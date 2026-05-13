@@ -1,24 +1,87 @@
-import { prisma } from "../../config/db.js";
-
-export const findUserByEmail = async (email) => {
+export const findUserById = async (id) => {
   return prisma.user.findUnique({
     where: {
-      email,
+      id,
     },
+
     include: {
-      role: true,
+      systemRole: true,
+
+      functionalRoles: {
+        include: {
+          functionalRole: {
+            include: {
+              permissions: {
+                include: {
+                  permission: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 };
 
-export const createUser = async (data) => {
-  return prisma.user.create({
-    data,
+export const findRefreshToken = async (
+  token
+) => {
+  return prisma.refreshToken.findFirst({
+    where: {
+      token,
+      revokedAt: null,
+    },
   });
 };
 
-export const createRefreshToken = async (data) => {
-  return prisma.refreshToken.create({
-    data,
-  });
-};
+export const revokeRefreshToken =
+  async (tokenHash) => {
+    return prisma.refreshToken.updateMany({
+      where: {
+        tokenHash,
+        revokedAt: null,
+      },
+
+      data: {
+        revokedAt: new Date(),
+      },
+    });
+  };
+
+export const revokeAllUserTokens =
+  async (userId) => {
+    return prisma.refreshToken.updateMany({
+      where: {
+        userId,
+        revokedAt: null,
+      },
+
+      data: {
+        revokedAt: new Date(),
+      },
+    });
+  };
+
+export const findValidRefreshToken =
+  async (tokenHash) => {
+    return prisma.refreshToken.findFirst({
+      where: {
+        tokenHash,
+
+        revokedAt: null,
+
+        expiresAt: {
+          gt: new Date(),
+        },
+      },
+
+      include: {
+        user: {
+          include: {
+            systemRole: true,
+          },
+        },
+      },
+    });
+  };

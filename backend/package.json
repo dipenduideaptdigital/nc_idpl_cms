@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "seed": "node src/database/seeds/seed.js"
   },
   "keywords": [],
   "author": "",

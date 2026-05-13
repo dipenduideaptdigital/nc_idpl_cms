@@ -20,4 +20,13 @@ export const env = {
     process.env.REFRESH_TOKEN_EXPIRES_IN || "7d",
 
   CLIENT_URL: process.env.CLIENT_URL,
+
+  SUPER_ADMIN_NAME:
+  process.env.SUPER_ADMIN_NAME,
+
+SUPER_ADMIN_EMAIL:
+  process.env.SUPER_ADMIN_EMAIL,
+
+SUPER_ADMIN_PASSWORD:
+  process.env.SUPER_ADMIN_PASSWORD,
 };

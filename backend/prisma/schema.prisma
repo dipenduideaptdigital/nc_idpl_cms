@@ -7,54 +7,183 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
+}
+
 model User {
-  id                String         @id @default(cuid())
-  name              String
-  email             String         @unique
-  username          String?        @unique
-  password          String
+  id String @id @default(cuid())
 
-  roleId            String
-  role              Role           @relation(fields: [roleId], references: [id])
+  name     String
+  email    String @unique
+  password String
 
-  isActive          Boolean        @default(true)
-  isEmailVerified   Boolean        @default(false)
+  avatar String?
 
-  lastLogin         DateTime?
+  systemRoleId String
+  systemRole   SystemRole @relation(fields: [systemRoleId], references: [id])
 
-  refreshTokens     RefreshToken[]
+  status UserStatus @default(PENDING)
 
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  isEmailVerified Boolean @default(false)
+
+  lastLoginAt DateTime?
+
+  refreshTokens RefreshToken[]
+
+  functionalRoles UserFunctionalRole[]
+
+  adminInvitationsSent AdminInvitation[]
+
+  passwordResetTokens PasswordResetToken[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("users")
 }
 
-model Role {
-  id            String            @id @default(cuid())
-  name          String            @unique
-  slug          String            @unique
-  description   String?
+model SystemRole {
+  id String @id @default(cuid())
 
-  users         User[]
+  name String @unique
+  slug String @unique
 
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  description String?
 
-  @@map("roles")
+  users User[]
+
+  adminInvitations AdminInvitation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("system_roles")
+}
+
+model FunctionalRole {
+  id String @id @default(cuid())
+
+  name String @unique
+  slug String @unique
+
+  description String?
+
+  users UserFunctionalRole[]
+
+  permissions FunctionalRolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("functional_roles")
+}
+
+model Permission {
+  id String @id @default(cuid())
+
+  name String @unique
+  slug String @unique
+
+  module String
+
+  description String?
+
+  functionalRoles FunctionalRolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("permissions")
+}
+
+model FunctionalRolePermission {
+  functionalRoleId String
+  permissionId     String
+
+  functionalRole FunctionalRole @relation(fields: [functionalRoleId], references: [id], onDelete: Cascade)
+
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@id([functionalRoleId, permissionId])
+  @@map("functional_role_permissions")
+}
+
+model UserFunctionalRole {
+  userId           String
+  functionalRoleId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  functionalRole FunctionalRole @relation(fields: [functionalRoleId], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now())
+
+  @@id([userId, functionalRoleId])
+  @@map("user_functional_roles")
 }
 
 model RefreshToken {
-  id           String      @id @default(cuid())
+  id String @id @default(cuid())
 
-  token        String      @db.Text
+  tokenHash String @db.Text
 
-  userId       String
-  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  expiresAt    DateTime
+  expiresAt DateTime
 
-  createdAt    DateTime    @default(now())
+  revokedAt DateTime?
 
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([revokedAt])
   @@map("refresh_tokens")
+}
+
+model PasswordResetToken {
+  id String @id @default(cuid())
+
+  token String @unique
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+model AdminInvitation {
+  id String @id @default(cuid())
+
+  email String
+
+  token String @unique
+
+  systemRoleId String
+  systemRole   SystemRole @relation(fields: [systemRoleId], references: [id])
+
+  invitedById String
+  invitedBy   User   @relation(fields: [invitedById], references: [id])
+
+  expiresAt DateTime
+
+  acceptedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([expiresAt])
+  @@map("admin_invitations")
 }
