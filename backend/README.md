@@ -10,7 +10,7 @@ This backend is being developed using:
 - MySQL
 - Prisma ORM
 
-The backend follows a production-grade modular architecture with enterprise-focused authentication, authorization, RBAC, session management, and security practices.
+The backend follows a modular architecture with enterprise-focused authentication, authorization, RBAC, session management, and security practices.
 
 ---
 
