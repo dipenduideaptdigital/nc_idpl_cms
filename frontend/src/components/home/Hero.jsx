@@ -1,26 +1,28 @@
 import React from 'react';
 import { ArrowUpRight, ArrowDown } from 'lucide-react';
+import heroback from '../../assets/homepage/banner_back.png'
+import herofront from '../../assets/homepage/banner_front.png'
 
 const Hero = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-900">
       {/* Main Background Image */}
-      {/* <div 
+      <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ 
-          backgroundImage: 'url("https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop")',
+          backgroundImage: `url(${heroback})`,
         }}
-      > */}
+      >
         {/* Dark overlay for readability */}
-        {/* <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
-      </div> */}
+        <div className="absolute inset-0 bg-black/5"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent"></div>
+      </div>
 
       <div className="container mx-auto px-8 relative z-10 w-full pt-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           {/* Left Content Area */}
-          <div className="text-white max-w-2xl">
+          <div className="text-white max-w-2xl fadeInLeft">
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-white/30 backdrop-blur-sm mb-6">
               <span className="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(249,115,22,0.8)]"></span>
@@ -49,36 +51,39 @@ const Hero = () => {
           </div>
 
           {/* Right Content Area - Glassmorphism Cards */}
-          <div className="relative hidden lg:block h-[500px]">
+          <div className="hidden lg:flex h-[500px] items-end justify-end gap-6 pb-4 fadeInRight">
             {/* Glass Card */}
-            <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[320px] bg-[#3a3532]/70 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl z-20">
-              <h2 className="text-4xl font-bold text-white mb-2">250+</h2>
-              <p className="text-sm text-gray-300 font-light mb-12">
-                go for go
-              </p>
+            <div className="w-[280px] h-[280px] bg-[#3a3532]/30 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl z-20 flex flex-col justify-between shrink-0">
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-1">250+</h2>
+                <p className="text-xs text-gray-300 font-light">
+                  My Design of art
+                </p>
+              </div>
               
-              <div className="w-8 h-[1px] bg-gray-500 mb-6"></div>
-              
-              <p className="text-xl text-white font-medium leading-tight">
-                There Is No One Who Loves Pain Itself
-              </p>
+              <div>
+                <div className="w-8 h-[1px] bg-gray-500 mb-4"></div>
+                <p className="text-lg text-white font-medium leading-tight">
+                  There Is No One Who Loves Pain Itself
+                </p>
+              </div>
             </div>
 
-            {/* Overlapping Image Card */}
-            {/* <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-12 w-[300px] h-[380px] rounded-3xl overflow-hidden shadow-2xl z-10 border-4 border-white/10">
+            {/* Image Card */}
+            <div className="w-[280px] h-[280px] rounded-[2rem] overflow-hidden shadow-2xl z-10 border-4 border-white/10 shrink-0">
               <img 
-                src="https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1964&auto=format&fit=crop" 
+                src={herofront} 
                 alt="Modern Interior" 
                 className="w-full h-full object-cover"
               />
-            </div> */}
+            </div>
           </div>
           
         </div>
       </div>
 
       {/* Bottom Arrow Indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 opal-move-up">
         <button className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
           <ArrowDown className="w-6 h-6 text-primary" />
         </button>

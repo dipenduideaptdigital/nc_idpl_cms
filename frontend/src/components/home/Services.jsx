@@ -27,7 +27,7 @@ const Services = () => {
         {/* Top Section */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 mb-20 items-start">
           {/* Left: Badge */}
-          <div>
+          <div className="fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
@@ -37,7 +37,7 @@ const Services = () => {
           </div>
           
           {/* Right: Heading & Description */}
-          <div>
+          <div className="fadeInRight">
             <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
               Experience <span className="text-primary">The Art Of Interior</span> Design
             </h2>
@@ -52,7 +52,7 @@ const Services = () => {
           {servicesData.map((service, index) => (
             <div 
               key={index} 
-              className="border border-gray-300 rounded-[2rem] p-8 hover:shadow-xl transition-shadow duration-300 bg-white"
+              className="border border-gray-300 rounded-[2rem] p-8 hover:shadow-xl transition-shadow duration-300 bg-white opal-move-up"
             >
               <h3 className="text-2xl font-bold text-gray-900 mb-6 whitespace-pre-line leading-tight">
                 {service.title}

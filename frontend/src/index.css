@@ -11,3 +11,74 @@ body {
   margin: 0;
   font-family: 'Outfit', sans-serif;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Animations */
+@keyframes opalMoveUp {
+  0% { transform: translateY(60px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes opalMoveRight {
+  0% { transform: translateX(-60px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes opalMoveLeft {
+  0% { transform: translateX(60px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInLeft {
+  0% { transform: translateX(-40px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInRight {
+  0% { transform: translateX(40px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.opal-move-up {
+  opacity: 0;
+  animation: opalMoveUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation-play-state: paused;
+}
+
+.opal-move-right {
+  opacity: 0;
+  animation: opalMoveRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation-play-state: paused;
+}
+
+.opal-move-left {
+  opacity: 0;
+  animation: opalMoveLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation-play-state: paused;
+}
+
+.fadeInLeft {
+  opacity: 0;
+  animation: fadeInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation-play-state: paused;
+}
+
+.fadeInRight {
+  opacity: 0;
+  animation: fadeInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation-play-state: paused;
+}
+
+.in-view {
+  animation-play-state: running !important;
+}
