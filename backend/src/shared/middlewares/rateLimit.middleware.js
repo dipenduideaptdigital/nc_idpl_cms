@@ -1,46 +1,64 @@
-import rateLimit from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
+import { StatusCodes } from "http-status-codes";
 
-export const authRateLimiter =
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
+// Common rate limit response
+const rateLimitHandler = (message) => {
+  return (req, res) => {
+    return res.status(StatusCodes.TOO_MANY_REQUESTS).json({
+      success: false,
+      message,
+      retryAfter: req.rateLimit?.resetTime || null,
+    });
+  };
+};
 
-    max: 10,
+// Common rate limit factory
+const createRateLimiter = ({
+  windowMs,
+  max,
+  message,
+  keyGenerator,
+  skipSuccessfulRequests = false,
+}) => {
+  return rateLimit({
+    windowMs,
+    max,
     standardHeaders: true,
     legacyHeaders: false,
-
-    message: {
-      success: false,
-      message:
-        "Too many authentication attempts. Please try again later.",
-    },
+    skipSuccessfulRequests,
+    handler: rateLimitHandler(message),
+    keyGenerator,
   });
+};
 
-export const adminAuthRateLimiter =
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 5,
+// Auth limiter
+export const authRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: "Too many authentication attempts. Please try again later.",
+});
 
-    standardHeaders: true,
-    legacyHeaders: false,
+// Admin auth limiter
+export const adminAuthRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: "Too many admin login attempts. Please try again later.",
+});
 
-    message: {
-      success: false,
-      message:
-        "Too many admin login attempts. Please try again later.",
-    },
-  });
+// Refresh token limiter
+export const refreshTokenRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: "Too many token refresh requests.",
+});
 
-export const refreshTokenRateLimiter =
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 20,
-
-    standardHeaders: true,
-    legacyHeaders: false,
-
-    message: {
-      success: false,
-      message:
-        "Too many token refresh requests.",
-    },
-  });
+// Sensitive operations limiter
+export const sensitiveOperationRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: "Too many sensitive account operations. Please try again later.",
+  keyGenerator: (req) => {
+    const ip = ipKeyGenerator(req);
+    return req.user ? `${req.user.id}_${ip}` : ip;
+  },
+});

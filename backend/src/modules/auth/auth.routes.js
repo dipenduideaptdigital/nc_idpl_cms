@@ -6,11 +6,17 @@ import {
   refreshTokenController,
   logoutController,
   logoutAllDevicesController,
+  forgotPasswordController,
+  resetPasswordController,
+  changePasswordController,
 } from "./auth.controller.js";
 
 import {
   registerSchema,
   loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  changePasswordSchema,
 } from "./auth.validation.js";
 
 import { validate } from "../../shared/middlewares/validate.middleware.js";
@@ -19,64 +25,36 @@ import {
   authRateLimiter,
   adminAuthRateLimiter,
   refreshTokenRateLimiter,
+  sensitiveOperationRateLimiter,
 } from "../../shared/middlewares/rateLimit.middleware.js";
 
 const router = Router();
 
-// USER REGISTRATION
+// User registration
+router.post("/register", authRateLimiter, validate(registerSchema), register);
 
-router.post(
-  "/register",
+// User login
+router.post("/login", authRateLimiter, validate(loginSchema), login);
 
-  authRateLimiter,
-  validate(registerSchema),
-  register
-);
+// Admin login
+router.post("/admin-login", adminAuthRateLimiter, validate(loginSchema), adminLoginController);
 
-// USER LOGIN
+// Refresh access token
+router.post("/refresh-token", refreshTokenRateLimiter, refreshTokenController);
 
-router.post(
-  "/login",
+// Forgot password
+router.post("/forgot-password", sensitiveOperationRateLimiter, validate(forgotPasswordSchema), forgotPasswordController);
 
-  authRateLimiter,
-  validate(loginSchema),
-  login
-);
+// Reset password
+router.post("/reset-password", sensitiveOperationRateLimiter, validate(resetPasswordSchema), resetPasswordController);
 
-// ADMIN LOGIN
+// Change password
+router.patch("/change-password", authenticate, sensitiveOperationRateLimiter, validate(changePasswordSchema), changePasswordController);
 
-router.post(
-  "/admin-login",
+// Logout current device
+router.post("/logout", logoutController);
 
-  adminAuthRateLimiter,
-  validate(loginSchema),
-  adminLoginController
-);
-
-// REFRESH ACCESS TOKEN
-
-router.post(
-  "/refresh-token",
-
-  refreshTokenRateLimiter,
-  refreshTokenController
-);
-
-
-// LOGOUT CURRENT DEVICE
-
-router.post(
-  "/logout",
-
-  logoutController
-);
-
-// LOGOUT ALL DEVICES
-router.post(
-  "/logout-all",
-
-  authenticate,
-  logoutAllDevicesController
-);
+// Logout all devices
+router.post("/logout-all", authenticate, sensitiveOperationRateLimiter, logoutAllDevicesController);
 
 export default router;

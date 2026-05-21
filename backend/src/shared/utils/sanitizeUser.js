@@ -1,6 +1,4 @@
-export const sanitizeUser = (
-  user
-) => {
+export const sanitizeUser = (user) => {
   if (!user) {
     return null;
   }
@@ -11,32 +9,20 @@ export const sanitizeUser = (
     email: user.email,
     avatar: user.avatar,
     status: user.status,
-    isEmailVerified:
-      user.isEmailVerified,
-
-    systemRole:
-      user.systemRole
-        ? {
-            id: user.systemRole.id,
-            name: user.systemRole.name,
-            slug: user.systemRole.slug,
-          }
-        : null,
-
-    functionalRoles:
-      user.functionalRoles?.map(
-        (role) => ({
-          id:
-            role.functionalRole.id,
-          name:
-            role.functionalRole.name,
-          slug:
-            role.functionalRole.slug,
-        })
-      ) || [],
-
+    isEmailVerified: user.isEmailVerified,
+    systemRole: user.systemRole
+      ? {
+          id: user.systemRole.id,
+          name: user.systemRole.name,
+          slug: user.systemRole.slug,
+        }
+      : null,
+    functionalRoles: user.functionalRoles?.map((role) => ({
+      id: role.functionalRole.id,
+      name: role.functionalRole.name,
+      slug: role.functionalRole.slug,
+    })) || [],
     createdAt: user.createdAt,
-
     updatedAt: user.updatedAt,
   };
 };

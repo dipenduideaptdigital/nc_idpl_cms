@@ -1,5 +1,4 @@
 import { StatusCodes } from "http-status-codes";
-
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
 import { sendResponse } from "../../shared/utils/apiResponse.js";
 
@@ -10,6 +9,9 @@ import {
   refreshAccessToken,
   logoutUser,
   logoutAllDevices,
+  forgotPassword,
+  resetPassword,
+  changePassword,
 } from "./auth.service.js";
 
 import {
@@ -17,159 +19,135 @@ import {
   CLEAR_COOKIE_OPTIONS,
 } from "../../config/cookies.js";
 
-// USER REGISTRATION
+// User registration
+export const register = asyncHandler(async (req, res) => {
+  const result = await registerUser(req.body);
 
-export const register = asyncHandler(
-  async (req, res) => {
-    const result = await registerUser(
-      req.body
-    );
+  sendResponse({
+    res,
+    statusCode: StatusCodes.CREATED,
+    message: "User registered successfully",
+    data: result,
+  });
+});
 
-    sendResponse({
-      res,
+// User login
+export const login = asyncHandler(async (req, res) => {
+  const result = await loginUser(req.body);
 
-      statusCode:
-        StatusCodes.CREATED,
+  res.cookie("refreshToken", result.refreshToken, REFRESH_COOKIE_OPTIONS);
 
-      message:
-        "User registered successfully",
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Login successful",
+    data: {
+      accessToken: result.accessToken,
+      user: result.user,
+    },
+  });
+});
 
-      data: result,
-    });
-  }
-);
+// Admin login
+export const adminLoginController = asyncHandler(async (req, res) => {
+  const result = await adminLogin(req.body);
 
-// USER LOGIN
+  res.cookie("refreshToken", result.refreshToken, REFRESH_COOKIE_OPTIONS);
 
-export const login = asyncHandler(
-  async (req, res) => {
-    const result = await loginUser(
-      req.body
-    );
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Admin login successful",
+    data: {
+      accessToken: result.accessToken,
+      user: result.user,
+    },
+  });
+});
 
-    res.cookie(
-      "refreshToken",
-      result.refreshToken,
-      REFRESH_COOKIE_OPTIONS
-    );
+// Refresh access token
+export const refreshTokenController = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies?.refreshToken;
+  const result = await refreshAccessToken(refreshToken);
 
-    sendResponse({
-      res,
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Access token refreshed",
+    data: {
+      accessToken: result.accessToken,
+    },
+  });
+});
 
-      statusCode: StatusCodes.OK,
+// Forgot password
+export const forgotPasswordController = asyncHandler(async (req, res) => {
+  await forgotPassword(req.body.email);
 
-      message: "Login successful",
+  // Always return success to prevent email enumeration
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "If an account exists with this email, a password reset link has been sent.",
+  });
+});
 
-      data: {
-        accessToken:
-          result.accessToken,
-
-        user: result.user,
-      },
-    });
-  }
-);
-
-// ADMIN LOGIN
-
-export const adminLoginController =
-  asyncHandler(async (req, res) => {
-    const result =
-      await adminLogin(req.body);
-
-    res.cookie(
-      "refreshToken",
-      result.refreshToken,
-      REFRESH_COOKIE_OPTIONS
-    );
-
-    sendResponse({
-      res,
-
-      statusCode: StatusCodes.OK,
-
-      message:
-        "Admin login successful",
-
-      data: {
-        accessToken:
-          result.accessToken,
-
-        user: result.user,
-      },
-    });
+// Reset password
+export const resetPasswordController = asyncHandler(async (req, res) => {
+  await resetPassword({
+    token: req.body.token,
+    password: req.body.password,
   });
 
-// REFRESH ACCESS TOKEN
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Password reset successful. Please login again.",
+  });
+});
 
-export const refreshTokenController =
-  asyncHandler(async (req, res) => {
-    const refreshToken =
-      req.cookies?.refreshToken;
-
-    const result =
-      await refreshAccessToken(
-        refreshToken
-      );
-
-    sendResponse({
-      res,
-
-      statusCode: StatusCodes.OK,
-
-      message:
-        "Access token refreshed",
-
-      data: {
-        accessToken:
-          result.accessToken,
-      },
-    });
+// Change password
+export const changePasswordController = asyncHandler(async (req, res) => {
+  await changePassword({
+    userId: req.user.id,
+    currentPassword: req.body.currentPassword,
+    newPassword: req.body.newPassword,
   });
 
-// LOGOUT CURRENT DEVICE
+  // Clear current session cookie
+  res.clearCookie("refreshToken", CLEAR_COOKIE_OPTIONS);
 
-export const logoutController =
-  asyncHandler(async (req, res) => {
-    const refreshToken =
-      req.cookies?.refreshToken;
-
-    await logoutUser(refreshToken);
-
-    res.clearCookie(
-      "refreshToken",
-      CLEAR_COOKIE_OPTIONS
-    );
-
-    sendResponse({
-      res,
-
-      statusCode: StatusCodes.OK,
-
-      message:
-        "Logged out successfully",
-    });
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Password changed successfully. Please login again.",
   });
+});
 
-// LOGOUT ALL DEVICES
+// Logout current device
+export const logoutController = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies?.refreshToken;
 
-export const logoutAllDevicesController =
-  asyncHandler(async (req, res) => {
-    await logoutAllDevices(
-      req.user.id
-    );
+  await logoutUser(refreshToken);
 
-    res.clearCookie(
-      "refreshToken",
-      CLEAR_COOKIE_OPTIONS
-    );
+  res.clearCookie("refreshToken", CLEAR_COOKIE_OPTIONS);
 
-    sendResponse({
-      res,
-
-      statusCode: StatusCodes.OK,
-
-      message:
-        "Logged out from all devices",
-    });
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Logged out successfully",
   });
+});
+
+// Logout all devices
+export const logoutAllDevicesController = asyncHandler(async (req, res) => {
+  await logoutAllDevices(req.user.id);
+
+  res.clearCookie("refreshToken", CLEAR_COOKIE_OPTIONS);
+
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Logged out from all devices",
+  });
+});

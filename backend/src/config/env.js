@@ -1,32 +1,25 @@
 import dotenv from "dotenv";
+import { cleanEnv, str, port } from "envalid";
 
 dotenv.config();
 
-export const env = {
-  NODE_ENV: process.env.NODE_ENV || "development",
-
-  PORT: process.env.PORT || 5000,
-
-  DATABASE_URL: process.env.DATABASE_URL,
-
-  JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
-
-  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
-
-  ACCESS_TOKEN_EXPIRES_IN:
-    process.env.ACCESS_TOKEN_EXPIRES_IN || "15m",
-
-  REFRESH_TOKEN_EXPIRES_IN:
-    process.env.REFRESH_TOKEN_EXPIRES_IN || "7d",
-
-  CLIENT_URL: process.env.CLIENT_URL,
-
-  SUPER_ADMIN_NAME:
-  process.env.SUPER_ADMIN_NAME,
-
-SUPER_ADMIN_EMAIL:
-  process.env.SUPER_ADMIN_EMAIL,
-
-SUPER_ADMIN_PASSWORD:
-  process.env.SUPER_ADMIN_PASSWORD,
-};
+export const env = cleanEnv(process.env, {
+  NODE_ENV: str({ default: "development" }),
+  PORT: port({ default: 5000 }),
+  DATABASE_URL: str(),
+  JWT_ACCESS_SECRET: str(),
+  JWT_REFRESH_SECRET: str(),
+  ACCESS_TOKEN_EXPIRES_IN: str({ default: "15m" }),
+  REFRESH_TOKEN_EXPIRES_IN: str({ default: "7d" }),
+  CLIENT_URL: str(),
+  SUPER_ADMIN_NAME: str(),
+  SUPER_ADMIN_EMAIL: str(),
+  SUPER_ADMIN_PASSWORD: str(),
+  PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES: str({ default: "15" }),
+  SMTP_HOST: str(),
+  SMTP_PORT: str(),
+  SMTP_USER: str(),
+  SMTP_PASS: str(),
+  FROM_EMAIL: str(),
+  FROM_NAME: str(),
+});
