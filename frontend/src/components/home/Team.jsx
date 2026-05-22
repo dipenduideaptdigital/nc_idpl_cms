@@ -19,7 +19,7 @@ const Team = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-15 gap-12">
           {/* Left: Badge */}
-          <div>
+          <div className="fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
@@ -29,7 +29,7 @@ const Team = () => {
           </div>
           
           {/* Right: Heading & Description */}
-          <div className="max-w-2xl">
+          <div className="max-w-2xl fadeInRight">
             <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
               Meet The <span className="text-primary">Experts Our <br /> Interior</span> Designers
             </h2>
@@ -43,12 +43,12 @@ const Team = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           
           {/* Left: Large Placeholder */}
-          <div className="w-full h-[500px] md:h-[600px] bg-slate-300 rounded-[2.5rem] shadow-lg">
+          <div className="w-full h-[500px] md:h-[600px] bg-slate-300 rounded-[2.5rem] shadow-lg fadeInLeft">
            
           </div>
 
           {/* Right: Team Members List */}
-          <div className="flex flex-col border-t border-gray-200">
+          <div className="flex flex-col border-t border-gray-200 fadeInRight">
             {teamMembers.map((member) => {
               const isActive = activeMember === member.id;
               

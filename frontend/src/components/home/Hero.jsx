@@ -1,17 +1,98 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, ArrowDown } from 'lucide-react';
-import heroback from '../../assets/homepage/banner_back.png'
-import herofront from '../../assets/homepage/banner_front.png'
+import defaultHeroback from '../../assets/homepage/banner_back.png'
+import defaultHerofront from '../../assets/homepage/banner_front.png'
 
 const Hero = () => {
+  const [content, setContent] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [bgImage, setBgImage] = useState(defaultHeroback);
+  const [frontImg, setFrontImg] = useState(defaultHerofront);
+
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/v1/cms/homepage/hero');
+        const data = await res.json();
+        if (data.success && data.data?.content) {
+          const fetchedContent = data.data.content;
+          setContent(fetchedContent);
+
+          const bgUrl = fetchedContent.backgroundImage ? `http://localhost:5000${fetchedContent.backgroundImage}` : null;
+          const frontUrl = fetchedContent.frontImage ? `http://localhost:5000${fetchedContent.frontImage}` : null;
+
+          const preloadPromises = [];
+
+          if (bgUrl) {
+            preloadPromises.push(
+              new Promise((resolve) => {
+                const img = new Image();
+                img.src = bgUrl;
+                img.onload = () => {
+                  setBgImage(bgUrl);
+                  resolve();
+                };
+                img.onerror = () => {
+                  setBgImage(defaultHeroback);
+                  resolve();
+                };
+              })
+            );
+          } else {
+            setBgImage(defaultHeroback);
+          }
+
+          if (frontUrl) {
+            preloadPromises.push(
+              new Promise((resolve) => {
+                const img = new Image();
+                img.src = frontUrl;
+                img.onload = () => {
+                  setFrontImg(frontUrl);
+                  resolve();
+                };
+                img.onerror = () => {
+                  setFrontImg(defaultHerofront);
+                  resolve();
+                };
+              })
+            );
+          } else {
+            setFrontImg(defaultHerofront);
+          }
+
+          if (preloadPromises.length > 0) {
+            await Promise.all(preloadPromises);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch hero content:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchHeroData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-900">
+        <div className="absolute inset-0 bg-black/5"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent"></div>
+        <div className="z-10 flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-white/20 border-t-primary rounded-full animate-spin mb-4"></div>
+          <p className="text-white/70 tracking-widest text-sm uppercase">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-900">
       {/* Main Background Image */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ 
-          backgroundImage: `url(${heroback})`,
-        }}
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"
+        style={{ backgroundImage: `url(${bgImage})` }}
       >
         {/* Dark overlay for readability */}
         <div className="absolute inset-0 bg-black/5"></div>
@@ -27,23 +108,22 @@ const Hero = () => {
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-white/30 backdrop-blur-sm mb-6">
               <span className="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(249,115,22,0.8)]"></span>
               <span className="text-[10px] uppercase tracking-wider font-medium text-white/90">
-                Fast and Reliable
+                {content?.badgeText || "Fast and Reliable"}
               </span>
             </div>
             
             {/* Headlines */}
             <h1 className="text-6xl md:text-7xl font-bold leading-[1.1] mb-6 tracking-tight">
-              End-To-End <br /> Office Interiors
+              {content?.titleLine1 || "End-To-End"} <br /> {content?.titleLine2 || "Office Interiors"}
             </h1>
             
             <p className="text-lg text-gray-200 mb-10 max-w-md font-light leading-relaxed">
-              We specialize in transforming visions into reality.
-              Explore our portfolio of innovative architectural and interior design projects crafted with precision.
+              {content?.subtitle || "We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision."}
             </p>
             
             {/* CTA Button */}
             <button className="group inline-flex items-center space-x-6 rounded-full border border-white/40 hover:border-white transition-all pl-6 pr-2 py-2">
-              <span className="text-sm font-medium tracking-wide">BOOK A FREE CONSULTATION</span>
+              <span className="text-sm font-medium tracking-wide">{content?.buttonText || "BOOK A FREE CONSULTATION"}</span>
               <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white transition-transform group-hover:scale-105">
                 <ArrowUpRight className="w-5 h-5" />
               </div>
@@ -55,26 +135,31 @@ const Hero = () => {
             {/* Glass Card */}
             <div className="w-[280px] h-[280px] bg-[#3a3532]/30 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl z-20 flex flex-col justify-between shrink-0">
               <div>
-                <h2 className="text-3xl font-bold text-white mb-1">250+</h2>
+                <h2 className="text-3xl font-bold text-white mb-1">{content?.glassCardNumber || "250+"}</h2>
                 <p className="text-xs text-gray-300 font-light">
-                  My Design of art
+                  {content?.glassCardText1 || "My Design of art"}
                 </p>
               </div>
               
               <div>
                 <div className="w-8 h-[1px] bg-gray-500 mb-4"></div>
                 <p className="text-lg text-white font-medium leading-tight">
-                  There Is No One Who Loves Pain Itself
+                  {content?.glassCardText2 || "There Is No One Who Loves Pain Itself"}
                 </p>
               </div>
             </div>
 
             {/* Image Card */}
-            <div className="w-[280px] h-[280px] rounded-[2rem] overflow-hidden shadow-2xl z-10 border-4 border-white/10 shrink-0">
+            <div className="w-[280px] h-[280px] rounded-[2rem] overflow-hidden shadow-2xl z-10 border-4 border-white/10 shrink-0 transition-all duration-500">
               <img 
-                src={herofront} 
+                src={frontImg} 
                 alt="Modern Interior" 
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  if (e.currentTarget.src !== defaultHerofront) {
+                    e.currentTarget.src = defaultHerofront;
+                  }
+                }}
               />
             </div>
           </div>

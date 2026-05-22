@@ -7,7 +7,7 @@ const Panoramas = () => {
       <div className="container mx-auto px-8 max-w-7xl flex flex-col items-center">
         
         {/* Centered Header Section */}
-        <div className="flex flex-col items-center text-center mb-16">
+        <div className="flex flex-col items-center text-center mb-16 opal-move-up">
           <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300 mb-8">
             <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
             <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
@@ -21,7 +21,7 @@ const Panoramas = () => {
         </div>
 
         {/* Panoramic Image */}
-        <div className="relative w-full max-w-6xl h-[400px] md:h-[600px] rounded-[2.5rem] overflow-hidden shadow-2xl">
+        <div className="relative w-full max-w-6xl h-[400px] md:h-[600px] rounded-[2.5rem] overflow-hidden shadow-2xl opal-move-up">
           <img 
             src={view}
             className="w-full h-full object-cover object-center"

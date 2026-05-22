@@ -39,7 +39,7 @@ const HowWeWork = () => {
         {/* Top Header Section */}
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-12 mb-20 items-end">
           {/* Left: Badge & Heading */}
-          <div>
+          <div className="fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300 mb-8 bg-white">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
@@ -53,7 +53,7 @@ const HowWeWork = () => {
           </div>
           
           {/* Right: Description Text */}
-          <div className="pb-2">
+          <div className="pb-2 fadeInRight">
             <p className="text-gray-500 text-sm font-light leading-relaxed max-w-md">
               Our process is alive – adapting, refining, and growing with your vision. Always.
               Like artists with a blank canvas, we transform rooms into living works of art.
@@ -66,7 +66,7 @@ const HowWeWork = () => {
           {stepsData.map((step) => (
             <div 
               key={step.id} 
-              className={`bg-white rounded-[2rem] p-6 shadow-xl relative overflow-hidden flex flex-col ${step.marginTop}`}
+              className={`bg-white rounded-[2rem] p-6 shadow-xl relative overflow-hidden flex flex-col ${step.marginTop} opal-move-up`}
             >
               {/* Image Placeholder */}
               <div className={`w-full h-48 rounded-2xl ${step.imagePlaceholder} mb-8`}></div>

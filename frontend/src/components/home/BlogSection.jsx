@@ -33,7 +33,7 @@ const BlogSection = () => {
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 mb-20">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300 mb-8">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
@@ -50,7 +50,7 @@ const BlogSection = () => {
         {/* Blog Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {blogPosts.map((post) => (
-            <div key={post.id} className="group cursor-pointer flex flex-col">
+            <div key={post.id} className="group cursor-pointer flex flex-col opal-move-up">
               <div className="w-full h-64 md:h-80 rounded-[2rem] overflow-hidden mb-6 shadow-md">
                 <img 
                   src={post.image} 

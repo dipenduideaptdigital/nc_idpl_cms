@@ -85,7 +85,7 @@ const Gallery = () => {
       </div>
 
       {/* Carousel Container - Pushed down to reveal text above it */}
-      <div className="relative z-10 w-full mt-32 md:mt-56">
+      <div className="relative z-10 w-full mt-32 md:mt-56 opal-move-up">
         <div 
           ref={scrollRef}
           className={`flex overflow-x-auto hide-scrollbar items-start cursor-grab active:cursor-grabbing ${isInteracting ? 'snap-x snap-mandatory' : ''}`}

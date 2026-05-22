@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const servicesData = [
+const defaultServicesData = [
   {
     title: 'Architectural\nDesign',
     description: 'A business house born out of passion for fish keeping and nature conservation'
@@ -20,6 +20,28 @@ const servicesData = [
 ];
 
 const Services = () => {
+  const [content, setContent] = useState(null);
+
+  useEffect(() => {
+    const fetchServicesData = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/v1/cms/homepage/services');
+        const data = await res.json();
+        if (data.success && data.data?.content) {
+          setContent(data.data.content);
+        }
+      } catch (error) {
+        console.error('Failed to fetch services content:', error);
+      }
+    };
+    fetchServicesData();
+  }, []);
+
+  const badgeText = content?.badgeText || "WHO WE ARE";
+  const title = content?.title || "Experience [The Art Of Interior] Design";
+  const description = content?.description || "If you use this site regularly and would like consider donating a small sum to help pay for the hosting and bandwidth bill. There is no minimum donation, any sum is appreciated";
+  const servicesList = content?.services || defaultServicesData;
+
   return (
     <section className="py-24 bg-white overflow-hidden">
       <div className="container mx-auto px-8 max-w-7xl">
@@ -31,7 +53,7 @@ const Services = () => {
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
-                WHO WE ARE
+                {badgeText}
               </span>
             </div>
           </div>
@@ -39,17 +61,17 @@ const Services = () => {
           {/* Right: Heading & Description */}
           <div className="fadeInRight">
             <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
-              Experience <span className="text-primary">The Art Of Interior</span> Design
+              {renderTitle(title)}
             </h2>
             <p className="text-gray-500 max-w-2xl font-light text-sm leading-relaxed">
-              If you use this site regularly and would like consider donating a small sum to help pay for the hosting and bandwidth bill. There is no minimum donation, any sum is appreciated
+              {description}
             </p>
           </div>
         </div>
 
         {/* Bottom Section: Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {servicesData.map((service, index) => (
+          {servicesList.map((service, index) => (
             <div 
               key={index} 
               className="border border-gray-300 rounded-[2rem] p-8 hover:shadow-xl transition-shadow duration-300 bg-white opal-move-up"
@@ -70,6 +92,22 @@ const Services = () => {
       </div>
     </section>
   );
+};
+
+// Helper component or function to render title with primary colored text inside square brackets [like this]
+const renderTitle = (titleText) => {
+  if (!titleText) return null;
+  const parts = titleText.split(/(\[[^\]]+\])/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('[') && part.endsWith(']')) {
+      return (
+        <span key={index} className="text-primary">
+          {part.slice(1, -1)}
+        </span>
+      );
+    }
+    return part;
+  });
 };
 
 export default Services;

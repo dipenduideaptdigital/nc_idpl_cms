@@ -9,7 +9,7 @@ const Testimonials = () => {
         {/* Top Header Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 items-start">
           {/* Left: Badge */}
-          <div>
+          <div className="fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
@@ -19,7 +19,7 @@ const Testimonials = () => {
           </div>
           
           {/* Right: Heading & Description */}
-          <div>
+          <div className="fadeInRight">
             <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
               Here's What <span className="text-primary">Warm Words</span> <br className="hidden md:block" />
               <span className="text-primary">Our Clients</span> Say
@@ -35,7 +35,7 @@ const Testimonials = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-24 items-center">
           
           {/* Left: Image */}
-          <div className="w-full h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl">
+          <div className="w-full h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl fadeInLeft">
             <img 
               src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop" 
               alt="Office Interior" 
@@ -44,7 +44,7 @@ const Testimonials = () => {
           </div>
 
           {/* Right: Testimonial Content */}
-          <div className="flex flex-col">
+          <div className="flex flex-col fadeInRight">
             
             {/* Rating Stats row */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-8">
@@ -88,7 +88,7 @@ const Testimonials = () => {
         </div>
 
         {/* Bottom Section: Logos */}
-        <div className="pt-8">
+        <div className="pt-8 opal-move-up">
           {/* Divider Text */}
           <div className="flex items-center justify-center mb-16">
             <div className="h-px bg-gray-200 flex-grow max-w-[200px] lg:max-w-[400px]"></div>

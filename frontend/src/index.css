@@ -49,36 +49,45 @@ body {
   100% { transform: translateX(0); opacity: 1; }
 }
 
-.opal-move-up {
+.opal-move-up, .opal-move-right, .opal-move-left, .fadeInLeft, .fadeInRight {
   opacity: 0;
-  animation: opalMoveUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  animation-play-state: paused;
 }
 
-.opal-move-right {
-  opacity: 0;
-  animation: opalMoveRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  animation-play-state: paused;
+.opal-move-up[data-in-view="true"] {
+  animation: opalMoveUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-.opal-move-left {
-  opacity: 0;
-  animation: opalMoveLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  animation-play-state: paused;
+.opal-move-right[data-in-view="true"] {
+  animation: opalMoveRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-.fadeInLeft {
-  opacity: 0;
-  animation: fadeInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  animation-play-state: paused;
+.opal-move-left[data-in-view="true"] {
+  animation: opalMoveLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-.fadeInRight {
-  opacity: 0;
-  animation: fadeInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  animation-play-state: paused;
+.fadeInLeft[data-in-view="true"] {
+  animation: fadeInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-.in-view {
-  animation-play-state: running !important;
+.fadeInRight[data-in-view="true"] {
+  animation: fadeInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+@keyframes fadeInDown {
+  0% { transform: translateY(-16px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.animate-shake {
+  animation: shake 0.25s cubic-bezier(.36,.07,.19,.97) both 2;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

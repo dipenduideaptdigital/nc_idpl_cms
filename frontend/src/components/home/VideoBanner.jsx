@@ -13,7 +13,7 @@ const VideoBanner = () => {
         <div className="container mx-auto px-2 sm:px-8 max-w-[1400px]">
           
           {/* Video Banner Container */}
-          <div className="relative w-full h-[400px] md:h-[600px] rounded-none sm:rounded-[2rem] overflow-hidden shadow-2xl group">
+          <div className="relative w-full h-[400px] md:h-[600px] rounded-none sm:rounded-[2rem] overflow-hidden shadow-2xl group opal-move-up">
             
             {/* Background Image */}
             <img 

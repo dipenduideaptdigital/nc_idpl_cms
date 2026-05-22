@@ -56,7 +56,7 @@ const OurProjects = () => {
         {/* Top Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 mb-20">
           
-          <div className="max-w-2xl">
+          <div className="max-w-2xl fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300 mb-8">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
@@ -69,7 +69,7 @@ const OurProjects = () => {
             </h2>
           </div>
           
-          <div className="max-w-md pb-2">
+          <div className="max-w-md pb-2 fadeInRight">
             <p className="text-gray-500 text-sm font-light leading-relaxed">
               Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors.
             </p>
@@ -78,7 +78,7 @@ const OurProjects = () => {
 
         {/* Carousel Section */}
         <div 
-          className="flex overflow-x-auto gap-8 pb-16 snap-x snap-mandatory hide-scrollbar"
+          className="flex overflow-x-auto gap-8 pb-16 snap-x snap-mandatory hide-scrollbar opal-move-up"
           ref={carouselRef}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
@@ -122,7 +122,7 @@ const OurProjects = () => {
       </div>
 
       {/* Bottom Section: Typography & Image */}
-      <div className="relative w-full mt-24 pt-20 pb-16 flex flex-col items-center justify-end min-h-[400px]">
+      <div className="relative w-full mt-24 pt-20 pb-16 flex flex-col items-center justify-end min-h-[400px] opal-move-up">
         {/* Huge Background Typography */}
         <div className="absolute top-0 left-0 right-0 overflow-hidden flex justify-center pointer-events-none z-0">
           <h2 className="text-[22vw] font-black text-gray-100 leading-none select-none">
