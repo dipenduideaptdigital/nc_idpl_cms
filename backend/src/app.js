@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
@@ -10,7 +11,7 @@ import { globalErrorHandler } from "./shared/middlewares/error.middleware.js";
 import { notFoundHandler } from "./shared/middlewares/notFound.middleware.js";
 
 const app = express();
-
+app.use(express.static(path.join(process.cwd(), "public")));
 app.set("trust proxy", 1);
 
 // Security middlewares
