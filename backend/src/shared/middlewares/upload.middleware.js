@@ -1,38 +1,43 @@
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+import multer from "multer";
+import path from "path";
+import crypto from "crypto";
+import fs from "fs";
+import { AppError } from "../errors/AppError.js";
+import { StatusCodes } from "http-status-codes";
 
-// Ensure the upload directory exists
-const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+const uploadDir = "public/uploads";
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Multer config
+// Storage Configuration
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: (req, file, cb) => {
     cb(null, uploadDir);
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
+  filename: (req, file, cb) => {
+    const uniqueSuffix = crypto.randomBytes(16).toString("hex");
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `${uniqueSuffix}${ext}`);
+  },
 });
 
-// File filter for images
+// MIME Type checking (Only Images for CMS)
 const fileFilter = (req, file, cb) => {
-  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
+  
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Only JPEG, PNG, GIF, and WEBP are allowed.'), false);
+    cb(new AppError("Invalid file type. Only JPG, PNG, WEBP, and SVG are allowed.", StatusCodes.UNSUPPORTED_MEDIA_TYPE), false);
   }
 };
 
-export const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
+export const uploadImage = multer({
+  storage,
+  fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
-  }
+    fileSize: 5 * 1024 * 1024, 
+    files: 5, 
+  },
 });

@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 import heroback from '../assets/homepage/banner_back.png';
+import apiClient from '../api/client';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { loginContext } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -28,25 +31,13 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || 'Authentication failed. Please try again.');
-      }
+      const res = await apiClient.post('/auth/login', formData);
+      
+      const { data } = res;
 
       setSuccess('Login successful! Redirecting...');
       
-      // Store token and user info
-      localStorage.setItem('accessToken', data.data.accessToken);
-      localStorage.setItem('user', JSON.stringify(data.data.user));
+      loginContext(data.data.user, data.data.accessToken);
 
       const roleSlug = data.data.user?.systemRole?.slug?.toUpperCase();
       const isAdmin = roleSlug === 'SUPER_ADMIN' || roleSlug === 'ADMIN';
@@ -61,7 +52,9 @@ const Login = () => {
       }, 1500);
 
     } catch (err) {
-      setError(err.message || 'Unable to connect to the server.');
+      //  Axios structured error handling
+      const errorMessage = err.response?.data?.message || err.message || 'Unable to connect to the server.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

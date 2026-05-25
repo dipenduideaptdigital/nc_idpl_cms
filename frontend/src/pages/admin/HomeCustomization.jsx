@@ -3,18 +3,29 @@ import { Save, Image as ImageIcon, Loader2, CheckCircle, List, User } from 'luci
 import HeroCustomization from '../../components/admin/HeroCustomization';
 import ServicesCustomization from '../../components/admin/ServicesCustomization';
 import AboutCustomization from '../../components/admin/AboutCustomization';
+import apiClient from '../../api/client'; 
+
+const getAssetUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  const baseUrl = import.meta.env.VITE_API_URL 
+    ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
+    : 'http://localhost:5000';
+  return `${baseUrl}${path}`;
+};
 
 const HomeCustomization = () => {
   const [activeTab, setActiveTab] = useState('hero');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   
   // Hero Section State
   const [heroData, setHeroData] = useState({
     titleLine1: 'End-To-End',
     titleLine2: 'Office Interiors',
-    subtitle: 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.',
+    subtitle: 'We specialize in transforming visions into reality.',
     buttonText: 'BOOK A FREE CONSULTATION',
     badgeText: 'Fast and Reliable',
     glassCardNumber: '250+',
@@ -24,16 +35,15 @@ const HomeCustomization = () => {
     frontImage: ''
   });
 
-  // Services Section State
   const [servicesData, setServicesData] = useState({
     badgeText: 'WHO WE ARE',
     title: 'Experience [The Art Of Interior] Design',
-    description: 'If you use this site regularly and would like consider donating a small sum to help pay for the hosting and bandwidth bill. There is no minimum donation, any sum is appreciated',
+    description: 'We offer professional design services.',
     services: [
-      { title: 'Architectural\nDesign', description: 'A business house born out of passion for fish keeping and nature conservation' },
-      { title: 'Interior Design\n& Planning', description: 'A business house born out of passion for fish keeping and nature conservation' },
-      { title: 'Consulting\nServices', description: 'A business house born out of passion for fish keeping and nature conservation' },
-      { title: 'Project\nManagement', description: 'A business house born out of passion for fish keeping and nature conservation' }
+      { title: 'Architectural\nDesign', description: 'Brief description here' },
+      { title: 'Interior Design\n& Planning', description: 'Brief description here' },
+      { title: 'Consulting\nServices', description: 'Brief description here' },
+      { title: 'Project\nManagement', description: 'Brief description here' }
     ]
   });
 
@@ -41,7 +51,7 @@ const HomeCustomization = () => {
   const [aboutData, setAboutData] = useState({
     badgeText: 'STARTED IN 1991',
     title: 'Where Spaces Inspire, And [Design Comes Alive]',
-    description: 'Whether it\'s your home, office, or a commercial project, we are always dedicated to bringing your vision to life. Our numbers speak better than words:',
+    description: 'Dedicated to bringing your vision to life.',
     buttonText: 'More About Us',
     image: '',
     highlights: [
@@ -67,32 +77,41 @@ const HomeCustomization = () => {
   const fetchAllData = async () => {
     try {
       setLoading(true);
+      setErrorMsg('');
       
-      // Fetch Hero
-      const heroRes = await fetch('http://localhost:5000/api/v1/cms/homepage/hero');
-      const heroJson = await heroRes.json();
-      if (heroJson.success && heroJson.data?.content) {
-        setHeroData(heroJson.data.content);
-        if (heroJson.data.content.backgroundImage) setPreviewBack(`http://localhost:5000${heroJson.data.content.backgroundImage}`);
-        if (heroJson.data.content.frontImage) setPreviewFront(`http://localhost:5000${heroJson.data.content.frontImage}`);
+      const [heroRes, servicesRes, aboutRes] = await Promise.allSettled([
+        apiClient.get('/cms/section/homepage_hero'),
+        apiClient.get('/cms/section/homepage_services'),
+        apiClient.get('/cms/section/homepage_about')
+      ]);
+
+      // Handle Hero Data
+      if (heroRes.status === 'fulfilled' && heroRes.value.data?.data?.content) {
+        const content = heroRes.value.data.data.content;
+        if (Object.keys(content).length > 0) {
+          setHeroData(content);
+          if (content.backgroundImage) setPreviewBack(getAssetUrl(content.backgroundImage));
+          if (content.frontImage) setPreviewFront(getAssetUrl(content.frontImage));
+        }
       }
 
-      // Fetch Services
-      const servicesRes = await fetch('http://localhost:5000/api/v1/cms/homepage/services');
-      const servicesJson = await servicesRes.json();
-      if (servicesJson.success && servicesJson.data?.content) {
-        setServicesData(servicesJson.data.content);
+      // Handle Services Data
+      if (servicesRes.status === 'fulfilled' && servicesRes.value.data?.data?.content) {
+        const content = servicesRes.value.data.data.content;
+        if (Object.keys(content).length > 0) setServicesData(content);
       }
 
-      // Fetch About
-      const aboutRes = await fetch('http://localhost:5000/api/v1/cms/homepage/about');
-      const aboutJson = await aboutRes.json();
-      if (aboutJson.success && aboutJson.data?.content) {
-        setAboutData(aboutJson.data.content);
-        if (aboutJson.data.content.image) setPreviewAbout(`http://localhost:5000${aboutJson.data.content.image}`);
+      // Handle About Data
+      if (aboutRes.status === 'fulfilled' && aboutRes.value.data?.data?.content) {
+        const content = aboutRes.value.data.data.content;
+        if (Object.keys(content).length > 0) {
+          setAboutData(content);
+          if (content.image) setPreviewAbout(getAssetUrl(content.image));
+        }
       }
     } catch (error) {
       console.error('Failed to fetch homepage data:', error);
+      setErrorMsg('Failed to load initial data. Please refresh.');
     } finally {
       setLoading(false);
     }
@@ -133,72 +152,70 @@ const HomeCustomization = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Show preview immediately
+    // Show immediate preview
     const reader = new FileReader();
-    reader.onload = (e) => {
-      if (type === 'background') setPreviewBack(e.target.result);
-      if (type === 'front') setPreviewFront(e.target.result);
-      if (type === 'about') setPreviewAbout(e.target.result);
+    reader.onload = (event) => {
+      if (type === 'background') setPreviewBack(event.target.result);
+      if (type === 'front') setPreviewFront(event.target.result);
+      if (type === 'about') setPreviewAbout(event.target.result);
     };
     reader.readAsDataURL(file);
 
-    // Upload to server
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', file); 
 
     try {
-      const res = await fetch('http://localhost:5000/api/v1/cms/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
+      setErrorMsg('');
       
+      const res = await apiClient.post('/uploads/image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', 
+        },
+      });
+      
+      const { data } = res;
       if (data.success && data.data.url) {
-        if (type === 'background') {
-          setHeroData(prev => ({ ...prev, backgroundImage: data.data.url }));
-        } else if (type === 'front') {
-          setHeroData(prev => ({ ...prev, frontImage: data.data.url }));
-        } else if (type === 'about') {
-          setAboutData(prev => ({ ...prev, image: data.data.url }));
-        }
+        const uploadedUrl = data.data.url;
+        if (type === 'background') setHeroData(prev => ({ ...prev, backgroundImage: uploadedUrl }));
+        else if (type === 'front') setHeroData(prev => ({ ...prev, frontImage: uploadedUrl }));
+        else if (type === 'about') setAboutData(prev => ({ ...prev, image: uploadedUrl }));
       }
     } catch (error) {
       console.error(`Failed to upload ${type} image:`, error);
+      
+      const errorDetail = error.response?.data?.message || 'File must be an image (Max 5MB)';
+      setErrorMsg(`Upload Failed: ${errorDetail}`); 
+      
+      // Revert preview if upload fails
+      if (type === 'background') setPreviewBack(heroData.backgroundImage ? getAssetUrl(heroData.backgroundImage) : '');
+      if (type === 'front') setPreviewFront(heroData.frontImage ? getAssetUrl(heroData.frontImage) : '');
+      if (type === 'about') setPreviewAbout(aboutData.image ? getAssetUrl(aboutData.image) : '');
+    } finally {
+      e.target.value = ''; 
     }
   };
 
   const handleSave = async () => {
     try {
       setSaving(true);
-      let url = '';
+      setErrorMsg('');
+      
+      let url = `/cms/section/homepage_${activeTab}`;
       let payload = null;
 
-      if (activeTab === 'hero') {
-        url = 'http://localhost:5000/api/v1/cms/homepage/hero';
-        payload = { content: heroData };
-      } else if (activeTab === 'services') {
-        url = 'http://localhost:5000/api/v1/cms/homepage/services';
-        payload = { content: servicesData };
-      } else if (activeTab === 'about') {
-        url = 'http://localhost:5000/api/v1/cms/homepage/about';
-        payload = { content: aboutData };
-      }
+      if (activeTab === 'hero') payload = { content: heroData };
+      else if (activeTab === 'services') payload = { content: servicesData };
+      else if (activeTab === 'about') payload = { content: aboutData };
 
-      const res = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
+      const res = await apiClient.put(url, payload);
       
-      if (data.success) {
+      if (res.data.success) {
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
       }
     } catch (error) {
       console.error(`Failed to save ${activeTab} settings:`, error);
+      setErrorMsg(error.response?.data?.message || 'Failed to save changes. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -234,6 +251,12 @@ const HomeCustomization = () => {
         <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-3 animate-fade-in-down">
           <CheckCircle className="w-5 h-5" />
           <span className="font-medium">Changes saved successfully! The homepage has been updated.</span>
+        </div>
+      )}
+
+      {errorMsg && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3 animate-fade-in-down">
+          <span className="font-medium">{errorMsg}</span>
         </div>
       )}
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import apiClient from '../../api/client';
 
 const defaultServicesData = [
   {
@@ -25,8 +26,9 @@ const Services = () => {
   useEffect(() => {
     const fetchServicesData = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/v1/cms/homepage/services');
-        const data = await res.json();
+        const res = await apiClient.get('/cms/section/homepage_services');
+        const { data } = res;
+        
         if (data.success && data.data?.content) {
           setContent(data.data.content);
         }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 import heroback from '../assets/homepage/banner_back.png';
+import apiClient from '../api/client'; 
 
 const Register = () => {
   const navigate = useNavigate();
@@ -29,29 +30,26 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/v1/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await apiClient.post('/auth/register', formData);
+      const { data } = res;
 
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
+      if (!data.success) {
         throw new Error(data.message || 'Registration failed. Please try again.');
       }
 
       setSuccess('Account created successfully! Redirecting to login...');
       
-      // Redirect to login page after a short delay
       setTimeout(() => {
         navigate('/login');
       }, 1500);
 
     } catch (err) {
-      setError(err.message || 'Unable to connect to the server.');
+      const errorMessage = 
+        err.response?.data?.message || 
+        err.message || 
+        'Unable to connect to the server.';
+        
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

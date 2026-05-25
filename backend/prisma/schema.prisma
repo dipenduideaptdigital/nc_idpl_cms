@@ -29,6 +29,7 @@ model User {
   functionalRoles      UserFunctionalRole[]
   adminInvitationsSent AdminInvitation[]
   passwordResetTokens  PasswordResetToken[]
+  media                Media[]              
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt
 
@@ -141,4 +142,41 @@ model AdminInvitation {
   @@index([email])
   @@index([expiresAt])
   @@map("admin_invitations")
+}
+
+model Setting {
+  id        String            @id @default(cuid())
+  key       String            @unique
+  value     Json
+  revisions SettingRevision[] // One-to-many relation to track history
+  updatedAt DateTime          @updatedAt
+
+  @@map("settings")
+}
+
+model SettingRevision {
+  id        String   @id @default(cuid())
+  settingId String
+  setting   Setting  @relation(fields: [settingId], references: [id], onDelete: Cascade)
+  value     Json     // The snapshot of the data at that time
+  actorId   String?  // Who made the change (Optional, just in case system does it)
+  createdAt DateTime @default(now())
+
+  @@index([settingId])
+  @@map("setting_revisions")
+}
+
+model Media {
+  id           String   @id @default(cuid())
+  filename     String   @unique
+  originalName String
+  mimeType     String
+  size         Int
+  url          String   
+  uploadedById String
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
+  createdAt    DateTime @default(now())
+
+  @@index([uploadedById])
+  @@map("media")
 }

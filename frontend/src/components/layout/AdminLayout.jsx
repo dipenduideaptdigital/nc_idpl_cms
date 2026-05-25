@@ -1,20 +1,20 @@
 import React from 'react';
 import { Outlet, NavLink, Navigate, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Globe } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext'; 
 
 const AdminLayout = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('accessToken');
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const { user, isAuthenticated, logoutContext } = useAuth(); 
   const roleSlug = user?.systemRole?.slug?.toUpperCase();
 
-  if (!token || !user || (roleSlug !== 'SUPER_ADMIN' && roleSlug !== 'ADMIN')) {
+  // Role & Auth Validation
+  if (!isAuthenticated || !user || (roleSlug !== 'SUPER_ADMIN' && roleSlug !== 'ADMIN')) {
     return <Navigate to="/login?mode=admin" replace />;
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('user');
+  const handleLogout = async () => {
+    await logoutContext(); 
     navigate('/login?mode=admin');
   };
 

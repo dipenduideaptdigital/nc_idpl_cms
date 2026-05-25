@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, ArrowDown } from 'lucide-react';
-import defaultHeroback from '../../assets/homepage/banner_back.png'
-import defaultHerofront from '../../assets/homepage/banner_front.png'
+import apiClient from '../../api/client'; 
+import defaultHeroback from '../../assets/homepage/banner_back.png';
+import defaultHerofront from '../../assets/homepage/banner_front.png';
 
 const Hero = () => {
   const [content, setContent] = useState(null);
@@ -12,14 +13,17 @@ const Hero = () => {
   useEffect(() => {
     const fetchHeroData = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/v1/cms/homepage/hero');
-        const data = await res.json();
+        const res = await apiClient.get('/cms/section/homepage_hero');
+        const data = res.data; 
+
         if (data.success && data.data?.content) {
           const fetchedContent = data.data.content;
           setContent(fetchedContent);
 
-          const bgUrl = fetchedContent.backgroundImage ? `http://localhost:5000${fetchedContent.backgroundImage}` : null;
-          const frontUrl = fetchedContent.frontImage ? `http://localhost:5000${fetchedContent.frontImage}` : null;
+          const baseUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
+
+          const bgUrl = fetchedContent.backgroundImage ? `${baseUrl}${fetchedContent.backgroundImage}` : null;
+          const frontUrl = fetchedContent.frontImage ? `${baseUrl}${fetchedContent.frontImage}` : null;
 
           const preloadPromises = [];
 
@@ -71,6 +75,7 @@ const Hero = () => {
         setIsLoading(false);
       }
     };
+    
     fetchHeroData();
   }, []);
 

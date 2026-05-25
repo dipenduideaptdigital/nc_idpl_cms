@@ -1,31 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { Check, ArrowUpRight } from 'lucide-react';
-import about_img from "../../assets/homepage/about_img.png"
+import about_img from "../../assets/homepage/about_img.png";
+import apiClient from '../../api/client'; 
 
 const AboutSection = () => {
   const [content, setContent] = useState(null);
   const [aboutImage, setAboutImage] = useState(about_img);
 
   useEffect(() => {
+    let isMounted = true; 
+
     const fetchAboutData = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/v1/cms/homepage/about');
-        const data = await res.json();
+        const res = await apiClient.get('/cms/section/homepage_about');
+        const { data } = res;
+
         if (data.success && data.data?.content) {
           const fetchedContent = data.data.content;
-          setContent(fetchedContent);
+          
+          if (isMounted) {
+            setContent(fetchedContent);
+          }
 
-          const imageUrl = fetchedContent.image ? `http://localhost:5000${fetchedContent.image}` : null;
+          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
+          const imageUrl = fetchedContent.image ? `${serverUrl}${fetchedContent.image}` : null;
+
           if (imageUrl) {
             const img = new Image();
             img.src = imageUrl;
             img.onload = () => {
-              setAboutImage(imageUrl);
+              if (isMounted) setAboutImage(imageUrl);
             };
             img.onerror = () => {
-              setAboutImage(about_img);
+              if (isMounted) setAboutImage(about_img);
             };
-          } else {
+          } else if (isMounted) {
             setAboutImage(about_img);
           }
         }
@@ -33,9 +42,15 @@ const AboutSection = () => {
         console.error('Failed to fetch about content:', error);
       }
     };
+
     fetchAboutData();
+
+    return () => {
+      isMounted = false; // Cleanup function to prevent memory leaks
+    };
   }, []);
 
+  // Safe defaults if content is missing or loading
   const badgeText = content?.badgeText || "STARTED IN 1991";
   const title = content?.title || "Where Spaces Inspire, And [Design Comes Alive]";
   const description = content?.description || "Whether it's your home, office, or a commercial project, we are always dedicated to bringing your vision to life. Our numbers speak better than words:";
@@ -112,7 +127,7 @@ const AboutSection = () => {
             <img 
               src={aboutImage} 
               alt="Modern Residential Exterior" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-opacity duration-500"
               onError={(e) => {
                 if (e.currentTarget.src !== about_img) {
                   e.currentTarget.src = about_img;

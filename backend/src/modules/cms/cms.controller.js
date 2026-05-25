@@ -1,74 +1,42 @@
-import { prisma } from "../../config/db.js";
+import { StatusCodes } from "http-status-codes";
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
 import { sendResponse } from "../../shared/utils/apiResponse.js";
-import { StatusCodes } from "http-status-codes";
+import { getHomepageSection, updateHomepageSection } from "./cms.service.js";
+import { CMS_REGISTRY } from "./cms.registry.js";
+import { AppError } from "../../shared/errors/AppError.js";
 
-export const getHomePageSetting = asyncHandler(async (req, res) => {
-  const { section } = req.params;
+// Fetch Dynamic Section
+export const getDynamicSectionController = asyncHandler(async (req, res) => {
+  const { sectionKey } = req.params;
 
-  const setting = await prisma.homePageSetting.findUnique({
-    where: { section },
-  });
-
-  if (!setting) {
-    return sendResponse({
-      res,
-      statusCode: StatusCodes.OK,
-      message: "Setting not found",
-      data: {
-        section,
-        content: null,
-      }
-    });
+  // Validate if someone is trying to fetch an unregistered/invalid key
+  if (!CMS_REGISTRY[sectionKey]) {
+    throw new AppError("CMS section not found", StatusCodes.NOT_FOUND);
   }
 
-  return sendResponse({
+  const data = await getHomepageSection(sectionKey);
+  
+  sendResponse({
     res,
     statusCode: StatusCodes.OK,
-    message: "Setting retrieved successfully",
-    data: setting
+    message: `Fetched ${sectionKey} successfully`,
+    data,
   });
 });
 
-export const updateHomePageSetting = asyncHandler(async (req, res) => {
-  const { section } = req.params;
+// Update Dynamic Section
+export const updateDynamicSectionController = asyncHandler(async (req, res) => {
+  const { sectionKey } = req.params;
   const { content } = req.body;
+  const actorUserId = req.user.id; // Get the admin who is making the change
 
-  const setting = await prisma.homePageSetting.upsert({
-    where: { section },
-    update: { content },
-    create: { section, content },
-  });
-
-  return sendResponse({
+  // Pass actorUserId to the service
+  const data = await updateHomepageSection(sectionKey, { content }, actorUserId);
+  
+  sendResponse({
     res,
     statusCode: StatusCodes.OK,
-    message: "Setting updated successfully",
-    data: setting
-  });
-});
-
-export const uploadImage = asyncHandler(async (req, res) => {
-  if (!req.file) {
-    return sendResponse({
-      res,
-      statusCode: StatusCodes.BAD_REQUEST,
-      success: false,
-      message: "No file uploaded"
-    });
-  }
-
-  // Construct URL for the uploaded file
-  // In a real app with cloud storage this would be the cloud URL
-  const fileUrl = `/uploads/${req.file.filename}`;
-
-  return sendResponse({
-    res,
-    statusCode: StatusCodes.OK,
-    message: "File uploaded successfully",
-    data: {
-      url: fileUrl,
-      filename: req.file.originalname,
-    }
+    message: `Updated ${sectionKey} successfully`,
+    data,
   });
 });
