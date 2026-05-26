@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 import heroback from '../assets/homepage/banner_back.png';
 import apiClient from '../api/client';
@@ -8,6 +8,8 @@ import { useAuth } from '../context/AuthContext';
 const Login = () => {
   const navigate = useNavigate();
   const { loginContext } = useAuth();
+  const [searchParams] = useSearchParams();
+  const isAdminMode = searchParams.get('mode') === 'admin';
 
   const [formData, setFormData] = useState({
     email: '',
@@ -31,7 +33,8 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await apiClient.post('/auth/login', formData);
+      const endpoint = isAdminMode ? '/auth/admin-login' : '/auth/login';
+      const res = await apiClient.post(endpoint, formData);
       
       const { data } = res;
 
@@ -110,7 +113,7 @@ const Login = () => {
         </div>
 
         <h2 className="text-2xl font-bold tracking-wide text-zinc-100 mb-6 text-center">
-          Welcome Back
+          {isAdminMode ? 'Admin Portal Sign In' : 'Welcome Back'}
         </h2>
 
         {/* Error Callout */}

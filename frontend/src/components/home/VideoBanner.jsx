@@ -1,11 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Play, X } from 'lucide-react';
-import play from '../../assets/homepage/play.jpg'
+import defaultPlay from '../../assets/homepage/play.jpg';
+import apiClient from '../../api/client';
+
 const VideoBanner = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // You can replace this with your actual YouTube video ID
-  const videoId = "ScMzIvxBSi4"; 
+  const [content, setContent] = useState(null);
+  const [coverImg, setCoverImg] = useState(defaultPlay);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchVideoBannerData = async () => {
+      try {
+        const res = await apiClient.get('/cms/section/homepage_video_banner');
+        const { data } = res;
+
+        if (data.success && data.data?.content) {
+          const fetchedContent = data.data.content;
+          if (isMounted) setContent(fetchedContent);
+
+          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
+          
+          if (fetchedContent.image) {
+            const imgUrl = `${serverUrl}${fetchedContent.image}`;
+            const img = new Image();
+            img.src = imgUrl;
+            img.onload = () => {
+              if (isMounted) setCoverImg(imgUrl);
+            };
+            img.onerror = () => {
+              if (isMounted) setCoverImg(defaultPlay);
+            };
+          } else if (isMounted) {
+            setCoverImg(defaultPlay);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch video banner content:', error);
+      }
+    };
+
+    fetchVideoBannerData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const videoId = content?.videoId || "ScMzIvxBSi4";
+  const title = content?.title || "UNLOCK YOUR DREAM \n HOME TODAY!";
+  const description = content?.description || "We encourage clients to actively participate in discussions, share their ideas, preferences, and feedback.";
+
+  const renderTitle = (titleText) => {
+    if (!titleText) return null;
+    return titleText.split(/\\n|\n/).map((line, index, arr) => (
+      <React.Fragment key={index}>
+        {line}
+        {index < arr.length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
 
   return (
     <>
@@ -17,9 +72,14 @@ const VideoBanner = () => {
             
             {/* Background Image */}
             <img 
-              src={play}
+              src={coverImg}
               alt="Office Interior Video Thumbnail" 
               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              onError={(e) => {
+                if (e.currentTarget.src !== defaultPlay) {
+                  e.currentTarget.src = defaultPlay;
+                }
+              }}
             />
             
             {/* Dark Overlays */}
@@ -30,7 +90,7 @@ const VideoBanner = () => {
             <div className="absolute inset-0 flex items-center justify-center">
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center transition-transform hover:scale-110 hover:bg-white/40"
+                className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center transition-transform hover:scale-110 hover:bg-white/40 cursor-pointer"
               >
                 <Play className="w-10 h-10 md:w-12 md:h-12 text-white ml-2" fill="currentColor" />
               </button>
@@ -42,15 +102,14 @@ const VideoBanner = () => {
               {/* Headlines */}
               <div className="flex-1">
                 <h2 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold text-white leading-[1.1] tracking-tight">
-                  UNLOCK YOUR DREAM <br />
-                  HOME TODAY!
+                  {renderTitle(title)}
                 </h2>
               </div>
               
               {/* Description Paragraph */}
               <div className="md:w-1/3 md:mb-4">
                 <p className="text-gray-200 text-sm md:text-base font-light leading-relaxed max-w-sm">
-                  We encourage clients to actively participate in discussions, share their ideas, preferences, and feedback.
+                  {description}
                 </p>
               </div>
               
@@ -66,7 +125,7 @@ const VideoBanner = () => {
           
           <button 
             onClick={() => setIsModalOpen(false)}
-            className="absolute top-6 right-6 md:top-10 md:right-10 text-white/70 hover:text-white transition-colors"
+            className="absolute top-6 right-6 md:top-10 md:right-10 text-white/70 hover:text-white transition-colors cursor-pointer"
           >
             <X className="w-10 h-10" />
           </button>

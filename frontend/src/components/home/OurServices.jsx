@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
-import service from '../../assets/homepage/service.png'
-import counting from '../../assets/homepage/counting.png'
-const servicesList = [
+import defaultServiceImg from '../../assets/homepage/service.png';
+import defaultCountingImg from '../../assets/homepage/counting.png';
+import apiClient from '../../api/client';
+
+const defaultServicesList = [
   { id: '01', title: 'Residential Interior Design' },
   { id: '02', title: 'Outdoor & Landscape Design' },
   { id: '03', title: 'Interior Design Consultation' },
@@ -11,7 +13,7 @@ const servicesList = [
   { id: '06', title: 'Interior 2D/3D Layouts' },
 ];
 
-const statsData = [
+const defaultStatsData = [
   { value: '26+', title: 'YEARS EXPERIENCE', description: 'Improving homes with expert craftsmanship for years' },
   { value: '100', title: 'PROJECTS DONE', description: 'Over 250 successful projects delivered with quality and care' },
   { value: '100', title: 'SATISFIED CUSTOMER', description: 'Our team of 30 experts ensures top-quality results' },
@@ -20,6 +22,94 @@ const statsData = [
 
 const OurServices = () => {
   const [activeService, setActiveService] = useState('01');
+  const [content, setContent] = useState(null);
+  const [serviceImg, setServiceImg] = useState(defaultServiceImg);
+  const [countingImg, setCountingImg] = useState(defaultCountingImg);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchServicesData = async () => {
+      try {
+        const res = await apiClient.get('/cms/section/homepage_our_services');
+        const { data } = res;
+
+        if (data.success && data.data?.content) {
+          const fetchedContent = data.data.content;
+          if (isMounted) setContent(fetchedContent);
+
+          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
+          
+          if (fetchedContent.image) {
+            const mainUrl = `${serverUrl}${fetchedContent.image}`;
+            const img1 = new Image();
+            img1.src = mainUrl;
+            img1.onload = () => {
+              if (isMounted) setServiceImg(mainUrl);
+            };
+            img1.onerror = () => {
+              if (isMounted) setServiceImg(defaultServiceImg);
+            };
+          } else if (isMounted) {
+            setServiceImg(defaultServiceImg);
+          }
+
+          if (fetchedContent.bottomImage) {
+            const bottomUrl = `${serverUrl}${fetchedContent.bottomImage}`;
+            const img2 = new Image();
+            img2.src = bottomUrl;
+            img2.onload = () => {
+              if (isMounted) setCountingImg(bottomUrl);
+            };
+            img2.onerror = () => {
+              if (isMounted) setCountingImg(defaultCountingImg);
+            };
+          } else if (isMounted) {
+            setCountingImg(defaultCountingImg);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch our services content:', error);
+      }
+    };
+
+    fetchServicesData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const badgeText = content?.badgeText || "OUR SERVICES";
+  const title = content?.title || "Explore Our [Comprehensive Interior Design] Services";
+  const description = content?.description || "We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.";
+  const servicesList = content?.services || defaultServicesList;
+  const statsData = content?.stats || defaultStatsData;
+
+  const renderTitle = (titleText) => {
+    if (!titleText) return null;
+    const parts = titleText.split(/(\[[^\]]+\])/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('[') && part.endsWith(']')) {
+        return (
+          <span key={index} className="text-primary">
+            {part.slice(1, -1).split(/\\n|\n/).map((line, lIdx, arr) => (
+              <React.Fragment key={lIdx}>
+                {line}
+                {lIdx < arr.length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </span>
+        );
+      }
+      return part.split(/\\n|\n/).map((line, lIdx, arr) => (
+        <React.Fragment key={lIdx}>
+          {line}
+          {lIdx < arr.length - 1 && <br />}
+        </React.Fragment>
+      ));
+    });
+  };
 
   return (
     <section className="py-24 bg-white overflow-hidden">
@@ -32,7 +122,7 @@ const OurServices = () => {
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
-                OUR SERVICES
+                {badgeText}
               </span>
             </div>
           </div>
@@ -40,10 +130,10 @@ const OurServices = () => {
           {/* Right: Heading & Description */}
           <div className="fadeInRight">
             <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
-              Explore Our <span className="text-primary">Comprehensive Interior Design</span> Services
+              {renderTitle(title)}
             </h2>
             <p className="text-gray-500 max-w-3xl font-light text-sm leading-relaxed">
-              We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.
+              {description}
             </p>
           </div>
         </div>
@@ -54,9 +144,14 @@ const OurServices = () => {
           {/* Left: Image with Overlay */}
           <div className="relative rounded-[2rem] overflow-hidden h-[500px] shadow-2xl fadeInLeft">
             <img 
-              src={service} 
+              src={serviceImg} 
               alt="Interior Design Service" 
               className="w-full h-full object-cover"
+              onError={(e) => {
+                if (e.currentTarget.src !== defaultServiceImg) {
+                  e.currentTarget.src = defaultServiceImg;
+                }
+              }}
             />
             {/* Dark overlay banner at the bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
@@ -68,18 +163,19 @@ const OurServices = () => {
 
           {/* Right: Services List */}
           <div className="flex flex-col fadeInRight">
-            {servicesList.map((service) => {
-              const isActive = activeService === service.id;
+            {servicesList.map((service, index) => {
+              const serviceId = service.id || `0${index + 1}`;
+              const isActive = activeService === serviceId;
               
               return (
                 <div 
-                  key={service.id}
+                  key={index}
                   className="group flex items-center justify-between py-6 border-b border-gray-200 cursor-pointer"
-                  onMouseEnter={() => setActiveService(service.id)}
+                  onMouseEnter={() => setActiveService(serviceId)}
                 >
                   <div className="flex items-center space-x-8">
                     <span className="text-lg font-medium text-gray-600 w-6">
-                      {service.id}
+                      {serviceId}
                     </span>
                     <span className="text-xl font-bold text-gray-900">
                       {service.title}
@@ -117,11 +213,15 @@ const OurServices = () => {
 
         {/* Bottom Section: 3D Floor Plan Image */}
         <div className="w-full flex justify-center opal-move-up">
-          {/* Using an architectural 3D rendering image from Unsplash as placeholder */}
           <img 
-            src={counting}
+            src={countingImg}
             alt="3D Floor Plan Rendering" 
             className="w-full max-w-5xl rounded-3xl object-cover"
+            onError={(e) => {
+              if (e.currentTarget.src !== defaultCountingImg) {
+                e.currentTarget.src = defaultCountingImg;
+              }
+            }}
           />
         </div>
 

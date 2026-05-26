@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
+import apiClient from '../../api/client';
 
-const teamMembers = [
+const defaultTeamMembers = [
   { id: '01', name: 'Mark Jackson', role: 'Co-Founder & CEO' },
   { id: '02', name: 'Valeria Novikova', role: 'Lighting Specialist' },
   { id: '03', name: 'Alex Podzemsky', role: 'Graphics Designer' },
@@ -11,6 +12,78 @@ const teamMembers = [
 
 const Team = () => {
   const [activeMember, setActiveMember] = useState('01');
+  const [content, setContent] = useState(null);
+  const [teamImg, setTeamImg] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchTeamData = async () => {
+      try {
+        const res = await apiClient.get('/cms/section/homepage_team');
+        const { data } = res;
+
+        if (data.success && data.data?.content) {
+          const fetchedContent = data.data.content;
+          if (isMounted) setContent(fetchedContent);
+
+          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
+          
+          if (fetchedContent.image) {
+            const imgUrl = `${serverUrl}${fetchedContent.image}`;
+            const img = new Image();
+            img.src = imgUrl;
+            img.onload = () => {
+              if (isMounted) setTeamImg(imgUrl);
+            };
+            img.onerror = () => {
+              if (isMounted) setTeamImg('');
+            };
+          } else if (isMounted) {
+            setTeamImg('');
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch team content:', error);
+      }
+    };
+
+    fetchTeamData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const badgeText = content?.badgeText || "AMAZING DESIGN TEAM";
+  const title = content?.title || "Meet The [Experts Our \\n Interior] Designers";
+  const description = content?.description || "Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors";
+  const teamMembers = content?.members || defaultTeamMembers;
+
+  const renderTitle = (titleText) => {
+    if (!titleText) return null;
+    const parts = titleText.split(/(\[[^\]]+\])/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('[') && part.endsWith(']')) {
+        return (
+          <span key={index} className="text-primary">
+            {part.slice(1, -1).split(/\\n|\n/).map((line, lIdx, arr) => (
+              <React.Fragment key={lIdx}>
+                {line}
+                {lIdx < arr.length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </span>
+        );
+      }
+      return part.split(/\\n|\n/).map((line, lIdx, arr) => (
+        <React.Fragment key={lIdx}>
+          {line}
+          {lIdx < arr.length - 1 && <br />}
+        </React.Fragment>
+      ));
+    });
+  };
 
   return (
     <section className="py-15 bg-white overflow-hidden">
@@ -23,7 +96,7 @@ const Team = () => {
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
-                AMAZING DESIGN TEAM
+                {badgeText}
               </span>
             </div>
           </div>
@@ -31,10 +104,10 @@ const Team = () => {
           {/* Right: Heading & Description */}
           <div className="max-w-2xl fadeInRight">
             <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
-              Meet The <span className="text-primary">Experts Our <br /> Interior</span> Designers
+              {renderTitle(title)}
             </h2>
             <p className="text-gray-500 font-light text-sm leading-relaxed max-w-lg">
-              Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors
+              {description}
             </p>
           </div>
         </div>
@@ -42,27 +115,32 @@ const Team = () => {
         {/* Content Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           
-          {/* Left: Large Placeholder */}
-          <div className="w-full h-[500px] md:h-[600px] bg-slate-300 rounded-[2.5rem] shadow-lg fadeInLeft">
-           
-          </div>
+          {/* Left: Team Photo / Slate Placeholder */}
+          {teamImg ? (
+            <div className="w-full h-[500px] md:h-[600px] rounded-[2.5rem] overflow-hidden shadow-lg fadeInLeft">
+              <img src={teamImg} alt="Interior Design Team" className="w-full h-full object-cover" />
+            </div>
+          ) : (
+            <div className="w-full h-[500px] md:h-[600px] bg-slate-300 rounded-[2.5rem] shadow-lg fadeInLeft"></div>
+          )}
 
           {/* Right: Team Members List */}
           <div className="flex flex-col border-t border-gray-200 fadeInRight">
-            {teamMembers.map((member) => {
-              const isActive = activeMember === member.id;
+            {teamMembers.map((member, index) => {
+              const memberId = member.id || `0${index + 1}`;
+              const isActive = activeMember === memberId;
               
               return (
                 <div 
-                  key={member.id}
+                  key={index}
                   className={`group flex items-center justify-between py-6 border-b cursor-pointer transition-colors ${
                     isActive ? 'border-primary border-b-2 border-t-2 -mt-[1px] z-10' : 'border-gray-200'
                   }`}
-                  onMouseEnter={() => setActiveMember(member.id)}
+                  onMouseEnter={() => setActiveMember(memberId)}
                 >
                   <div className="flex items-center gap-6 sm:gap-12">
                     <span className="text-sm font-medium text-gray-600 w-6">
-                      {member.id}
+                      {memberId}
                     </span>
                     <span className="text-lg sm:text-xl font-bold text-gray-900 w-40 sm:w-48">
                       {member.name}
