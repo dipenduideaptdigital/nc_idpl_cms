@@ -12,8 +12,6 @@ export const upsertSetting = async (key, value, actorUserId = null) => {
       where: { key },
     });
 
-    // If it already exists, archive the OLD value into the Revision history
-    // This ensures we always have the exact snapshot of what it was before this update
     if (existingSetting) {
       await tx.settingRevision.create({
         data: {
@@ -24,7 +22,6 @@ export const upsertSetting = async (key, value, actorUserId = null) => {
       });
     }
 
-    // Now perform the upsert to save the NEW value in the main table
     const updatedSetting = await tx.setting.upsert({
       where: { key },
       update: { value },

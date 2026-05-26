@@ -1,39 +1,40 @@
 import { prisma } from "../../config/db.js";
 import { AppError } from "../../shared/errors/AppError.js";
 import { StatusCodes } from "http-status-codes";
-import fs from "fs/promises";
 import { logger } from "../../config/logger.js";
-
-const cleanupFile = async (filepath) => {
-  try {
-    await fs.unlink(filepath);
-  } catch (error) {
-    logger.error(`Failed to cleanup orphaned file: ${filepath}`, error);
-  }
-};
+import { saveBufferToStorage, deleteMediaFile } from "../../shared/services/storage.service.js";
+import { processImageBuffer } from "../../shared/utils/imageProcessor.js";
 
 export const saveUploadedFile = async (file, userId) => {
-  if (!file) {
-    throw new AppError("No file provided", StatusCodes.BAD_REQUEST);
+  if (!file || !file.buffer) {
+    throw new AppError("No file buffer provided", StatusCodes.BAD_REQUEST);
   }
 
-  const fileUrl = `/uploads/${file.filename}`;
+  const processed = await processImageBuffer(file.buffer, file.originalname);
+
+  const mainUrl = `/uploads/${processed.filename}`;
+  const thumbUrl = `/uploads/thumbs/${processed.thumbFilename}`;
+
+  await saveBufferToStorage(processed.mainBuffer, mainUrl);
+  await saveBufferToStorage(processed.thumbBuffer, thumbUrl);
 
   try {
     const media = await prisma.media.create({
       data: {
-        filename: file.filename,
+        filename: processed.filename,
         originalName: file.originalname,
-        mimeType: file.mimetype,
-        size: file.size,
-        url: fileUrl,
+        mimeType: processed.mimeType,
+        size: processed.finalSize,
+        url: mainUrl,
+        thumbnailUrl: thumbUrl,
         uploadedById: userId,
       },
     });
 
     return media;
   } catch (error) {
-    await cleanupFile(file.path);
+    await deleteMediaFile(mainUrl);
+    await deleteMediaFile(thumbUrl);
     throw new AppError("Failed to save file metadata", StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
@@ -44,15 +45,13 @@ export const saveMultipleFiles = async (files, userId) => {
   }
 
   const savedMedia = [];
-  
   for (const file of files) {
     try {
       const media = await saveUploadedFile(file, userId);
       savedMedia.push(media);
     } catch (error) {
-      logger.error(`Failed to process file ${file.originalname}`);
+      logger.error(`Failed to process file ${file.originalname}`, error);
     }
   }
-
   return savedMedia;
 };

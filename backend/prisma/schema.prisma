@@ -14,6 +14,12 @@ enum UserStatus {
   PENDING
 }
 
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 model User {
   id                   String               @id @default(cuid())
   name                 String
@@ -33,6 +39,10 @@ model User {
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt
 
+  pagesAuthored        Page[]         @relation("PageAuthor")
+  pagesUpdated         Page[]         @relation("PageUpdatedBy")
+  pageRevisions        PageRevision[]
+  
   @@map("users")
 }
 
@@ -167,16 +177,75 @@ model SettingRevision {
 }
 
 model Media {
-  id           String   @id @default(cuid())
-  filename     String   @unique
-  originalName String
-  mimeType     String
-  size         Int
-  url          String   
-  uploadedById String
-  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
-  createdAt    DateTime @default(now())
+  id              String    @id @default(cuid())
+  filename        String    @unique
+  originalName    String
+  mimeType        String    
+  size            Int       
+  url             String    
+  thumbnailUrl    String?   
+  
+  uploadedById    String
+  uploadedBy      User      @relation(fields: [uploadedById], references: [id])
+  featuredInPages Page[]    // Relation to pages where this media is the featured image
+  
+  createdAt       DateTime  @default(now())
+  deletedAt       DateTime? 
 
   @@index([uploadedById])
+  @@index([deletedAt])
   @@map("media")
+}
+
+model Page {
+  id                String      @id @default(cuid())
+  title             String
+  slug              String      @unique 
+  excerpt           String?     @db.Text
+  content           Json        
+  status            PageStatus  @default(DRAFT)
+  template          String      @default("default") 
+  
+  metaTitle         String?
+  metaDescription   String?     @db.Text
+  metaKeywords      String?     @db.Text
+  
+  featuredImageId   String?
+  featuredImage     Media?      @relation(fields: [featuredImageId], references: [id])
+  
+  publishedAt       DateTime?   
+  
+  authorId          String
+  author            User        @relation("PageAuthor", fields: [authorId], references: [id])
+
+  updatedById       String?
+  updatedBy         User?       @relation("PageUpdatedBy", fields: [updatedById], references: [id])
+  
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  
+  deletedAt         DateTime?   
+
+  revisions         PageRevision[]
+
+  @@index([status])
+  @@index([publishedAt])
+  @@index([deletedAt])
+  @@index([status, publishedAt])
+  @@map("pages")
+}
+
+model PageRevision {
+  id          String   @id @default(cuid())
+  pageId      String
+  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  snapshot    Json     
+  
+  actorId     String?  
+  actor       User?    @relation(fields: [actorId], references: [id]) // Relational tracking for Audit UI
+  
+  createdAt   DateTime @default(now())
+
+  @@index([pageId])
+  @@map("page_revisions")
 }
