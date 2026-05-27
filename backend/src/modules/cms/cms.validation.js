@@ -1,182 +1,195 @@
 import { z } from "zod";
 
+// Hero Section
 export const heroSchema = z.object({
   content: z.object({
-    titleLine1: z.string().max(100),
-    titleLine2: z.string().max(100),
-    subtitle: z.string().max(500),
-    buttonText: z.string().max(50),
-    badgeText: z.string().max(50),
-    glassCardNumber: z.string().max(20),
-    glassCardText1: z.string().max(100),
-    glassCardText2: z.string().max(100),
+    titleLine1: z.string().max(100).optional(),
+    titleLine2: z.string().max(100).optional(),
+    subtitle: z.string().max(500).optional(),
+    buttonText: z.string().max(50).optional(),
+    badgeText: z.string().max(50).optional(),
+    glassCardNumber: z.string().max(20).optional(),
+    glassCardText1: z.string().max(100).optional(),
+    glassCardText2: z.string().max(100).optional(),
     backgroundImage: z.string().optional(),
     frontImage: z.string().optional(),
   }),
 });
 
+// Services Section
 export const servicesSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(150),
-    description: z.string().max(500),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
+    description: z.string().max(500).optional(),
     services: z.array(
       z.object({
-        title: z.string().max(100),
-        description: z.string().max(300),
+        title: z.string().max(100).optional(),
+        description: z.string().max(300).optional(),
       })
-    ).max(4, "Maximum 4 services allowed"),
+    ).max(4).optional(),
   }),
 });
 
+//  About Section
 export const aboutSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(150),
-    description: z.string().max(500),
-    buttonText: z.string().max(50),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
+    description: z.string().max(1000).optional(),
+    buttonText: z.string().max(50).optional(),
     image: z.string().optional(),
-    highlights: z.array(z.string().max(100)).max(4),
+    highlights: z.array(z.string().max(100)).max(6).optional(),
   }),
 });
 
+//  Our Services Section
 export const ourServicesSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(150),
-    description: z.string().max(500),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
+    description: z.string().max(1000).optional(),
     services: z.array(
       z.object({
-        id: z.string().max(10),
-        title: z.string().max(100),
+        id: z.union([z.string(), z.number()]).optional(),
+        title: z.string().max(100).optional(),
       })
-    ).max(6),
+    ).optional(),
     stats: z.array(
       z.object({
-        value: z.string().max(20),
-        title: z.string().max(50),
-        description: z.string().max(200),
+        value: z.string().max(20).optional(),
+        title: z.string().max(100).optional(),
+        description: z.string().max(300).optional(),
       })
-    ).max(4),
-    image: z.string().optional().nullable(),
-    bottomImage: z.string().optional().nullable(),
+    ).optional(),
+    image: z.string().optional(),
+    bottomImage: z.string().optional(),
   }),
 });
 
+//  How We Work Section
 export const howWeWorkSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(150),
-    description: z.string().max(500),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
+    description: z.string().max(1000).optional(),
     steps: z.array(
       z.object({
-        id: z.string().max(10),
-        title: z.string().max(100),
-        description: z.string().max(300),
+        id: z.union([z.string(), z.number()]).optional(),
+        title: z.string().max(100).optional(),
+        description: z.string().max(500).optional(),
       })
-    ).max(4),
-    bottomText: z.string().max(200),
-    bottomLinkText: z.string().max(50),
-    bottomLinkUrl: z.string().max(200),
+    ).optional(),
+    bottomText: z.string().max(200).optional(),
+    bottomLinkText: z.string().max(50).optional(),
+    bottomLinkUrl: z.string().max(500).optional(),
   }),
 });
 
+//  Our Projects Section
 export const ourProjectsSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(150),
-    description: z.string().max(500),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
+    description: z.string().max(1000).optional(),
     projects: z.array(
       z.object({
-        id: z.union([z.number(), z.string()]),
-        category: z.string().max(50),
-        title: z.string().max(100),
-        description: z.string().max(300),
-        image: z.string().optional().nullable(),
+        id: z.union([z.string(), z.number()]).optional(),
+        category: z.string().max(50).optional(),
+        title: z.string().max(100).optional(),
+        description: z.string().max(500).optional(),
+        image: z.string().optional(),
       })
-    ).max(5),
-    bottomImage: z.string().optional().nullable(),
+    ).optional(),
+    bottomImage: z.string().optional(),
   }),
 });
 
+//  Panoramas Section
 export const panoramasSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(150),
-    image: z.string().optional().nullable(),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
+    image: z.string().optional(),
   }),
 });
 
+//  Team Section
 export const teamSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(150),
-    description: z.string().max(500),
-    image: z.string().optional().nullable(),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
+    description: z.string().max(1000).optional(),
+    image: z.string().optional(),
     members: z.array(
       z.object({
-        id: z.string().max(10),
-        name: z.string().max(100),
-        role: z.string().max(100),
+        id: z.union([z.string(), z.number()]).optional(),
+        name: z.string().max(100).optional(),
+        role: z.string().max(100).optional(),
       })
-    ).max(5),
+    ).optional(),
   }),
 });
 
+// Testimonials Section
 export const testimonialsSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(150),
-    description: z.string().max(500),
-    image: z.string().optional().nullable(),
-    ratingValue: z.string().max(10),
-    reviewCount: z.string().max(20),
-    conceptText: z.string().max(300),
-    mainQuote: z.string().max(500),
-    authorImage: z.string().optional().nullable(),
-    authorName: z.string().max(100),
-    authorRole: z.string().max(100),
-    bottomText: z.string().max(200),
-    logos: z.array(z.string().max(50)).max(5),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
+    description: z.string().max(1000).optional(),
+    image: z.string().optional(),
+    ratingValue: z.string().max(10).optional(),
+    reviewCount: z.string().max(50).optional(),
+    conceptText: z.string().max(500).optional(),
+    mainQuote: z.string().max(1000).optional(),
+    authorImage: z.string().optional(),
+    authorName: z.string().max(100).optional(),
+    authorRole: z.string().max(100).optional(),
+    bottomText: z.string().max(200).optional(),
+    logos: z.array(z.string().max(100)).optional(),
   }),
 });
 
+//  Video Banner Section
 export const videoBannerSchema = z.object({
   content: z.object({
-    videoId: z.string().max(50),
-    image: z.string().optional().nullable(),
-    title: z.string().max(150),
-    description: z.string().max(500),
+    videoId: z.string().max(50).optional(), 
+    image: z.string().optional(),
+    title: z.string().max(150).optional(),
+    description: z.string().max(1000).optional(),
   }),
 });
 
+// Blog Section
 export const blogSectionSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(150),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
     posts: z.array(
       z.object({
-        id: z.union([z.number(), z.string()]),
-        author: z.string().max(100),
-        title: z.string().max(200),
-        excerpt: z.string().max(400),
-        image: z.string().optional().nullable(),
+        id: z.union([z.string(), z.number()]).optional(),
+        author: z.string().max(100).optional(),
+        title: z.string().max(200).optional(),
+        excerpt: z.string().max(500).optional(),
+        image: z.string().optional(),
       })
-    ).max(3),
+    ).optional(),
   }),
 });
 
+// Gallery Section
 export const gallerySchema = z.object({
   content: z.object({
-    bgText: z.string().max(50),
-    images: z.array(z.string()).max(6),
+    bgText: z.string().max(50).optional(),
+    images: z.array(z.string()).max(10).optional(),
   }),
 });
 
+// CTA Section
 export const ctaSchema = z.object({
   content: z.object({
-    badgeText: z.string().max(50),
-    title: z.string().max(200),
-    buttonText: z.string().max(50),
+    badgeText: z.string().max(50).optional(),
+    title: z.string().max(150).optional(),
+    buttonText: z.string().max(50).optional(),
   }),
 });

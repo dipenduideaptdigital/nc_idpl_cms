@@ -14,7 +14,7 @@ import {
   ctaSchema
 } from "./cms.validation.js";
 
-//  Maps frontend section keys to backend validation schemas
+// Maps frontend section keys to backend validation schemas
 export const CMS_REGISTRY = {
   "homepage_hero": heroSchema,
   "homepage_services": servicesSchema,
