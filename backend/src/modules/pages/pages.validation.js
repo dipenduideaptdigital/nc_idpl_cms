@@ -7,6 +7,7 @@ const RESERVED_SLUGS = [
   "home", "index", "404", "500"
 ];
 
+//dynamic system design layout templates routing blocks
 export const ALLOWED_TEMPLATES = [
   "default",
   "landing-page",
@@ -15,7 +16,7 @@ export const ALLOWED_TEMPLATES = [
   "about-page"
 ];
 
-// Headless Content Engine Block Structure Definition
+
 const heroBlockSchema = z.object({
   type: z.literal("hero"),
   data: z.record(z.any()).default({}), 
@@ -36,18 +37,33 @@ const testimonialBlockSchema = z.object({
   data: z.record(z.any()).default({}),
 });
 
+
+const contactFormBlockSchema = z.object({
+  type: z.literal("contactForm"),
+  data: z.object({
+    formId: z.string().cuid("Block content specification failure: Dynamic rendering requires explicit reference binding to an active contact form engine database instance unique identity format signature."),
+    formTitle: z.string().trim().max(100).optional().default("Get in Touch"),
+    submitButtonText: z.string().trim().max(50).optional().default("Submit Inquiry"),
+    redirectPath: z.string().trim().max(250).refine((path) => path.startsWith("/"), {
+      message: "Success redirect target layout routing context must be a valid internal system relative path node string structure loop tracking pattern."
+    }).optional()
+  }).strict() 
+});
+
+// validation gates execution
 const blockSchema = z.discriminatedUnion("type", [
   heroBlockSchema,
   richTextBlockSchema,
   galleryBlockSchema,
   testimonialBlockSchema,
+  contactFormBlockSchema,
 ]);
 
 const pageContentSchema = z.object({
   blocks: z.array(blockSchema).default([]),
 }).default({ blocks: [] });
 
-// Create Validation Schema
+
 export const createPageSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(150, "Title cannot exceed 150 characters"),
   
@@ -63,51 +79,51 @@ export const createPageSchema = z.object({
   content: pageContentSchema,
   status: z.enum(["DRAFT", "PUBLISHED"]).default("DRAFT").optional(),
   
-  // Whitelist Template Security
+  //Template Design Execution Hard Security Control
   template: z.enum(ALLOWED_TEMPLATES, {
     errorMap: () => ({ message: "Selected layout design template is not registered or supported by system." })
   }).default("default").optional(),
 
-  parentId: z.string().cuid("Invalid Parent ID structure").optional().nullable(),
-  menuOrder: z.coerce.number().int("Menu order must be an integer").default(0).optional(),
+  parentId: z.string().cuid("Invalid Parent ID structural trace context format identifier").optional().nullable(),
+  menuOrder: z.coerce.number().int("Menu display re-ordering parameter metrics must remain a valid integer").default(0).optional(),
   showInMenu: z.boolean().default(true).optional(),
   
   metaTitle: z.string().trim().max(100, "Meta title cannot exceed 100 characters").optional().nullable(),
   metaDescription: z.string().trim().max(500, "Meta description cannot exceed 500 characters").optional().nullable(),
   metaKeywords: z.string().trim().max(300, "Meta keywords cannot exceed 300 characters").optional().nullable(),
   
-  featuredImageId: z.string().cuid("Invalid Media Asset ID mapping").optional().nullable(),
+  featuredImageId: z.string().cuid("Invalid Media Asset digital asset cryptographic unique identity mapping").optional().nullable(),
 }).strict();
 
-// Core Update Validation Schema
+// Core Update Operations Pipeline Matrix Verification Schema 
 export const updatePageSchema = createPageSchema.partial().extend({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
 });
 
-// Admin Filter Matrix & Pagination Configuration Schema
+// Admin Filter Matrix & Pagination Configuration Management Schema Lookups
 export const pageQuerySchema = z.object({
-  page: z.coerce.number().int().min(1, "Page must be greater than 0").default(1),
-  limit: z.coerce.number().int().min(1, "Limit must be at least 1").max(100, "Maximum limit allowed is 100").default(10),
+  page: z.coerce.number().int().min(1, "Page tracking parameter must remain greater than 0").default(1),
+  limit: z.coerce.number().int().min(1, "Pagination capacity constraint limit must register at least 1 data node").max(100, "Maximum network extraction block limit is capped at 100 records buffer").default(10),
   search: z.string().trim().optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
   template: z.enum(ALLOWED_TEMPLATES).optional(), 
-  authorId: z.string().cuid("Invalid Author filter constraint").optional(),
-  parentId: z.string().cuid("Invalid Parent filter constraint").optional().nullable(), 
+  authorId: z.string().cuid("Invalid corporate author query sequence filter constraint token").optional(),
+  parentId: z.string().cuid("Invalid branch structural parent filter query identity token parameter").optional().nullable(), 
   sortBy: z.enum(["createdAt", "updatedAt", "publishedAt", "title", "menuOrder"]).default("createdAt"),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
 
-// Dynamic Route Param hard security locks
+// Dynamic Route Param hard security locks protecting structural transactional endpoints layer
 export const pageIdParamSchema = z.object({
-  id: z.string().cuid("Invalid cryptographic or transaction identity format mapped"),
+  id: z.string().cuid("Invalid cryptographic database record or unique execution structural transaction identifier identity format mapped"),
 });
 
 export const pageSlugParamSchema = z.object({
-  slug: z.string().min(1, "Absolute layout path resource identity tracking failed"),
+  slug: z.string().min(1, "Absolute layout path relative network resource endpoint tracking resource tracking signature processing failed"),
 });
 
-// Administrative Revision Version Control Subsystem Parameters Match Locking
+// Administrative Revision Version Control Subsystem Parameters Match Integrity Check Locking Loops
 export const pageRevisionParamSchema = z.object({
-  id: z.string().cuid("Invalid Page context ID template mapping"),
-  revisionId: z.string().cuid("Invalid cryptographic targeted Revision snapshot identity format")
+  id: z.string().cuid("Invalid relational Page context unique validation model master layout ID template mapping token"),
+  revisionId: z.string().cuid("Invalid historical version revision database checkpoint identifier cryptographic targeted snapshot identity token format")
 });
