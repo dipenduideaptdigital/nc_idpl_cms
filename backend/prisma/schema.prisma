@@ -200,9 +200,17 @@ model Media {
 model Page {
   id                String      @id @default(cuid())
   title             String
-  slug              String      @unique 
+  slug              String     
+  fullPath          String      @unique 
+  
+  parentId          String?
+  parent            Page?       @relation("PageHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children          Page[]      @relation("PageHierarchy")
+  menuOrder         Int         @default(0)
+  showInMenu        Boolean     @default(true)
+
   excerpt           String?     @db.Text
-  content           Json        
+  content           Json        // Block-based structured data
   status            PageStatus  @default(DRAFT)
   template          String      @default("default") 
   
@@ -228,6 +236,9 @@ model Page {
 
   revisions         PageRevision[]
 
+  @@unique([parentId, slug, deletedAt]) 
+  @@index([fullPath]) // For fast routing
+  @@index([parentId]) // For fast tree building
   @@index([status])
   @@index([publishedAt])
   @@index([deletedAt])

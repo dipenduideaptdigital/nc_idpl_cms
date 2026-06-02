@@ -6,14 +6,43 @@ import isEqual from "lodash/isEqual.js";
 import * as repo from "./pages.repository.js";
 import { prisma } from "../../config/db.js";
 
-const ensureUniqueSlug = async (baseSlug, excludeId = null) => {
+const MAX_HIERARCHY_DEPTH = 20;
+
+// Guarantees uniqueness among siblings sharing the same parent
+const ensureUniqueSiblingSlug = async (parentId, baseSlug, excludeId = null) => {
   let uniqueSlug = baseSlug;
   let counter = 1;
-  while (await repo.checkSlugExists(uniqueSlug, excludeId)) {
+  while (await repo.checkSiblingSlugExists(parentId, uniqueSlug, excludeId)) {
     uniqueSlug = `${baseSlug}-${counter}`;
     counter++;
   }
   return uniqueSlug;
+};
+
+// Generates the absolute path by concatenating the parent's path
+const buildFullPath = async (parentId, slug) => {
+  if (!parentId) return `/${slug}`;
+  
+  const parent = await repo.findPageById(parentId);
+  if (!parent) throw new AppError("Parent page not found", StatusCodes.NOT_FOUND);
+  
+  const combined = `${parent.fullPath}/${slug}`;
+  return combined.replace(/\/\//g, '/'); // Prevent double slashes
+};
+
+// Recursively updates the fullPath of all descendant pages if a parent's path changes
+const cascadeFullPathUpdate = async (parentId, newParentFullPath, actorId) => {
+  const children = await prisma.page.findMany({ 
+    where: { parentId, deletedAt: null } 
+  });
+  
+  for (const child of children) {
+    const newFullPath = `${newParentFullPath}/${child.slug}`.replace(/\/\//g, '/');
+    
+    // Update child without generating a new content revision, just updating the path
+    await repo.updatePageWithRevision(child.id, { fullPath: newFullPath, updatedById: actorId }, null, actorId);
+    await cascadeFullPathUpdate(child.id, newFullPath, actorId);
+  }
 };
 
 const validateFeaturedImage = async (mediaId) => {
@@ -24,9 +53,38 @@ const validateFeaturedImage = async (mediaId) => {
   if (!media) throw new AppError("Featured image not found or deleted", StatusCodes.BAD_REQUEST);
 };
 
+//  Prevents Infinite Circular References using O(1) Set detection
+const validateHierarchy = async (pageId, newParentId) => {
+  if (!newParentId) return; 
+
+  if (pageId === newParentId) {
+    throw new AppError("A page cannot be its own parent.", StatusCodes.CONFLICT);
+  }
+
+  let currentParentId = newParentId;
+  let depth = 0;
+  const visited = new Set([pageId]);
+
+  while (currentParentId) { 
+    if (visited.has(currentParentId)) {
+      throw new AppError("Circular dependency detected. You cannot nest a page inside its own descendant.", StatusCodes.CONFLICT);
+    }
+    
+    if (depth >= MAX_HIERARCHY_DEPTH) {
+      throw new AppError(`Maximum hierarchy depth of ${MAX_HIERARCHY_DEPTH} reached.`, StatusCodes.BAD_REQUEST);
+    }
+
+    visited.add(currentParentId);
+    const parentPage = await repo.findPageById(currentParentId);
+    currentParentId = parentPage?.parentId || null;
+    depth++;
+  }
+};
+
 const buildFullSnapshot = (page) => ({
   title: page.title,
   slug: page.slug,
+  fullPath: page.fullPath,
   excerpt: page.excerpt,
   content: page.content,
   status: page.status,
@@ -35,19 +93,34 @@ const buildFullSnapshot = (page) => ({
   metaDescription: page.metaDescription,
   metaKeywords: page.metaKeywords,
   featuredImageId: page.featuredImageId,
+  parentId: page.parentId,
+  menuOrder: page.menuOrder,
+  showInMenu: page.showInMenu,
 });
 
 export const createNewPage = async (payload, authorId) => {
   await validateFeaturedImage(payload.featuredImageId);
+  
+  if (payload.parentId) {
+    const parentExists = await repo.findPageById(payload.parentId);
+    if (!parentExists) throw new AppError("Parent page not found", StatusCodes.NOT_FOUND);
+  }
 
   const baseSlug = payload.slug ? generateSlug(payload.slug) : generateSlug(payload.title);
-  const finalSlug = await ensureUniqueSlug(baseSlug);
+  const finalSlug = await ensureUniqueSiblingSlug(payload.parentId, baseSlug);
+  const finalFullPath = await buildFullPath(payload.parentId, finalSlug);
+
+  // Fallback protection against absolute global URL collisions
+  if (await repo.checkFullPathExists(finalFullPath)) {
+    throw new AppError(`The URL path ${finalFullPath} is already in use.`, StatusCodes.CONFLICT);
+  }
 
   const publishedAt = payload.status === "PUBLISHED" ? new Date() : null;
 
   const pageData = {
     ...payload,
     slug: finalSlug,
+    fullPath: finalFullPath,
     authorId,
     updatedById: authorId,
     publishedAt,
@@ -57,8 +130,8 @@ export const createNewPage = async (payload, authorId) => {
     const page = await repo.createPageWithRevision(pageData, authorId);
     return serializePage(page, "admin");
   } catch (error) {
-    if (error.code === 'P2002' && error.meta?.target?.includes('slug')) {
-      throw new AppError("Slug was just taken by another process. Please try again.", StatusCodes.CONFLICT);
+    if (error.code === 'P2002' && error.meta?.target?.includes('fullPath')) {
+      throw new AppError("The URL path was just taken by another process. Please try again.", StatusCodes.CONFLICT);
     }
     throw error;
   }
@@ -72,24 +145,42 @@ export const updateExistingPage = async (id, payload, actorId) => {
     await validateFeaturedImage(payload.featuredImageId);
   }
 
+  if (payload.parentId !== undefined) {
+    await validateHierarchy(id, payload.parentId);
+  }
+
   const updateData = { updatedById: actorId };
   
-  // Explicitly build update payload to avoid undefined overrides
-  const allowedFields = ["title", "excerpt", "content", "status", "template", "metaTitle", "metaDescription", "metaKeywords", "featuredImageId"];
+  const allowedFields = [
+    "title", "excerpt", "content", "status", "template", 
+    "metaTitle", "metaDescription", "metaKeywords", "featuredImageId",
+    "parentId", "menuOrder", "showInMenu" 
+  ];
+  
   allowedFields.forEach(field => {
     if (payload[field] !== undefined) updateData[field] = payload[field];
   });
 
-  if (payload.slug !== undefined || (payload.title !== undefined && payload.title !== existingPage.title && !existingPage.publishedAt)) {
-    const slugSource = payload.slug !== undefined ? payload.slug : payload.title;
-    updateData.slug = await ensureUniqueSlug(generateSlug(slugSource), id);
+  // Re-calculate slug and fullPath if structural data changed
+  const parentIdChanged = payload.parentId !== undefined && payload.parentId !== existingPage.parentId;
+  const slugChanged = payload.slug !== undefined && payload.slug !== existingPage.slug;
+  const titleChanged = payload.title !== undefined && payload.title !== existingPage.title && !existingPage.publishedAt;
+
+  if (slugChanged || parentIdChanged || titleChanged) {
+    const slugSource = payload.slug !== undefined ? payload.slug : (payload.title || existingPage.title);
+    const targetParentId = payload.parentId !== undefined ? payload.parentId : existingPage.parentId;
+
+    updateData.slug = await ensureUniqueSiblingSlug(targetParentId, generateSlug(slugSource), id);
+    updateData.fullPath = await buildFullPath(targetParentId, updateData.slug);
+
+    if (await repo.checkFullPathExists(updateData.fullPath, id)) {
+      throw new AppError(`The URL path ${updateData.fullPath} is already in use.`, StatusCodes.CONFLICT);
+    }
   }
 
   if (payload.status === "PUBLISHED" && existingPage.status !== "PUBLISHED") {
     updateData.publishedAt = new Date();
-  } else if (payload.status === "DRAFT" || payload.status === "ARCHIVED") {
-    // Keeping publishedAt for SEO history intentionally
-  }
+  } 
 
   const stateToCompare = { ...existingPage, ...updateData };
   const existingSnapshot = buildFullSnapshot(existingPage);
@@ -98,19 +189,30 @@ export const updateExistingPage = async (id, payload, actorId) => {
   const newSnapshot = !isEqual(existingSnapshot, proposedSnapshot) ? proposedSnapshot : null;
 
   const updatedPage = await repo.updatePageWithRevision(id, updateData, newSnapshot, actorId);
+
+  // If the path changed, ripple the changes down to all descendants
+  if (updateData.fullPath && updateData.fullPath !== existingPage.fullPath) {
+    await cascadeFullPathUpdate(id, updateData.fullPath, actorId);
+  }
+
   return serializePage(updatedPage, "admin");
 };
 
-export const duplicatePage = async (originalId, actorId) => {
+export const duplicatePageDeep = async (originalId, actorId, newParentId = undefined, isRootCall = true) => {
   const original = await repo.findPageById(originalId);
   if (!original) throw new AppError("Original page not found", StatusCodes.NOT_FOUND);
 
-  const clonedTitle = `${original.title} (Copy)`;
-  const finalSlug = await ensureUniqueSlug(generateSlug(clonedTitle));
+  const targetParentId = newParentId !== undefined ? newParentId : original.parentId;
+  const clonedTitle = isRootCall ? `${original.title} (Copy)` : original.title;
+  
+  const baseSlug = generateSlug(clonedTitle);
+  const finalSlug = await ensureUniqueSiblingSlug(targetParentId, baseSlug);
+  const finalFullPath = await buildFullPath(targetParentId, finalSlug);
 
   const pageData = {
     title: clonedTitle,
     slug: finalSlug,
+    fullPath: finalFullPath,
     excerpt: original.excerpt,
     content: structuredClone(original.content),
     status: "DRAFT",
@@ -119,18 +221,47 @@ export const duplicatePage = async (originalId, actorId) => {
     metaDescription: original.metaDescription,
     metaKeywords: original.metaKeywords,
     featuredImageId: original.featuredImageId,
+    parentId: targetParentId,
+    menuOrder: original.menuOrder,
+    showInMenu: original.showInMenu,
     authorId: actorId,
     updatedById: actorId,
     publishedAt: null,
   };
 
-  const page = await repo.createPageWithRevision(pageData, actorId);
-  return serializePage(page, "admin");
+  const newPage = await repo.createPageWithRevision(pageData, actorId);
+
+  // Deep clone all children recursively
+  const children = await prisma.page.findMany({ 
+    where: { parentId: originalId, deletedAt: null } 
+  });
+  
+  if (children.length > 0) {
+    await Promise.all(
+      children.map(child => duplicatePageDeep(child.id, actorId, newPage.id, false))
+    );
+  }
+
+  return isRootCall ? serializePage(newPage, "admin") : newPage;
+};
+
+// Aliased to map to the controller
+export const duplicatePage = async (originalId, actorId) => {
+  return await duplicatePageDeep(originalId, actorId);
 };
 
 export const deletePage = async (id, actorId) => {
   const page = await repo.findPageById(id);
   if (!page) throw new AppError("Page not found", StatusCodes.NOT_FOUND);
+
+  const hasChildren = await repo.hasActiveChildren(id);
+  if (hasChildren) {
+    throw new AppError(
+      "Cannot delete this page because it has active child pages. Please delete or reassign the children first.", 
+      StatusCodes.CONFLICT
+    );
+  }
+
   return await repo.softDeletePage(page, actorId); 
 };
 
@@ -146,12 +277,86 @@ export const getPagesList = async (query) => {
   };
 };
 
-export const getPublicPageBySlug = async (slug) => {
-  const page = await repo.findPageBySlug(slug);
+export const getAdminPageTree = async () => {
+  return await repo.buildPageTree(false, false); 
+};
+
+export const getPublicMenuTree = async () => {
+  return await repo.buildPageTree(true, true); 
+};
+
+//searches by fullPath (e.g. /company/team) 
+export const getPublicPageByPath = async (fullPath) => {
+  // Ensure starting slash
+  const formattedPath = fullPath.startsWith('/') ? fullPath : `/${fullPath}`;
+  
+  const page = await repo.findPageByFullPath(formattedPath);
   
   if (!page || page.status !== "PUBLISHED") {
     throw new AppError("Page not found", StatusCodes.NOT_FOUND);
   }
+
+  const breadcrumbs = await repo.getPageBreadcrumbs(page.id);
   
-  return serializePage(page, "public");
+  return { 
+    ...serializePage(page, "public"), 
+    breadcrumbs 
+  };
+};
+
+// REVISION CONTROL PIPELINES (VERSIONING SYSTEM ACTIONS)
+
+// Compiles a comprehensive mutation history for specific dynamic dashboard 
+export const getPageRevisionsList = async (pageId) => {
+  const existingPage = await repo.findPageById(pageId);
+  if (!existingPage) {
+    throw new AppError("Target component engine context invalid", StatusCodes.NOT_FOUND);
+  }
+  return await repo.findPageRevisionHistory(pageId);
+};
+
+// Extracts a singular targeted archival node block snapshot context
+export const getSinglePageRevision = async (pageId, revisionId) => {
+  const revision = await repo.findPageRevisionById(pageId, revisionId);
+  if (!revision) {
+    throw new AppError("Targeted archival system revision log mismatch", StatusCodes.NOT_FOUND);
+  }
+  return revision;
+};
+
+//Transactionally reverses running living metrics to precise past snapshots.
+export const restorePageToRevision = async (pageId, revisionId, actorId) => {
+  // sanity evaluations processing checks
+  const existingPage = await repo.findPageById(pageId);
+  if (!existingPage) {
+    throw new AppError("Living system data engine targeted contextual reference missing", StatusCodes.NOT_FOUND);
+  }
+
+  const historicRevision = await repo.findPageRevisionById(pageId, revisionId);
+  if (!historicRevision) {
+    throw new AppError("Requested processing change checkpoint parameters validation failed", StatusCodes.NOT_FOUND);
+  }
+
+  const snapshotToRestore = historicRevision.snapshot;
+
+  //  Structural safety checks, Enforce collision detection framework rules on path structures
+  if (snapshotToRestore.fullPath !== existingPage.fullPath) {
+    const isPathTaken = await repo.checkFullPathExists(snapshotToRestore.fullPath, pageId);
+    if (isPathTaken) {
+      throw new AppError(
+        `Restoration aborted: The architectural path structure '${snapshotToRestore.fullPath}' was claimed by another active process.`, 
+        StatusCodes.CONFLICT
+      );
+    }
+  }
+
+  // Trigger atomic workspace state translation mapping
+  const restoredPage = await repo.restorePageContentSnapshot(pageId, snapshotToRestore, actorId);
+
+  // If path configuration differs during historic rollback, cascade ripple modification updates across descendants branch
+  if (snapshotToRestore.fullPath !== existingPage.fullPath) {
+    await cascadeFullPathUpdate(pageId, snapshotToRestore.fullPath, actorId);
+  }
+
+  return serializePage(restoredPage, "admin");
 };
