@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, Navigate, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Globe } from 'lucide-react';
+import { LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Globe, Inbox } from 'lucide-react'; 
 import { useAuth } from '../../context/AuthContext'; 
 
 const AdminLayout = () => {
@@ -21,6 +21,7 @@ const AdminLayout = () => {
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
     { name: 'Pages', icon: FileText, path: '/admin/pages' },
+    { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms' },
     { name: 'Home Customization', icon: ImageIcon, path: '/admin/home-customization' },
     { name: 'Settings', icon: Settings, path: '/admin/settings' },
   ];

@@ -38,7 +38,8 @@ const PageEditor = () => {
     { type: 'blog_section', label: 'Blog Section' },
     { type: 'gallery', label: 'Gallery' },
     { type: 'cta', label: 'Call to Action (CTA)' },
-    { type: 'richText', label: 'Rich Text Box' }
+    { type: 'richText', label: 'Rich Text Box' },
+    { type: 'contactForm', label: 'Contact Form (Dynamic Engine)' } 
   ];
 
   const [formData, setFormData] = useState({
@@ -211,6 +212,15 @@ const PageEditor = () => {
         defaultData = { badgeText: 'GET IN TOUCH', title: "Have A Project In [Mind? Let's Make] It Happen", buttonText: 'BOOK A FREE CONSULTATION' }; break;
       case 'richText':
         defaultData = { content: '' }; break;
+      
+      case 'contactForm':
+        defaultData = { 
+          formId: '', 
+          formTitle: 'Get in Touch',
+          submitButtonText: 'Submit Inquiry',
+          redirectPath: '' 
+        }; break;
+        
       default:
         defaultData = {};
     }
@@ -457,7 +467,7 @@ const PageEditor = () => {
               ) : (
                 formData.content.blocks.map((block, index) => (
                   <div key={block.id || index} className="group relative bg-white border border-zinc-200 rounded-xl shadow-sm hover:border-zinc-300 transition-colors">
-                    <div className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <button
                         type="button"
                         onClick={() => removeBlock(index)}
@@ -471,7 +481,7 @@ const PageEditor = () => {
                       <span className="bg-zinc-200 text-zinc-700 w-5 h-5 rounded flex items-center justify-center mr-2">{index + 1}</span>
                       {AVAILABLE_BLOCKS.find(b => b.type === block.type)?.label || block.type}
                     </div>
-                    <div className="p-0 border-t border-zinc-200">
+                    <div className="p-0 border-t border-zinc-200 relative">
                       <DynamicBlockEditor 
                         block={block} 
                         index={index} 
@@ -537,10 +547,6 @@ const PageEditor = () => {
           </div>
         </div>
       </div>
-
-      
-      
-
     </form>
   );
 };

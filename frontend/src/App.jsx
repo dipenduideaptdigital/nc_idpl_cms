@@ -15,6 +15,8 @@ import AdminLayout from './components/layout/AdminLayout';
 import HomeCustomization from './pages/admin/HomeCustomization';
 import PageList from './pages/admin/pages/PageList';
 import PageEditor from './pages/admin/pages/PageEditor';
+import ContactFormList from './pages/admin/contact-forms/ContactFormList';
+import ContactFormEditor from './pages/admin/contact-forms/ContactFormEditor';
 
 function App() {
   return (
@@ -34,6 +36,9 @@ function App() {
           <Route path="pages" element={<PageList />} />
           <Route path="pages/create" element={<PageEditor />} />
           <Route path="pages/edit/:id" element={<PageEditor />} />
+          <Route path="contact-forms" element={<ContactFormList />} />
+          <Route path="contact-forms/create" element={<ContactFormEditor />} />
+          <Route path="contact-forms/edit/:id" element={<ContactFormEditor />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import apiClient from '../../api/client';
 import HeroCustomization from './HeroCustomization';
 import ServicesCustomization from './ServicesCustomization';
@@ -27,6 +27,27 @@ const getAssetUrl = (path) => {
 const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
   const { type, data } = block;
 
+  const [availableForms, setAvailableForms] = useState([]);
+  const [loadingForms, setLoadingForms] = useState(false);
+
+  useEffect(() => {
+    if (type === 'contactForm') {
+      const fetchForms = async () => {
+        try {
+          setLoadingForms(true);
+          const res = await apiClient.get('/admin/contact-forms');
+          if (res.data?.success && res.data?.data) {
+            setAvailableForms(res.data.data);
+          }
+        } catch (err) {
+          console.error('Failed to fetch contact forms:', err);
+        } finally {
+          setLoadingForms(false);
+        }
+      };
+      fetchForms();
+    }
+  }, [type]);
   // Generic change handler for simple inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -269,6 +290,83 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
               placeholder="Enter your HTML or text content here..."
               className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors font-mono text-sm bg-zinc-50/50"
             ></textarea>
+          </div>
+        </div>
+      );
+
+    case 'contactForm':
+      return (
+        <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
+          <div className="px-8 py-4 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50/50">
+            <Type className="w-5 h-5 text-zinc-700" />
+            <h2 className="text-lg font-semibold text-zinc-800">Contact Form Module</h2>
+          </div>
+          <div className="p-8 space-y-6">
+            
+            {/* DYNAMIC DROPDOWN API DRIVEN */}
+            <div>
+              <label className="block text-sm font-medium text-zinc-700 mb-2">Target Form *</label>
+              {loadingForms ? (
+                <div className="w-full px-4 py-3 border border-zinc-200 rounded-xl bg-zinc-50 text-sm text-zinc-500 animate-pulse">
+                  Loading available forms from database...
+                </div>
+              ) : (
+                <select
+                  value={data.formId || ''}
+                  onChange={(e) => updateBlockData(index, 'formId', e.target.value)}
+                  className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm cursor-pointer"
+                >
+                  <option value="" disabled>-- Select a Contact Form --</option>
+                  {availableForms.map((form) => (
+                    <option key={form.id} value={form.id}>
+                      {form.name} ({form.slug}) - {form.isActive ? 'Active' : 'Inactive'}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <p className="text-xs text-zinc-400 mt-1.5">
+                Select the form you want to display. You can create new forms from the Contact Forms module.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-zinc-100">
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 mb-2">Form Override Title</label>
+                <input 
+                  type="text" 
+                  value={data.formTitle || ''} 
+                  onChange={(e) => updateBlockData(index, 'formTitle', e.target.value)}
+                  placeholder="e.g. Reach Out Today"
+                  className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 mb-2">Submit Button Text</label>
+                <input 
+                  type="text" 
+                  value={data.submitButtonText || ''} 
+                  onChange={(e) => updateBlockData(index, 'submitButtonText', e.target.value)}
+                  placeholder="e.g. Send Application"
+                  className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-zinc-700 mb-2">Optional Success Redirect Path</label>
+              <input 
+                type="text" 
+                value={data.redirectPath || ''} 
+                onChange={(e) => updateBlockData(index, 'redirectPath', e.target.value)}
+                placeholder="e.g. /thank-you"
+                className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm"
+              />
+              <p className="text-xs text-zinc-400 mt-1.5">
+                Leave blank to stay on the same page. Must start with a forward slash (/).
+              </p>
+            </div>
+
           </div>
         </div>
       );

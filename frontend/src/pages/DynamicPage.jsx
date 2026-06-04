@@ -17,6 +17,7 @@ import VideoBanner from '../components/home/VideoBanner';
 import BlogSection from '../components/home/BlogSection';
 import Gallery from '../components/home/Gallery';
 import CtaSection from '../components/home/CtaSection';
+import ContactFormBlock from '../components/blocks/ContactFormBlock';
 
 const renderBlock = (block, index) => {
   const { type, data } = block;
@@ -34,6 +35,7 @@ const renderBlock = (block, index) => {
     case 'blog_section': return <BlogSection key={index} data={data} />;
     case 'gallery': return <Gallery key={index} data={data} />;
     case 'cta': return <CtaSection key={index} data={data} />;
+    case 'contactForm': return <ContactFormBlock key={index} data={data} />;
     case 'richText':
       return (
         <div key={index} className="py-16 md:py-24">
