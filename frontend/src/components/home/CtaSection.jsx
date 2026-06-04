@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import apiClient from '../../api/client';
 
-const CtaSection = () => {
-  const [content, setContent] = useState(null);
+const CtaSection = ({ data: externalData }) => {
+  const [content, setContent] = useState(externalData || null);
 
   useEffect(() => {
     let isMounted = true;
+
+    if (externalData) {
+      setContent(externalData);
+      return () => { isMounted = false; };
+    }
 
     const fetchCtaData = async () => {
       try {
@@ -25,7 +30,7 @@ const CtaSection = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [externalData]);
 
   const badgeText = content?.badgeText || "GET IN TOUCH";
   const title = content?.title || "Have A Project In [Mind? Let's Make] It Happen";

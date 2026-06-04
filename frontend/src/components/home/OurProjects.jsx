@@ -15,54 +15,56 @@ const defaultProjectsData = [
   { id: 5, category: 'COMMERCIAL', title: 'Retail Experience', description: 'Improving homes with expert craftsmanship for years', image: project5 }
 ];
 
-const OurProjects = () => {
+const OurProjects = ({ data: externalData }) => {
   const carouselRef = useRef(null);
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(externalData || null);
   const [projectsList, setProjectsList] = useState(defaultProjectsData);
   const [interiorImg, setInteriorImg] = useState(defaultInterior);
 
   useEffect(() => {
     let isMounted = true;
 
+    const processContent = (fetchedContent) => {
+      if (isMounted) setContent(fetchedContent);
+      const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
+
+      // Resolve project images
+      if (fetchedContent.projects && fetchedContent.projects.length > 0) {
+        const mapped = fetchedContent.projects.map((p, idx) => {
+          const defaultImg = defaultProjectsData[idx % defaultProjectsData.length].image;
+          return {
+            ...p,
+            image: p.image ? (p.image.startsWith('http') ? p.image : `${serverUrl}${p.image}`) : defaultImg
+          };
+        });
+        if (isMounted) setProjectsList(mapped);
+      } else if (isMounted) {
+        setProjectsList(defaultProjectsData);
+      }
+
+      // Resolve bottom graphic image
+      if (fetchedContent.bottomImage) {
+        const botUrl = fetchedContent.bottomImage.startsWith('http') ? fetchedContent.bottomImage : `${serverUrl}${fetchedContent.bottomImage}`;
+        const img = new Image();
+        img.src = botUrl;
+        img.onload = () => { if (isMounted) setInteriorImg(botUrl); };
+        img.onerror = () => { if (isMounted) setInteriorImg(defaultInterior); };
+      } else if (isMounted) {
+        setInteriorImg(defaultInterior);
+      }
+    };
+
+    if (externalData) {
+      processContent(externalData);
+      return () => { isMounted = false; };
+    }
+
     const fetchProjectsData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_our_projects');
         const { data } = res;
-
         if (data.success && data.data?.content) {
-          const fetchedContent = data.data.content;
-          if (isMounted) setContent(fetchedContent);
-
-          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-
-          // Resolve project images
-          if (fetchedContent.projects && fetchedContent.projects.length > 0) {
-            const mapped = fetchedContent.projects.map((p, idx) => {
-              const defaultImg = defaultProjectsData[idx % defaultProjectsData.length].image;
-              return {
-                ...p,
-                image: p.image ? `${serverUrl}${p.image}` : defaultImg
-              };
-            });
-            if (isMounted) setProjectsList(mapped);
-          } else if (isMounted) {
-            setProjectsList(defaultProjectsData);
-          }
-
-          // Resolve bottom graphic image
-          if (fetchedContent.bottomImage) {
-            const botUrl = `${serverUrl}${fetchedContent.bottomImage}`;
-            const img = new Image();
-            img.src = botUrl;
-            img.onload = () => {
-              if (isMounted) setInteriorImg(botUrl);
-            };
-            img.onerror = () => {
-              if (isMounted) setInteriorImg(defaultInterior);
-            };
-          } else if (isMounted) {
-            setInteriorImg(defaultInterior);
-          }
+          processContent(data.data.content);
         }
       } catch (error) {
         console.error('Failed to fetch our projects content:', error);
@@ -74,7 +76,7 @@ const OurProjects = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [externalData]);
 
   const badgeText = content?.badgeText || "OUR PROJECT";
   const title = content?.title || "Creative [Projects That Define] Our Style";

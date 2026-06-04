@@ -38,11 +38,17 @@ const placeholderColors = [
   'bg-violet-500'
 ];
 
-const HowWeWork = () => {
-  const [content, setContent] = useState(null);
+const HowWeWork = ({ data: externalData }) => {
+  const [content, setContent] = useState(externalData || null);
 
   useEffect(() => {
     let isMounted = true;
+    
+    if (externalData) {
+      setContent(externalData);
+      return () => { isMounted = false; };
+    }
+
     const fetchStepsData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_how_we_work');
@@ -59,7 +65,7 @@ const HowWeWork = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [externalData]);
 
   const badgeText = content?.badgeText || "HOW WE WORK";
   const title = content?.title || "Description [Architecture Process] For Exceptional Results.";

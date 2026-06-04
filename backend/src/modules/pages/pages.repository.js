@@ -298,3 +298,9 @@ export const restorePageContentSnapshot = async (pageId, snapshotData, actorId) 
     return updatedPage;
   });
 };
+
+export const findActiveChildrenByParentId = async (parentId) => {
+  return await prisma.page.findMany({
+    where: { parentId, deletedAt: null }
+  });
+};

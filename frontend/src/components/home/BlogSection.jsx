@@ -10,36 +10,42 @@ const defaultBlogPosts = [
   { id: 3, author: 'Admin', title: 'Functional Design Trends That Blend Style And Comfort', excerpt: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: gallery1 }
 ];
 
-const BlogSection = () => {
-  const [content, setContent] = useState(null);
+const BlogSection = ({ data: externalData }) => {
+  const [content, setContent] = useState(externalData || null);
   const [postsList, setPostsList] = useState(defaultBlogPosts);
 
   useEffect(() => {
     let isMounted = true;
 
+    const processContent = (fetchedContent) => {
+      if (isMounted) setContent(fetchedContent);
+      const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
+
+      if (fetchedContent.posts && fetchedContent.posts.length > 0) {
+        const mapped = fetchedContent.posts.map((post, idx) => {
+          const defaultImg = defaultBlogPosts[idx % defaultBlogPosts.length].image;
+          return {
+            ...post,
+            image: post.image ? (post.image.startsWith('http') ? post.image : `${serverUrl}${post.image}`) : defaultImg
+          };
+        });
+        if (isMounted) setPostsList(mapped);
+      } else if (isMounted) {
+        setPostsList(defaultBlogPosts);
+      }
+    };
+
+    if (externalData) {
+      processContent(externalData);
+      return () => { isMounted = false; };
+    }
+
     const fetchBlogsData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_blog_section');
         const { data } = res;
-
         if (data.success && data.data?.content) {
-          const fetchedContent = data.data.content;
-          if (isMounted) setContent(fetchedContent);
-
-          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-
-          if (fetchedContent.posts && fetchedContent.posts.length > 0) {
-            const mapped = fetchedContent.posts.map((post, idx) => {
-              const defaultImg = defaultBlogPosts[idx % defaultBlogPosts.length].image;
-              return {
-                ...post,
-                image: post.image ? `${serverUrl}${post.image}` : defaultImg
-              };
-            });
-            if (isMounted) setPostsList(mapped);
-          } else if (isMounted) {
-            setPostsList(defaultBlogPosts);
-          }
+          processContent(data.data.content);
         }
       } catch (error) {
         console.error('Failed to fetch blog content:', error);
@@ -51,7 +57,7 @@ const BlogSection = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [externalData]);
 
   const badgeText = content?.badgeText || "STRAIGHT FROM THE NEWSROOM";
   const title = content?.title || "Take A Look At [Our Latest \\n Blog] & Articles.";

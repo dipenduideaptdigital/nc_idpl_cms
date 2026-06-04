@@ -4,80 +4,71 @@ import apiClient from '../../api/client';
 import defaultHeroback from '../../assets/homepage/banner_back.png';
 import defaultHerofront from '../../assets/homepage/banner_front.png';
 
-const Hero = () => {
-  const [content, setContent] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+const Hero = ({ data: externalData }) => {
+  const [content, setContent] = useState(externalData || null);
+  const [isLoading, setIsLoading] = useState(!externalData);
   const [bgImage, setBgImage] = useState(defaultHeroback);
   const [frontImg, setFrontImg] = useState(defaultHerofront);
 
   useEffect(() => {
+    const processContent = async (fetchedContent) => {
+      setContent(fetchedContent);
+      const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
+      const bgUrl = fetchedContent.backgroundImage ? (fetchedContent.backgroundImage.startsWith('http') ? fetchedContent.backgroundImage : `${baseUrl}${fetchedContent.backgroundImage}`) : null;
+      const frontUrl = fetchedContent.frontImage ? (fetchedContent.frontImage.startsWith('http') ? fetchedContent.frontImage : `${baseUrl}${fetchedContent.frontImage}`) : null;
+
+      const preloadPromises = [];
+
+      if (bgUrl) {
+        preloadPromises.push(
+          new Promise((resolve) => {
+            const img = new Image();
+            img.src = bgUrl;
+            img.onload = () => { setBgImage(bgUrl); resolve(); };
+            img.onerror = () => { setBgImage(defaultHeroback); resolve(); };
+          })
+        );
+      } else { setBgImage(defaultHeroback); }
+
+      if (frontUrl) {
+        preloadPromises.push(
+          new Promise((resolve) => {
+            const img = new Image();
+            img.src = frontUrl;
+            img.onload = () => { setFrontImg(frontUrl); resolve(); };
+            img.onerror = () => { setFrontImg(defaultHerofront); resolve(); };
+          })
+        );
+      } else { setFrontImg(defaultHerofront); }
+
+      if (preloadPromises.length > 0) {
+        await Promise.all(preloadPromises);
+      }
+      setIsLoading(false);
+    };
+
+    if (externalData) {
+      processContent(externalData);
+      return;
+    }
+
     const fetchHeroData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_hero');
         const data = res.data; 
-
         if (data.success && data.data?.content) {
-          const fetchedContent = data.data.content;
-          setContent(fetchedContent);
-
-          const baseUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-
-          const bgUrl = fetchedContent.backgroundImage ? `${baseUrl}${fetchedContent.backgroundImage}` : null;
-          const frontUrl = fetchedContent.frontImage ? `${baseUrl}${fetchedContent.frontImage}` : null;
-
-          const preloadPromises = [];
-
-          if (bgUrl) {
-            preloadPromises.push(
-              new Promise((resolve) => {
-                const img = new Image();
-                img.src = bgUrl;
-                img.onload = () => {
-                  setBgImage(bgUrl);
-                  resolve();
-                };
-                img.onerror = () => {
-                  setBgImage(defaultHeroback);
-                  resolve();
-                };
-              })
-            );
-          } else {
-            setBgImage(defaultHeroback);
-          }
-
-          if (frontUrl) {
-            preloadPromises.push(
-              new Promise((resolve) => {
-                const img = new Image();
-                img.src = frontUrl;
-                img.onload = () => {
-                  setFrontImg(frontUrl);
-                  resolve();
-                };
-                img.onerror = () => {
-                  setFrontImg(defaultHerofront);
-                  resolve();
-                };
-              })
-            );
-          } else {
-            setFrontImg(defaultHerofront);
-          }
-
-          if (preloadPromises.length > 0) {
-            await Promise.all(preloadPromises);
-          }
+          await processContent(data.data.content);
+        } else {
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('Failed to fetch hero content:', error);
-      } finally {
         setIsLoading(false);
       }
     };
     
     fetchHeroData();
-  }, []);
+  }, [externalData]);
 
   if (isLoading) {
     return (

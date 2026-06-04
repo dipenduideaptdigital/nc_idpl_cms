@@ -6,10 +6,15 @@ import MainLayout from './components/layout/MainLayout';
 
 /* Pages */
 import Home from './pages/Home';
+import LandingReference from './pages/LandingReference';
+import LandingContainer from './pages/LandingContainer';
+import DynamicPage from './pages/DynamicPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminLayout from './components/layout/AdminLayout';
 import HomeCustomization from './pages/admin/HomeCustomization';
+import PageList from './pages/admin/pages/PageList';
+import PageEditor from './pages/admin/pages/PageEditor';
 
 function App() {
   return (
@@ -17,14 +22,18 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        
         <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/hero-preview" element={<LandingReference />} />
+          <Route path="/" element={<LandingContainer />} />
+          <Route path="/:slug*" element={<DynamicPage />} />
         </Route>
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="home-customization" element={<HomeCustomization />} />
+          <Route path="pages" element={<PageList />} />
+          <Route path="pages/create" element={<PageEditor />} />
+          <Route path="pages/edit/:id" element={<PageEditor />} />
         </Route>
       </Routes>
     </BrowserRouter>

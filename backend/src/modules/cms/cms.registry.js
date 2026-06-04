@@ -11,7 +11,8 @@ import {
   videoBannerSchema,
   blogSectionSchema,
   gallerySchema,
-  ctaSchema
+  ctaSchema,
+  generalSettingsSchema
 } from "./cms.validation.js";
 
 // Maps frontend section keys to backend validation schemas
@@ -28,5 +29,6 @@ export const CMS_REGISTRY = {
   "homepage_video_banner": videoBannerSchema,
   "homepage_blog_section": blogSectionSchema,
   "homepage_gallery": gallerySchema,
-  "homepage_cta": ctaSchema
+  "homepage_cta": ctaSchema,
+  "homepage_general": generalSettingsSchema // Required for frontend LandingContainer routing decision
 };

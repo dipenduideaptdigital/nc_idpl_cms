@@ -32,14 +32,11 @@ const buildFullPath = async (parentId, slug) => {
 
 // Recursively updates the fullPath of all descendant pages if a parent's path changes
 const cascadeFullPathUpdate = async (parentId, newParentFullPath, actorId) => {
-  const children = await prisma.page.findMany({ 
-    where: { parentId, deletedAt: null } 
-  });
+  const children = await repo.findActiveChildrenByParentId(parentId);
   
   for (const child of children) {
     const newFullPath = `${newParentFullPath}/${child.slug}`.replace(/\/\//g, '/');
     
-    // Update child without generating a new content revision, just updating the path
     await repo.updatePageWithRevision(child.id, { fullPath: newFullPath, updatedById: actorId }, null, actorId);
     await cascadeFullPathUpdate(child.id, newFullPath, actorId);
   }

@@ -3,37 +3,38 @@ import { Settings } from 'lucide-react';
 import defaultView from '../../assets/homepage/view.jpg';
 import apiClient from '../../api/client';
 
-const Panoramas = () => {
-  const [content, setContent] = useState(null);
+const Panoramas = ({ data: externalData }) => {
+  const [content, setContent] = useState(externalData || null);
   const [panoramaImg, setPanoramaImg] = useState(defaultView);
 
   useEffect(() => {
     let isMounted = true;
 
+    const processContent = (fetchedContent) => {
+      if (isMounted) setContent(fetchedContent);
+      const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
+      if (fetchedContent.image) {
+        const imgUrl = fetchedContent.image.startsWith('http') ? fetchedContent.image : `${serverUrl}${fetchedContent.image}`;
+        const img = new Image();
+        img.src = imgUrl;
+        img.onload = () => { if (isMounted) setPanoramaImg(imgUrl); };
+        img.onerror = () => { if (isMounted) setPanoramaImg(defaultView); };
+      } else if (isMounted) {
+        setPanoramaImg(defaultView);
+      }
+    };
+
+    if (externalData) {
+      processContent(externalData);
+      return () => { isMounted = false; };
+    }
+
     const fetchPanoramasData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_panoramas');
         const { data } = res;
-
         if (data.success && data.data?.content) {
-          const fetchedContent = data.data.content;
-          if (isMounted) setContent(fetchedContent);
-
-          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-
-          if (fetchedContent.image) {
-            const imgUrl = `${serverUrl}${fetchedContent.image}`;
-            const img = new Image();
-            img.src = imgUrl;
-            img.onload = () => {
-              if (isMounted) setPanoramaImg(imgUrl);
-            };
-            img.onerror = () => {
-              if (isMounted) setPanoramaImg(defaultView);
-            };
-          } else if (isMounted) {
-            setPanoramaImg(defaultView);
-          }
+          processContent(data.data.content);
         }
       } catch (error) {
         console.error('Failed to fetch panoramas content:', error);
@@ -45,7 +46,7 @@ const Panoramas = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [externalData]);
 
   const badgeText = content?.badgeText || "360-DEGREE PANORAMAS";
   const title = content?.title || "Create An Even [Greater \\n Experience]";

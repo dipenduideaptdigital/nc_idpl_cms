@@ -20,53 +20,47 @@ const defaultStatsData = [
   { value: '4+', title: 'LOCATION', description: 'All of our clients are satisfied with our work and service' },
 ];
 
-const OurServices = () => {
+const OurServices = ({ data: externalData }) => {
   const [activeService, setActiveService] = useState('01');
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(externalData || null);
   const [serviceImg, setServiceImg] = useState(defaultServiceImg);
   const [countingImg, setCountingImg] = useState(defaultCountingImg);
 
   useEffect(() => {
     let isMounted = true;
 
+    const processContent = (fetchedContent) => {
+      if (isMounted) setContent(fetchedContent);
+      const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
+      
+      if (fetchedContent.image) {
+        const mainUrl = fetchedContent.image.startsWith('http') ? fetchedContent.image : `${serverUrl}${fetchedContent.image}`;
+        const img1 = new Image();
+        img1.src = mainUrl;
+        img1.onload = () => { if (isMounted) setServiceImg(mainUrl); };
+        img1.onerror = () => { if (isMounted) setServiceImg(defaultServiceImg); };
+      } else if (isMounted) { setServiceImg(defaultServiceImg); }
+
+      if (fetchedContent.bottomImage) {
+        const bottomUrl = fetchedContent.bottomImage.startsWith('http') ? fetchedContent.bottomImage : `${serverUrl}${fetchedContent.bottomImage}`;
+        const img2 = new Image();
+        img2.src = bottomUrl;
+        img2.onload = () => { if (isMounted) setCountingImg(bottomUrl); };
+        img2.onerror = () => { if (isMounted) setCountingImg(defaultCountingImg); };
+      } else if (isMounted) { setCountingImg(defaultCountingImg); }
+    };
+
+    if (externalData) {
+      processContent(externalData);
+      return () => { isMounted = false; };
+    }
+
     const fetchServicesData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_our_services');
         const { data } = res;
-
         if (data.success && data.data?.content) {
-          const fetchedContent = data.data.content;
-          if (isMounted) setContent(fetchedContent);
-
-          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-          
-          if (fetchedContent.image) {
-            const mainUrl = `${serverUrl}${fetchedContent.image}`;
-            const img1 = new Image();
-            img1.src = mainUrl;
-            img1.onload = () => {
-              if (isMounted) setServiceImg(mainUrl);
-            };
-            img1.onerror = () => {
-              if (isMounted) setServiceImg(defaultServiceImg);
-            };
-          } else if (isMounted) {
-            setServiceImg(defaultServiceImg);
-          }
-
-          if (fetchedContent.bottomImage) {
-            const bottomUrl = `${serverUrl}${fetchedContent.bottomImage}`;
-            const img2 = new Image();
-            img2.src = bottomUrl;
-            img2.onload = () => {
-              if (isMounted) setCountingImg(bottomUrl);
-            };
-            img2.onerror = () => {
-              if (isMounted) setCountingImg(defaultCountingImg);
-            };
-          } else if (isMounted) {
-            setCountingImg(defaultCountingImg);
-          }
+          processContent(data.data.content);
         }
       } catch (error) {
         console.error('Failed to fetch our services content:', error);
@@ -78,7 +72,7 @@ const OurServices = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [externalData]);
 
   const badgeText = content?.badgeText || "OUR SERVICES";
   const title = content?.title || "Explore Our [Comprehensive Interior Design] Services";

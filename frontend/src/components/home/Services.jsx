@@ -20,10 +20,14 @@ const defaultServicesData = [
   }
 ];
 
-const Services = () => {
-  const [content, setContent] = useState(null);
+const Services = ({ data: externalData }) => {
+  const [content, setContent] = useState(externalData || null);
 
   useEffect(() => {
+    if (externalData) {
+      setContent(externalData);
+      return;
+    }
     const fetchServicesData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_services');
@@ -37,7 +41,7 @@ const Services = () => {
       }
     };
     fetchServicesData();
-  }, []);
+  }, [externalData]);
 
   const badgeText = content?.badgeText || "WHO WE ARE";
   const title = content?.title || "Experience [The Art Of Interior] Design";

@@ -3,12 +3,32 @@ import { Check, ArrowUpRight } from 'lucide-react';
 import about_img from "../../assets/homepage/about_img.png";
 import apiClient from '../../api/client'; 
 
-const AboutSection = () => {
-  const [content, setContent] = useState(null);
+const AboutSection = ({ data: externalData }) => {
+  const [content, setContent] = useState(externalData || null);
   const [aboutImage, setAboutImage] = useState(about_img);
 
   useEffect(() => {
     let isMounted = true; 
+
+    const processContent = (fetchedContent) => {
+      if (isMounted) setContent(fetchedContent);
+      const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
+      const imageUrl = fetchedContent.image ? (fetchedContent.image.startsWith('http') ? fetchedContent.image : `${serverUrl}${fetchedContent.image}`) : null;
+
+      if (imageUrl) {
+        const img = new Image();
+        img.src = imageUrl;
+        img.onload = () => { if (isMounted) setAboutImage(imageUrl); };
+        img.onerror = () => { if (isMounted) setAboutImage(about_img); };
+      } else if (isMounted) {
+        setAboutImage(about_img);
+      }
+    };
+
+    if (externalData) {
+      processContent(externalData);
+      return () => { isMounted = false; };
+    }
 
     const fetchAboutData = async () => {
       try {
@@ -16,27 +36,7 @@ const AboutSection = () => {
         const { data } = res;
 
         if (data.success && data.data?.content) {
-          const fetchedContent = data.data.content;
-          
-          if (isMounted) {
-            setContent(fetchedContent);
-          }
-
-          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-          const imageUrl = fetchedContent.image ? `${serverUrl}${fetchedContent.image}` : null;
-
-          if (imageUrl) {
-            const img = new Image();
-            img.src = imageUrl;
-            img.onload = () => {
-              if (isMounted) setAboutImage(imageUrl);
-            };
-            img.onerror = () => {
-              if (isMounted) setAboutImage(about_img);
-            };
-          } else if (isMounted) {
-            setAboutImage(about_img);
-          }
+          processContent(data.data.content);
         }
       } catch (error) {
         console.error('Failed to fetch about content:', error);
@@ -48,7 +48,7 @@ const AboutSection = () => {
     return () => {
       isMounted = false; // Cleanup function to prevent memory leaks
     };
-  }, []);
+  }, [externalData]);
 
   // Safe defaults if content is missing or loading
   const badgeText = content?.badgeText || "STARTED IN 1991";

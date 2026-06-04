@@ -4,10 +4,10 @@ import { z } from "zod";
 const RESERVED_SLUGS = [
   "admin", "api", "login", "register", "dashboard", 
   "cms", "uploads", "settings", "profile", "users",
-  "home", "index", "404", "500"
+  "home", "index", "404", "500", "menu"
 ];
 
-//dynamic system design layout templates routing blocks
+// Dynamic system design layout templates routing blocks
 export const ALLOWED_TEMPLATES = [
   "default",
   "landing-page",
@@ -16,28 +16,23 @@ export const ALLOWED_TEMPLATES = [
   "about-page"
 ];
 
+// Headless Content Engine Block Structure Definitions (Supporting all 15 Frontend Modules)
+const heroBlockSchema = z.object({ type: z.literal("hero"), data: z.record(z.any()).default({}) });
+const servicesBlockSchema = z.object({ type: z.literal("services"), data: z.record(z.any()).default({}) });
+const aboutBlockSchema = z.object({ type: z.literal("about"), data: z.record(z.any()).default({}) });
+const ourServicesBlockSchema = z.object({ type: z.literal("our_services"), data: z.record(z.any()).default({}) });
+const howWeWorkBlockSchema = z.object({ type: z.literal("how_we_work"), data: z.record(z.any()).default({}) });
+const ourProjectsBlockSchema = z.object({ type: z.literal("our_projects"), data: z.record(z.any()).default({}) });
+const panoramasBlockSchema = z.object({ type: z.literal("panoramas"), data: z.record(z.any()).default({}) });
+const teamBlockSchema = z.object({ type: z.literal("team"), data: z.record(z.any()).default({}) });
+const testimonialsBlockSchema = z.object({ type: z.literal("testimonials"), data: z.record(z.any()).default({}) });
+const videoBannerBlockSchema = z.object({ type: z.literal("video_banner"), data: z.record(z.any()).default({}) });
+const blogSectionBlockSchema = z.object({ type: z.literal("blog_section"), data: z.record(z.any()).default({}) });
+const galleryBlockSchema = z.object({ type: z.literal("gallery"), data: z.record(z.any()).default({}) });
+const ctaBlockSchema = z.object({ type: z.literal("cta"), data: z.record(z.any()).default({}) });
+const richTextBlockSchema = z.object({ type: z.literal("richText"), data: z.record(z.any()).default({}) });
 
-const heroBlockSchema = z.object({
-  type: z.literal("hero"),
-  data: z.record(z.any()).default({}), 
-});
-
-const richTextBlockSchema = z.object({
-  type: z.literal("richText"),
-  data: z.record(z.any()).default({}),
-});
-
-const galleryBlockSchema = z.object({
-  type: z.literal("gallery"),
-  data: z.record(z.any()).default({}),
-});
-
-const testimonialBlockSchema = z.object({
-  type: z.literal("testimonials"),
-  data: z.record(z.any()).default({}),
-});
-
-
+// The dynamic Form Engine block
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
   data: z.object({
@@ -50,12 +45,22 @@ const contactFormBlockSchema = z.object({
   }).strict() 
 });
 
-// validation gates execution
+// Validation gates execution (Combining all 15 modules)
 const blockSchema = z.discriminatedUnion("type", [
   heroBlockSchema,
-  richTextBlockSchema,
+  servicesBlockSchema,
+  aboutBlockSchema,
+  ourServicesBlockSchema,
+  howWeWorkBlockSchema,
+  ourProjectsBlockSchema,
+  panoramasBlockSchema,
+  teamBlockSchema,
+  testimonialsBlockSchema,
+  videoBannerBlockSchema,
+  blogSectionBlockSchema,
   galleryBlockSchema,
-  testimonialBlockSchema,
+  ctaBlockSchema,
+  richTextBlockSchema,
   contactFormBlockSchema,
 ]);
 
@@ -64,6 +69,7 @@ const pageContentSchema = z.object({
 }).default({ blocks: [] });
 
 
+// API Request Payload Validation Schemas
 export const createPageSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(150, "Title cannot exceed 150 characters"),
   
@@ -79,7 +85,7 @@ export const createPageSchema = z.object({
   content: pageContentSchema,
   status: z.enum(["DRAFT", "PUBLISHED"]).default("DRAFT").optional(),
   
-  //Template Design Execution Hard Security Control
+  // Template Design Execution Hard Security Control
   template: z.enum(ALLOWED_TEMPLATES, {
     errorMap: () => ({ message: "Selected layout design template is not registered or supported by system." })
   }).default("default").optional(),

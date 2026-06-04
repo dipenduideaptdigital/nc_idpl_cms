@@ -3,38 +3,40 @@ import { Play, X } from 'lucide-react';
 import defaultPlay from '../../assets/homepage/play.jpg';
 import apiClient from '../../api/client';
 
-const VideoBanner = () => {
+const VideoBanner = ({ data: externalData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(externalData || null);
   const [coverImg, setCoverImg] = useState(defaultPlay);
 
   useEffect(() => {
     let isMounted = true;
 
+    const processContent = (fetchedContent) => {
+      if (isMounted) setContent(fetchedContent);
+      const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
+      
+      if (fetchedContent.image) {
+        const imgUrl = fetchedContent.image.startsWith('http') ? fetchedContent.image : `${serverUrl}${fetchedContent.image}`;
+        const img = new Image();
+        img.src = imgUrl;
+        img.onload = () => { if (isMounted) setCoverImg(imgUrl); };
+        img.onerror = () => { if (isMounted) setCoverImg(defaultPlay); };
+      } else if (isMounted) {
+        setCoverImg(defaultPlay);
+      }
+    };
+
+    if (externalData) {
+      processContent(externalData);
+      return () => { isMounted = false; };
+    }
+
     const fetchVideoBannerData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_video_banner');
         const { data } = res;
-
         if (data.success && data.data?.content) {
-          const fetchedContent = data.data.content;
-          if (isMounted) setContent(fetchedContent);
-
-          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-          
-          if (fetchedContent.image) {
-            const imgUrl = `${serverUrl}${fetchedContent.image}`;
-            const img = new Image();
-            img.src = imgUrl;
-            img.onload = () => {
-              if (isMounted) setCoverImg(imgUrl);
-            };
-            img.onerror = () => {
-              if (isMounted) setCoverImg(defaultPlay);
-            };
-          } else if (isMounted) {
-            setCoverImg(defaultPlay);
-          }
+          processContent(data.data.content);
         }
       } catch (error) {
         console.error('Failed to fetch video banner content:', error);
@@ -46,7 +48,7 @@ const VideoBanner = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [externalData]);
 
   const videoId = content?.videoId || "ScMzIvxBSi4";
   const title = content?.title || "UNLOCK YOUR DREAM \n HOME TODAY!";

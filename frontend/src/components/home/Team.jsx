@@ -10,38 +10,39 @@ const defaultTeamMembers = [
   { id: '05', name: 'Jake Nicholson', role: '3D Visualisation' },
 ];
 
-const Team = () => {
+const Team = ({ data: externalData }) => {
   const [activeMember, setActiveMember] = useState('01');
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(externalData || null);
   const [teamImg, setTeamImg] = useState('');
 
   useEffect(() => {
     let isMounted = true;
 
+    const processContent = (fetchedContent) => {
+      if (isMounted) setContent(fetchedContent);
+      const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
+      if (fetchedContent.image) {
+        const imgUrl = fetchedContent.image.startsWith('http') ? fetchedContent.image : `${serverUrl}${fetchedContent.image}`;
+        const img = new Image();
+        img.src = imgUrl;
+        img.onload = () => { if (isMounted) setTeamImg(imgUrl); };
+        img.onerror = () => { if (isMounted) setTeamImg(''); };
+      } else if (isMounted) {
+        setTeamImg('');
+      }
+    };
+
+    if (externalData) {
+      processContent(externalData);
+      return () => { isMounted = false; };
+    }
+
     const fetchTeamData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_team');
         const { data } = res;
-
         if (data.success && data.data?.content) {
-          const fetchedContent = data.data.content;
-          if (isMounted) setContent(fetchedContent);
-
-          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-          
-          if (fetchedContent.image) {
-            const imgUrl = `${serverUrl}${fetchedContent.image}`;
-            const img = new Image();
-            img.src = imgUrl;
-            img.onload = () => {
-              if (isMounted) setTeamImg(imgUrl);
-            };
-            img.onerror = () => {
-              if (isMounted) setTeamImg('');
-            };
-          } else if (isMounted) {
-            setTeamImg('');
-          }
+          processContent(data.data.content);
         }
       } catch (error) {
         console.error('Failed to fetch team content:', error);
@@ -53,7 +54,7 @@ const Team = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [externalData]);
 
   const badgeText = content?.badgeText || "AMAZING DESIGN TEAM";
   const title = content?.title || "Meet The [Experts Our \\n Interior] Designers";

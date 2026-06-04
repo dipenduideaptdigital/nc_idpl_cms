@@ -31,7 +31,7 @@ export const servicesSchema = z.object({
   }),
 });
 
-//  About Section
+// About Section
 export const aboutSchema = z.object({
   content: z.object({
     badgeText: z.string().max(50).optional(),
@@ -43,7 +43,7 @@ export const aboutSchema = z.object({
   }),
 });
 
-//  Our Services Section
+// Our Services Section
 export const ourServicesSchema = z.object({
   content: z.object({
     badgeText: z.string().max(50).optional(),
@@ -67,7 +67,7 @@ export const ourServicesSchema = z.object({
   }),
 });
 
-//  How We Work Section
+// How We Work Section
 export const howWeWorkSchema = z.object({
   content: z.object({
     badgeText: z.string().max(50).optional(),
@@ -86,7 +86,7 @@ export const howWeWorkSchema = z.object({
   }),
 });
 
-//  Our Projects Section
+// Our Projects Section
 export const ourProjectsSchema = z.object({
   content: z.object({
     badgeText: z.string().max(50).optional(),
@@ -105,7 +105,7 @@ export const ourProjectsSchema = z.object({
   }),
 });
 
-//  Panoramas Section
+// Panoramas Section
 export const panoramasSchema = z.object({
   content: z.object({
     badgeText: z.string().max(50).optional(),
@@ -114,7 +114,7 @@ export const panoramasSchema = z.object({
   }),
 });
 
-//  Team Section
+// Team Section
 export const teamSchema = z.object({
   content: z.object({
     badgeText: z.string().max(50).optional(),
@@ -150,7 +150,7 @@ export const testimonialsSchema = z.object({
   }),
 });
 
-//  Video Banner Section
+// Video Banner Section
 export const videoBannerSchema = z.object({
   content: z.object({
     videoId: z.string().max(50).optional(), 
@@ -192,4 +192,11 @@ export const ctaSchema = z.object({
     title: z.string().max(150).optional(),
     buttonText: z.string().max(50).optional(),
   }),
+});
+
+// General Settings Section (Crucial for LandingContainer route)
+export const generalSettingsSchema = z.object({
+  content: z.object({
+    landingPage: z.enum(["default", "reference"]).default("default")
+  }).strict()
 });

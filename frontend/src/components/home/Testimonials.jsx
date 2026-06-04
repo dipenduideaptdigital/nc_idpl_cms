@@ -6,52 +6,50 @@ const defaultMainImg = "https://images.unsplash.com/photo-1497366216548-37526070
 const defaultAuthorImg = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop";
 const defaultLogos = ['LOGO 01', 'LOGO 02', 'LOGO 03', 'LOGO 04', 'LOGO 05'];
 
-const Testimonials = () => {
-  const [content, setContent] = useState(null);
+const Testimonials = ({ data: externalData }) => {
+  const [content, setContent] = useState(externalData || null);
   const [mainImg, setMainImg] = useState(defaultMainImg);
   const [authorImg, setAuthorImg] = useState(defaultAuthorImg);
 
   useEffect(() => {
     let isMounted = true;
 
+    const processContent = (fetchedContent) => {
+      if (isMounted) setContent(fetchedContent);
+      const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
+
+      if (fetchedContent.image) {
+        const mainUrl = fetchedContent.image.startsWith('http') ? fetchedContent.image : `${serverUrl}${fetchedContent.image}`;
+        const img1 = new Image();
+        img1.src = mainUrl;
+        img1.onload = () => { if (isMounted) setMainImg(mainUrl); };
+        img1.onerror = () => { if (isMounted) setMainImg(defaultMainImg); };
+      } else if (isMounted) {
+        setMainImg(defaultMainImg);
+      }
+
+      if (fetchedContent.authorImage) {
+        const authUrl = fetchedContent.authorImage.startsWith('http') ? fetchedContent.authorImage : `${serverUrl}${fetchedContent.authorImage}`;
+        const img2 = new Image();
+        img2.src = authUrl;
+        img2.onload = () => { if (isMounted) setAuthorImg(authUrl); };
+        img2.onerror = () => { if (isMounted) setAuthorImg(defaultAuthorImg); };
+      } else if (isMounted) {
+        setAuthorImg(defaultAuthorImg);
+      }
+    };
+
+    if (externalData) {
+      processContent(externalData);
+      return () => { isMounted = false; };
+    }
+
     const fetchTestimonialsData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_testimonials');
         const { data } = res;
-
         if (data.success && data.data?.content) {
-          const fetchedContent = data.data.content;
-          if (isMounted) setContent(fetchedContent);
-
-          const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-
-          if (fetchedContent.image) {
-            const mainUrl = `${serverUrl}${fetchedContent.image}`;
-            const img1 = new Image();
-            img1.src = mainUrl;
-            img1.onload = () => {
-              if (isMounted) setMainImg(mainUrl);
-            };
-            img1.onerror = () => {
-              if (isMounted) setMainImg(defaultMainImg);
-            };
-          } else if (isMounted) {
-            setMainImg(defaultMainImg);
-          }
-
-          if (fetchedContent.authorImage) {
-            const authUrl = `${serverUrl}${fetchedContent.authorImage}`;
-            const img2 = new Image();
-            img2.src = authUrl;
-            img2.onload = () => {
-              if (isMounted) setAuthorImg(authUrl);
-            };
-            img2.onerror = () => {
-              if (isMounted) setAuthorImg(defaultAuthorImg);
-            };
-          } else if (isMounted) {
-            setAuthorImg(defaultAuthorImg);
-          }
+          processContent(data.data.content);
         }
       } catch (error) {
         console.error('Failed to fetch testimonials content:', error);
@@ -63,7 +61,7 @@ const Testimonials = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [externalData]);
 
   const badgeText = content?.badgeText || "OUR CLIENTS SAY";
   const title = content?.title || "Here's What [Warm Words] \\n [Our Clients] Say";
