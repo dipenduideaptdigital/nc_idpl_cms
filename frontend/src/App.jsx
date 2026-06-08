@@ -40,7 +40,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/hero-preview" element={<LandingReference />} />
           <Route path="/" element={<LandingContainer />} />
-          <Route path="/:slug*" element={<DynamicPage />} />
+          <Route path="/*" element={<DynamicPage />} />
         </Route>
         
       </Routes>

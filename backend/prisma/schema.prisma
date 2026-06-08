@@ -53,6 +53,7 @@ model User {
   pagesAuthored        Page[]               @relation("PageAuthor")
   pagesUpdated         Page[]               @relation("PageUpdatedBy")
   pageRevisions        PageRevision[]
+  previewTokens        PagePreviewToken[]   
 
   submissionLogs       ContactSubmissionLog[]
   internalNotes        ContactInternalNote[]
@@ -216,7 +217,7 @@ model Media {
 model Page {
   id                String        @id @default(cuid())
   title             String
-  slug              String     
+  slug              String      
   fullPath          String        @unique 
   
   parentId          String?
@@ -248,6 +249,7 @@ model Page {
   updatedBy         User?         @relation("PageUpdatedBy", fields: [updatedById], references: [id])
 
   revisions         PageRevision[]
+  previewTokens     PagePreviewToken[] 
 
   @@unique([parentId, slug, deletedAt]) 
   @@index([fullPath]) 
@@ -272,6 +274,28 @@ model PageRevision {
 
   @@index([pageId])
   @@map("page_revisions")
+}
+
+model PagePreviewToken {
+  id             String   @id @default(cuid())
+  token          String   @unique
+
+  pageId         String
+  page           Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  createdById    String
+  createdBy      User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  expiresAt      DateTime
+  usedCount      Int      @default(0)
+  lastAccessedAt DateTime?
+
+  createdAt      DateTime @default(now())
+
+  @@index([token])
+  @@index([pageId])
+  @@index([expiresAt]) // Critical for finding active tokens efficiently and fast purging
+  @@map("page_preview_tokens")
 }
 
 model ContactForm {
