@@ -53,7 +53,8 @@ const renderBlock = (block, index) => {
 };
 
 const DynamicPage = () => {
-  const { slug } = useParams();
+  const params = useParams();
+  const fullSlug = params['*'] ? `${params.slug}/${params['*']}` : params.slug;
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -65,7 +66,7 @@ const DynamicPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await pagesApi.getPublicPageBySlug(slug);
+        const response = await pagesApi.getPublicPageBySlug(fullSlug);
         setPage(response.data);
         
         // Basic SEO injection
@@ -88,7 +89,7 @@ const DynamicPage = () => {
     };
 
     fetchPage();
-  }, [slug]);
+  }, [fullSlug]); 
 
   if (loading) {
     return (

@@ -108,8 +108,8 @@ const OurProjects = ({ data: externalData }) => {
   };
 
   return (
-    <section className="py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-8 max-w-7xl">
+    <section className="py-16 md:py-24 bg-white overflow-hidden">
+      <div className="container mx-auto px-6 md:px-8 max-w-7xl">
         
         {/* Top Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 mb-20">
@@ -122,7 +122,7 @@ const OurProjects = ({ data: externalData }) => {
               </span>
             </div>
             
-            <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 leading-[1.1]">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-[1.1]">
               {renderTitle(title)}
             </h2>
           </div>
@@ -142,7 +142,7 @@ const OurProjects = ({ data: externalData }) => {
         >
           {projectsList.map((project, index) => {
             const isEven = index % 2 === 0;
-            const marginTopClass = isEven ? 'mt-24' : 'mt-0';
+            const marginTopClass = isEven ? 'mt-12 md:mt-24' : 'mt-0';
 
             return (
               <div 
@@ -150,11 +150,11 @@ const OurProjects = ({ data: externalData }) => {
                 className={`min-w-[320px] md:min-w-[380px] snap-center flex flex-col ${marginTopClass} transition-all duration-300 hover:-translate-y-2`}
               >
                 {/* Image Card */}
-                <div className="relative w-full h-[500px] rounded-[2.5rem] overflow-hidden mb-8 shadow-lg">
+                <div className="relative w-full h-[400px] md:h-[500px] rounded-[2.5rem] overflow-hidden mb-8 shadow-lg group">
                   <img 
                     src={project.image} 
                     alt={project.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     onError={(e) => {
                       const defaultImg = defaultProjectsData[index % defaultProjectsData.length].image;
                       if (e.currentTarget.src !== defaultImg) {
@@ -194,7 +194,7 @@ const OurProjects = ({ data: externalData }) => {
         </div>
 
         {/* Foreground Image */}
-        <div className="container mx-auto px-28 relative z-10">
+        <div className="container mx-auto px-8 md:px-28 relative z-10">
           <img 
             src={interiorImg} 
             alt="Interior Panoramic" 

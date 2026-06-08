@@ -5,6 +5,7 @@ export const serializePage = (page, context = "admin") => {
     id: page.id,
     title: page.title,
     slug: page.slug,
+    fullPath: page.fullPath,
     excerpt: page.excerpt,
     content: page.content,
     status: page.status,
@@ -24,6 +25,9 @@ export const serializePage = (page, context = "admin") => {
   if (context === "admin") {
     return {
       ...base,
+      parentId: page.parentId,     
+      menuOrder: page.menuOrder,   
+      showInMenu: page.showInMenu, 
       authorId: page.authorId,
       updatedById: page.updatedById,
       deletedAt: page.deletedAt,

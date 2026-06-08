@@ -87,11 +87,11 @@ const Team = ({ data: externalData }) => {
   };
 
   return (
-    <section className="py-15 bg-white overflow-hidden">
-      <div className="container mx-auto px-8 max-w-7xl">
+    <section className="py-16 md:py-24 bg-white overflow-hidden">
+      <div className="container mx-auto px-6 md:px-8 max-w-7xl">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start mb-15 gap-12">
+        <div className="flex flex-col md:flex-row justify-between items-start mb-12 md:mb-16 gap-8 md:gap-12">
           {/* Left: Badge */}
           <div className="fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
@@ -104,10 +104,10 @@ const Team = ({ data: externalData }) => {
           
           {/* Right: Heading & Description */}
           <div className="max-w-2xl fadeInRight">
-            <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
               {renderTitle(title)}
             </h2>
-            <p className="text-gray-500 font-light text-sm leading-relaxed max-w-lg">
+            <p className="text-gray-500 font-light text-sm md:text-base leading-relaxed max-w-lg">
               {description}
             </p>
           </div>
@@ -118,11 +118,11 @@ const Team = ({ data: externalData }) => {
           
           {/* Left: Team Photo / Slate Placeholder */}
           {teamImg ? (
-            <div className="w-full h-[500px] md:h-[600px] rounded-[2.5rem] overflow-hidden shadow-lg fadeInLeft">
-              <img src={teamImg} alt="Interior Design Team" className="w-full h-full object-cover" />
+            <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] rounded-[2.5rem] overflow-hidden shadow-lg fadeInLeft group">
+              <img src={teamImg} alt="Interior Design Team" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
           ) : (
-            <div className="w-full h-[500px] md:h-[600px] bg-slate-300 rounded-[2.5rem] shadow-lg fadeInLeft"></div>
+            <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] bg-slate-300 rounded-[2.5rem] shadow-lg fadeInLeft"></div>
           )}
 
           {/* Right: Team Members List */}
@@ -134,9 +134,9 @@ const Team = ({ data: externalData }) => {
               return (
                 <div 
                   key={index}
-                  className={`group flex items-center justify-between py-6 border-b cursor-pointer transition-colors ${
-                    isActive ? 'border-primary border-b-2 border-t-2 -mt-[1px] z-10' : 'border-gray-200'
-                  }`}
+                  className={`group flex items-center justify-between py-5 md:py-6 border-b cursor-pointer transition-all duration-300 ${
+                    isActive ? 'border-primary border-b-2 border-t-2 -mt-[1px] z-10' : 'border-gray-200 hover:bg-gray-50'
+                  } rounded-xl px-2 -mx-2`}
                   onMouseEnter={() => setActiveMember(memberId)}
                 >
                   <div className="flex items-center gap-6 sm:gap-12">

@@ -106,11 +106,11 @@ const OurServices = ({ data: externalData }) => {
   };
 
   return (
-    <section className="py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-8 max-w-7xl">
+    <section className="py-16 md:py-24 bg-white overflow-hidden">
+      <div className="container mx-auto px-6 md:px-8 max-w-7xl">
         
         {/* Top Header Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 mb-20 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 md:gap-12 mb-12 md:mb-20 items-start">
           {/* Left: Badge */}
           <div className="fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
@@ -123,24 +123,24 @@ const OurServices = ({ data: externalData }) => {
           
           {/* Right: Heading & Description */}
           <div className="fadeInRight">
-            <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
               {renderTitle(title)}
             </h2>
-            <p className="text-gray-500 max-w-3xl font-light text-sm leading-relaxed">
+            <p className="text-gray-500 max-w-3xl font-light text-sm md:text-base leading-relaxed">
               {description}
             </p>
           </div>
         </div>
 
         {/* Middle Section: Image & Services List */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-16 mb-16 md:mb-24 items-center">
           
           {/* Left: Image with Overlay */}
-          <div className="relative rounded-[2rem] overflow-hidden h-[500px] shadow-2xl fadeInLeft">
+          <div className="relative rounded-[2rem] overflow-hidden h-[400px] lg:h-[500px] w-full shadow-2xl fadeInLeft group">
             <img 
               src={serviceImg} 
               alt="Interior Design Service" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               onError={(e) => {
                 if (e.currentTarget.src !== defaultServiceImg) {
                   e.currentTarget.src = defaultServiceImg;
@@ -164,10 +164,10 @@ const OurServices = ({ data: externalData }) => {
               return (
                 <div 
                   key={index}
-                  className="group flex items-center justify-between py-6 border-b border-gray-200 cursor-pointer"
+                  className="group flex items-center justify-between py-5 md:py-6 border-b border-gray-200 cursor-pointer hover:bg-gray-50/50 transition-colors rounded-xl px-2 -mx-2"
                   onMouseEnter={() => setActiveService(serviceId)}
                 >
-                  <div className="flex items-center space-x-8">
+                  <div className="flex items-center space-x-6 md:space-x-8 transform group-hover:translate-x-2 transition-transform duration-300">
                     <span className="text-lg font-medium text-gray-600 w-6">
                       {serviceId}
                     </span>
@@ -192,7 +192,7 @@ const OurServices = ({ data: externalData }) => {
         </div>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-32 text-center">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-20 md:mb-32 text-center">
           {statsData.map((stat, index) => (
             <div key={index} className="flex flex-col items-center opal-move-up">
               <h3 className="text-5xl font-bold text-primary mb-6">{stat.value}</h3>

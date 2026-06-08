@@ -8,7 +8,6 @@ import {
   Trash2, 
   Search,
   ExternalLink,
-  MoreVertical,
   AlertCircle
 } from 'lucide-react';
 
@@ -57,7 +56,7 @@ const PageList = () => {
 
   const filteredPages = pages.filter(page => 
     page.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    page.slug?.toLowerCase().includes(searchTerm.toLowerCase())
+    page.fullPath?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getStatusBadge = (status) => {
@@ -120,7 +119,7 @@ const PageList = () => {
             </div>
             <input
               type="text"
-              placeholder="Search pages by title or slug..."
+              placeholder="Search pages by title or URL path..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="block w-full pl-10 pr-3 py-2 border border-zinc-200 rounded-xl leading-5 bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors sm:text-sm"
@@ -161,9 +160,12 @@ const PageList = () => {
                       <div className="flex flex-col">
                         <span className="text-sm font-semibold text-zinc-900">{page.title}</span>
                         <div className="flex items-center gap-1 mt-1">
-                          <span className="text-xs text-zinc-500 font-mono bg-zinc-100 px-1.5 py-0.5 rounded">/{page.slug}</span>
+                          <span className="text-xs text-zinc-500 font-mono bg-zinc-100 px-1.5 py-0.5 rounded">
+                            {page.fullPath || `/${page.slug}`}
+                          </span>
+                          
                           <a 
-                            href={`/${page.slug}`} 
+                            href={page.fullPath?.startsWith('/') ? page.fullPath : `/${page.fullPath || page.slug}`}
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-zinc-400 hover:text-zinc-700 transition-colors"

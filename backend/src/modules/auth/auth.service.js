@@ -39,9 +39,9 @@ const login = async ({ email, password, allowedRoles = [] }) => {
 
   // Find user
   const user = await findUserByEmail(
-  normalizedEmail,
-  AUTH_BASIC_USER_INCLUDE
-);
+    normalizedEmail,
+    AUTH_BASIC_USER_INCLUDE
+  );
 
   // Invalid user
   if (!user) {
@@ -68,9 +68,12 @@ const login = async ({ email, password, allowedRoles = [] }) => {
     throw new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED);
   }
 
-  // Role validation
+  // Role Validation mapping with descriptive errors
   if (allowedRoles.length > 0 && !allowedRoles.includes(user.systemRole.slug)) {
-    throw new AppError("Access denied", StatusCodes.FORBIDDEN);
+    if (["SUPER_ADMIN", "ADMIN"].includes(user.systemRole.slug)) {
+      throw new AppError("Access denied. Admins must use the dedicated Admin Portal to sign in.", StatusCodes.FORBIDDEN);
+    }
+    throw new AppError("Access denied. Invalid role for this portal.", StatusCodes.FORBIDDEN);
   }
 
   // Access token
@@ -123,9 +126,9 @@ export const registerUser = async (payload) => {
 
   // Check existing user
   const existingUser = await findUserByEmail(
-  normalizedEmail,
-  AUTH_BASIC_USER_INCLUDE
-);
+    normalizedEmail,
+    AUTH_BASIC_USER_INCLUDE
+  );
 
   if (existingUser) {
     throw new AppError("Email already exists", StatusCodes.BAD_REQUEST);
@@ -175,7 +178,7 @@ export const loginUser = async (payload) => {
   return login({
     email: payload.email,
     password: payload.password,
-    allowedRoles: [],
+    allowedRoles: ["USER"], 
   });
 };
 
@@ -255,9 +258,9 @@ export const forgotPassword = async (email) => {
 
   // Find user
   const user = await findUserByEmail(
-  normalizedEmail,
-  AUTH_BASIC_USER_INCLUDE
-);
+    normalizedEmail,
+    AUTH_BASIC_USER_INCLUDE
+  );
 
   // Silent success to prevent email enumeration
   if (!user) {
@@ -346,10 +349,10 @@ export const resetPassword = async ({ token, password }) => {
 
   if (isSamePassword) { 
     throw new AppError(
-    "New password must be different from current password",
-    StatusCodes.BAD_REQUEST
-  );
-}
+      "New password must be different from current password",
+      StatusCodes.BAD_REQUEST
+    );
+  }
 
   const hashedPassword = await hashPassword(password);
 

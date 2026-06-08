@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 /* Layouts */
 import MainLayout from './components/layout/MainLayout';
+import AdminLayout from './components/layout/AdminLayout';
 
 /* Pages */
 import Home from './pages/Home';
@@ -11,7 +12,8 @@ import LandingContainer from './pages/LandingContainer';
 import DynamicPage from './pages/DynamicPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import AdminLayout from './components/layout/AdminLayout';
+
+/* Admin Pages */
 import HomeCustomization from './pages/admin/HomeCustomization';
 import PageList from './pages/admin/pages/PageList';
 import PageEditor from './pages/admin/pages/PageEditor';
@@ -24,13 +26,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route element={<MainLayout />}>
-          <Route path="/hero-preview" element={<LandingReference />} />
-          <Route path="/" element={<LandingContainer />} />
-          <Route path="/:slug*" element={<DynamicPage />} />
-        </Route>
         
-        {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="home-customization" element={<HomeCustomization />} />
           <Route path="pages" element={<PageList />} />
@@ -40,6 +36,13 @@ function App() {
           <Route path="contact-forms/create" element={<ContactFormEditor />} />
           <Route path="contact-forms/edit/:id" element={<ContactFormEditor />} />
         </Route>
+
+        <Route element={<MainLayout />}>
+          <Route path="/hero-preview" element={<LandingReference />} />
+          <Route path="/" element={<LandingContainer />} />
+          <Route path="/:slug*" element={<DynamicPage />} />
+        </Route>
+        
       </Routes>
     </BrowserRouter>
   );

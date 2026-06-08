@@ -57,7 +57,7 @@ const Navbar = () => {
                 {pages.map((page) => (
                   <li key={page.id}>
                     <Link
-                      to={`/${page.slug}`}
+                      to={page.fullPath.startsWith('/') ? page.fullPath : `/${page.fullPath}`}
                       className="block px-4 py-2 text-sm hover:bg-gray-50 hover:text-primary transition-colors"
                     >
                       {page.title}

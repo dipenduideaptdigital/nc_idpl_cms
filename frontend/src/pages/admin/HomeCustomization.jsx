@@ -13,6 +13,7 @@ import VideoBannerCustomization from '../../components/admin/VideoBannerCustomiz
 import BlogSectionCustomization from '../../components/admin/BlogSectionCustomization';
 import GalleryCustomization from '../../components/admin/GalleryCustomization';
 import CtaCustomization from '../../components/admin/CtaCustomization';
+import GeneralCustomization from '../../components/admin/GeneralCustomization';
 import apiClient from '../../api/client'; 
 
 const getAssetUrl = (path) => {
@@ -25,12 +26,17 @@ const getAssetUrl = (path) => {
 };
 
 const HomeCustomization = () => {
-  const [activeTab, setActiveTab] = useState('hero');
+  const [activeTab, setActiveTab] = useState('general');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
+  // 0. General State
+  const [generalData, setGeneralData] = useState({
+    landingPage: 'default'
+  });
+
   // 1. Hero Section State
   const [heroData, setHeroData] = useState({
     titleLine1: 'End-To-End',
@@ -240,6 +246,7 @@ const HomeCustomization = () => {
       setErrorMsg('');
       
       const [
+        generalRes,
         heroRes, 
         servicesRes, 
         aboutRes,
@@ -254,6 +261,7 @@ const HomeCustomization = () => {
         galleryRes,
         ctaRes
       ] = await Promise.allSettled([
+        apiClient.get('/cms/section/homepage_general'),
         apiClient.get('/cms/section/homepage_hero'),
         apiClient.get('/cms/section/homepage_services'),
         apiClient.get('/cms/section/homepage_about'),
@@ -268,6 +276,14 @@ const HomeCustomization = () => {
         apiClient.get('/cms/section/homepage_gallery'),
         apiClient.get('/cms/section/homepage_cta')
       ]);
+
+      // General
+      if (generalRes.status === 'fulfilled' && generalRes.value.data?.data?.content) {
+        const content = generalRes.value.data.data.content;
+        if (Object.keys(content).length > 0) {
+          setGeneralData(content);
+        }
+      }
 
       // 1. Hero
       if (heroRes.status === 'fulfilled' && heroRes.value.data?.data?.content) {
@@ -395,6 +411,11 @@ const HomeCustomization = () => {
   };
 
   // Base Handlers
+  const handleGeneralInputChange = (e) => {
+    const { name, value } = e.target;
+    setGeneralData(prev => ({ ...prev, [name]: value }));
+  };
+
   const handleHeroInputChange = (e) => {
     const { name, value } = e.target;
     setHeroData(prev => ({ ...prev, [name]: value }));
@@ -755,7 +776,8 @@ const HomeCustomization = () => {
       let url = `/cms/section/homepage_${activeTab}`;
       let payload = null;
 
-      if (activeTab === 'hero') payload = { content: heroData };
+      if (activeTab === 'general') payload = { content: generalData };
+      else if (activeTab === 'hero') payload = { content: heroData };
       else if (activeTab === 'services') payload = { content: servicesData };
       else if (activeTab === 'about') payload = { content: aboutData };
       else if (activeTab === 'our_services') payload = { content: ourServicesData };
@@ -825,6 +847,7 @@ const HomeCustomization = () => {
       {/* Tab Navigation */}
       <div className="flex flex-wrap border-b border-zinc-200 gap-3 md:gap-4">
         {[
+          { key: 'general', label: 'General', icon: Settings },
           { key: 'hero', label: 'Hero', icon: ImageIcon },
           { key: 'services', label: 'Services', icon: List },
           { key: 'about', label: 'About Us', icon: User },
@@ -854,6 +877,13 @@ const HomeCustomization = () => {
       </div>
 
       {/* Tab Contents */}
+      {activeTab === 'general' && (
+        <GeneralCustomization
+          generalData={generalData}
+          onChange={handleGeneralInputChange}
+        />
+      )}
+
       {activeTab === 'hero' && (
         <HeroCustomization
           heroData={heroData}

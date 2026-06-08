@@ -101,11 +101,11 @@ const Testimonials = ({ data: externalData }) => {
   };
 
   return (
-    <section className="py-15 bg-white overflow-hidden">
-      <div className="container mx-auto px-8 max-w-7xl">
+    <section className="py-16 md:py-24 bg-white overflow-hidden">
+      <div className="container mx-auto px-6 md:px-8 max-w-7xl">
         
         {/* Top Header Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 items-start">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16 items-start">
           {/* Left: Badge */}
           <div className="fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
@@ -118,10 +118,10 @@ const Testimonials = ({ data: externalData }) => {
           
           {/* Right: Heading & Description */}
           <div className="fadeInRight">
-            <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
               {renderTitle(title)}
             </h2>
-            <p className="text-gray-500 max-w-2xl font-light text-sm leading-relaxed">
+            <p className="text-gray-500 max-w-2xl font-light text-sm md:text-base leading-relaxed">
               {description}
             </p>
           </div>
@@ -131,11 +131,11 @@ const Testimonials = ({ data: externalData }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-24 items-center">
           
           {/* Left: Image */}
-          <div className="w-full h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl fadeInLeft">
+          <div className="w-full h-[350px] md:h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl fadeInLeft group">
             <img 
               src={mainImg} 
               alt="Office Interior" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               onError={(e) => {
                 if (e.currentTarget.src !== defaultMainImg) {
                   e.currentTarget.src = defaultMainImg;
@@ -151,7 +151,7 @@ const Testimonials = ({ data: externalData }) => {
             <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-8">
               <div className="text-6xl font-bold text-gray-900 tracking-tighter">{ratingValue}</div>
               
-              <div className="flex flex-col items-center sm:items-start gap-1">
+              <div className="flex flex-col items-start sm:items-start gap-1">
                 <div className="bg-primary text-white flex space-x-1 px-3 py-1.5 rounded-full shadow-md">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-3.5 h-3.5 fill-white text-white" />
@@ -160,7 +160,7 @@ const Testimonials = ({ data: externalData }) => {
                 <span className="text-xs font-bold text-gray-900 pl-1">{reviewCount}</span>
               </div>
               
-              <p className="text-xs text-gray-600 font-medium leading-relaxed max-w-[250px] sm:pl-4 sm:border-l border-gray-200">
+              <p className="text-xs text-gray-600 font-medium leading-relaxed max-w-[250px] sm:pl-6 sm:border-l border-gray-200">
                 {conceptText}
               </p>
             </div>
