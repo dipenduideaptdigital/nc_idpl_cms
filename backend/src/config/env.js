@@ -12,6 +12,7 @@ export const env = cleanEnv(process.env, {
   ACCESS_TOKEN_EXPIRES_IN: str({ default: "15m" }),
   REFRESH_TOKEN_EXPIRES_IN: str({ default: "7d" }),
   CLIENT_URL: str(),
+  TRUST_PROXY: str({ default: "false" }), 
   SUPER_ADMIN_NAME: str(),
   SUPER_ADMIN_EMAIL: str(),
   SUPER_ADMIN_PASSWORD: str(),

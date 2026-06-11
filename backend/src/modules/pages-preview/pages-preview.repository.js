@@ -1,23 +1,29 @@
 import { prisma } from "../../config/db.js";
+import crypto from "crypto";
 
-// Check if an active token already exists to prevent DB bloat
-export const findActiveTokenByPageId = async (pageId) => {
-  return await prisma.pagePreviewToken.findFirst({
-    where: {
-      pageId,
-      expiresAt: { gt: new Date() } // Strictly check if it's still alive
-    }
+const hashToken = (token) => crypto.createHash("sha256").update(token).digest("hex");
+
+export const replaceAndCreatePreviewToken = async (data) => {
+  return await prisma.$transaction(async (tx) => {
+    await tx.pagePreviewToken.deleteMany({
+      where: { pageId: data.pageId }
+    });
+
+    return await tx.pagePreviewToken.create({
+      data: {
+        tokenHash: hashToken(data.token),
+        pageId: data.pageId,
+        createdById: data.createdById,
+        expiresAt: data.expiresAt
+      }
+    });
   });
 };
 
-export const createNewPreviewToken = async (data) => {
-  return await prisma.pagePreviewToken.create({ data });
-};
-
-// Fetch token and eagerly load the exact relation structures needed for the Page renderer
-export const findTokenWithPageContext = async (token) => {
+export const findTokenWithPageContext = async (rawToken) => {
+  const tokenHash = hashToken(rawToken);
   return await prisma.pagePreviewToken.findUnique({
-    where: { token },
+    where: { tokenHash },
     include: {
       page: {
         include: {
@@ -29,13 +35,31 @@ export const findTokenWithPageContext = async (token) => {
   });
 };
 
-// Fire-and-forget audit tracking
 export const incrementTokenUsage = async (tokenId) => {
   return await prisma.pagePreviewToken.update({
     where: { id: tokenId },
-    data: {
-      usedCount: { increment: 1 },
-      lastAccessedAt: new Date()
+    data: { usedCount: { increment: 1 }, lastAccessedAt: new Date() }
+  });
+};
+
+export const revokePreviewToken = async (pageId) => {
+  return await prisma.pagePreviewToken.deleteMany({ where: { pageId } });
+};
+
+export const deleteExpiredTokens = async () => {
+  return await prisma.pagePreviewToken.deleteMany({
+    where: { expiresAt: { lt: new Date() } }
+  });
+};
+
+export const getPreviewTokenStats = async (pageId) => {
+  return await prisma.pagePreviewToken.findUnique({
+    where: { pageId },
+    select: { 
+      expiresAt: true, 
+      usedCount: true, 
+      lastAccessedAt: true, 
+      createdAt: true 
     }
   });
 };

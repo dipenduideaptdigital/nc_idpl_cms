@@ -3,52 +3,94 @@ import http from "http";
 import app from "./app.js";
 import { env } from "./config/env.js";
 import { logger } from "./config/logger.js";
+
 import { cleanupExpiredTokens } from "./jobs/cleanupExpiredTokens.job.js";
-import { initMediaCleanupJob } from "./jobs/cleanupOrphanMedia.job.js"; 
+import { initMediaCleanupJob } from "./jobs/cleanupOrphanMedia.job.js";
+import { initPreviewCleanupJob } from "./jobs/cleanupPreviewTokens.job.js";
 
 const server = http.createServer(app);
 
-const PORT = env.PORT;
+// Timeouts
+server.keepAliveTimeout = 65000;
+server.headersTimeout = 66000;
+server.timeout = 30000;
+
+const PORT = env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    // Initialize background cron jobs before starting the server
+    logger.info("Connecting to database...");
+    await prisma.$connect();
+    logger.info("Database connected successfully.");
+
+    logger.info("Starting background jobs...");
     cleanupExpiredTokens();
-    initMediaCleanupJob(); 
+    initMediaCleanupJob();
+    initPreviewCleanupJob();
+    logger.info("Background jobs initialized.");
 
     server.listen(PORT, () => {
-      logger.info(`Server running in ${env.NODE_ENV || 'development'} mode on port ${PORT}`);
+      logger.info(
+        `Server started in ${env.NODE_ENV || "development"} mode on port ${PORT}`
+      );
     });
   } catch (error) {
-    logger.error("Failed to start server:", error);
+    logger.error("Failed to start server.", error);
     process.exit(1);
   }
 };
 
 startServer();
 
-// Graceful shutdown logic
 const shutdown = async (signal) => {
-  logger.info(`${signal} received. Shutting down server...`);
-  
-  server.close(async () => {
-    await prisma.$disconnect(); 
-    logger.info("Server closed and database disconnected.");
-    process.exit(0);
+  logger.warn(`${signal} received. Starting graceful shutdown...`);
+
+  const shutdownTimeout = setTimeout(() => {
+    logger.error("Graceful shutdown timed out. Force exiting.");
+    process.exit(1);
+  }, 10000);
+
+  server.close(async (err) => {
+    if (err) {
+      logger.error("Failed to close HTTP server.", err);
+      clearTimeout(shutdownTimeout);
+      process.exit(1);
+    }
+
+    try {
+      logger.info("Disconnecting database...");
+      await prisma.$disconnect();
+
+      clearTimeout(shutdownTimeout);
+
+      logger.info("Shutdown completed successfully.");
+      process.exit(0);
+    } catch (error) {
+      logger.error("Failed to disconnect database.", error);
+
+      clearTimeout(shutdownTimeout);
+      process.exit(1);
+    }
   });
 };
 
-// Handle termination signals
+// shutdown signals
 process.on("SIGINT", () => shutdown("SIGINT"));
 process.on("SIGTERM", () => shutdown("SIGTERM"));
 
-// Catch unexpected runtime errors
+// Fatal runtime errors
 process.on("uncaughtException", (error) => {
-  logger.error("Uncaught Exception:", error);
+  logger.error("Uncaught exception.", error);
   process.exit(1);
 });
 
+// Promise rejections
 process.on("unhandledRejection", (reason) => {
-  logger.error("Unhandled Rejection:", reason);
-  process.exit(1);
+  logger.error(
+    {
+      reason: reason instanceof Error ? reason.message : reason,
+      stack: reason instanceof Error ? reason.stack : undefined,
+    },
+    "Unhandled promise rejection."
+  );
 });

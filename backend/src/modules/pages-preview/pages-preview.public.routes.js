@@ -6,7 +6,6 @@ import { getPreviewPageDataController } from "./pages-preview.controller.js";
 
 const router = Router();
 
-// Brute-force trap: 10 requests per minute per IP
 const previewRateLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, 
   max: 10, 

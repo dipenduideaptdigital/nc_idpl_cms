@@ -10,6 +10,8 @@ import pagesPublicRoutes from "../modules/pages/pages.public.routes.js";
 import contactPublicRoutes from "../modules/contacts/contacts.public.routes.js";
 import contactAdminRoutes from "../modules/contacts/contacts.admin.routes.js";
 import contactFormsAdminRoutes from "../modules/contactForms/contactForms.admin.routes.js";
+import previewAdminRoutes from "../modules/pages-preview/pages-preview.admin.routes.js";
+import previewPublicRoutes from "../modules/pages-preview/pages-preview.public.routes.js";
 
 const router = Router();
 
@@ -23,6 +25,8 @@ router.use("/admin/pages", pagesAdminRoutes);
 router.use("/contacts", contactPublicRoutes);
 router.use("/admin", contactAdminRoutes);
 router.use("/admin/contact-forms", contactFormsAdminRoutes);
+router.use("/admin/pages", previewAdminRoutes);
+router.use("/preview", previewPublicRoutes);
 
 router.get("/health", (req, res) => {
   res.status(200).json({

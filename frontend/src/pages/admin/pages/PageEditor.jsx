@@ -13,6 +13,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import DynamicBlockEditor from '../../../components/admin/DynamicBlockEditor';
+import PreviewManager from '../../../components/admin/PreviewManager';
 
 const PageEditor = () => {
   const { id } = useParams();
@@ -327,6 +328,7 @@ const PageEditor = () => {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <PreviewManager pageId={isEditMode ? id : null} />
           <select
             name="status"
             value={formData.status}

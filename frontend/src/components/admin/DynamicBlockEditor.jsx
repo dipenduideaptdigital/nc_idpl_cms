@@ -354,7 +354,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-2">Optional Success Redirect Path</label>
+              <label className="block text-sm font-medium text-zinc-700 mb-2">Redirect Path *</label>
               <input 
                 type="text" 
                 value={data.redirectPath || ''} 

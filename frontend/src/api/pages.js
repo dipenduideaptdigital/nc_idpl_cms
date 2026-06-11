@@ -35,4 +35,24 @@ export const pagesApi = {
     const response = await apiClient.get(`/pages/${slug}`);
     return response.data;
   },
+
+  generatePreviewLink: async (id) => {
+    const response = await apiClient.post(`/admin/pages/${id}/preview-link`);
+    return response.data;
+  },
+  
+  getPreviewStatus: async (id) => {
+    const response = await apiClient.get(`/admin/pages/${id}/preview-link`);
+    return response.data;
+  },
+
+  revokePreviewLink: async (id) => {
+    const response = await apiClient.delete(`/admin/pages/${id}/preview-link`);
+    return response.data;
+  },
+
+  getPreviewPageData: async (token) => {
+    const response = await apiClient.get(`/preview/${token}`);
+    return response.data;
+  },
 };

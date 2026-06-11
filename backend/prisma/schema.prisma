@@ -278,23 +278,21 @@ model PageRevision {
 
 model PagePreviewToken {
   id             String   @id @default(cuid())
-  token          String   @unique
+  tokenHash      String   @unique
 
-  pageId         String
+  pageId         String   @unique 
+
   page           Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
   createdById    String
-  createdBy      User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
-
+  createdBy      User     @relation(fields: [createdById], references: [id])
+  
   expiresAt      DateTime
   usedCount      Int      @default(0)
   lastAccessedAt DateTime?
-
   createdAt      DateTime @default(now())
 
-  @@index([token])
-  @@index([pageId])
-  @@index([expiresAt]) // Critical for finding active tokens efficiently and fast purging
+  @@index([expiresAt])
   @@map("page_preview_tokens")
 }
 

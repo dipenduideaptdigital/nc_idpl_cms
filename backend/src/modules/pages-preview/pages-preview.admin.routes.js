@@ -3,12 +3,14 @@ import { authenticate } from "../../shared/middlewares/authenticate.middleware.j
 import { authorizeSystemRoles } from "../../shared/middlewares/authorize.middleware.js";
 import { validate } from "../../shared/middlewares/validate.middleware.js";
 import { pageIdParamSchema } from "../pages/pages.validation.js";
-import { createPreviewLinkController } from "./pages-preview.controller.js";
+import { createPreviewLinkController, revokePreviewLinkController, getPreviewStatusController } from "./pages-preview.controller.js";
 
 const router = Router();
 
 router.use(authenticate, authorizeSystemRoles("SUPER_ADMIN", "ADMIN"));
 
 router.post("/:id/preview-link", validate(pageIdParamSchema, "params"), createPreviewLinkController);
+router.delete("/:id/preview-link", validate(pageIdParamSchema, "params"), revokePreviewLinkController);
+router.get("/:id/preview-link", validate(pageIdParamSchema, "params"), getPreviewStatusController);
 
 export default router;

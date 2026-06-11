@@ -1,60 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Navigate, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { pagesApi } from '../api/pages';
 import { ArrowLeft } from 'lucide-react';
 import useScrollAnimation from '../hooks/useScrollAnimation';
-
-import Hero from '../components/home/Hero';
-import Services from '../components/home/Services';
-import AboutSection from '../components/home/AboutSection';
-import OurServices from '../components/home/OurServices';
-import HowWeWork from '../components/home/HowWeWork';
-import OurProjects from '../components/home/OurProjects';
-import Panoramas from '../components/home/Panoramas';
-import Team from '../components/home/Team';
-import Testimonials from '../components/home/Testimonials';
-import VideoBanner from '../components/home/VideoBanner';
-import BlogSection from '../components/home/BlogSection';
-import Gallery from '../components/home/Gallery';
-import CtaSection from '../components/home/CtaSection';
-import ContactFormBlock from '../components/blocks/ContactFormBlock';
-
-const renderBlock = (block, index) => {
-  const { type, data } = block;
-  switch (type) {
-    case 'hero': return <Hero key={index} data={data} />;
-    case 'services': return <Services key={index} data={data} />;
-    case 'about': return <AboutSection key={index} data={data} />;
-    case 'our_services': return <OurServices key={index} data={data} />;
-    case 'how_we_work': return <HowWeWork key={index} data={data} />;
-    case 'our_projects': return <OurProjects key={index} data={data} />;
-    case 'panoramas': return <Panoramas key={index} data={data} />;
-    case 'team': return <Team key={index} data={data} />;
-    case 'testimonials': return <Testimonials key={index} data={data} />;
-    case 'video_banner': return <VideoBanner key={index} data={data} />;
-    case 'blog_section': return <BlogSection key={index} data={data} />;
-    case 'gallery': return <Gallery key={index} data={data} />;
-    case 'cta': return <CtaSection key={index} data={data} />;
-    case 'contactForm': return <ContactFormBlock key={index} data={data} />;
-    case 'richText':
-      return (
-        <div key={index} className="py-16 md:py-24">
-          <div className="max-w-4xl mx-auto px-6">
-            <div 
-              className="prose prose-zinc lg:prose-lg mx-auto prose-headings:font-semibold prose-a:text-blue-600 hover:prose-a:text-blue-800"
-              dangerouslySetInnerHTML={{ __html: data?.content || '' }}
-            />
-          </div>
-        </div>
-      );
-    default:
-      return null;
-  }
-};
+import PageRenderer from '../components/shared/PageRenderer';
 
 const DynamicPage = () => {
-  const params = useParams();
-  const fullSlug = params['*'] ? `${params.slug}/${params['*']}` : params.slug;
+  const location = useLocation();
+  const currentPath = location.pathname; 
+  
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,11 +16,16 @@ const DynamicPage = () => {
   useScrollAnimation();
 
   useEffect(() => {
+    const originalTitle = document.title;
+    const metaDescElement = document.querySelector('meta[name="description"]');
+    const originalDesc = metaDescElement ? metaDescElement.getAttribute('content') : '';
+
     const fetchPage = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await pagesApi.getPublicPageBySlug(fullSlug);
+        
+        const response = await pagesApi.getPublicPageBySlug(currentPath);
         setPage(response.data);
         
         // Basic SEO injection
@@ -76,9 +35,14 @@ const DynamicPage = () => {
           document.title = `${response.data.title} | Subhaakritee`;
         }
 
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc && response.data.metaDescription) {
-          metaDesc.setAttribute('content', response.data.metaDescription);
+        if (metaDescElement && response.data.metaDescription) {
+          metaDescElement.setAttribute('content', response.data.metaDescription);
+        } else if (!metaDescElement && response.data.metaDescription) {
+          const newMeta = document.createElement('meta');
+          newMeta.name = 'description';
+          newMeta.content = response.data.metaDescription;
+          newMeta.setAttribute('data-dynamic-meta', 'true');
+          document.head.appendChild(newMeta);
         }
       } catch (err) {
         console.error('Failed to load page:', err);
@@ -89,7 +53,18 @@ const DynamicPage = () => {
     };
 
     fetchPage();
-  }, [fullSlug]); 
+
+    return () => {
+      document.title = originalTitle;
+      
+      const createdMeta = document.querySelector('meta[data-dynamic-meta="true"]');
+      if (createdMeta) {
+        document.head.removeChild(createdMeta);
+      } else if (metaDescElement) {
+        metaDescElement.setAttribute('content', originalDesc);
+      }
+    };
+  }, [currentPath]); 
 
   if (loading) {
     return (
@@ -127,19 +102,7 @@ const DynamicPage = () => {
 
   if (!page) return null;
 
-  return (
-    <div className="animate-in fade-in duration-700 min-h-screen">
-      {page.content?.blocks?.length > 0 ? (
-        page.content.blocks.map((block, index) => renderBlock(block, index))
-      ) : (
-        <div className="min-h-[60vh] flex flex-col items-center justify-center">
-          <p className="text-center text-zinc-500 italic">
-            This page is currently empty.
-          </p>
-        </div>
-      )}
-    </div>
-  );
+  return <PageRenderer blocks={page.content?.blocks} />;
 };
 
 export default DynamicPage;
