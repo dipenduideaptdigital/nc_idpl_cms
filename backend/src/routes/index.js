@@ -4,6 +4,6 @@ import v1Routes from "./v1.routes.js";
 
 const router = Router();
 
-router.use("/v1", v1Routes);
+router.use("/", v1Routes);
 
 export default router;
