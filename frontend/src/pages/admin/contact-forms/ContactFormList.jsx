@@ -83,7 +83,7 @@ const ContactFormList = () => {
 
       {/* Main Content */}
       <div className="bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-hidden">
-        <div className="p-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
+        <div className="p-4 border-b border-zinc-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-50/50">
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
             <input

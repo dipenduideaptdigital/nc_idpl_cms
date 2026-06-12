@@ -815,16 +815,16 @@ const HomeCustomization = () => {
 
   return (
     <div className="space-y-8 pb-10 animation-fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Home Page Customization</h1>
-          <p className="text-zinc-500 mt-1">Manage the content and images for your main landing page.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">Home Page Customization</h1>
+          <p className="text-zinc-500 mt-1 text-sm sm:text-base">Manage the content and images for your main landing page.</p>
         </div>
         
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="bg-zinc-900 hover:bg-zinc-800 text-white px-6 py-2.5 rounded-xl font-medium tracking-wide flex items-center gap-2 transition-all shadow-lg shadow-zinc-900/20 disabled:opacity-70 text-sm"
+          className="bg-zinc-900 hover:bg-zinc-800 text-white px-6 py-2.5 rounded-xl font-medium tracking-wide flex items-center justify-center gap-2 transition-all shadow-lg shadow-zinc-900/20 disabled:opacity-70 text-sm w-full sm:w-auto"
         >
           {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
           {saving ? 'Saving...' : 'Save Changes'}
@@ -845,7 +845,7 @@ const HomeCustomization = () => {
       )}
 
       {/* Tab Navigation */}
-      <div className="flex flex-wrap border-b border-zinc-200 gap-3 md:gap-4">
+      <div className="flex overflow-x-auto hide-scrollbar whitespace-nowrap flex-nowrap border-b border-zinc-200 gap-3 md:gap-4 pb-1">
         {[
           { key: 'general', label: 'General', icon: Settings },
           { key: 'hero', label: 'Hero', icon: ImageIcon },
