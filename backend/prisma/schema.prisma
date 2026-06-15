@@ -20,6 +20,13 @@ enum PageStatus {
   ARCHIVED
 }
 
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  SCHEDULED
+}
+
 enum ContactStatus {
   NEW
   IN_PROGRESS
@@ -45,15 +52,17 @@ model User {
   refreshTokens        RefreshToken[]
   passwordResetTokens  PasswordResetToken[]
   adminInvitationsSent AdminInvitation[]
-
   functionalRoles      UserFunctionalRole[]
-
   media                Media[]              
 
   pagesAuthored        Page[]               @relation("PageAuthor")
   pagesUpdated         Page[]               @relation("PageUpdatedBy")
   pageRevisions        PageRevision[]
   previewTokens        PagePreviewToken[]   
+
+  blogsAuthored        Blog[]               @relation("BlogAuthor")
+  blogRevisions        BlogRevision[]
+  blogPreviewTokens    BlogPreviewToken[]
 
   submissionLogs       ContactSubmissionLog[]
   internalNotes        ContactInternalNote[]
@@ -205,6 +214,7 @@ model Media {
   uploadedBy      User      @relation(fields: [uploadedById], references: [id])
   
   featuredInPages Page[]    
+  featuredInBlogs Blog[]    
   
   createdAt       DateTime  @default(now())
   deletedAt       DateTime? 
@@ -281,7 +291,6 @@ model PagePreviewToken {
   tokenHash      String   @unique
 
   pageId         String   @unique 
-
   page           Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
   createdById    String
@@ -294,6 +303,111 @@ model PagePreviewToken {
 
   @@index([expiresAt])
   @@map("page_preview_tokens")
+}
+
+model Blog {
+  id                String            @id @default(cuid())
+  title             String
+  slug              String            @unique
+  excerpt           String?           @db.Text
+  content           Json              
+  status            BlogStatus        @default(DRAFT)
+  
+  isFeatured        Boolean           @default(false)
+  viewCount         Int               @default(0)
+  readingTime       Int               @default(1) 
+  
+  metaTitle         String?
+  metaDescription   String?           @db.Text
+  metaKeywords      String?           @db.Text
+  
+  featuredImageId   String?
+  featuredImage     Media?            @relation(fields: [featuredImageId], references: [id], onDelete: SetNull)
+  
+  authorId          String
+  author            User              @relation("BlogAuthor", fields: [authorId], references: [id])
+  
+  publishedAt       DateTime?         
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?         
+
+  categories        BlogCategory[]    @relation("BlogToCategory")
+  tags              BlogTag[]         @relation("BlogToTag")
+  revisions         BlogRevision[]
+  previewTokens     BlogPreviewToken[]
+  viewLogs          BlogViewLog[]
+
+  @@index([status])
+  @@index([slug])
+  @@index([publishedAt])
+  @@index([isFeatured])
+  @@index([deletedAt])
+  @@map("blogs")
+}
+
+model BlogCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  blogs       Blog[]   @relation("BlogToCategory")
+
+  @@index([slug])
+  @@map("blog_categories")
+}
+
+model BlogTag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  blogs       Blog[]   @relation("BlogToTag")
+
+  @@index([slug])
+  @@map("blog_tags")
+}
+
+model BlogRevision {
+  id          String   @id @default(cuid())
+  blogId      String
+  blog        Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  snapshot    Json     
+  actorId     String?
+  actor       User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+
+  @@index([blogId])
+  @@map("blog_revisions")
+}
+
+model BlogPreviewToken {
+  id             String   @id @default(cuid())
+  tokenHash      String   @unique
+  blogId         String   @unique
+  blog           Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  createdById    String
+  createdBy      User     @relation(fields: [createdById], references: [id])
+  expiresAt      DateTime
+  usedCount      Int      @default(0)
+  lastAccessedAt DateTime?
+  createdAt      DateTime @default(now())
+
+  @@index([expiresAt])
+  @@map("blog_preview_tokens")
+}
+
+model BlogViewLog {
+  id          String   @id @default(cuid())
+  blogId      String
+  blog        Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  fingerprint String   @db.VarChar(64)
+  createdAt   DateTime @default(now())
+
+  @@index([blogId, fingerprint, createdAt])
+  @@map("blog_view_logs")
 }
 
 model ContactForm {
