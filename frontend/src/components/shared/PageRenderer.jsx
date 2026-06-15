@@ -34,10 +34,10 @@ const BlockMapper = memo(({ block, index }) => {
     case 'contactForm': return <ContactFormBlock key={index} data={data} />;
     case 'richText':
       return (
-        <div key={index} className="py-16 md:py-24">
-          <div className="max-w-4xl mx-auto px-6">
+        <div key={index} className="py-12 md:py-24 overflow-hidden w-full">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 w-full">
             <div 
-              className="prose prose-zinc lg:prose-lg mx-auto prose-headings:font-semibold prose-a:text-blue-600 hover:prose-a:text-blue-800"
+              className="prose prose-zinc sm:prose-lg max-w-none w-full mx-auto prose-headings:font-semibold prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-img:rounded-xl prose-img:w-full break-words overflow-x-auto hide-scrollbar"
               dangerouslySetInnerHTML={{ __html: data?.content || '' }}
             />
           </div>

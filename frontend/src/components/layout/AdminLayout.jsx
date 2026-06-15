@@ -21,9 +21,9 @@ const AdminLayout = () => {
 
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
-    { name: 'Pages', icon: FileText, path: '/admin/pages' },
+    { name: 'Landing pages', icon: FileText, path: '/admin/pages' },
     { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms' },
-    { name: 'Home Customization', icon: ImageIcon, path: '/admin/home-customization' },
+    { name: 'Home page', icon: ImageIcon, path: '/admin/home-customization' },
     { name: 'Settings', icon: Settings, path: '/admin/settings' },
   ];
 

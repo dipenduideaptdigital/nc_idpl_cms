@@ -92,6 +92,17 @@ body {
   animation: fadeInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
+/* Disable scroll animations in Puck Editor mode */
+body.puck-mode .opal-move-up,
+body.puck-mode .opal-move-right,
+body.puck-mode .opal-move-left,
+body.puck-mode .fadeInLeft,
+body.puck-mode .fadeInRight {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-8px); }

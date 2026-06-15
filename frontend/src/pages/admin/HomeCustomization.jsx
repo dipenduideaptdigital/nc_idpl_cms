@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Save, Image as ImageIcon, Loader2, CheckCircle, List, User, Settings, FileText, Send } from 'lucide-react';
+import { Save, Image as ImageIcon, Loader2, CheckCircle, List, User, Settings, FileText, Send, ChevronDown } from 'lucide-react';
 import HeroCustomization from '../../components/admin/HeroCustomization';
 import ServicesCustomization from '../../components/admin/ServicesCustomization';
 import AboutCustomization from '../../components/admin/AboutCustomization';
@@ -13,7 +13,6 @@ import VideoBannerCustomization from '../../components/admin/VideoBannerCustomiz
 import BlogSectionCustomization from '../../components/admin/BlogSectionCustomization';
 import GalleryCustomization from '../../components/admin/GalleryCustomization';
 import CtaCustomization from '../../components/admin/CtaCustomization';
-import GeneralCustomization from '../../components/admin/GeneralCustomization';
 import apiClient from '../../api/client'; 
 
 const getAssetUrl = (path) => {
@@ -25,17 +24,41 @@ const getAssetUrl = (path) => {
   return `${baseUrl}${path}`;
 };
 
+const TABS = [
+  { key: 'hero', label: 'Hero', icon: ImageIcon },
+  { key: 'services', label: 'Services', icon: List },
+  { key: 'about', label: 'About Us', icon: User },
+  { key: 'our_services', label: 'Our Services', icon: List },
+  { key: 'how_we_work', label: 'How We Work', icon: Settings },
+  { key: 'our_projects', label: 'Projects', icon: FileText },
+  { key: 'panoramas', label: 'Panoramas', icon: ImageIcon },
+  { key: 'team', label: 'Team', icon: User },
+  { key: 'testimonials', label: 'Testimonials', icon: User },
+  { key: 'video_banner', label: 'Video Banner', icon: ImageIcon },
+  { key: 'blog_section', label: 'Blog Section', icon: FileText },
+  { key: 'gallery', label: 'Gallery', icon: ImageIcon },
+  { key: 'cta', label: 'Call to Action', icon: Send }
+];
+
 const HomeCustomization = () => {
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState('hero');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  
-  // 0. General State
-  const [generalData, setGeneralData] = useState({
-    landingPage: 'default'
-  });
 
   // 1. Hero Section State
   const [heroData, setHeroData] = useState({
@@ -246,7 +269,6 @@ const HomeCustomization = () => {
       setErrorMsg('');
       
       const [
-        generalRes,
         heroRes, 
         servicesRes, 
         aboutRes,
@@ -261,7 +283,6 @@ const HomeCustomization = () => {
         galleryRes,
         ctaRes
       ] = await Promise.allSettled([
-        apiClient.get('/cms/section/homepage_general'),
         apiClient.get('/cms/section/homepage_hero'),
         apiClient.get('/cms/section/homepage_services'),
         apiClient.get('/cms/section/homepage_about'),
@@ -276,14 +297,6 @@ const HomeCustomization = () => {
         apiClient.get('/cms/section/homepage_gallery'),
         apiClient.get('/cms/section/homepage_cta')
       ]);
-
-      // General
-      if (generalRes.status === 'fulfilled' && generalRes.value.data?.data?.content) {
-        const content = generalRes.value.data.data.content;
-        if (Object.keys(content).length > 0) {
-          setGeneralData(content);
-        }
-      }
 
       // 1. Hero
       if (heroRes.status === 'fulfilled' && heroRes.value.data?.data?.content) {
@@ -411,11 +424,6 @@ const HomeCustomization = () => {
   };
 
   // Base Handlers
-  const handleGeneralInputChange = (e) => {
-    const { name, value } = e.target;
-    setGeneralData(prev => ({ ...prev, [name]: value }));
-  };
-
   const handleHeroInputChange = (e) => {
     const { name, value } = e.target;
     setHeroData(prev => ({ ...prev, [name]: value }));
@@ -776,8 +784,7 @@ const HomeCustomization = () => {
       let url = `/cms/section/homepage_${activeTab}`;
       let payload = null;
 
-      if (activeTab === 'general') payload = { content: generalData };
-      else if (activeTab === 'hero') payload = { content: heroData };
+      if (activeTab === 'hero') payload = { content: heroData };
       else if (activeTab === 'services') payload = { content: servicesData };
       else if (activeTab === 'about') payload = { content: aboutData };
       else if (activeTab === 'our_services') payload = { content: ourServicesData };
@@ -844,46 +851,56 @@ const HomeCustomization = () => {
         </div>
       )}
 
-      {/* Tab Navigation */}
-      <div className="flex overflow-x-auto hide-scrollbar whitespace-nowrap flex-nowrap border-b border-zinc-200 gap-3 md:gap-4 pb-1">
-        {[
-          { key: 'general', label: 'General', icon: Settings },
-          { key: 'hero', label: 'Hero', icon: ImageIcon },
-          { key: 'services', label: 'Services', icon: List },
-          { key: 'about', label: 'About Us', icon: User },
-          { key: 'our_services', label: 'Our Services', icon: List },
-          { key: 'how_we_work', label: 'How We Work', icon: Settings },
-          { key: 'our_projects', label: 'Projects', icon: FileText },
-          { key: 'panoramas', label: 'Panoramas', icon: ImageIcon },
-          { key: 'team', label: 'Team', icon: User },
-          { key: 'testimonials', label: 'Testimonials', icon: User },
-          { key: 'video_banner', label: 'Video Banner', icon: ImageIcon },
-          { key: 'blog_section', label: 'Blog', icon: FileText },
-          { key: 'gallery', label: 'Gallery', icon: ImageIcon },
-          { key: 'cta', label: 'CTA', icon: Send }
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`pb-3 px-2 font-medium text-xs md:text-sm transition-all border-b-2 flex items-center gap-1.5 ${
-              activeTab === tab.key 
-                ? 'border-zinc-950 text-zinc-950 font-semibold' 
-                : 'border-transparent text-zinc-500 hover:text-zinc-800'
-            }`}
-          >
-            <tab.icon className="w-3.5 h-3.5" /> {tab.label}
-          </button>
-        ))}
+      {/* Component Selector Dropdown */}
+      <div className="relative mb-6 z-40" ref={dropdownRef}>
+        <label className="block text-sm font-medium text-zinc-700 mb-2">Select Component to Edit</label>
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="w-full sm:max-w-md flex items-center justify-between bg-white border border-zinc-200 px-4 py-3 rounded-xl shadow-sm hover:border-zinc-300 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-900/10"
+        >
+          <div className="flex items-center gap-3">
+            <div className="bg-zinc-100 p-2 rounded-lg">
+              {(() => {
+                const ActiveIcon = TABS.find(t => t.key === activeTab)?.icon || ImageIcon;
+                return <ActiveIcon className="w-5 h-5 text-zinc-700" />;
+              })()}
+            </div>
+            <span className="font-semibold text-zinc-900">
+              {TABS.find(t => t.key === activeTab)?.label || 'Select Component'}
+            </span>
+          </div>
+          <ChevronDown className={`w-5 h-5 text-zinc-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {dropdownOpen && (
+          <div className="absolute left-0 mt-2 w-full sm:max-w-md bg-white border border-zinc-200 rounded-xl shadow-xl max-h-80 overflow-y-auto animate-in fade-in slide-in-from-top-2">
+            <div className="p-2 grid gap-1">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => {
+                    setActiveTab(tab.key);
+                    setDropdownOpen(false);
+                  }}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all w-full text-left group ${
+                    activeTab === tab.key 
+                      ? 'bg-zinc-900 text-white shadow-md' 
+                      : 'hover:bg-zinc-100 text-zinc-700'
+                  }`}
+                >
+                  <tab.icon className={`w-4 h-4 ${activeTab === tab.key ? 'text-zinc-300' : 'text-zinc-500 group-hover:text-zinc-700'}`} />
+                  <span className="font-medium text-sm">{tab.label}</span>
+                  {activeTab === tab.key && (
+                    <CheckCircle className="w-4 h-4 text-green-400 ml-auto" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tab Contents */}
-      {activeTab === 'general' && (
-        <GeneralCustomization
-          generalData={generalData}
-          onChange={handleGeneralInputChange}
-        />
-      )}
-
       {activeTab === 'hero' && (
         <HeroCustomization
           heroData={heroData}

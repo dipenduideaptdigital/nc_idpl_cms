@@ -14,6 +14,9 @@ import {
 } from 'lucide-react';
 import DynamicBlockEditor from '../../../components/admin/DynamicBlockEditor';
 import PreviewManager from '../../../components/admin/PreviewManager';
+import { Puck } from '@measured/puck';
+import '@measured/puck/puck.css';
+import { puckConfig } from '../../../config/puck.config';
 
 const PageEditor = () => {
   const { id } = useParams();
@@ -24,6 +27,18 @@ const PageEditor = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [showBlockMenu, setShowBlockMenu] = useState(false);
+  const [isPuckMode, setIsPuckMode] = useState(false);
+
+  useEffect(() => {
+    if (isPuckMode) {
+      document.body.classList.add('puck-mode');
+    } else {
+      document.body.classList.remove('puck-mode');
+    }
+    return () => {
+      document.body.classList.remove('puck-mode');
+    };
+  }, [isPuckMode]);
 
   const AVAILABLE_BLOCKS = [
     { type: 'hero', label: 'Hero Section' },
@@ -273,10 +288,12 @@ const PageEditor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Clean up temporary IDs from blocks before sending
     const payload = { ...formData };
     if (payload.content && payload.content.blocks) {
       payload.content.blocks = payload.content.blocks.map(({ id, ...block }) => block);
+    }
+    if (!payload.slug || payload.slug.trim() === '') {
+      delete payload.slug;
     }
 
     try {
@@ -303,6 +320,79 @@ const PageEditor = () => {
       <div className="flex flex-col items-center justify-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-zinc-900"></div>
         <p className="mt-4 text-zinc-500 font-medium">Loading editor...</p>
+      </div>
+    );
+  }
+
+  if (isPuckMode) {
+    const puckData = {
+      content: (formData.content?.blocks || []).map(b => ({ 
+        type: b.type, 
+        props: { ...(b.data || {}), id: b.id || b.data?.id || `puck-id-${Math.random().toString(36).slice(2)}` }
+      })),
+      root: { props: { title: formData.title || "" } },
+      zones: {}
+    };
+
+    const handlePuckPublish = async (data) => {
+      const blocks = (data.content || []).map(item => {
+        const { id, ...cleanProps } = item.props || {};
+        return {
+          type: item.type,
+          data: cleanProps,
+          id: Date.now().toString() + Math.random().toString()
+        };
+      });
+      
+      const updatedContent = { ...formData.content, blocks };
+      
+      // Update local UI immediately and exit Puck mode
+      setFormData(prev => ({ ...prev, content: updatedContent }));
+      setIsPuckMode(false);
+
+      // Auto-Save to backend
+      const payload = { ...formData, content: updatedContent };
+      if (payload.content && payload.content.blocks) {
+        payload.content.blocks = payload.content.blocks.map(({ id, ...block }) => block);
+      }
+      if (!payload.slug || payload.slug.trim() === '') {
+        delete payload.slug;
+      }
+
+      try {
+        setSaving(true);
+        setError(null);
+        if (isEditMode) {
+          await pagesApi.updatePage(id, payload);
+        } else {
+          const res = await pagesApi.createPage(payload);
+          navigate(`/admin/pages/edit/${res.data.id}`);
+        }
+      } catch (err) {
+        console.error('Failed to save page:', err);
+        setError(err.response?.data?.message || 'Failed to auto-save. Please try saving manually.');
+      } finally {
+        setSaving(false);
+      }
+    };
+
+    return (
+      <div className="fixed inset-0 z-[100] bg-white flex flex-col">
+        <div className="flex items-center justify-between p-4 border-b border-zinc-200 bg-zinc-50">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setIsPuckMode(false)} 
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 rounded-xl font-medium hover:bg-zinc-50 transition-colors shadow-sm"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to Standard Editor
+            </button>
+            <span className="font-bold text-lg text-zinc-900">Puck Visual Editor</span>
+          </div>
+          <p className="text-sm text-zinc-500">Click "Publish" in Puck to apply changes to the form</p>
+        </div>
+        <div className="flex-1 overflow-y-auto h-full min-h-[calc(100vh-70px)]">
+          <Puck config={puckConfig} data={puckData} onPublish={handlePuckPublish} iframe={{ enabled: false }} />
+        </div>
       </div>
     );
   }
@@ -422,10 +512,19 @@ const PageEditor = () => {
           {/* Page Builder / Content Blocks */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 space-y-5">
             <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
-              <h2 className="text-lg font-semibold text-zinc-900 flex items-center gap-2">
-                <Type className="w-5 h-5 text-zinc-400" />
-                Content Blocks
-              </h2>
+              <div className="flex items-center gap-4">
+                <h2 className="text-lg font-semibold text-zinc-900 flex items-center gap-2">
+                  <Type className="w-5 h-5 text-zinc-400" />
+                  Content Blocks
+                </h2>
+                <button 
+                  type="button" 
+                  onClick={() => setIsPuckMode(true)}
+                  className="px-3 py-1.5 bg-blue-900 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors flex items-center gap-1.5"
+                >
+                  <Layout className="w-4 h-4" /> Edit visually with Puck
+                </button>
+              </div>
               <div className="relative">
                 <button
                   type="button"

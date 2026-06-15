@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useParams } from 'react-router-dom';
 import { pagesApi } from '../api/pages';
 import { ArrowLeft } from 'lucide-react';
 import useScrollAnimation from '../hooks/useScrollAnimation';
@@ -8,7 +8,10 @@ import PageRenderer from '../components/shared/PageRenderer';
 const DynamicPage = () => {
   const location = useLocation();
   const currentPath = location.pathname; 
-  
+  const params = useParams();
+  const fullSlug = params.slug 
+    ? (params['*'] ? `${params.slug}/${params['*']}` : params.slug) 
+    : params['*'];
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
