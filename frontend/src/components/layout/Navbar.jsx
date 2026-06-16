@@ -71,9 +71,9 @@ const Navbar = () => {
           </div>
         </div>
 
-        <a href="#" className="hover:text-gray-300 transition-colors py-2">
+        <Link to="/blog" className="hover:text-gray-300 transition-colors py-2">
           Blog
-        </a>
+        </Link>
         <a href="#" className="hover:text-gray-300 transition-colors py-2">
           Contact Us
         </a>
