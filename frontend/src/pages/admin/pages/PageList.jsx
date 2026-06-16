@@ -54,7 +54,21 @@ const PageList = () => {
     }
   };
 
-  const filteredPages = pages.filter(page => 
+  const staticPages = [
+    {
+      id: 'static-landing-reference',
+      title: 'Original Landing Page (Reference)',
+      fullPath: '/hero-preview',
+      status: 'SYSTEM',
+      author: { name: 'System' },
+      isStatic: true,
+      updatedAt: null
+    }
+  ];
+
+  const allPages = [...staticPages, ...pages];
+
+  const filteredPages = allPages.filter(page => 
     page.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     page.fullPath?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -67,6 +81,8 @@ const PageList = () => {
         return <span className="px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200">Draft</span>;
       case 'ARCHIVED':
         return <span className="px-3 py-1 rounded-full text-xs font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">Archived</span>;
+      case 'SYSTEM':
+        return <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700 border border-purple-200">System Reference</span>;
       default:
         return <span className="px-3 py-1 rounded-full text-xs font-medium bg-zinc-100 text-zinc-700">{status}</span>;
     }
@@ -192,25 +208,32 @@ const PageList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Link 
-                          to={`/admin/pages/edit/${page.id}`}
-                          className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          title="Edit Page"
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </Link>
-                        <button 
-                          onClick={() => handleDelete(page.id)}
-                          disabled={isDeleting === page.id}
-                          className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                          title="Delete Page"
-                        >
-                          {isDeleting === page.id ? (
-                            <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                          ) : (
-                            <Trash2 className="w-4 h-4" />
-                          )}
-                        </button>
+                        {!page.isStatic && (
+                          <>
+                            <Link 
+                              to={`/admin/pages/edit/${page.id}`}
+                              className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Edit Page"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </Link>
+                            <button 
+                              onClick={() => handleDelete(page.id)}
+                              disabled={isDeleting === page.id}
+                              className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                              title="Delete Page"
+                            >
+                              {isDeleting === page.id ? (
+                                <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                              ) : (
+                                <Trash2 className="w-4 h-4" />
+                              )}
+                            </button>
+                          </>
+                        )}
+                        {page.isStatic && (
+                          <span className="text-xs text-zinc-400 mr-2">Hardcoded reference</span>
+                        )}
                       </div>
                     </td>
                   </tr>

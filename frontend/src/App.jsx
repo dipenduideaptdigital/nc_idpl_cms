@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 /* Layouts */
 import MainLayout from './components/layout/MainLayout';
+import LandingLayout from './components/layout/LandingLayout';
 import AdminLayout from './components/layout/AdminLayout';
 
 /* Pages */
@@ -13,6 +14,8 @@ import DynamicPage from './pages/DynamicPage';
 import PreviewPage from './pages/PreviewPage'; 
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Blog from './pages/Blog';
+import BlogDetail from './pages/BlogDetail';
 
 /* Admin Pages */
 import HomeCustomization from './pages/admin/HomeCustomization';
@@ -39,12 +42,18 @@ function App() {
           <Route path="contact-forms/edit/:id" element={<ContactFormEditor />} />
         </Route>
 
-        {/* Public Routes */}
-        <Route element={<MainLayout />}>
+        {/* Public Routes - Landing Pages */}
+        <Route element={<LandingLayout />}>
           <Route path="/hero-preview" element={<LandingReference />} />
-          <Route path="/" element={<LandingContainer />} />
           <Route path="/preview/:token" element={<PreviewPage />} /> 
           <Route path="/*" element={<DynamicPage />} />
+        </Route>
+
+        {/* Public Routes - Main Pages */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<LandingContainer />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogDetail />} />
         </Route>
         
       </Routes>

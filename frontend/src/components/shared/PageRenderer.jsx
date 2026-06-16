@@ -13,6 +13,16 @@ import BlogSection from '../home/BlogSection';
 import Gallery from '../home/Gallery';
 import CtaSection from '../home/CtaSection';
 import ContactFormBlock from '../blocks/ContactFormBlock';
+import HeroSection from '../landing/HeroSection';
+import WhySubhaakritee from '../landing/WhySubhaakritee';
+import MetricsBarOne from '../landing/MetricsBarOne';
+import ModernWorkspace from '../landing/ModernWorkspace';
+import MetricsBarTwo from '../landing/MetricsBarTwo';
+import SpacesStories from '../landing/SpacesStories';
+import WayWeCreate from '../landing/WayWeCreate';
+import GallerySection from '../landing/GallerySection';
+import TrustedClients from '../landing/TrustedClients';
+import GetInTouch from '../landing/GetInTouch';
 
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
@@ -32,6 +42,16 @@ const BlockMapper = memo(({ block, index }) => {
     case 'gallery': return <Gallery key={index} data={data} />;
     case 'cta': return <CtaSection key={index} data={data} />;
     case 'contactForm': return <ContactFormBlock key={index} data={data} />;
+    case 'heroSection': return <HeroSection key={index} data={data} />;
+    case 'whySubhaakritee': return <WhySubhaakritee key={index} data={data} />;
+    case 'metricsBarOne': return <MetricsBarOne key={index} data={data} />;
+    case 'modernWorkspace': return <ModernWorkspace key={index} data={data} />;
+    case 'metricsBarTwo': return <MetricsBarTwo key={index} data={data} />;
+    case 'spacesStories': return <SpacesStories key={index} data={data} />;
+    case 'wayWeCreate': return <WayWeCreate key={index} data={data} />;
+    case 'gallerySection': return <GallerySection key={index} data={data} />;
+    case 'trustedClients': return <TrustedClients key={index} data={data} />;
+    case 'getInTouch': return <GetInTouch key={index} data={data} />;
     case 'richText':
       return (
         <div key={index} className="py-12 md:py-24 overflow-hidden w-full">

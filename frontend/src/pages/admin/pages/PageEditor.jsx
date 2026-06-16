@@ -41,19 +41,16 @@ const PageEditor = () => {
   }, [isPuckMode]);
 
   const AVAILABLE_BLOCKS = [
-    { type: 'hero', label: 'Hero Section' },
-    { type: 'services', label: 'Services (Stats & Cards)' },
-    { type: 'about', label: 'About Section' },
-    { type: 'our_services', label: 'Our Services (List & Icons)' },
-    { type: 'how_we_work', label: 'How We Work' },
-    { type: 'our_projects', label: 'Our Projects' },
-    { type: 'panoramas', label: 'Panoramas' },
-    { type: 'team', label: 'Team Section' },
-    { type: 'testimonials', label: 'Testimonials' },
-    { type: 'video_banner', label: 'Video Banner' },
-    { type: 'blog_section', label: 'Blog Section' },
-    { type: 'gallery', label: 'Gallery' },
-    { type: 'cta', label: 'Call to Action (CTA)' },
+    { type: 'heroSection', label: 'Hero Section' },
+    { type: 'whySubhaakritee', label: 'Why SubhAAkritee?' },
+    { type: 'metricsBarOne', label: 'Metrics Bar 1' },
+    { type: 'modernWorkspace', label: 'Modern Workspace Solutions' },
+    { type: 'metricsBarTwo', label: 'Metrics Bar 2' },
+    { type: 'spacesStories', label: 'Spaces. Stories. Experiences.' },
+    { type: 'wayWeCreate', label: 'The Way We Create' },
+    { type: 'gallerySection', label: 'Gallery Section' },
+    { type: 'trustedClients', label: 'Trusted Clients' },
+    { type: 'getInTouch', label: 'Get In Touch' },
     { type: 'richText', label: 'Rich Text Box' },
     { type: 'contactForm', label: 'Contact Form (Dynamic Engine)' } 
   ];
@@ -115,117 +112,110 @@ const PageEditor = () => {
     let defaultData = {};
     
     switch(type) {
-      case 'hero':
-        defaultData = {
-          titleLine1: 'End-To-End', titleLine2: 'Office Interiors',
-          subtitle: 'We specialize in transforming visions into reality.',
-          buttonText: 'BOOK A FREE CONSULTATION', badgeText: 'Fast and Reliable',
-          glassCardNumber: '250+', glassCardText1: 'My Design of art', glassCardText2: 'There Is No One Who Loves Pain Itself',
-          backgroundImage: '', frontImage: ''
-        }; break;
-      case 'services':
-        defaultData = {
-          badgeText: 'WHO WE ARE', title: 'Experience [The Art Of Interior] Design',
-          description: 'We offer professional design services.',
-          services: [
-            { title: 'Architectural\\nDesign', description: 'Brief description here' },
-            { title: 'Interior Design\\n& Planning', description: 'Brief description here' },
-            { title: 'Consulting\\nServices', description: 'Brief description here' },
-            { title: 'Project\\nManagement', description: 'Brief description here' }
+      case 'heroSection':
+        defaultData = { titleLine1: 'End-To-End', titleLine2: 'Office Interiors', subtitle: 'For Every Test & Budget', description: "Simply dummy text of the printing and typesetting. Lorem Ipsum has been the industry's standard,", buttonText: 'Book A Free Consultation', backgroundImage: '' }; break;
+      case 'whySubhaakritee':
+        defaultData = { 
+          title: 'WHY subhAAkritee?', 
+          description: 'For Over 26 Years, SubhAAkritee - The Design People Has Delivered Innovative, High-Quality Interior And Architectural Solutions Across Residential And Commercial Spaces. With A Strong Presence In Kolkata, Delhi, Siliguri, And Bhubaneswar, We Transform Spaces Into Functional Works Of Art', 
+          buttonText: 'Get Free Estimated',
+          features: [
+            { icon: 'Award', textLine1: '1,400+ design', textLine2: 'experts' },
+            { icon: 'Home', textLine1: '20,000+ happy', textLine2: 'customers' },
+            { icon: 'ShieldCheck', textLine1: 'Up to 10-years', textLine2: 'material warranty' },
+            { icon: 'CalendarDays', textLine1: '45 days or we', textLine2: 'pay you rent', extraBadge: '45' }
           ]
         }; break;
-      case 'about':
-        defaultData = {
-          badgeText: 'STARTED IN 1991', title: 'Where Spaces Inspire, And [Design Comes Alive]',
-          description: 'Dedicated to bringing your vision to life.', buttonText: 'More About Us', image: '',
-          highlights: ['Latest Technologies', 'High-Quality Designs', '10 Years Warranty', 'Residential Design']
-        }; break;
-      case 'our_services':
-        defaultData = {
-          badgeText: 'OUR SERVICES', title: 'Explore Our [Comprehensive Interior Design] Services',
-          description: 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.',
+      case 'modernWorkspace':
+        defaultData = { 
+          title: 'Modern Workspace Solutions', 
+          subtitle: 'SubhAAkritee',
           services: [
-            { id: '01', title: 'Residential Interior Design' }, { id: '02', title: 'Outdoor & Landscape Design' },
-            { id: '03', title: 'Interior Design Consultation' }, { id: '04', title: 'Commercial Interior Design' },
-            { id: '05', title: 'Renovation And Remodeling' }, { id: '06', title: 'Interior 2D/3D Layouts' }
-          ],
-          stats: [
-            { value: '26+', title: 'YEARS EXPERIENCE', description: 'Improving homes with expert craftsmanship for years' },
-            { value: '100', title: 'PROJECTS DONE', description: 'Over 250 successful projects delivered with quality and care' },
-            { value: '100', title: 'SATISFIED CUSTOMER', description: 'Our team of 30 experts ensures top-quality results' },
-            { value: '4+', title: 'LOCATION', description: 'All of our clients are satisfied with our work and service' }
-          ],
-          image: '', bottomImage: ''
+            { icon: 'Hammer', title: 'Modular Kitchen' },
+            { icon: 'Lightbulb', title: 'Lighting / Ceilings' },
+            { icon: 'Archive', title: 'Wardrobes' },
+            { icon: 'Settings', title: 'Smart Homes' },
+            { icon: 'Monitor', title: 'Furniture / Wood Work' },
+            { icon: 'Layout', title: 'Space Saving Furniture' }
+          ]
         }; break;
-      case 'how_we_work':
-        defaultData = {
-          badgeText: 'HOW WE WORK', title: 'Description [Architecture Process] For Exceptional Results.',
-          description: 'Our process is alive – adapting, refining, and growing with your vision. Always. Like artists with a blank canvas, we transform rooms into living works of art.',
+      case 'spacesStories':
+        defaultData = { 
+          badgeText: 'ARCHITECTURE AND INTERIOR DESIGN', 
+          titleLine1: 'Spaces. Stories.', 
+          titleLine2: 'Experiences.', 
+          description: '26 Years Of Crafting Environments Defined By Excellence.', 
+          buttonText: 'Discover More',
+          images: [
+            '/assets/homepage/gallery1.png', 
+            '/assets/homepage/gallery2.png', 
+            '/assets/homepage/gallery3.png'
+          ]
+        }; break;
+      case 'wayWeCreate':
+        defaultData = { 
+          title: 'The Way We Create', 
+          subtitle: 'Bringing your vision to life in three simple steps.',
           steps: [
-            { id: '01', title: 'Initial Consultation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
-            { id: '02', title: 'Design & Planning', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
-            { id: '03', title: 'Implementation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
-            { id: '04', title: 'Project Handover', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' }
-          ],
-          bottomText: "We've Been Working Hard To Impress You.", bottomLinkText: "Start Your's Today", bottomLinkUrl: '#'
-        }; break;
-      case 'our_projects':
-        defaultData = {
-          badgeText: 'OUR PROJECT', title: 'Creative [Projects That Define] Our Style',
-          description: 'Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors.',
-          projects: [
-            { id: 1, category: 'LANDSCAPE', title: 'Art Deco Revival', description: 'Improving homes with expert craftsmanship for years', image: '' },
-            { id: 2, category: 'RESIDENTIAL', title: 'Modern Minimalist', description: 'Improving homes with expert craftsmanship for years', image: '' },
-            { id: 3, category: 'SINGLE HOME', title: 'Urban Oasis', description: 'Improving homes with expert craftsmanship for years', image: '' },
-            { id: 4, category: 'OFFICE AREA', title: 'Corporate Elegance', description: 'Improving homes with expert craftsmanship for years', image: '' },
-            { id: 5, category: 'COMMERCIAL', title: 'Retail Experience', description: 'Improving homes with expert craftsmanship for years', image: '' }
-          ],
-          bottomImage: ''
-        }; break;
-      case 'panoramas':
-        defaultData = { badgeText: '360-DEGREE PANORAMAS', title: 'Create An Even [Greater \\n Experience]', image: '' }; break;
-      case 'team':
-        defaultData = {
-          badgeText: 'AMAZING DESIGN TEAM', title: 'Meet The [Experts Our \\n Interior] Designers',
-          description: 'Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors',
-          image: '',
-          members: [
-            { id: '01', name: 'Mark Jackson', role: 'Co-Founder & CEO' },
-            { id: '02', name: 'Valeria Novikova', role: 'Lighting Specialist' },
-            { id: '03', name: 'Alex Podzemsky', role: 'Graphics Designer' },
-            { id: '04', name: 'Helen Reeves', role: 'Material Consultant' },
-            { id: '05', name: 'Jake Nicholson', role: '3D Visualisation' }
+            { icon: 'PenTool', title: 'Consult', desc: "We'll explore ideas and options together." },
+            { icon: 'ClipboardList', title: 'Plan', desc: "We'll build a detailed design plan." },
+            { icon: 'UserCheck', title: 'Execute', desc: "We'll deliver the project flawlessly." }
           ]
         }; break;
-      case 'testimonials':
-        defaultData = {
-          badgeText: 'OUR CLIENTS SAY', title: "Here's What [Warm Words] \\n [Our Clients] Say",
-          description: 'Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors',
-          image: '', ratingValue: '4.80', reviewCount: '2,688 Reviews',
-          conceptText: "From Concept To Reality, The Team Turned My Vision Into A Stunning, Livable Space. I Couldn't Be Happier With This!",
-          mainQuote: '"I absolutely love my the new modern living room! The clean lines, a neutral tones, and minimalist interior create such a calming & stylish atmosphere. Highly recommend their modern interior design services!"',
-          authorImage: '', authorName: 'Morgan Dufresne', authorRole: 'Company owner',
-          bottomText: 'Our Website [75000+] VIP Customer',
-          logos: ['LOGO 01', 'LOGO 02', 'LOGO 03', 'LOGO 04', 'LOGO 05']
-        }; break;
-      case 'video_banner':
-        defaultData = {
-          videoId: 'ScMzIvxBSi4', image: '', title: 'UNLOCK YOUR DREAM \\n HOME TODAY!',
-          description: 'We encourage clients to actively participate in discussions, share their ideas, preferences, and feedback.'
-        }; break;
-      case 'blog_section':
-        defaultData = {
-          badgeText: 'STRAIGHT FROM THE NEWSROOM', title: 'Take A Look At [Our Latest \\n Blog] & Articles.',
-          posts: [
-            { id: 1, author: 'Admin', title: 'Functional Design Trends That Blend Style And Comfort', excerpt: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '' },
-            { id: 2, author: 'Admin', title: 'Functional Design Trends That Blend Style And Comfort', excerpt: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '' },
-            { id: 3, author: 'Admin', title: 'Functional Design Trends That Blend Style And Comfort', excerpt: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '' }
+      case 'trustedClients':
+        defaultData = { 
+          title: 'Trusted By Thousands', 
+          subtitle: 'See what our clients say about us',
+          reviews: [
+            {
+              text: "SubhAAkritee transformed our office space into a vibrant, functional environment. The team's attention to detail and commitment to our vision was exceptional.",
+              author: "Rajesh Kumar",
+              role: "CEO, TechCorp",
+              rating: 5
+            },
+            {
+              text: "We wanted a modern yet cozy home, and they delivered exactly that. Their material quality and design ideas are top-notch. Highly recommended!",
+              author: "Sneha Patel",
+              role: "Homeowner",
+              rating: 5
+            },
+            {
+              text: "Professional, timely, and incredibly creative. They managed our entire restaurant renovation without a hitch. The 45-day guarantee is real!",
+              author: "Amit Singh",
+              role: "Restaurant Owner",
+              rating: 5
+            }
           ]
         }; break;
-      case 'gallery':
-        defaultData = { bgText: 'gallery', images: ['', '', '', '', '', ''] }; break;
-      case 'cta':
-        defaultData = { badgeText: 'GET IN TOUCH', title: "Have A Project In [Mind? Let's Make] It Happen", buttonText: 'BOOK A FREE CONSULTATION' }; break;
+      case 'getInTouch':
+        defaultData = { title: 'Get In Touch', subtitle: 'Our friendly team would love to hear from you.', buttonText: 'Send Message', image: '' }; break;
+      case 'metricsBarOne':
+        defaultData = {
+          metrics: [
+            { value: '26+', label: 'YEARS EXPERIENCE' },
+            { value: '100+', label: 'PROJECTS DONE' },
+            { value: '100+', label: 'SATISFIED CUSTOMER' },
+            { value: '4+', label: 'LOCATION' }
+          ]
+        }; break;
+      case 'metricsBarTwo':
+        defaultData = {
+          metrics: [
+            { value: '3,000+', label: 'INTERIOR DESIGNS' },
+            { value: '1,500+', label: 'RENOVATIONS' },
+            { value: '500+', label: 'COMMERCIAL PROJECTS' },
+            { value: '25+', label: 'AWARDS WON' }
+          ]
+        }; break;
+      case 'gallerySection':
+        defaultData = {
+          images: [
+            '/assets/homepage/gallery1.png', 
+            '/assets/homepage/gallery2.png', 
+            '/assets/homepage/gallery3.png',
+            '/assets/homepage/gallery4.png'
+          ]
+        }; break;
       case 'richText':
         defaultData = { content: '' }; break;
       
