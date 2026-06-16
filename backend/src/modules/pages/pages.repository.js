@@ -2,7 +2,7 @@ import { prisma } from "../../config/db.js";
 
 export const PAGES_ADMIN_INCLUDE = {
   author: { select: { id: true, name: true, email: true } },
-  featuredImage: { select: { id: true, url: true, thumbnailUrl: true } },
+  featuredImage: { select: { id: true, url: true, thumbnailUrl: true, mimeType: true } },
 };
 
 export const PAGES_PUBLIC_INCLUDE = {
@@ -12,7 +12,6 @@ export const PAGES_PUBLIC_INCLUDE = {
 
 const activeCondition = { deletedAt: null };
 
-// Checks if a specific absolute URL path is already claimed globally by an active page.
 export const checkFullPathExists = async (fullPath, excludeId = null) => {
   const whereClause = { fullPath, ...activeCondition };
   if (excludeId) whereClause.id = { not: excludeId };
@@ -24,7 +23,6 @@ export const checkFullPathExists = async (fullPath, excludeId = null) => {
   return !!page;
 };
 
-//  Enforces slug uniqueness strictly at the sibling level under the same parent directory branch.
 export const checkSiblingSlugExists = async (parentId, slug, excludeId = null) => {
   const whereClause = { parentId: parentId || null, slug, ...activeCondition };
   if (excludeId) whereClause.id = { not: excludeId };
@@ -36,15 +34,12 @@ export const checkSiblingSlugExists = async (parentId, slug, excludeId = null) =
   return !!page;
 };
 
-// Retreives a specific active page mapping for admin panel contexts using its unique CUID.
-
 export const findPageById = async (id, includeParams = PAGES_ADMIN_INCLUDE) => {
   return await prisma.page.findFirst({
     where: { id, ...activeCondition },
     include: includeParams,
   });
 };
-
 
 export const findPageByFullPath = async (fullPath, includeParams = PAGES_PUBLIC_INCLUDE) => {
   return await prisma.page.findFirst({
@@ -53,7 +48,6 @@ export const findPageByFullPath = async (fullPath, includeParams = PAGES_PUBLIC_
   });
 };
 
-//  Transactional Creation Engine: Materializes the core living page and generates initial v1 historical snapshot.
 export const createPageWithRevision = async (pageData, actorId) => {
   return await prisma.$transaction(async (tx) => {
     const page = await tx.page.create({
@@ -90,7 +84,6 @@ export const createPageWithRevision = async (pageData, actorId) => {
   });
 };
 
-// Transactional Mutation Engine: Writes updates to the main entry and logs a tracking revision state if context changed.
 export const updatePageWithRevision = async (id, updateData, newSnapshot, actorId) => {
   return await prisma.$transaction(async (tx) => {
     const page = await tx.page.update({
@@ -113,7 +106,6 @@ export const updatePageWithRevision = async (id, updateData, newSnapshot, actorI
   });
 };
 
-// Soft Deletes a target layout and mutates structural slugs uniquely to unblock future path claims instantly.
 export const softDeletePage = async (page, actorId) => {
   const timestamp = Date.now();
   const mutatedSlug = `${page.slug}__deleted__${timestamp}`;
@@ -131,7 +123,6 @@ export const softDeletePage = async (page, actorId) => {
   });
 };
 
-// Extracts list payloads supporting complex search queries, filtering boundaries, and pagination metrics.
 export const findPagesList = async ({ skip, take, search, status, template, authorId, sortBy, sortOrder }) => {
   const where = { ...activeCondition };
 
@@ -141,10 +132,10 @@ export const findPagesList = async ({ skip, take, search, status, template, auth
 
   if (search) {
     where.OR = [
-      { title: { contains: search } },
-      { slug: { contains: search } },
-      { fullPath: { contains: search } },
-      { metaTitle: { contains: search } }
+      { title: { contains: search, mode: "insensitive" } },
+      { slug: { contains: search, mode: "insensitive" } },
+      { fullPath: { contains: search, mode: "insensitive" } },
+      { metaTitle: { contains: search, mode: "insensitive" } }
     ];
   }
 
@@ -162,7 +153,6 @@ export const findPagesList = async ({ skip, take, search, status, template, auth
   return { pages, total };
 };
 
-//Combines flat directory data into multidimensional array node trees in O(N) memory runtime.
 export const buildPageTree = async (onlyPublished = false, onlyInMenu = false) => {
   const where = { deletedAt: null };
   if (onlyPublished) where.status = "PUBLISHED";
@@ -210,7 +200,6 @@ export const getPageBreadcrumbs = async (pageId) => {
   if (!page || !page.fullPath || page.fullPath === '/') return [];
 
   const segments = page.fullPath.split('/').filter(Boolean);
-  
   const pathsToFetch = [];
   let currentPath = '';
   for (const segment of segments) {
@@ -218,13 +207,14 @@ export const getPageBreadcrumbs = async (pageId) => {
     pathsToFetch.push(currentPath);
   }
 
-  const breadcrumbs = await prisma.page.findMany({
+  const rawNodes = await prisma.page.findMany({
     where: { fullPath: { in: pathsToFetch }, deletedAt: null },
-    orderBy: { fullPath: 'asc' },
     select: { id: true, title: true, slug: true, fullPath: true }
   });
 
-  return breadcrumbs;
+  return pathsToFetch
+    .map(p => rawNodes.find(node => node.fullPath === p))
+    .filter(Boolean);
 };
 
 export const hasActiveChildren = async (parentId) => {
@@ -234,10 +224,6 @@ export const hasActiveChildren = async (parentId) => {
   return count > 0;
 };
 
-
-// VERSION REVISIONS SUBSYSTEM IMPLEMENTATIONS
-
-// Compiles a sorted timeline of every logged historical revision captured for a distinct system page layout.
 export const findPageRevisionHistory = async (pageId) => {
   return await prisma.pageRevision.findMany({
     where: { pageId },
@@ -250,7 +236,6 @@ export const findPageRevisionHistory = async (pageId) => {
   });
 };
 
-// Extracts a definitive atomic snapshot checkpoint logging log context based on targeting IDs parameters.
 export const findPageRevisionById = async (pageId, revisionId) => {
   return await prisma.pageRevision.findFirst({
     where: { id: revisionId, pageId },
@@ -262,7 +247,6 @@ export const findPageRevisionById = async (pageId, revisionId) => {
   });
 };
 
-// System Workspaces Execution Rollback Database Transaction Component Layer.
 export const restorePageContentSnapshot = async (pageId, snapshotData, actorId) => {
   return await prisma.$transaction(async (tx) => {
     const updatedPage = await tx.page.update({
@@ -302,5 +286,19 @@ export const restorePageContentSnapshot = async (pageId, snapshotData, actorId) 
 export const findActiveChildrenByParentId = async (parentId) => {
   return await prisma.page.findMany({
     where: { parentId, deletedAt: null }
+  });
+};
+
+export const getPagesForSitemap = async () => {
+  return await prisma.page.findMany({
+    where: {
+      status: "PUBLISHED",
+      deletedAt: null
+    },
+    select: {
+      fullPath: true,
+      publishedAt: true,
+      updatedAt: true
+    }
   });
 };

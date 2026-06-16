@@ -32,7 +32,10 @@ const blogContentSchema = z.object({
 
 export const createBlogSchema = z.object({
   title: z.string().trim().min(5, "Title requires at least 5 characters.").max(200),
-  slug: z.string().trim().toLowerCase().regex(/^[a-z0-9-]+$/, "Slug format invalid.").optional(),
+  slug: z.string().trim().toLowerCase()
+    .regex(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and dashes")
+    .max(150, "Slug cannot exceed 150 characters")
+    .optional(),
   excerpt: z.string().trim().max(1000).optional().nullable(),
   content: blogContentSchema,
   status: z.enum(["DRAFT", "PUBLISHED", "SCHEDULED"]).default("DRAFT").optional(),
@@ -71,4 +74,7 @@ export const createTaxonomySchema = z.object({
 
 export const blogParamSchema = z.object({ id: z.string().cuid() });
 export const blogSlugParamSchema = z.object({ slug: z.string().min(1) });
-export const blogPreviewTokenParamSchema = z.object({ token: z.string().length(64, "Token evaluation parameters require exact 64 characters mapping layout.") });
+export const blogPreviewTokenParamSchema = z.object({
+  token: z.string()
+    .length(64, "Token signature length evaluation failed system security constraints boundary checks.")
+});

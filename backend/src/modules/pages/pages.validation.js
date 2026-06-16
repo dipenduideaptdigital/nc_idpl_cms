@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-// Registered system protection constraints
+// Registered system protection constraints against core namespace hijack loops
 const RESERVED_SLUGS = [
   "admin", "api", "login", "register", "dashboard", 
   "cms", "uploads", "settings", "profile", "users",
-  "home", "index", "404", "500", "menu"
+  "home", "index", "404", "500", "menu", "sitemap", "sitemap.xml", "robots.txt"
 ];
 
-// Dynamic system design layout templates routing blocks
+// Dynamic layout design templates whitelist tracking schema
 export const ALLOWED_TEMPLATES = [
   "default",
   "landing-page",
@@ -68,11 +68,9 @@ const pageContentSchema = z.object({
   blocks: z.array(blockSchema).default([]),
 }).default({ blocks: [] });
 
-
 // API Request Payload Validation Schemas
 export const createPageSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(150, "Title cannot exceed 150 characters"),
-  
   slug: z.string().trim().toLowerCase()
     .regex(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and dashes")
     .max(150, "Slug cannot exceed 150 characters")
@@ -80,33 +78,25 @@ export const createPageSchema = z.object({
       message: "This slug is reserved by the system and cannot be used.",
     })
     .optional(), 
-    
   excerpt: z.string().trim().max(1000, "Excerpt cannot exceed 1000 characters").optional().nullable(),
   content: pageContentSchema,
   status: z.enum(["DRAFT", "PUBLISHED"]).default("DRAFT").optional(),
-  
-  // Template Design Execution Hard Security Control
   template: z.enum(ALLOWED_TEMPLATES, {
     errorMap: () => ({ message: "Selected layout design template is not registered or supported by system." })
   }).default("default").optional(),
-
   parentId: z.string().cuid("Invalid Parent ID structural trace context format identifier").optional().nullable(),
   menuOrder: z.coerce.number().int("Menu display re-ordering parameter metrics must remain a valid integer").default(0).optional(),
   showInMenu: z.boolean().default(true).optional(),
-  
   metaTitle: z.string().trim().max(100, "Meta title cannot exceed 100 characters").optional().nullable(),
   metaDescription: z.string().trim().max(500, "Meta description cannot exceed 500 characters").optional().nullable(),
   metaKeywords: z.string().trim().max(300, "Meta keywords cannot exceed 300 characters").optional().nullable(),
-  
   featuredImageId: z.string().cuid("Invalid Media Asset digital asset cryptographic unique identity mapping").optional().nullable(),
 }).strict();
 
-// Core Update Operations Pipeline Matrix Verification Schema 
 export const updatePageSchema = createPageSchema.partial().extend({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
 });
 
-// Admin Filter Matrix & Pagination Configuration Management Schema Lookups
 export const pageQuerySchema = z.object({
   page: z.coerce.number().int().min(1, "Page tracking parameter must remain greater than 0").default(1),
   limit: z.coerce.number().int().min(1, "Pagination capacity constraint limit must register at least 1 data node").max(100, "Maximum network extraction block limit is capped at 100 records buffer").default(10),
@@ -119,7 +109,6 @@ export const pageQuerySchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
 
-// Dynamic Route Param hard security locks protecting structural transactional endpoints layer
 export const pageIdParamSchema = z.object({
   id: z.string().cuid("Invalid cryptographic database record or unique execution structural transaction identifier identity format mapped"),
 });
@@ -128,7 +117,6 @@ export const pageSlugParamSchema = z.object({
   slug: z.string().min(1, "Absolute layout path relative network resource endpoint tracking resource tracking signature processing failed"),
 });
 
-// Administrative Revision Version Control Subsystem Parameters Match Integrity Check Locking Loops
 export const pageRevisionParamSchema = z.object({
   id: z.string().cuid("Invalid relational Page context unique validation model master layout ID template mapping token"),
   revisionId: z.string().cuid("Invalid historical version revision database checkpoint identifier cryptographic targeted snapshot identity token format")

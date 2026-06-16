@@ -12,34 +12,33 @@ export const createBlogPostController = asyncHandler(async (req, res) => {
 });
 
 export const getAdminBlogsGridController = asyncHandler(async (req, res) => {
-  const result = await blogService.getAdminBlogs(req.query);
+  const result = await blogService.getAdminBlogs(req.query, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, data: result.data, meta: result.meta });
 });
 
 export const getAdminBlogByIdController = asyncHandler(async (req, res) => {
-  const blog = await repo.findBlogById(req.params.id);
-  if (!blog) throw new AppError("Blog post not found", StatusCodes.NOT_FOUND);
+  const blog = await blogService.getAdminBlogByIdSecure(req.params.id, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, data: blog });
 });
 
 export const updateBlogPostController = asyncHandler(async (req, res) => {
-  const updated = await blogService.updateBlog(req.params.id, req.body, req.user.id);
+  const updated = await blogService.updateBlog(req.params.id, req.body, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, data: updated });
 });
 
 export const deleteBlogPostController = asyncHandler(async (req, res) => {
-  await blogService.deleteBlog(req.params.id);
+  await blogService.deleteBlog(req.params.id, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, message: "Archived." });
 });
 
 export const generateBlogPreviewLinkController = asyncHandler(async (req, res) => {
   const frontendUrl = process.env.CLIENT_URL || "http://localhost:5173";
-  const result = await blogService.generatePreviewLink(req.params.id, req.user.id, frontendUrl);
+  const result = await blogService.generatePreviewLink(req.params.id, req.user.id, req.user.systemRole?.slug, frontendUrl);
   sendResponse({ res, statusCode: StatusCodes.CREATED, data: result });
 });
 
 export const revokeBlogPreviewLinkController = asyncHandler(async (req, res) => {
-  await blogService.revokePreviewLink(req.params.id);
+  await blogService.revokePreviewLink(req.params.id, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, message: "Link revoked successfully." });
 });
 

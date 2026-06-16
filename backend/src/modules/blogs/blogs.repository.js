@@ -42,7 +42,7 @@ export const validateTaxonomyIds = async (categoryIds = [], tagIds = []) => {
 };
 
 export const findMediaById = async (id) => {
-  return await prisma.media.findFirst({ where: { id, deletedAt: null }, select: { id: true } });
+  return await prisma.media.findFirst({ where: { id, deletedAt: null }, select: { id: true, mimeType: true } }); 
 };
 
 export const createBlogWithRevision = async (blogData, categoryIds, tagIds, actorId) => {
@@ -120,7 +120,7 @@ export const findBlogBySlug = async (slug, isPublic = true) => {
   const where = { slug, ...baseFilterMask };
   if (isPublic) {
     where.status = "PUBLISHED";
-    where.publishedAt = { lte: new Date() };
+    where.publishedAt = { lte: new Date() }; 
   }
   return await prisma.blog.findFirst({ where, include: isPublic ? BLOG_PUBLIC_SELECT_INCLUDE : BLOG_ADMIN_SELECT_INCLUDE });
 };
@@ -143,13 +143,14 @@ export const deleteBlogAndPreviewTokens = async (id) => {
   });
 };
 
-export const findBlogsPaginated = async ({ skip, take, search, status, categorySlug, tagSlug, isFeatured, sortBy, sortOrder }, isPublic = true) => {
+export const findBlogsPaginated = async ({ skip, take, search, status, authorId, categorySlug, tagSlug, isFeatured, sortBy, sortOrder }, isPublic = true) => {
   const where = { ...baseFilterMask };
   if (isPublic) {
     where.status = "PUBLISHED";
     where.publishedAt = { lte: new Date() }; 
-  } else if (status) {
-    where.status = status;
+  } else {
+    if (status) where.status = status;
+    if (authorId) where.authorId = authorId; 
   }
 
   if (isFeatured !== undefined) where.isFeatured = isFeatured;
@@ -184,11 +185,21 @@ export const getSidebarData = async () => {
 };
 
 export const getRelatedBlogs = async (currentBlogId, categorySlugsArray, limit = 3) => {
-  return await prisma.blog.findMany({
+  const matchingRelatedRecords = await prisma.blog.findMany({
     where: { id: { not: currentBlogId }, status: "PUBLISHED", deletedAt: null, publishedAt: { lte: new Date() }, categories: { some: { slug: { in: categorySlugsArray } } } },
     take: limit, orderBy: { publishedAt: "desc" },
     include: { featuredImage: { select: { url: true, thumbnailUrl: true } } }
   });
+
+  if (matchingRelatedRecords.length === 0) {
+    return await prisma.blog.findMany({
+      where: { id: { not: currentBlogId }, status: "PUBLISHED", deletedAt: null, publishedAt: { lte: new Date() } },
+      take: limit, orderBy: { publishedAt: "desc" },
+      include: { featuredImage: { select: { url: true, thumbnailUrl: true } } }
+    });
+  }
+
+  return matchingRelatedRecords;
 };
 
 export const getAdjacentPosts = async (currentPublishedAtDate) => {
