@@ -31,6 +31,11 @@ export const deleteBlogPostController = asyncHandler(async (req, res) => {
   sendResponse({ res, statusCode: StatusCodes.OK, message: "Archived." });
 });
 
+export const getBlogPreviewStatusController = asyncHandler(async (req, res) => {
+  const status = await blogService.getBlogPreviewStatus(req.params.id); 
+  sendResponse({ res, statusCode: StatusCodes.OK, message: "Blog preview link status retrieved successfully.", data: status });
+});
+
 export const generateBlogPreviewLinkController = asyncHandler(async (req, res) => {
   const frontendUrl = process.env.CLIENT_URL || "http://localhost:5173";
   const result = await blogService.generatePreviewLink(req.params.id, req.user.id, req.user.systemRole?.slug, frontendUrl);

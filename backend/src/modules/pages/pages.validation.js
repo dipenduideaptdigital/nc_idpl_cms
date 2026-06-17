@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-// Registered system protection constraints against core namespace hijack loops
+// Registered system protection constraints
 const RESERVED_SLUGS = [
   "admin", "api", "login", "register", "dashboard", 
   "cms", "uploads", "settings", "profile", "users",
-  "home", "index", "404", "500", "menu", "sitemap", "sitemap.xml", "robots.txt"
+  "home", "index", "404", "500", "menu"
 ];
 
-// Dynamic layout design templates whitelist tracking schema
+// Dynamic system design layout templates routing blocks
 export const ALLOWED_TEMPLATES = [
   "default",
   "landing-page",
@@ -16,7 +16,6 @@ export const ALLOWED_TEMPLATES = [
   "about-page"
 ];
 
-// Headless Content Engine Block Structure Definitions (Supporting all 15 Frontend Modules)
 const heroBlockSchema = z.object({ type: z.literal("hero"), data: z.record(z.any()).default({}) });
 const servicesBlockSchema = z.object({ type: z.literal("services"), data: z.record(z.any()).default({}) });
 const aboutBlockSchema = z.object({ type: z.literal("about"), data: z.record(z.any()).default({}) });
@@ -31,8 +30,17 @@ const blogSectionBlockSchema = z.object({ type: z.literal("blog_section"), data:
 const galleryBlockSchema = z.object({ type: z.literal("gallery"), data: z.record(z.any()).default({}) });
 const ctaBlockSchema = z.object({ type: z.literal("cta"), data: z.record(z.any()).default({}) });
 const richTextBlockSchema = z.object({ type: z.literal("richText"), data: z.record(z.any()).default({}) });
+const heroSectionBlockSchema = z.object({ type: z.literal("heroSection"), data: z.record(z.any()).default({}) });
+const whySubhaakriteeBlockSchema = z.object({ type: z.literal("whySubhaakritee"), data: z.record(z.any()).default({}) });
+const metricsBarOneBlockSchema = z.object({ type: z.literal("metricsBarOne"), data: z.record(z.any()).default({}) });
+const modernWorkspaceBlockSchema = z.object({ type: z.literal("modernWorkspace"), data: z.record(z.any()).default({}) });
+const metricsBarTwoBlockSchema = z.object({ type: z.literal("metricsBarTwo"), data: z.record(z.any()).default({}) });
+const spacesStoriesBlockSchema = z.object({ type: z.literal("spacesStories"), data: z.record(z.any()).default({}) });
+const wayWeCreateBlockSchema = z.object({ type: z.literal("wayWeCreate"), data: z.record(z.any()).default({}) });
+const gallerySectionBlockSchema = z.object({ type: z.literal("gallerySection"), data: z.record(z.any()).default({}) });
+const trustedClientsBlockSchema = z.object({ type: z.literal("trustedClients"), data: z.record(z.any()).default({}) });
+const getInTouchBlockSchema = z.object({ type: z.literal("getInTouch"), data: z.record(z.any()).default({}) });
 
-// The dynamic Form Engine block
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
   data: z.object({
@@ -45,7 +53,6 @@ const contactFormBlockSchema = z.object({
   }).strict() 
 });
 
-// Validation gates execution (Combining all 15 modules)
 const blockSchema = z.discriminatedUnion("type", [
   heroBlockSchema,
   servicesBlockSchema,
@@ -62,15 +69,27 @@ const blockSchema = z.discriminatedUnion("type", [
   ctaBlockSchema,
   richTextBlockSchema,
   contactFormBlockSchema,
+  heroSectionBlockSchema,
+  whySubhaakriteeBlockSchema,
+  metricsBarOneBlockSchema,
+  modernWorkspaceBlockSchema,
+  metricsBarTwoBlockSchema,
+  spacesStoriesBlockSchema,
+  wayWeCreateBlockSchema,
+  gallerySectionBlockSchema,
+  trustedClientsBlockSchema,
+  getInTouchBlockSchema,
 ]);
 
 const pageContentSchema = z.object({
   blocks: z.array(blockSchema).default([]),
 }).default({ blocks: [] });
 
+
 // API Request Payload Validation Schemas
 export const createPageSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(150, "Title cannot exceed 150 characters"),
+  
   slug: z.string().trim().toLowerCase()
     .regex(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and dashes")
     .max(150, "Slug cannot exceed 150 characters")
@@ -78,25 +97,33 @@ export const createPageSchema = z.object({
       message: "This slug is reserved by the system and cannot be used.",
     })
     .optional(), 
+    
   excerpt: z.string().trim().max(1000, "Excerpt cannot exceed 1000 characters").optional().nullable(),
   content: pageContentSchema,
   status: z.enum(["DRAFT", "PUBLISHED"]).default("DRAFT").optional(),
+  
+  // Template Design Execution Hard Security Control
   template: z.enum(ALLOWED_TEMPLATES, {
     errorMap: () => ({ message: "Selected layout design template is not registered or supported by system." })
   }).default("default").optional(),
+
   parentId: z.string().cuid("Invalid Parent ID structural trace context format identifier").optional().nullable(),
   menuOrder: z.coerce.number().int("Menu display re-ordering parameter metrics must remain a valid integer").default(0).optional(),
   showInMenu: z.boolean().default(true).optional(),
+  
   metaTitle: z.string().trim().max(100, "Meta title cannot exceed 100 characters").optional().nullable(),
   metaDescription: z.string().trim().max(500, "Meta description cannot exceed 500 characters").optional().nullable(),
   metaKeywords: z.string().trim().max(300, "Meta keywords cannot exceed 300 characters").optional().nullable(),
+  
   featuredImageId: z.string().cuid("Invalid Media Asset digital asset cryptographic unique identity mapping").optional().nullable(),
 }).strict();
 
+// Core Update Operations Pipeline Matrix Verification Schema 
 export const updatePageSchema = createPageSchema.partial().extend({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
 });
 
+// Admin Filter Matrix & Pagination Configuration Management Schema Lookups
 export const pageQuerySchema = z.object({
   page: z.coerce.number().int().min(1, "Page tracking parameter must remain greater than 0").default(1),
   limit: z.coerce.number().int().min(1, "Pagination capacity constraint limit must register at least 1 data node").max(100, "Maximum network extraction block limit is capped at 100 records buffer").default(10),

@@ -23,6 +23,9 @@ import PageList from './pages/admin/pages/PageList';
 import PageEditor from './pages/admin/pages/PageEditor';
 import ContactFormList from './pages/admin/contact-forms/ContactFormList';
 import ContactFormEditor from './pages/admin/contact-forms/ContactFormEditor';
+import BlogList from './pages/admin/blogs/BlogList';
+import BlogEditor from './pages/admin/blogs/BlogEditor';
+import TaxonomyManager from './pages/admin/blogs/TaxonomyManager';
 
 function App() {
   return (
@@ -40,6 +43,10 @@ function App() {
           <Route path="contact-forms" element={<ContactFormList />} />
           <Route path="contact-forms/create" element={<ContactFormEditor />} />
           <Route path="contact-forms/edit/:id" element={<ContactFormEditor />} />
+          <Route path="blogs" element={<BlogList />} />
+          <Route path="blogs/create" element={<BlogEditor />} />
+          <Route path="blogs/edit/:id" element={<BlogEditor />} />
+          <Route path="blogs/taxonomies" element={<TaxonomyManager />} />
         </Route>
 
         {/* Public Routes - Landing Pages */}

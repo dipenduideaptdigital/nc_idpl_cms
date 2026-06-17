@@ -6,7 +6,7 @@ const textDataSchema = z.object({
 }).catchall(z.any());
 
 const mediaDataSchema = z.object({
-  url: z.string().trim().url("Invalid asset pointer URL structure."),
+  url: z.string().trim().optional().default(""), 
   caption: z.string().trim().max(300).optional().nullable(),
   videoId: z.string().trim().optional(),
   platform: z.enum(["youtube", "vimeo"]).optional()
@@ -18,7 +18,14 @@ const paragraphBlock = z.object({ type: z.literal("paragraph"), data: textDataSc
 const quoteBlock = z.object({ type: z.literal("quote"), data: textDataSchema });
 const dividerBlock = z.object({ type: z.literal("divider"), data: z.record(z.any()).default({}) });
 const imageBlock = z.object({ type: z.literal("image"), data: mediaDataSchema });
-const galleryBlock = z.object({ type: z.literal("gallery"), data: z.object({ images: z.array(z.string().url()) }).default({ images: [] }) });
+
+const galleryBlock = z.object({ 
+  type: z.literal("gallery"), 
+  data: z.object({ 
+    images: z.array(z.string()).default([]) 
+  }).default({ images: [] }) 
+});
+
 const videoBlock = z.object({ type: z.literal("video"), data: mediaDataSchema });
 
 const blogBlockSchema = z.discriminatedUnion("type", [
@@ -33,24 +40,22 @@ const blogContentSchema = z.object({
 export const createBlogSchema = z.object({
   title: z.string().trim().min(5, "Title requires at least 5 characters.").max(200),
   slug: z.string().trim().toLowerCase()
-    .regex(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and dashes")
-    .max(150, "Slug cannot exceed 150 characters")
-    .optional(),
+    .regex(/^[a-z0-9-]*$/, "Slug can only contain lowercase letters, numbers, and dashes")
+    .max(150)
+    .optional()
+    .nullable(),
   excerpt: z.string().trim().max(1000).optional().nullable(),
   content: blogContentSchema,
   status: z.enum(["DRAFT", "PUBLISHED", "SCHEDULED"]).default("DRAFT").optional(),
   isFeatured: z.boolean().default(false).optional(),
-  
-  categoryIds: z.array(z.string().cuid("Invalid Category dynamic CUID standard structure.")).default([]).optional(),
-  tagIds: z.array(z.string().cuid("Invalid Tag dynamic CUID standard structure.")).default([]).optional(),
-  
-  featuredImageId: z.string().cuid("Invalid image mapping identity key.").optional().nullable(),
-  publishedAt: z.string().datetime("Scheduling settings require a valid ISO datetime parameter mapping.").optional().nullable(),
-  
+  categoryIds: z.array(z.string().cuid()).default([]).optional(),
+  tagIds: z.array(z.string().cuid()).default([]).optional(),
+  featuredImageId: z.string().cuid().optional().nullable(),
+  publishedAt: z.string().datetime().optional().nullable(),
   metaTitle: z.string().trim().max(150).optional().nullable(),
   metaDescription: z.string().trim().max(500).optional().nullable(),
   metaKeywords: z.string().trim().max(300).optional().nullable()
-}).strict();
+}); 
 
 export const updateBlogSchema = createBlogSchema.partial().extend({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED", "SCHEDULED"]).optional()

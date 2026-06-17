@@ -190,10 +190,32 @@ export const deleteBlog = async (id, actorId, actorRoleSlug) => {
 
 const hashToken = (token) => crypto.createHash("sha256").update(token).digest("hex");
 
+export const getBlogPreviewStatus = async (blogId) => {
+  const stats = await repo.getBlogPreviewTokenStats(blogId);
+  
+  if (!stats) {
+    return { isActive: false };
+  }
+
+  const isExpired = new Date() > stats.expiresAt;
+  if (isExpired) {
+    return { isActive: false, isExpired: true };
+  }
+
+  return {
+    isActive: true,
+    expiresAt: stats.expiresAt,
+    usedCount: stats.usedCount,
+    lastAccessedAt: stats.lastAccessedAt,
+    createdAt: stats.createdAt
+  };
+};
+
 export const generatePreviewLink = async (blogId, userId, userRoleSlug, baseUrl) => {
   const blog = await repo.findBlogById(blogId);
   if (!blog) throw new AppError("Blog not found.", StatusCodes.NOT_FOUND);
   enforceContentOwnershipBoundary(blog, userId, userRoleSlug);
+  
   const rawToken = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
@@ -203,10 +225,8 @@ export const generatePreviewLink = async (blogId, userId, userRoleSlug, baseUrl)
     createdById: userId,
     expiresAt
   });
-
-  return { previewUrl: `${baseUrl}/blogs/preview/${rawToken}` };
+  return { previewUrl: `${baseUrl}/preview/${rawToken}?type=blog` };
 };
-
 export const revokePreviewLink = async (blogId, actorId, actorRoleSlug) => {
   const blog = await repo.findBlogById(blogId);
   if (!blog) throw new AppError("Target blog reference pointer invalid.", StatusCodes.NOT_FOUND);
@@ -223,8 +243,12 @@ export const resolvePreviewToken = async (rawToken) => {
   if (tokenRecord.blog.deletedAt) throw new AppError("This blog has been deleted.", StatusCodes.NOT_FOUND);
 
   repo.incrementPreviewTokenUsage(tokenRecord.id).catch(() => {});
-  return tokenRecord.blog;
+  return {
+    preview: { enabled: true, expiresAt: tokenRecord.expiresAt },
+    blog: tokenRecord.blog
+  };
 };
+
 
 export const createCategory = async (payload) => {
   const slug = generateSlug(payload.name);

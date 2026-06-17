@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, Navigate, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Globe, Inbox, Menu, X } from 'lucide-react'; 
+import { LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Globe, Inbox, Menu, X, BookOpen, Tag } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext'; 
 
 const AdminLayout = () => {
@@ -22,6 +22,8 @@ const AdminLayout = () => {
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
     { name: 'Landing pages', icon: FileText, path: '/admin/pages' },
+    { name: 'Blog Posts', icon: BookOpen, path: '/admin/blogs' },
+    { name: 'Categories & Tags', icon: Tag, path: '/admin/blogs/taxonomies' },
     { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms' },
     { name: 'Home page', icon: ImageIcon, path: '/admin/home-customization' },
     { name: 'Settings', icon: Settings, path: '/admin/settings' },

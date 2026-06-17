@@ -408,7 +408,7 @@ const PageEditor = () => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <PreviewManager pageId={isEditMode ? id : null} />
+          <PreviewManager id={isEditMode ? id : null} entityType="page" />
           <select
             name="status"
             value={formData.status}

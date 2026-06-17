@@ -30,6 +30,7 @@ router.delete("/tags/:id", validate(blogParamSchema, "params"), controller.delet
 // Blog Posts
 router.post("/", validate(createBlogSchema, "body"), controller.createBlogPostController);
 router.get("/", validate(blogQuerySchema, "query"), controller.getAdminBlogsGridController);
+router.get("/:id/preview-link", validate(blogParamSchema, "params"), controller.getBlogPreviewStatusController);
 router.post("/:id/preview-link", validate(blogParamSchema, "params"), controller.generateBlogPreviewLinkController);
 router.delete("/:id/preview-link", validate(blogParamSchema, "params"), controller.revokeBlogPreviewLinkController);
 router.get("/:id", validate(blogParamSchema, "params"), controller.getAdminBlogByIdController);
