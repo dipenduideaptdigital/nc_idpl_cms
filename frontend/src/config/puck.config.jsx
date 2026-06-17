@@ -132,7 +132,7 @@ export const puckConfig = {
         titleLine2: { type: "text" },
         description: { type: "textarea" },
         buttonText: { type: "text" },
-        images: { type: "array", arrayFields: { url: { type: "text" }, label: { type: "text" } }, defaultItemProps: { url: '/assets/homepage/gallery1.png', label: 'New Image' } }
+        images: { type: "array", arrayFields: { url: { type: "custom", render: ({ value, name, onChange }) => <ImageField value={value} onChange={onChange} /> }, label: { type: "text" } }, defaultItemProps: { url: '/assets/homepage/gallery1.png', label: 'New Image' } }
       },
       defaultProps: { 
         badgeText: 'ARCHITECTURE AND INTERIOR DESIGN', 
@@ -181,7 +181,7 @@ export const puckConfig = {
       fields: {
         title: { type: "text" },
         subtitle: { type: "text" },
-        images: { type: "array", arrayFields: { url: { type: "text" } }, defaultItemProps: { url: '/assets/homepage/gallery1.png' } }
+        images: { type: "array", arrayFields: { url: { type: "custom", render: ({ value, name, onChange }) => <ImageField value={value} onChange={onChange} /> } }, defaultItemProps: { url: '/assets/homepage/gallery1.png' } }
       },
       defaultProps: { 
         title: 'Gallery', 

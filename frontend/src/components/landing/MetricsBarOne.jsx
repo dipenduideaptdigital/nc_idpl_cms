@@ -1,13 +1,7 @@
 import React from 'react';
 
 const MetricsBarOne = ({ data }) => {
-  // Override CMS data to force the layout since the user wants exactly this static text
-  const metrics = [
-    { value: 'ON-TIME', label: 'DELIVERY' },
-    { value: 'BEST', label: 'PRICE' },
-    { value: 'SUPERIOR', label: 'QUALITY' },
-    { value: 'SAFETY', label: 'ASSURED' }
-  ];
+  const metrics = data?.metrics || [];
 
   return (
     <section className="py-10 px-8 bg-[#eef4fa]">
