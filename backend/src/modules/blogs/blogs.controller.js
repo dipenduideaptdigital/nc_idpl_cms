@@ -54,8 +54,30 @@ export const getPublicBlogsGridController = asyncHandler(async (req, res) => {
 
 export const getPublicSingleBlogDetailsController = asyncHandler(async (req, res) => {
   const fingerprint = generateRequestFingerprint(req); 
-  const detailManifest = await blogService.getBlogBySlug(req.params.slug, fingerprint);
-  sendResponse({ res, statusCode: StatusCodes.OK, data: detailManifest });
+  const slug = req.params.slug;
+
+  try {
+    const detailManifest = await blogService.getBlogBySlug(slug, fingerprint);
+    sendResponse({ res, statusCode: StatusCodes.OK, data: detailManifest });
+  } catch (error) {
+    if (error.statusCode === StatusCodes.NOT_FOUND) {
+      const historyRecord = await repo.findBlogIdByOldSlug(slug);
+      
+      if (historyRecord && historyRecord.blog.status === "PUBLISHED" && !historyRecord.blog.deletedAt) {
+        return sendResponse({
+          res,
+          statusCode: 301, 
+          message: "Content has moved permanently.",
+          data: {
+            redirect: true,
+            newSlug: historyRecord.blog.slug,
+            newUrl: `/blog/${historyRecord.blog.slug}`
+          }
+        });
+      }
+    }
+    throw error;
+  }
 });
 
 export const resolvePublicBlogPreviewController = asyncHandler(async (req, res) => {

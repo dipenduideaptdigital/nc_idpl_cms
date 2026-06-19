@@ -3,11 +3,13 @@ import { prisma } from "../../config/db.js";
 export const PAGES_ADMIN_INCLUDE = {
   author: { select: { id: true, name: true, email: true } },
   featuredImage: { select: { id: true, url: true, thumbnailUrl: true, mimeType: true } },
+  ogImage: { select: { id: true, url: true, thumbnailUrl: true, mimeType: true } },
 };
 
 export const PAGES_PUBLIC_INCLUDE = {
   author: { select: { name: true } },
   featuredImage: { select: { url: true, thumbnailUrl: true } },
+  ogImage: { select: { url: true, thumbnailUrl: true } },
 };
 
 const activeCondition = { deletedAt: null };
@@ -70,6 +72,13 @@ export const createPageWithRevision = async (pageData, actorId) => {
       parentId: page.parentId,
       menuOrder: page.menuOrder,
       showInMenu: page.showInMenu,
+      includeInSitemap: page.includeInSitemap,
+      noIndex: page.noIndex,
+      noFollow: page.noFollow,
+      canonicalUrl: page.canonicalUrl,
+      ogTitle: page.ogTitle,
+      ogDescription: page.ogDescription,
+      ogImageId: page.ogImageId,
     };
 
     await tx.pageRevision.create({
@@ -266,6 +275,13 @@ export const restorePageContentSnapshot = async (pageId, snapshotData, actorId) 
         parentId: snapshotData.parentId,
         menuOrder: snapshotData.menuOrder || 0,
         showInMenu: snapshotData.showInMenu !== undefined ? snapshotData.showInMenu : true,
+        includeInSitemap: snapshotData.includeInSitemap !== undefined ? snapshotData.includeInSitemap : true,
+        noIndex: snapshotData.noIndex !== undefined ? snapshotData.noIndex : false,
+        noFollow: snapshotData.noFollow !== undefined ? snapshotData.noFollow : false,
+        canonicalUrl: snapshotData.canonicalUrl || null,
+        ogTitle: snapshotData.ogTitle || null,
+        ogDescription: snapshotData.ogDescription || null,
+        ogImageId: snapshotData.ogImageId || null,
         updatedById: actorId,
       },
       include: PAGES_ADMIN_INCLUDE
@@ -293,7 +309,9 @@ export const getPagesForSitemap = async () => {
   return await prisma.page.findMany({
     where: {
       status: "PUBLISHED",
-      deletedAt: null
+      deletedAt: null,
+      includeInSitemap: true,
+      noIndex: false
     },
     select: {
       fullPath: true,
@@ -301,4 +319,18 @@ export const getPagesForSitemap = async () => {
       updatedAt: true
     }
   });
+};
+
+export const createPagePathHistory = async (pageId, oldFullPath) => {
+  return await prisma.pagePathHistory.create({
+    data: { pageId, oldFullPath }
+  });
+};
+
+export const findPageIdByOldPath = async (oldFullPath) => {
+  const history = await prisma.pagePathHistory.findUnique({
+    where: { oldFullPath },
+    include: { page: { select: { fullPath: true, status: true, deletedAt: null } } }
+  });
+  return history;
 };

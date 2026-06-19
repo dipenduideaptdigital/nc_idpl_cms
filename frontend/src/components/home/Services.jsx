@@ -49,7 +49,7 @@ const Services = ({ data: externalData }) => {
   const servicesList = content?.services || defaultServicesData;
 
   return (
-    <section className="py-16 md:py-24 bg-white overflow-hidden">
+    <section id="services-section" className="py-16 md:py-24 bg-white overflow-hidden">
       <div className="container mx-auto px-6 md:px-8 max-w-7xl">
         
         {/* Top Section */}

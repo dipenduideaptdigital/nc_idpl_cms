@@ -21,16 +21,15 @@ const BlogSidebar = ({ sidebarData, onSearchSubmit, activeCategorySlug, onCatego
 
   return (
     <div className="space-y-12">
-      {/* Search Interaction Control */}
       <div>
         <h3 className="font-['Outfit'] text-[32px] md:text-[43px] font-semibold leading-none text-zinc-900 mb-6">Search</h3>
         <form onSubmit={handleSearchKeyPressFormSignal} className="relative">
           <input 
             type="text" 
-            placeholder="Search articles...." 
+            placeholder="Search...." 
             value={localSearchInputTerm}
             onChange={(e) => setLocalSearchInputString(e.target.value)}
-            className="w-full border border-zinc-200 rounded-full py-3.5 px-6 pr-12 focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-all text-sm font-medium text-zinc-600 placeholder-zinc-400"
+            className="w-full border border-zinc-200 rounded-full py-3.5 px-6 pr-12 focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-all text-base font-extralight text-zinc-600 placeholder-zinc-400"
           />
           <button type="submit" className="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-[#3B82F6] transition-colors">
             <Search className="w-5 h-5" />
@@ -42,14 +41,14 @@ const BlogSidebar = ({ sidebarData, onSearchSubmit, activeCategorySlug, onCatego
       {structuralCategoriesList.length > 0 && (
         <div>
           <h3 className="font-['Outfit'] text-[32px] md:text-[43px] font-semibold leading-none text-zinc-900 mb-6">Categories</h3>
-          <ul className="flex flex-col border-t border-zinc-100">
+          <ul className="flex flex-col border-t border-zinc-200">
             {structuralCategoriesList.map((category) => {
               const isSelectedNode = activeCategorySlug === category.slug;
               return (
                 <li 
                   key={category.id} 
                   onClick={() => onCategorySelect && onCategorySelect(category.slug)}
-                  className={`font-['Montserrat'] text-[18px] md:text-[22px] font-semibold capitalize border-b border-zinc-100 py-4 flex justify-between items-center transition-colors cursor-pointer ${
+                  className={`font-['Montserrat'] text-[18px] md:text-[22px] font-semibold capitalize border-b border-zinc-200 py-4 flex justify-between items-center transition-colors cursor-pointer ${
                     isSelectedNode ? 'text-[#3B82F6]' : 'text-zinc-600 hover:text-[#3B82F6]'
                   }`}
                 >
@@ -104,14 +103,14 @@ const BlogSidebar = ({ sidebarData, onSearchSubmit, activeCategorySlug, onCatego
       {structuralPopularTagsList.length > 0 && (
         <div>
           <h3 className="font-['Outfit'] text-[32px] md:text-[43px] font-semibold leading-none text-zinc-900 mb-6 mt-6">Popular Tags</h3>
-          <div className="flex flex-wrap gap-2.5">
+          <div className="flex flex-wrap justify-center gap-2.5">
             {structuralPopularTagsList.map((tag) => (
               <span 
                 key={tag.id} 
                 onClick={() => onTagSelect && onTagSelect(tag.slug)}
                 className="px-4 py-2 border border-zinc-200 rounded-full text-[12px] md:text-[13px] font-medium text-zinc-600 hover:border-[#3B82F6] hover:text-[#3B82F6] cursor-pointer bg-white hover:bg-blue-50/20 transition-all shadow-sm"
               >
-                #{tag.name}
+                {tag.name}
               </span>
             ))}
           </div>

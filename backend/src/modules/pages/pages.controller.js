@@ -3,7 +3,7 @@ import { asyncHandler } from "../../shared/utils/asyncHandler.js";
 import { sendResponse } from "../../shared/utils/apiResponse.js";
 import { AppError } from "../../shared/errors/AppError.js";
 import { serializePage } from "../../shared/utils/serializePage.js";
-import { findPageById } from "./pages.repository.js";
+import { findPageById, findPageIdByOldPath } from "./pages.repository.js";
 import * as pagesService from "./pages.service.js";
 
 
@@ -72,6 +72,28 @@ export const getPublicMenuTreeController = asyncHandler(async (req, res) => {
 
 export const getPublicPageController = asyncHandler(async (req, res) => {
   const fullPath = req.path;
-  const page = await pagesService.getPublicPageByPath(fullPath);
-  sendResponse({ res, statusCode: StatusCodes.OK, message: "Page retrieved successfully", data: page });
+  const formattedPath = fullPath.startsWith('/') ? fullPath : `/${fullPath}`;
+
+  try {
+    const page = await pagesService.getPublicPageByPath(formattedPath);
+    sendResponse({ res, statusCode: StatusCodes.OK, message: "Page retrieved successfully", data: page });
+  } catch (error) {
+    if (error.statusCode === StatusCodes.NOT_FOUND) {
+      const historyRecord = await findPageIdByOldPath(formattedPath);
+      
+      if (historyRecord && historyRecord.page.status === "PUBLISHED" && !historyRecord.page.deletedAt) {
+        return sendResponse({
+          res,
+          statusCode: 301, 
+          message: "Content has moved permanently.",
+          data: {
+            redirect: true,
+            newPath: historyRecord.page.fullPath,
+            newUrl: historyRecord.page.fullPath
+          }
+        });
+      }
+    }
+    throw error;
+  }
 });

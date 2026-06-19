@@ -116,6 +116,15 @@ export const createPageSchema = z.object({
   metaKeywords: z.string().trim().max(300, "Meta keywords cannot exceed 300 characters").optional().nullable(),
   
   featuredImageId: z.string().cuid("Invalid Media Asset digital asset cryptographic unique identity mapping").optional().nullable(),
+
+  // SEO Engine Fields
+  includeInSitemap: z.boolean().default(true).optional(),
+  noIndex: z.boolean().default(false).optional(),
+  noFollow: z.boolean().default(false).optional(),
+  canonicalUrl: z.union([z.string().trim().url("Invalid canonical URL format."), z.literal("")]).optional().nullable(),
+  ogTitle: z.string().trim().max(150).optional().nullable(),
+  ogDescription: z.string().trim().max(500).optional().nullable(),
+  ogImageId: z.union([z.string().cuid("Invalid OG Image ID format."), z.literal("")]).optional().nullable(),
 }).strict();
 
 // Core Update Operations Pipeline Matrix Verification Schema 

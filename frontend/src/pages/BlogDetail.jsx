@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { blogsApi } from '../api/blogs';
-import { resolveAssetUrl } from '../utils/assetResolver';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 import BlogDetailHero from '../components/blog/BlogDetailHero';
 import BlogBlockParser from '../components/blog/BlogBlockParser';
 import BlogSidebar from '../components/blog/BlogSidebar';
 import BlogReviews from '../components/blog/BlogReviews';
 import CallToAction from '../components/shared/CallToAction';
+import SEOHead from '../components/shared/SEOHead';
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -22,21 +22,16 @@ const BlogDetail = () => {
       setLoading(true);
       try {
         const response = await blogsApi.getPublicBlogBySlug(slug);
-        const fetchedData = response.data;
-        setData(fetchedData);
-        
-        // Dynamic SEO Injection
-        const seoTitle = fetchedData.blog.metaTitle || fetchedData.blog.title;
-        document.title = `${seoTitle} | Subhaakritee`;
-        
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc) {
-          metaDesc.setAttribute('content', fetchedData.blog.metaDescription || fetchedData.blog.excerpt || '');
-        }
-
+        setData(response.data);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (error) {
         console.error("Error fetching blog post:", error);
+        
+        if (error.response?.status === 301 && error.response?.data?.data?.redirect) {
+          navigate(error.response.data.data.newUrl, { replace: true });
+          return;
+        }
+
         if (error.response?.status === 404) {
           navigate('/404', { replace: true });
         }
@@ -62,6 +57,8 @@ const BlogDetail = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans">
+      <SEOHead data={blog} type="blog" />
+
       <BlogDetailHero post={blog} />
 
       <div className="container mx-auto px-4 md:px-8 max-w-7xl mt-16 opal-move-up mb-12">
@@ -88,19 +85,19 @@ const BlogDetail = () => {
                 {blog.title}
               </h1>
 
-              {/*  Layout Renderer (JSON to HTML) */}
+              {/* Layout Renderer (JSON to HTML) */}
               <div className="blog-content-wrapper">
                 <BlogBlockParser contentPayload={blog.content} />
               </div>
 
               {/* Dynamic Previous / Next Navigation */}
-              <div className="flex flex-col md:flex-row justify-between items-start border-y border-zinc-200 pt-8 pb-16 mt-16 mb-8 gap-8">
+             <div className="flex flex-col md:flex-row justify-between items-start border-y-2 border-zinc-200 pt-8 pb-8 mt-16 mb-8 gap-8">
                 {navigationSiblings?.prev ? (
                   <Link to={`/blog/${navigationSiblings.prev.slug}`} className="group w-full md:w-1/2 flex flex-col items-start">
                     <div className="flex items-center gap-2 text-zinc-400 font-bold text-[13px] tracking-widest uppercase mb-3 group-hover:text-[#3B82F6] transition-colors">
                       <span className="text-lg leading-none">&larr;</span> Previous Post
                     </div>
-                    <div className="font-['Outfit'] font-bold text-xl md:text-2xl leading-snug text-zinc-900 group-hover:text-[#3B82F6] transition-colors pr-4">
+                    <div className="font-['Outfit'] font-bold text-lg md:text-xl leading-snug text-zinc-900 group-hover:text-[#3B82F6] transition-colors pr-4">
                       {navigationSiblings.prev.title}
                     </div>
                   </Link>
@@ -111,7 +108,7 @@ const BlogDetail = () => {
                     <div className="flex items-center gap-2 text-zinc-400 font-bold text-[13px] tracking-widest uppercase mb-3 group-hover:text-[#3B82F6] transition-colors">
                       Next Post <span className="text-lg leading-none">&rarr;</span>
                     </div>
-                    <div className="font-['Outfit'] font-bold text-xl md:text-2xl leading-snug text-zinc-900 group-hover:text-[#3B82F6] transition-colors md:pl-4">
+                    <div className="font-['Outfit'] font-bold text-lg md:text-xl leading-snug text-zinc-900 group-hover:text-[#3B82F6] transition-colors md:pl-4">
                       {navigationSiblings.next.title}
                     </div>
                   </Link>

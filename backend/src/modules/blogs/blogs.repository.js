@@ -4,14 +4,16 @@ export const BLOG_ADMIN_SELECT_INCLUDE = {
   author: { select: { id: true, name: true, email: true, avatar: true } },
   featuredImage: { select: { id: true, url: true, thumbnailUrl: true } },
   categories: { select: { id: true, name: true, slug: true } },
-  tags: { select: { id: true, name: true, slug: true } }
+  tags: { select: { id: true, name: true, slug: true } },
+  ogImage: { select: { id: true, url: true, thumbnailUrl: true } }
 };
 
 export const BLOG_PUBLIC_SELECT_INCLUDE = {
   author: { select: { name: true, avatar: true } },
   featuredImage: { select: { url: true, thumbnailUrl: true } },
   categories: { select: { name: true, slug: true } },
-  tags: { select: { name: true, slug: true } }
+  tags: { select: { name: true, slug: true } },
+  ogImage: { select: { url: true, thumbnailUrl: true } }
 };
 
 const baseFilterMask = { deletedAt: null };
@@ -357,6 +359,36 @@ export const getBlogPreviewTokenStats = async (blogId) => {
       usedCount: true, 
       lastAccessedAt: true, 
       createdAt: true 
+    }
+  });
+};
+
+export const createBlogSlugHistory = async (blogId, oldSlug) => {
+  return await prisma.blogSlugHistory.create({
+    data: { blogId, oldSlug }
+  });
+};
+
+export const findBlogIdByOldSlug = async (oldSlug) => {
+  const history = await prisma.blogSlugHistory.findUnique({
+    where: { oldSlug },
+    include: { blog: { select: { slug: true, status: true, deletedAt: null } } }
+  });
+  return history; 
+};
+
+export const getBlogsForSitemap = async () => {
+  return await prisma.blog.findMany({
+    where: {
+      status: "PUBLISHED",
+      deletedAt: null,
+      includeInSitemap: true,
+      noIndex: false
+    },
+    select: {
+      slug: true,
+      publishedAt: true,
+      updatedAt: true
     }
   });
 };

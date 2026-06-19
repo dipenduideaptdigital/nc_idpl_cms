@@ -34,6 +34,10 @@ const cascadeFullPathUpdate = async (parentId, newParentFullPath, actorId) => {
   for (const child of children) {
     const newFullPath = `${newParentFullPath}/${child.slug}`.replace(/\/\//g, '/');
     
+    if (child.publishedAt && newFullPath !== child.fullPath) {
+      await repo.createPagePathHistory(child.id, child.fullPath).catch(() => {});
+    }
+    
     await repo.updatePageWithRevision(child.id, { fullPath: newFullPath, updatedById: actorId }, null, actorId);
     await cascadeFullPathUpdate(child.id, newFullPath, actorId);
   }
@@ -92,6 +96,13 @@ const buildFullSnapshot = (page) => ({
   parentId: page.parentId,
   menuOrder: page.menuOrder,
   showInMenu: page.showInMenu,
+  includeInSitemap: page.includeInSitemap,
+  noIndex: page.noIndex,
+  noFollow: page.noFollow,
+  canonicalUrl: page.canonicalUrl,
+  ogTitle: page.ogTitle,
+  ogDescription: page.ogDescription,
+  ogImageId: page.ogImageId,
 });
 
 export const createNewPage = async (payload, authorId) => {
@@ -148,7 +159,8 @@ export const updateExistingPage = async (id, payload, actorId) => {
   const allowedFields = [
     "title", "excerpt", "content", "status", "template", 
     "metaTitle", "metaDescription", "metaKeywords", "featuredImageId",
-    "parentId", "menuOrder", "showInMenu" 
+    "parentId", "menuOrder", "showInMenu", "includeInSitemap", "noIndex",
+    "noFollow", "canonicalUrl", "ogTitle", "ogDescription", "ogImageId"
   ];
   
   allowedFields.forEach(field => {
@@ -156,10 +168,10 @@ export const updateExistingPage = async (id, payload, actorId) => {
   });
 
   const parentIdChanged = payload.parentId !== undefined && payload.parentId !== existingPage.parentId;
-  const slugChanged = payload.slug !== undefined && payload.slug !== existingPage.slug;
+  const slugExplicitlyChanged = payload.slug !== undefined && payload.slug !== existingPage.slug;
   const titleChanged = payload.title !== undefined && payload.title !== existingPage.title && !existingPage.publishedAt;
 
-  if (slugChanged || parentIdChanged || titleChanged) {
+  if (slugExplicitlyChanged || parentIdChanged || titleChanged) {
     const slugSource = payload.slug !== undefined ? payload.slug : (payload.title || existingPage.title);
     const targetParentId = payload.parentId !== undefined ? payload.parentId : existingPage.parentId;
 
@@ -168,6 +180,10 @@ export const updateExistingPage = async (id, payload, actorId) => {
 
     if (await repo.checkFullPathExists(updateData.fullPath, id)) {
       throw new AppError(`The URL path ${updateData.fullPath} is already in use.`, StatusCodes.CONFLICT);
+    }
+    
+    if (existingPage.publishedAt && updateData.fullPath !== existingPage.fullPath) {
+      await repo.createPagePathHistory(id, existingPage.fullPath).catch(() => {});
     }
   }
 
@@ -218,6 +234,13 @@ export const duplicatePageDeep = async (originalId, actorId, newParentId = undef
     parentId: targetParentId,
     menuOrder: original.menuOrder,
     showInMenu: original.showInMenu,
+    includeInSitemap: original.includeInSitemap,
+    noIndex: original.noIndex,
+    noFollow: original.noFollow,
+    canonicalUrl: original.canonicalUrl,
+    ogTitle: original.ogTitle,
+    ogDescription: original.ogDescription,
+    ogImageId: original.ogImageId,
     authorId: actorId,
     updatedById: actorId,
     publishedAt: null,

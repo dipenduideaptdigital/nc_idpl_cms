@@ -110,13 +110,23 @@ export const updateBlog = async (id, payload, actorId, actorRoleSlug) => {
   }
   
   const updateData = {};
-  const allowed = ["title", "excerpt", "content", "status", "isFeatured", "metaTitle", "metaDescription", "metaKeywords", "featuredImageId", "publishedAt"];
+  const allowed = ["title", "excerpt", "content", "status", "isFeatured", "metaTitle", "metaDescription", "metaKeywords", "featuredImageId", "publishedAt", "includeInSitemap", "noIndex", "noFollow", "canonicalUrl", "ogTitle", "ogDescription", "ogImageId"];
   allowed.forEach(f => { if (payload[f] !== undefined) updateData[f] = payload[f]; });
 
-  if (payload.title || payload.slug) {
+  const slugExplicitlyChanged = payload.slug !== undefined && payload.slug !== existing.slug;
+  const titleChanged = payload.title !== undefined && payload.title !== existing.title && !existing.publishedAt;
+
+  if (slugExplicitlyChanged || titleChanged) {
     const slugSource = payload.slug !== undefined ? payload.slug : payload.title;
     const baseSlug = generateSlug(slugSource);
-    if (baseSlug !== existing.slug) updateData.slug = await ensureUniqueSlug(baseSlug, id);
+    
+    if (baseSlug !== existing.slug) {
+      updateData.slug = await ensureUniqueSlug(baseSlug, id);
+      
+      if (existing.publishedAt) {
+        await repo.createBlogSlugHistory(id, existing.slug).catch(() => {}); 
+      }
+    }
   }
 
   if (payload.content) updateData.readingTime = calculateReadingTime(payload.content);
@@ -248,7 +258,6 @@ export const resolvePreviewToken = async (rawToken) => {
     blog: tokenRecord.blog
   };
 };
-
 
 export const createCategory = async (payload) => {
   const slug = generateSlug(payload.name);

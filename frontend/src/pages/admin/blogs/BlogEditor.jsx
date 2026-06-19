@@ -22,17 +22,21 @@ const BlogEditor = () => {
   const BLOG_BLOCKS = [
     { type: 'richText', label: 'Rich Text Paragraph' },
     { type: 'heading', label: 'Section Heading' },
-    { type: 'quote', label: 'Blockquote' },
+    { type: 'quote', label: 'Blockquote (Figma Style)' },
     { type: 'image', label: 'Single Image' },
     { type: 'gallery', label: 'Image Grid (Use for 2-column layout)' },
     { type: 'video', label: 'Video Embed' },
     { type: 'divider', label: 'Line Divider' }
   ];
 
+  // Added all Advanced SEO Engine Fields
   const [formData, setFormData] = useState({
     title: '', slug: '', excerpt: '', status: 'DRAFT', publishedAt: '',
     categoryIds: [], tagIds: [], featuredImageId: null, content: { blocks: [] },
-    metaTitle: '', metaDescription: '', metaKeywords: '', isFeatured: false
+    isFeatured: false,
+    metaTitle: '', metaDescription: '', metaKeywords: '',
+    includeInSitemap: true, noIndex: false, noFollow: false, 
+    canonicalUrl: '', ogTitle: '', ogDescription: '', ogImageId: null
   });
 
   useEffect(() => {
@@ -49,27 +53,31 @@ const BlogEditor = () => {
   };
 
   const fetchBlog = async () => {
-  try {
-    setLoading(true);
-    const res = await apiClient.get(`/admin/blogs/${id}`);
-    const data = res.data.data;
-    
-    setFormData({
-      ...data,
-      categoryIds: data.categories.map(c => c.id),
-      tagIds: data.tags.map(t => t.id),
-      publishedAt: data.publishedAt ? new Date(data.publishedAt).toISOString().slice(0, 16) : ''
-    });
+    try {
+      setLoading(true);
+      const res = await apiClient.get(`/admin/blogs/${id}`);
+      const data = res.data.data;
+      
+      setFormData({
+        ...data,
+        categoryIds: data.categories.map(c => c.id),
+        tagIds: data.tags.map(t => t.id),
+        publishedAt: data.publishedAt ? new Date(data.publishedAt).toISOString().slice(0, 16) : '',
+        // Ensure boolean fallbacks for older posts
+        includeInSitemap: data.includeInSitemap ?? true,
+        noIndex: data.noIndex ?? false,
+        noFollow: data.noFollow ?? false,
+      });
 
-    if (data.featuredImage) {
-      setCoverPreview(resolveAssetUrl(data.featuredImage.url));
+      if (data.featuredImage) {
+        setCoverPreview(resolveAssetUrl(data.featuredImage.url));
+      }
+    } catch (err) { 
+      alert('Failed to load blog.'); 
+    } finally { 
+      setLoading(false); 
     }
-  } catch (err) { 
-    alert('Failed to load blog.'); 
-  } finally { 
-    setLoading(false); 
-  }
-};
+  };
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -131,6 +139,7 @@ const BlogEditor = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 pb-20 font-sans">
+      {/* Header */}
       <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
         <div className="flex items-center gap-4">
           <Link to="/admin/blogs" className="p-2 hover:bg-zinc-100 rounded-full"><ArrowLeft className="w-5 h-5"/></Link>
@@ -138,7 +147,6 @@ const BlogEditor = () => {
         </div>
         <div className="flex items-center gap-3">
           
-          {/* Inject Preview Manager for Blogs */}
           <PreviewManager id={isEditMode ? id : null} entityType="blog" />
 
           <select value={formData.status} onChange={e => setFormData(p => ({...p, status: e.target.value}))} className="px-4 py-2.5 border border-zinc-200 rounded-xl bg-zinc-50 text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-900/10">
@@ -155,11 +163,18 @@ const BlogEditor = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Column */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 space-y-5">
             <h2 className="text-lg font-bold border-b pb-2 flex items-center gap-2"><Layout className="w-5 h-5 text-zinc-400"/> Article Meta</h2>
             <div><label className="block text-sm font-bold mb-1">Article Title *</label><input type="text" required value={formData.title} onChange={e => setFormData(p => ({...p, title: e.target.value}))} className="w-full px-4 py-2 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 bg-zinc-50/50"/></div>
-            <div><label className="block text-sm font-bold mb-1">Excerpt</label><textarea rows="3" value={formData.excerpt} onChange={e => setFormData(p => ({...p, excerpt: e.target.value}))} placeholder="A brief summary for blog listings..." className="w-full px-4 py-2 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 bg-zinc-50/50 resize-y"/></div>
+            <div>
+              <label className="block text-sm font-bold mb-1">
+                URL Slug <span className="text-xs text-zinc-400 font-normal">(Leave blank to auto-generate)</span>
+              </label>
+              <input type="text" value={formData.slug || ''} onChange={e => setFormData(p => ({...p, slug: e.target.value}))} placeholder="my-awesome-post" className="w-full px-4 py-2 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 bg-zinc-50/50 font-mono text-sm"/>
+            </div>
+            <div><label className="block text-sm font-bold mb-1">Excerpt</label><textarea rows="3" value={formData.excerpt || ''} onChange={e => setFormData(p => ({...p, excerpt: e.target.value}))} placeholder="A brief summary for blog listings..." className="w-full px-4 py-2 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 bg-zinc-50/50 resize-y"/></div>
           </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 space-y-5">
@@ -201,7 +216,7 @@ const BlogEditor = () => {
           </div>
         </div>
 
-        {/* Sidebar Area */}
+        {/* Sidebar Column */}
         <div className="space-y-6">
           
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
@@ -232,24 +247,75 @@ const BlogEditor = () => {
             </div>
           </div>
 
-          {/*SEO DATA BLOCK */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 space-y-5">
-            <h2 className="text-lg font-bold border-b pb-2 flex items-center gap-2"><Settings className="w-5 h-5 text-zinc-400"/> SEO Data</h2>
+          {/* SEO ENGINE BLOCK */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 space-y-6">
+            <h2 className="text-lg font-bold border-b pb-2 flex items-center gap-2">
+              <Settings className="w-5 h-5 text-zinc-400"/> Advanced SEO
+            </h2>
+            
+            {/* Standard SEO */}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-bold mb-1 text-zinc-700">Meta Title</label>
-                <input type="text" value={formData.metaTitle || ''} onChange={e => setFormData(p => ({...p, metaTitle: e.target.value}))} placeholder="SEO Title" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
-                <p className="text-[10px] text-zinc-400 mt-1">Recommended: 50-60 characters</p>
+                <input type="text" value={formData.metaTitle || ''} onChange={e => setFormData(p => ({...p, metaTitle: e.target.value}))} placeholder="Keep empty to use page title" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
               </div>
               <div>
                 <label className="block text-sm font-bold mb-1 text-zinc-700">Meta Description</label>
-                <textarea rows="3" value={formData.metaDescription || ''} onChange={e => setFormData(p => ({...p, metaDescription: e.target.value}))} placeholder="Brief description for search engines..." className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm resize-y"/>
-                <p className="text-[10px] text-zinc-400 mt-1">Recommended: 150-160 characters</p>
+                <textarea rows="3" value={formData.metaDescription || ''} onChange={e => setFormData(p => ({...p, metaDescription: e.target.value}))} className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm resize-y"/>
               </div>
               <div>
                 <label className="block text-sm font-bold mb-1 text-zinc-700">Meta Keywords</label>
                 <input type="text" value={formData.metaKeywords || ''} onChange={e => setFormData(p => ({...p, metaKeywords: e.target.value}))} placeholder="interior, design, architecture" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
                 <p className="text-[10px] text-zinc-400 mt-1">Comma separated</p>
+              </div>
+            </div>
+
+            {/* Crawler Rules */}
+            <div className="pt-4 border-t border-zinc-100 space-y-4">
+              <h3 className="text-sm font-bold text-zinc-800">Crawler Instructions</h3>
+              
+              <div className="flex flex-col gap-3">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.includeInSitemap} onChange={e => setFormData(p => ({...p, includeInSitemap: e.target.checked}))} className="w-4 h-4 text-[#3B82F6] rounded border-zinc-300 focus:ring-[#3B82F6]"/>
+                  <span className="text-sm text-zinc-700 font-medium">Include in Sitemap.xml</span>
+                </label>
+                
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.noIndex} onChange={e => setFormData(p => ({...p, noIndex: e.target.checked}))} className="w-4 h-4 text-red-500 rounded border-zinc-300 focus:ring-red-500"/>
+                  <div>
+                    <span className="text-sm text-zinc-700 font-medium block">noIndex (Hide from Google)</span>
+                    <span className="text-xs text-zinc-500">Search engines will drop this page from results.</span>
+                  </div>
+                </label>
+
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.noFollow} onChange={e => setFormData(p => ({...p, noFollow: e.target.checked}))} className="w-4 h-4 text-amber-500 rounded border-zinc-300 focus:ring-amber-500"/>
+                  <div>
+                    <span className="text-sm text-zinc-700 font-medium block">noFollow (Ignore Links)</span>
+                    <span className="text-xs text-zinc-500">Crawlers won't follow any links on this page.</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Social Graph */}
+            <div className="pt-4 border-t border-zinc-100 space-y-4">
+              <h3 className="text-sm font-bold text-zinc-800">Social Graph & Advanced</h3>
+              
+              <div>
+                <label className="block text-sm font-bold mb-1 text-zinc-700">Canonical URL</label>
+                <input type="url" value={formData.canonicalUrl || ''} onChange={e => setFormData(p => ({...p, canonicalUrl: e.target.value}))} placeholder="https://domain.com/original-source" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
+                <p className="text-[10px] text-zinc-400 mt-1">Use only if this content is copied from another URL.</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-1 text-zinc-700">OG Title</label>
+                <input type="text" value={formData.ogTitle || ''} onChange={e => setFormData(p => ({...p, ogTitle: e.target.value}))} placeholder="Facebook/Twitter Title" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-bold mb-1 text-zinc-700">OG Description</label>
+                <textarea rows="2" value={formData.ogDescription || ''} onChange={e => setFormData(p => ({...p, ogDescription: e.target.value}))} placeholder="Facebook/Twitter Description" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm resize-y"/>
               </div>
             </div>
           </div>

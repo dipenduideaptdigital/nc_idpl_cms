@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Check, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import about_img from "../../assets/homepage/about_img.png";
-import apiClient from '../../api/client'; 
+import tick from "../../assets/logos/tick.png";
+import apiClient from '../../api/client';
 
 const AboutSection = ({ data: externalData }) => {
   const [content, setContent] = useState(externalData || null);
   const [aboutImage, setAboutImage] = useState(about_img);
+  const [isArrowClicked, setIsArrowClicked] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    let isMounted = true; 
+    let isMounted = true;
 
     const processContent = (fetchedContent) => {
       if (isMounted) setContent(fetchedContent);
@@ -79,10 +83,10 @@ const AboutSection = ({ data: externalData }) => {
   };
 
   return (
-    <section className="py-24 bg-[#1a1a1a] overflow-hidden">
+    <section className="py-24 bg-[#121212] overflow-hidden">
       <div className="container mx-auto px-8 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
           {/* Left Column: Content */}
           <div className="text-white max-w-xl fadeInLeft">
             {/* Badge */}
@@ -92,41 +96,60 @@ const AboutSection = ({ data: externalData }) => {
                 {badgeText}
               </span>
             </div>
-            
+
             {/* Headline */}
             <h2 className="text-5xl md:text-6xl font-bold leading-[1.1] mb-10 tracking-tight">
               {renderTitle(title)}
             </h2>
-            
+
             {/* Checkmarks Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mb-10">
               {highlights.map((highlight, idx) => (
                 <div key={idx} className="flex items-center space-x-3">
-                  <Check className="w-5 h-5 text-primary" strokeWidth={3} />
+                  <img src={tick} alt="tick" className="w-5 h-5 object-contain" />
                   <span className="font-semibold text-sm">{highlight}</span>
                 </div>
               ))}
             </div>
-            
+
             {/* Paragraph Text */}
-            <p className="text-gray-400 text-sm font-light leading-relaxed mb-10 max-w-md">
+            <p
+              className="text-[#FFFFFF] mb-10 max-w-md"
+              style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: '20px', lineHeight: '25px', fontWeight: 400 }}
+            >
               {description}
             </p>
-            
+
             {/* CTA Button */}
-            <button className="group inline-flex items-center space-x-6 rounded-full border border-gray-500 hover:border-white transition-all pl-6 pr-2 py-2">
+            <button
+              onClick={() => {
+                setIsArrowClicked(true);
+                setTimeout(() => navigate('/about'), 300);
+              }}
+              className="group inline-flex items-center space-x-6 rounded-full border border-gray-500 hover:border-white transition-all pl-6 pr-2 py-2"
+            >
               <span className="text-sm font-medium tracking-wide">{buttonText}</span>
               <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white transition-transform group-hover:scale-105 shadow-lg">
-                <ArrowUpRight className="w-5 h-5" />
+                {isArrowClicked ? <ArrowRight className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
               </div>
             </button>
           </div>
 
           {/* Right Column: Image */}
-          <div className="relative h-[600px] w-full rounded-[2rem] overflow-hidden shadow-2xl fadeInRight">
-            <img 
-              src={aboutImage} 
-              alt="Modern Residential Exterior" 
+          <div
+            className="relative overflow-hidden shadow-2xl fadeInRight lg:ml-auto"
+            style={{
+              width: '100%',
+              maxWidth: '540px',
+              aspectRatio: '540 / 650',
+              borderRadius: '41px',
+              opacity: 1,
+              transform: 'rotate(0deg)'
+            }}
+          >
+            <img
+              src={aboutImage}
+              alt="Modern Residential Exterior"
               className="w-full h-full object-cover transition-opacity duration-500"
               onError={(e) => {
                 if (e.currentTarget.src !== about_img) {

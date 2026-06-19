@@ -52,9 +52,18 @@ export const createBlogSchema = z.object({
   tagIds: z.array(z.string().cuid()).default([]).optional(),
   featuredImageId: z.string().cuid().optional().nullable(),
   publishedAt: z.string().datetime().optional().nullable(),
+  
+  // Standard SEO
   metaTitle: z.string().trim().max(150).optional().nullable(),
   metaDescription: z.string().trim().max(500).optional().nullable(),
-  metaKeywords: z.string().trim().max(300).optional().nullable()
+  metaKeywords: z.string().trim().max(300).optional().nullable(),
+  includeInSitemap: z.boolean().default(true).optional(),
+  noIndex: z.boolean().default(false).optional(),
+  noFollow: z.boolean().default(false).optional(),
+  canonicalUrl: z.union([z.string().trim().url("Invalid canonical URL format."), z.literal("")]).optional().nullable(),
+  ogTitle: z.string().trim().max(150).optional().nullable(),
+  ogDescription: z.string().trim().max(500).optional().nullable(),
+  ogImageId: z.union([z.string().cuid("Invalid OG Image ID format."), z.literal("")]).optional().nullable()
 }); 
 
 export const updateBlogSchema = createBlogSchema.partial().extend({

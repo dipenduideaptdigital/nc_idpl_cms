@@ -215,6 +215,9 @@ model Media {
   
   featuredInPages Page[]    
   featuredInBlogs Blog[]    
+
+  ogImageForPages Page[]    @relation("PageOgImage")
+  ogImageForBlogs Blog[]    @relation("BlogOgImage")
   
   createdAt       DateTime  @default(now())
   deletedAt       DateTime? 
@@ -225,41 +228,52 @@ model Media {
 }
 
 model Page {
-  id                String        @id @default(cuid())
-  title             String
-  slug              String      
-  fullPath          String        @unique 
+  id              String             @id @default(cuid())
+  title           String
+  slug            String            
+  fullPath        String             @unique 
   
-  parentId          String?
-  parent            Page?         @relation("PageHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
-  children          Page[]        @relation("PageHierarchy")
-  menuOrder         Int           @default(0)
-  showInMenu        Boolean       @default(true)
+  parentId        String?
+  parent          Page?              @relation("PageHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children        Page[]             @relation("PageHierarchy")
+  menuOrder       Int                @default(0)
+  showInMenu      Boolean            @default(true)
 
-  excerpt           String?       @db.Text
-  content           Json          
-  status            PageStatus    @default(DRAFT)
-  template          String        @default("default") 
+  excerpt         String?            @db.Text
+  content         Json              
+  status          PageStatus         @default(DRAFT)
+  template        String             @default("default") 
   
-  metaTitle         String?
-  metaDescription   String?       @db.Text
-  metaKeywords      String?       @db.Text
+  metaTitle       String?
+  metaDescription String?            @db.Text
+  metaKeywords    String?            @db.Text
   
-  featuredImageId   String?
-  featuredImage     Media?        @relation(fields: [featuredImageId], references: [id], onDelete: SetNull)
-  
-  publishedAt       DateTime?   
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  deletedAt         DateTime?   
+  featuredImageId String?
+  featuredImage   Media?             @relation(fields: [featuredImageId], references: [id], onDelete: SetNull)
 
-  authorId          String
-  author            User          @relation("PageAuthor", fields: [authorId], references: [id])
-  updatedById       String?
-  updatedBy         User?         @relation("PageUpdatedBy", fields: [updatedById], references: [id])
+  // Advanced SEO Engine Fields
+  includeInSitemap Boolean           @default(true)
+  noIndex          Boolean           @default(false)
+  noFollow         Boolean           @default(false)
+  canonicalUrl     String?           @db.Text
+  ogTitle          String?
+  ogDescription    String?           @db.Text
+  ogImageId        String?
+  ogImage          Media?            @relation("PageOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
+  
+  publishedAt     DateTime?   
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  deletedAt       DateTime?   
 
-  revisions         PageRevision[]
-  previewTokens     PagePreviewToken[] 
+  authorId        String
+  author          User               @relation("PageAuthor", fields: [authorId], references: [id])
+  updatedById     String?
+  updatedBy       User?              @relation("PageUpdatedBy", fields: [updatedById], references: [id])
+
+  revisions       PageRevision[]
+  previewTokens   PagePreviewToken[] 
+  pathHistories   PagePathHistory[]
 
   @@unique([parentId, slug, deletedAt]) 
   @@index([fullPath]) 
@@ -268,19 +282,20 @@ model Page {
   @@index([publishedAt])
   @@index([deletedAt])
   @@index([status, publishedAt])
+  @@index([includeInSitemap])
   @@map("pages")
 }
 
 model PageRevision {
-  id          String   @id @default(cuid())
-  pageId      String
-  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  snapshot    Json     
+  id        String   @id @default(cuid())
+  pageId    String
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  snapshot  Json     
   
-  actorId     String?  
-  actor       User?    @relation(fields: [actorId], references: [id], onDelete: SetNull) 
+  actorId   String?  
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull) 
   
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([pageId])
   @@map("page_revisions")
@@ -305,79 +320,102 @@ model PagePreviewToken {
   @@map("page_preview_tokens")
 }
 
-model Blog {
-  id                String            @id @default(cuid())
-  title             String
-  slug              String            @unique
-  excerpt           String?           @db.Text
-  content           Json              
-  status            BlogStatus        @default(DRAFT)
+model PagePathHistory {
+  id          String   @id @default(cuid())
+  pageId      String
+  oldFullPath String   @unique // The dead URL
+  createdAt   DateTime @default(now())
   
-  isFeatured        Boolean           @default(false)
-  viewCount         Int               @default(0)
-  readingTime       Int               @default(1) 
-  
-  metaTitle         String?
-  metaDescription   String?           @db.Text
-  metaKeywords      String?           @db.Text
-  
-  featuredImageId   String?
-  featuredImage     Media?            @relation(fields: [featuredImageId], references: [id], onDelete: SetNull)
-  
-  authorId          String
-  author            User              @relation("BlogAuthor", fields: [authorId], references: [id])
-  
-  publishedAt       DateTime?         
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  deletedAt         DateTime?         
+  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
-  categories        BlogCategory[]    @relation("BlogToCategory")
-  tags              BlogTag[]         @relation("BlogToTag")
-  revisions         BlogRevision[]
-  previewTokens     BlogPreviewToken[]
-  viewLogs          BlogViewLog[]
+  @@index([pageId])
+  @@map("page_path_histories")
+}
+
+model Blog {
+  id              String             @id @default(cuid())
+  title           String
+  slug            String             @unique
+  excerpt         String?            @db.Text
+  content         Json              
+  status          BlogStatus         @default(DRAFT)
+  
+  isFeatured      Boolean            @default(false)
+  viewCount       Int                @default(0)
+  readingTime     Int                @default(1) 
+  
+  metaTitle       String?
+  metaDescription String?            @db.Text
+  metaKeywords    String?            @db.Text
+  
+  featuredImageId String?
+  featuredImage   Media?             @relation(fields: [featuredImageId], references: [id], onDelete: SetNull)
+
+  includeInSitemap Boolean           @default(true)
+  noIndex          Boolean           @default(false)
+  noFollow         Boolean           @default(false)
+  canonicalUrl     String?           @db.Text
+  ogTitle          String?
+  ogDescription    String?           @db.Text
+  ogImageId        String?
+  ogImage          Media?            @relation("BlogOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
+  
+  authorId        String
+  author          User               @relation("BlogAuthor", fields: [authorId], references: [id])
+  
+  publishedAt     DateTime?         
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  deletedAt       DateTime?         
+
+  categories      BlogCategory[]     @relation("BlogToCategory")
+  tags            BlogTag[]          @relation("BlogToTag")
+  revisions       BlogRevision[]
+  previewTokens   BlogPreviewToken[]
+  viewLogs        BlogViewLog[]
+  slugHistories   BlogSlugHistory[]
 
   @@index([status])
   @@index([slug])
   @@index([publishedAt])
   @@index([isFeatured])
   @@index([deletedAt])
+  @@index([includeInSitemap])
   @@map("blogs")
 }
 
 model BlogCategory {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  blogs       Blog[]   @relation("BlogToCategory")
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blogs     Blog[]   @relation("BlogToCategory")
 
   @@index([slug])
   @@map("blog_categories")
 }
 
 model BlogTag {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  blogs       Blog[]   @relation("BlogToTag")
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blogs     Blog[]   @relation("BlogToTag")
 
   @@index([slug])
   @@map("blog_tags")
 }
 
 model BlogRevision {
-  id          String   @id @default(cuid())
-  blogId      String
-  blog        Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
-  snapshot    Json     
-  actorId     String?
-  actor       User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  blogId    String
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  snapshot  Json     
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
 
   @@index([blogId])
   @@map("blog_revisions")
@@ -410,54 +448,66 @@ model BlogViewLog {
   @@map("blog_view_logs")
 }
 
-model ContactForm {
-  id              String              @id @default(cuid())
-  name            String
-  slug            String              @unique
-  successMessage  String?             @default("Thank you! Your submission has been successfully processed.")
-  redirectUrl     String?             
-  notifyEmails    Json?               
-  isActive        Boolean             @default(true)
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
+model BlogSlugHistory {
+  id          String   @id @default(cuid())
+  blogId      String
+  oldSlug     String   @unique // The dead URL slug
+  createdAt   DateTime @default(now())
 
-  submissions     ContactSubmission[]
+  blog        Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+
+  @@index([blogId])
+  @@map("blog_slug_histories")
+}
+
+model ContactForm {
+  id             String              @id @default(cuid())
+  name           String
+  slug           String              @unique
+  successMessage String?             @default("Thank you! Your submission has been successfully processed.")
+  redirectUrl    String?             
+  notifyEmails   Json?               
+  isActive       Boolean             @default(true)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  submissions    ContactSubmission[]
 
   @@index([isActive])
   @@map("contact_forms")
 }
 
 model ContactSubmission {
-  id               String               @id @default(cuid())
-  name             String
-  email            String
-  phone            String?
-  subject          String?
-  message          String?              @db.Text 
-  messageHash      String?              @db.VarChar(64) 
+  id             String               @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  subject        String?
+  message        String?              @db.Text 
+  messageHash    String?              @db.VarChar(64) 
   
-  status           ContactStatus        @default(NEW)
-  sourcePage       String?              
-  isViewed         Boolean              @default(false)   
+  status         ContactStatus        @default(NEW)
+  sourcePage     String?              
+  isViewed       Boolean              @default(false)   
 
-  formId           String
-  form             ContactForm          @relation(fields: [formId], references: [id], onDelete: Restrict) 
+  formId         String
+  form           ContactForm          @relation(fields: [formId], references: [id], onDelete: Restrict) 
 
-  assignedToId     String?
-  assignedTo       User?                @relation("LeadAssignment", fields: [assignedToId], references: [id], onDelete: SetNull)
-  resolvedAt       DateTime?            
-  spamScore        Int                  @default(0)
+  assignedToId   String?
+  assignedTo     User?                @relation("LeadAssignment", fields: [assignedToId], references: [id], onDelete: SetNull)
+  resolvedAt     DateTime?            
+  spamScore      Int                  @default(0)
 
-  ipAddress        String?
-  userAgent        String?
-  fingerprint      String?              @db.VarChar(64) 
+  ipAddress      String?
+  userAgent      String?
+  fingerprint    String?              @db.VarChar(64) 
 
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
-  deletedAt        DateTime?            
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  deletedAt      DateTime?            
 
-  auditLogs        ContactSubmissionLog[]
-  internalNotes    ContactInternalNote[]
+  auditLogs      ContactSubmissionLog[]
+  internalNotes  ContactInternalNote[]
 
   @@index([formId]) 
   @@index([status])
@@ -473,33 +523,33 @@ model ContactSubmission {
 }
 
 model ContactSubmissionLog {
-  id               String            @id @default(cuid())
-  submissionId     String
-  submission       ContactSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  id             String            @id @default(cuid())
+  submissionId   String
+  submission     ContactSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   
-  fromStatus       ContactStatus
-  toStatus         ContactStatus
+  fromStatus     ContactStatus
+  toStatus       ContactStatus
   
-  actorId          String?           
-  actor            User?             @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actorId        String?           
+  actor          User?             @relation(fields: [actorId], references: [id], onDelete: SetNull)
   
-  note             String?           @db.Text
-  createdAt        DateTime          @default(now())
+  note           String?           @db.Text
+  createdAt      DateTime          @default(now())
 
   @@index([submissionId])
   @@map("contact_submission_logs")
 }
 
 model ContactInternalNote {
-  id               String            @id @default(cuid())
-  submissionId     String
-  submission       ContactSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  id             String            @id @default(cuid())
+  submissionId   String
+  submission     ContactSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   
-  authorId         String
-  author           User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId       String
+  author         User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
   
-  note             String            @db.Text
-  createdAt        DateTime          @default(now())
+  note           String            @db.Text
+  createdAt      DateTime          @default(now())
 
   @@index([submissionId])
   @@map("contact_internal_notes")
