@@ -4,14 +4,16 @@ export const BLOG_ADMIN_SELECT_INCLUDE = {
   author: { select: { id: true, name: true, email: true, avatar: true } },
   featuredImage: { select: { id: true, url: true, thumbnailUrl: true } },
   categories: { select: { id: true, name: true, slug: true } },
-  tags: { select: { id: true, name: true, slug: true } }
+  tags: { select: { id: true, name: true, slug: true } },
+  ogImage: { select: { id: true, url: true, thumbnailUrl: true } }
 };
 
 export const BLOG_PUBLIC_SELECT_INCLUDE = {
   author: { select: { name: true, avatar: true } },
   featuredImage: { select: { url: true, thumbnailUrl: true } },
   categories: { select: { name: true, slug: true } },
-  tags: { select: { name: true, slug: true } }
+  tags: { select: { name: true, slug: true } },
+  ogImage: { select: { url: true, thumbnailUrl: true } }
 };
 
 const baseFilterMask = { deletedAt: null };
@@ -42,7 +44,7 @@ export const validateTaxonomyIds = async (categoryIds = [], tagIds = []) => {
 };
 
 export const findMediaById = async (id) => {
-  return await prisma.media.findFirst({ where: { id, deletedAt: null }, select: { id: true } });
+  return await prisma.media.findFirst({ where: { id, deletedAt: null }, select: { id: true, mimeType: true } }); 
 };
 
 export const createBlogWithRevision = async (blogData, categoryIds, tagIds, actorId) => {
@@ -120,7 +122,7 @@ export const findBlogBySlug = async (slug, isPublic = true) => {
   const where = { slug, ...baseFilterMask };
   if (isPublic) {
     where.status = "PUBLISHED";
-    where.publishedAt = { lte: new Date() };
+    where.publishedAt = { lte: new Date() }; 
   }
   return await prisma.blog.findFirst({ where, include: isPublic ? BLOG_PUBLIC_SELECT_INCLUDE : BLOG_ADMIN_SELECT_INCLUDE });
 };
@@ -143,13 +145,14 @@ export const deleteBlogAndPreviewTokens = async (id) => {
   });
 };
 
-export const findBlogsPaginated = async ({ skip, take, search, status, categorySlug, tagSlug, isFeatured, sortBy, sortOrder }, isPublic = true) => {
+export const findBlogsPaginated = async ({ skip, take, search, status, authorId, categorySlug, tagSlug, isFeatured, sortBy, sortOrder }, isPublic = true) => {
   const where = { ...baseFilterMask };
   if (isPublic) {
     where.status = "PUBLISHED";
     where.publishedAt = { lte: new Date() }; 
-  } else if (status) {
-    where.status = status;
+  } else {
+    if (status) where.status = status;
+    if (authorId) where.authorId = authorId; 
   }
 
   if (isFeatured !== undefined) where.isFeatured = isFeatured;
@@ -176,19 +179,46 @@ export const findBlogsPaginated = async ({ skip, take, search, status, categoryS
 
 export const getSidebarData = async () => {
   const [categories, recentPosts, popularTags] = await Promise.all([
-    prisma.blogCategory.findMany({ take: 10, include: { _count: { select: { blogs: true } } }, orderBy: { blogs: { _count: "desc" } } }),
-    prisma.blog.findMany({ where: { status: "PUBLISHED", deletedAt: null, publishedAt: { lte: new Date() } }, take: 5, orderBy: { publishedAt: "desc" }, select: { title: true, slug: true, publishedAt: true, featuredImage: { select: { thumbnailUrl: true } } } }),
-    prisma.blogTag.findMany({ take: 15, include: { _count: { select: { blogs: true } } }, orderBy: { blogs: { _count: "desc" } } })
+    prisma.blogCategory.findMany({ 
+      take: 10, 
+      include: { 
+        _count: { select: { blogs: { where: { status: "PUBLISHED", deletedAt: null } } } } 
+      }, 
+      orderBy: { blogs: { _count: "desc" } } 
+    }),
+    prisma.blog.findMany({ 
+      where: { status: "PUBLISHED", deletedAt: null, publishedAt: { lte: new Date() } }, 
+      take: 5, 
+      orderBy: { publishedAt: "desc" }, 
+      select: { title: true, slug: true, publishedAt: true, featuredImage: { select: { thumbnailUrl: true } } } 
+    }),
+    prisma.blogTag.findMany({ 
+      take: 15, 
+      include: { 
+        _count: { select: { blogs: { where: { status: "PUBLISHED", deletedAt: null } } } } 
+      }, 
+      orderBy: { blogs: { _count: "desc" } } 
+    })
   ]);
   return { categories, recentPosts, popularTags };
 };
 
 export const getRelatedBlogs = async (currentBlogId, categorySlugsArray, limit = 3) => {
-  return await prisma.blog.findMany({
+  const matchingRelatedRecords = await prisma.blog.findMany({
     where: { id: { not: currentBlogId }, status: "PUBLISHED", deletedAt: null, publishedAt: { lte: new Date() }, categories: { some: { slug: { in: categorySlugsArray } } } },
     take: limit, orderBy: { publishedAt: "desc" },
     include: { featuredImage: { select: { url: true, thumbnailUrl: true } } }
   });
+
+  if (matchingRelatedRecords.length === 0) {
+    return await prisma.blog.findMany({
+      where: { id: { not: currentBlogId }, status: "PUBLISHED", deletedAt: null, publishedAt: { lte: new Date() } },
+      take: limit, orderBy: { publishedAt: "desc" },
+      include: { featuredImage: { select: { url: true, thumbnailUrl: true } } }
+    });
+  }
+
+  return matchingRelatedRecords;
 };
 
 export const getAdjacentPosts = async (currentPublishedAtDate) => {
@@ -269,7 +299,16 @@ export const deleteCategoryById = async (id) => {
 };
 
 export const findAllCategories = async () => {
-  return await prisma.blogCategory.findMany({ orderBy: { name: "asc" } });
+  return await prisma.blogCategory.findMany({ 
+    orderBy: { name: "asc" },
+    include: {
+      _count: {
+        select: {
+          blogs: { where: { status: "PUBLISHED", deletedAt: null } }
+        }
+      }
+    }
+  });
 };
 
 export const findTagBySlug = async (slug, excludeId = null) => {
@@ -300,5 +339,56 @@ export const deleteTagById = async (id) => {
 };
 
 export const findAllTags = async () => {
-  return await prisma.blogTag.findMany({ orderBy: { name: "asc" } });
+  return await prisma.blogTag.findMany({ 
+    orderBy: { name: "asc" },
+    include: {
+      _count: {
+        select: {
+          blogs: { where: { status: "PUBLISHED", deletedAt: null } }
+        }
+      }
+    }
+  });
+};
+
+export const getBlogPreviewTokenStats = async (blogId) => {
+  return await prisma.blogPreviewToken.findUnique({
+    where: { blogId },
+    select: { 
+      expiresAt: true, 
+      usedCount: true, 
+      lastAccessedAt: true, 
+      createdAt: true 
+    }
+  });
+};
+
+export const createBlogSlugHistory = async (blogId, oldSlug) => {
+  return await prisma.blogSlugHistory.create({
+    data: { blogId, oldSlug }
+  });
+};
+
+export const findBlogIdByOldSlug = async (oldSlug) => {
+  const history = await prisma.blogSlugHistory.findUnique({
+    where: { oldSlug },
+    include: { blog: { select: { slug: true, status: true, deletedAt: null } } }
+  });
+  return history; 
+};
+
+export const getBlogsForSitemap = async () => {
+  return await prisma.blog.findMany({
+    where: {
+      status: "PUBLISHED",
+      deletedAt: null,
+      includeInSitemap: true,
+      noIndex: false
+    },
+    select: {
+      slug: true,
+      publishedAt: true,
+      updatedAt: true
+    }
+  });
 };

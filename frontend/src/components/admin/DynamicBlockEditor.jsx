@@ -534,6 +534,50 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
           </div>
         </div>
       );
+      case 'heading':
+      return renderGenericFields([
+        { name: 'content', type: 'text', placeholder: 'Enter your section heading here...' }
+      ]);
+      
+    case 'paragraph':
+      return renderGenericFields([
+        { name: 'content', type: 'textarea', placeholder: 'Write your paragraph content...' }
+      ]);
+
+    case 'quote':
+      return renderGenericFields([
+        { name: 'content', type: 'textarea', placeholder: 'Enter the quote text...' }
+      ]);
+
+    case 'image':
+      return renderGenericFields([
+        { name: 'url', type: 'image' },
+        { name: 'caption', type: 'text', placeholder: 'Image caption (optional)' }
+      ]);
+
+    case 'video':
+      return renderGenericFields([
+        { name: 'platform', type: 'text', defaultValue: 'youtube', placeholder: 'youtube or vimeo' },
+        { name: 'videoId', type: 'text', placeholder: 'e.g. ScMzIvxBSi4' }
+      ]);
+
+    case 'gallery':
+      return renderGenericFields([
+        { 
+          name: 'images', 
+          type: 'arrayString', 
+          isImage: true, 
+          defaultArray: [] 
+        }
+      ]);
+
+    case 'divider':
+      return (
+        <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden p-6 text-center">
+          <div className="w-full h-px bg-zinc-200 my-4"></div>
+          <p className="text-sm text-zinc-500 font-medium">Line Divider (No settings required)</p>
+        </div>
+        );
     default:
       return (
         <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-yellow-800 text-sm">

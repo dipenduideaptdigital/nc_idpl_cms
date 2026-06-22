@@ -5,23 +5,30 @@ import crypto from "crypto";
 import { prisma } from "../../config/db.js";
 import * as repo from "./blogs.repository.js";
 
-const extractText = (blocks) => {
-  if (!blocks || !Array.isArray(blocks)) return "";
-  let text = "";
-  blocks.forEach(b => {
-    if (b.data) {
-      if (b.data.content) text += " " + b.data.content;
-      if (b.data.text) text += " " + b.data.text; 
+const deepFlattenExtractPlaintextTextTokens = (inputObjectPayload) => {
+  if (!inputObjectPayload) return "";
+  let extractedTextBuffer = "";
+
+  const deepRecursiveSearchTaskLoop = (nodeItem) => {
+    if (typeof nodeItem === "string") {
+      extractedTextBuffer += " " + nodeItem;
+      return;
     }
-  });
-  return text.replace(/<[^>]*>/g, " ").trim();
+    if (nodeItem && typeof nodeItem === "object") {
+      Object.values(nodeItem).forEach(childValue => deepRecursiveSearchTaskLoop(childValue));
+    }
+  };
+
+  deepRecursiveSearchTaskLoop(inputObjectPayload);
+  return extractedTextBuffer.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 };
 
-const calculateReadingTime = (content) => {
-  const strippedText = extractText(content?.blocks);
-  const wordsCount = strippedText.split(/\s+/).filter(Boolean).length;
-  if (wordsCount === 0) return 1;
-  return Math.ceil(wordsCount / 200);
+const calculateReadingTime = (contentJsonPayload) => {
+  const completelyStrippedPlaintextStr = deepFlattenExtractPlaintextTextTokens(contentJsonPayload?.blocks);
+  const preciseWordsCountTotal = completelyStrippedPlaintextStr.split(/\s+/).filter(Boolean).length;
+  
+  if (preciseWordsCountTotal === 0) return 1;
+  return Math.ceil(preciseWordsCountTotal / 200);
 };
 
 const ensureUniqueSlug = async (baseSlug, excludeId = null) => {
@@ -43,16 +50,32 @@ const validateScheduleDate = (status, publishedAt) => {
   }
 };
 
+const enforceContentOwnershipBoundary = (resourceRecord, executingActorId, executingActorRoleSlug) => {
+  const normalizedRole = executingActorRoleSlug?.toUpperCase();
+  if (normalizedRole === "SUPER_ADMIN") return; 
+
+  if (resourceRecord.authorId !== executingActorId) {
+    throw new AppError("Access Denied: You do not possess structural identity rights ownership to modify or read this targeted private content record profile.", StatusCodes.FORBIDDEN);
+  }
+};
+
+const validateFeaturedImageAssetMimeType = async (mediaId) => {
+  if (!mediaId) return;
+  const mediaNodeRecord = await repo.findMediaById(mediaId);
+  if (!mediaNodeRecord) throw new AppError("The requested featured image asset identifier mapping points to a non-existent or dropped database profile metadata snapshot.", StatusCodes.BAD_REQUEST);
+
+  if (!mediaNodeRecord.mimeType.startsWith("image/")) {
+    throw new AppError("Security validation error: Asset mapping validation criteria breached. Selected targeted operational index represents a non-image file type structural mapping format stream context parameters checking failure.", StatusCodes.BAD_REQUEST);
+  }
+};
+
 export const createBlog = async (payload, authorId) => {
   validateScheduleDate(payload.status, payload.publishedAt);
 
   const { categoriesValid, tagsValid } = await repo.validateTaxonomyIds(payload.categoryIds, payload.tagIds);
   if (!categoriesValid || !tagsValid) throw new AppError("One or more selected category or tag IDs are unregistered.", StatusCodes.BAD_REQUEST);
 
-  if (payload.featuredImageId) {
-    const media = await repo.findMediaById(payload.featuredImageId);
-    if (!media) throw new AppError("Featured image not found.", StatusCodes.BAD_REQUEST);
-  }
+  await validateFeaturedImageAssetMimeType(payload.featuredImageId);
 
   const baseSlug = payload.slug ? generateSlug(payload.slug) : generateSlug(payload.title);
   const uniqueSlug = await ensureUniqueSlug(baseSlug);
@@ -70,9 +93,10 @@ export const createBlog = async (payload, authorId) => {
   }
 };
 
-export const updateBlog = async (id, payload, actorId) => {
+export const updateBlog = async (id, payload, actorId, actorRoleSlug) => {
   const existing = await repo.findBlogById(id);
   if (!existing) throw new AppError("Blog record reference unavailable in backend systems.", StatusCodes.NOT_FOUND);
+  enforceContentOwnershipBoundary(existing, actorId, actorRoleSlug);
 
   validateScheduleDate(payload.status, payload.publishedAt);
 
@@ -81,19 +105,28 @@ export const updateBlog = async (id, payload, actorId) => {
     if (!categoriesValid || !tagsValid) throw new AppError("Taxonomy validation mismatch configuration error.", StatusCodes.BAD_REQUEST);
   }
 
-  if (payload.featuredImageId) {
-    const media = await repo.findMediaById(payload.featuredImageId);
-    if (!media) throw new AppError("Featured image not found.", StatusCodes.BAD_REQUEST);
+  if (payload.featuredImageId !== undefined) {
+    await validateFeaturedImageAssetMimeType(payload.featuredImageId);
   }
   
   const updateData = {};
-  const allowed = ["title", "excerpt", "content", "status", "isFeatured", "metaTitle", "metaDescription", "metaKeywords", "featuredImageId", "publishedAt"];
+  const allowed = ["title", "excerpt", "content", "status", "isFeatured", "metaTitle", "metaDescription", "metaKeywords", "featuredImageId", "publishedAt", "includeInSitemap", "noIndex", "noFollow", "canonicalUrl", "ogTitle", "ogDescription", "ogImageId"];
   allowed.forEach(f => { if (payload[f] !== undefined) updateData[f] = payload[f]; });
 
-  if (payload.title || payload.slug) {
+  const slugExplicitlyChanged = payload.slug !== undefined && payload.slug !== existing.slug;
+  const titleChanged = payload.title !== undefined && payload.title !== existing.title && !existing.publishedAt;
+
+  if (slugExplicitlyChanged || titleChanged) {
     const slugSource = payload.slug !== undefined ? payload.slug : payload.title;
     const baseSlug = generateSlug(slugSource);
-    if (baseSlug !== existing.slug) updateData.slug = await ensureUniqueSlug(baseSlug, id);
+    
+    if (baseSlug !== existing.slug) {
+      updateData.slug = await ensureUniqueSlug(baseSlug, id);
+      
+      if (existing.publishedAt) {
+        await repo.createBlogSlugHistory(id, existing.slug).catch(() => {}); 
+      }
+    }
   }
 
   if (payload.content) updateData.readingTime = calculateReadingTime(payload.content);
@@ -122,11 +155,24 @@ export const getPublicBlogs = async (query) => {
   return { data: records, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
 };
 
-export const getAdminBlogs = async (query) => {
+export const getAdminBlogs = async (query, actorId, actorRoleSlug) => {
   const { page, limit, ...filters } = query;
   const skip = (page - 1) * limit;
+  
+  const normalizedRole = actorRoleSlug?.toUpperCase();
+  if (normalizedRole !== "SUPER_ADMIN") {
+    filters.authorId = actorId; 
+  }
+
   const { records, total } = await repo.findBlogsPaginated({ skip, take: limit, ...filters }, false);
   return { data: records, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
+};
+
+export const getAdminBlogByIdSecure = async (id, actorId, actorRoleSlug) => {
+  const blog = await repo.findBlogById(id);
+  if (!blog) throw new AppError("Blog post not found", StatusCodes.NOT_FOUND);
+  enforceContentOwnershipBoundary(blog, actorId, actorRoleSlug);
+  return blog;
 };
 
 export const getBlogBySlug = async (slug, fingerprint) => {
@@ -145,18 +191,41 @@ export const getBlogBySlug = async (slug, fingerprint) => {
   return { blog, relatedPosts, navigationSiblings, sidebar };
 };
 
-export const deleteBlog = async (id) => {
+export const deleteBlog = async (id, actorId, actorRoleSlug) => {
   const post = await repo.findBlogById(id);
   if (!post) throw new AppError("Target blog post record reference identity failed to resolve.", StatusCodes.NOT_FOUND);
+  enforceContentOwnershipBoundary(post, actorId, actorRoleSlug);
   return await repo.deleteBlogAndPreviewTokens(id);
 };
 
 const hashToken = (token) => crypto.createHash("sha256").update(token).digest("hex");
 
-export const generatePreviewLink = async (blogId, userId, baseUrl) => {
+export const getBlogPreviewStatus = async (blogId) => {
+  const stats = await repo.getBlogPreviewTokenStats(blogId);
+  
+  if (!stats) {
+    return { isActive: false };
+  }
+
+  const isExpired = new Date() > stats.expiresAt;
+  if (isExpired) {
+    return { isActive: false, isExpired: true };
+  }
+
+  return {
+    isActive: true,
+    expiresAt: stats.expiresAt,
+    usedCount: stats.usedCount,
+    lastAccessedAt: stats.lastAccessedAt,
+    createdAt: stats.createdAt
+  };
+};
+
+export const generatePreviewLink = async (blogId, userId, userRoleSlug, baseUrl) => {
   const blog = await repo.findBlogById(blogId);
   if (!blog) throw new AppError("Blog not found.", StatusCodes.NOT_FOUND);
-
+  enforceContentOwnershipBoundary(blog, userId, userRoleSlug);
+  
   const rawToken = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
@@ -166,13 +235,12 @@ export const generatePreviewLink = async (blogId, userId, baseUrl) => {
     createdById: userId,
     expiresAt
   });
-
-  return { previewUrl: `${baseUrl}/blogs/preview/${rawToken}` };
+  return { previewUrl: `${baseUrl}/preview/${rawToken}?type=blog` };
 };
-
-export const revokePreviewLink = async (blogId) => {
+export const revokePreviewLink = async (blogId, actorId, actorRoleSlug) => {
   const blog = await repo.findBlogById(blogId);
   if (!blog) throw new AppError("Target blog reference pointer invalid.", StatusCodes.NOT_FOUND);
+  enforceContentOwnershipBoundary(blog, actorId, actorRoleSlug);
   return await repo.revokePreviewToken(blogId);
 };
 
@@ -185,7 +253,10 @@ export const resolvePreviewToken = async (rawToken) => {
   if (tokenRecord.blog.deletedAt) throw new AppError("This blog has been deleted.", StatusCodes.NOT_FOUND);
 
   repo.incrementPreviewTokenUsage(tokenRecord.id).catch(() => {});
-  return tokenRecord.blog;
+  return {
+    preview: { enabled: true, expiresAt: tokenRecord.expiresAt },
+    blog: tokenRecord.blog
+  };
 };
 
 export const createCategory = async (payload) => {

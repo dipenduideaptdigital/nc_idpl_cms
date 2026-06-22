@@ -61,9 +61,9 @@ const PageEditor = () => {
     excerpt: '',
     status: 'DRAFT',
     content: { blocks: [] },
-    metaTitle: '',
-    metaDescription: '',
-    metaKeywords: ''
+    metaTitle: '', metaDescription: '', metaKeywords: '',
+    includeInSitemap: true, noIndex: false, noFollow: false, 
+    canonicalUrl: '', ogTitle: '', ogDescription: '', ogImageId: null
   });
 
   useEffect(() => {
@@ -92,7 +92,14 @@ const PageEditor = () => {
         content: data.data.content || { blocks: [] },
         metaTitle: data.data.metaTitle || '',
         metaDescription: data.data.metaDescription || '',
-        metaKeywords: data.data.metaKeywords || ''
+        metaKeywords: data.data.metaKeywords || '',
+        includeInSitemap: data.data.includeInSitemap ?? true,
+        noIndex: data.data.noIndex ?? false,
+        noFollow: data.data.noFollow ?? false,
+        canonicalUrl: data.data.canonicalUrl || '',
+        ogTitle: data.data.ogTitle || '',
+        ogDescription: data.data.ogDescription || '',
+        ogImageId: data.data.ogImageId || null
       });
     } catch (err) {
       console.error('Failed to fetch page:', err);
@@ -408,7 +415,7 @@ const PageEditor = () => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <PreviewManager pageId={isEditMode ? id : null} />
+          <PreviewManager id={isEditMode ? id : null} entityType="page" />
           <select
             name="status"
             value={formData.status}
@@ -588,51 +595,74 @@ const PageEditor = () => {
 
         {/* Sidebar Area */}
         <div className="space-y-6">
-          {/* SEO Settings */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 space-y-5">
-            <h2 className="text-lg font-semibold text-zinc-900 flex items-center gap-2 border-b border-zinc-100 pb-3">
-              <Settings className="w-5 h-5 text-zinc-400" />
-              SEO Data
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 space-y-6">
+            <h2 className="text-lg font-bold border-b pb-2 flex items-center gap-2">
+              <Settings className="w-5 h-5 text-zinc-400"/> Advanced SEO
             </h2>
             
+            {/* Standard SEO */}
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">Meta Title</label>
-                <input
-                  type="text"
-                  name="metaTitle"
-                  value={formData.metaTitle}
-                  onChange={handleInputChange}
-                  placeholder="SEO Title"
-                  className="w-full px-4 py-2 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm"
-                />
-                <p className="text-xs text-zinc-400 mt-1">Recommended: 50-60 characters</p>
+                <label className="block text-sm font-bold mb-1 text-zinc-700">Meta Title</label>
+                <input type="text" value={formData.metaTitle || ''} onChange={e => setFormData(p => ({...p, metaTitle: e.target.value}))} placeholder="Keep empty to use page title" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
               </div>
+              <div>
+                <label className="block text-sm font-bold mb-1 text-zinc-700">Meta Description</label>
+                <textarea rows="3" value={formData.metaDescription || ''} onChange={e => setFormData(p => ({...p, metaDescription: e.target.value}))} className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm resize-y"/>
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-1 text-zinc-700">Meta Keywords</label>
+                <input type="text" value={formData.metaKeywords || ''} onChange={e => setFormData(p => ({...p, metaKeywords: e.target.value}))} placeholder="interior, design, architecture" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
+                <p className="text-[10px] text-zinc-400 mt-1">Comma separated</p>
+              </div>
+            </div>
+
+            {/* Crawler Rules */}
+            <div className="pt-4 border-t border-zinc-100 space-y-4">
+              <h3 className="text-sm font-bold text-zinc-800">Crawler Instructions</h3>
+              
+              <div className="flex flex-col gap-3">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.includeInSitemap} onChange={e => setFormData(p => ({...p, includeInSitemap: e.target.checked}))} className="w-4 h-4 text-[#3B82F6] rounded border-zinc-300 focus:ring-[#3B82F6]"/>
+                  <span className="text-sm text-zinc-700 font-medium">Include in Sitemap.xml</span>
+                </label>
+                
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.noIndex} onChange={e => setFormData(p => ({...p, noIndex: e.target.checked}))} className="w-4 h-4 text-red-500 rounded border-zinc-300 focus:ring-red-500"/>
+                  <div>
+                    <span className="text-sm text-zinc-700 font-medium block">noIndex (Hide from Google)</span>
+                    <span className="text-xs text-zinc-500">Search engines will drop this page from results.</span>
+                  </div>
+                </label>
+
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.noFollow} onChange={e => setFormData(p => ({...p, noFollow: e.target.checked}))} className="w-4 h-4 text-amber-500 rounded border-zinc-300 focus:ring-amber-500"/>
+                  <div>
+                    <span className="text-sm text-zinc-700 font-medium block">noFollow (Ignore Links)</span>
+                    <span className="text-xs text-zinc-500">Crawlers won't follow any links on this page.</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Social Graph */}
+            <div className="pt-4 border-t border-zinc-100 space-y-4">
+              <h3 className="text-sm font-bold text-zinc-800">Social Graph & Advanced</h3>
               
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">Meta Description</label>
-                <textarea
-                  name="metaDescription"
-                  rows="3"
-                  value={formData.metaDescription}
-                  onChange={handleInputChange}
-                  placeholder="Brief description for search engines..."
-                  className="w-full px-4 py-2 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm resize-y"
-                ></textarea>
-                <p className="text-xs text-zinc-400 mt-1">Recommended: 150-160 characters</p>
+                <label className="block text-sm font-bold mb-1 text-zinc-700">Canonical URL</label>
+                <input type="url" value={formData.canonicalUrl || ''} onChange={e => setFormData(p => ({...p, canonicalUrl: e.target.value}))} placeholder="https://domain.com/original-source" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
+                <p className="text-[10px] text-zinc-400 mt-1">Use only if this content is copied from another URL.</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">Meta Keywords</label>
-                <input
-                  type="text"
-                  name="metaKeywords"
-                  value={formData.metaKeywords}
-                  onChange={handleInputChange}
-                  placeholder="interior, design, decor"
-                  className="w-full px-4 py-2 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm"
-                />
-                <p className="text-xs text-zinc-400 mt-1">Comma separated keywords</p>
+                <label className="block text-sm font-bold mb-1 text-zinc-700">Social Share Title (OG Title)</label>
+                <input type="text" value={formData.ogTitle || ''} onChange={e => setFormData(p => ({...p, ogTitle: e.target.value}))} placeholder="Facebook/Twitter Title" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-bold mb-1 text-zinc-700">Social Share Description (OG Desc)</label>
+                <textarea rows="2" value={formData.ogDescription || ''} onChange={e => setFormData(p => ({...p, ogDescription: e.target.value}))} placeholder="Facebook/Twitter Description" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm resize-y"/>
               </div>
             </div>
           </div>

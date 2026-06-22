@@ -1,26 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Eye, Copy, Trash2, CheckCircle, ExternalLink, RefreshCw, ShieldAlert, ChevronDown } from 'lucide-react';
 import { pagesApi } from '../../api/pages';
+import { blogsApi } from '../../api/blogs';
 
-const PreviewManager = ({ pageId }) => {
+const PreviewManager = ({ id, entityType = 'page' }) => {
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [isOpen, setIsOpen] = useState(false); // Controlled Dropdown State
+  const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    if (pageId) fetchStatus();
-  }, [pageId]);
+  const api = entityType === 'blog' ? blogsApi : pagesApi;
 
-  // Handle clicking outside to close the dropdown
+  useEffect(() => {
+    if (id) fetchStatus();
+  }, [id, entityType]);
+
+  // Click outside to close
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setIsOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -29,7 +30,7 @@ const PreviewManager = ({ pageId }) => {
   const fetchStatus = async () => {
     try {
       setLoading(true);
-      const res = await pagesApi.getPreviewStatus(pageId);
+      const res = await api.getPreviewStatus(id);
       setStatus(res.data);
     } catch (err) {
       console.error(err);
@@ -39,19 +40,20 @@ const PreviewManager = ({ pageId }) => {
   };
 
   const handleGenerate = async (e) => {
-    if (e) e.preventDefault(); // Prevent form submission
+    if (e) e.preventDefault();
     try {
       setGenerating(true);
-      const res = await pagesApi.generatePreviewLink(pageId);
+      const res = await api.generatePreviewLink(id);
+      const generatedUrl = res.data.previewUrl;
+      const finalUrl = generatedUrl;
       setStatus({ 
         isActive: true, 
-        url: res.data.previewUrl, 
-        // Backend returns URL, we approximate expiry for UI
+        url: finalUrl, 
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() 
       });
       setIsOpen(true);
     } catch (err) {
-      alert("Failed to generate preview.");
+      alert(`Failed to generate ${entityType} preview.`);
     } finally {
       setGenerating(false);
     }
@@ -62,7 +64,7 @@ const PreviewManager = ({ pageId }) => {
     if (!window.confirm("Revoke this link? Clients won't be able to view it anymore.")) return;
     try {
       setLoading(true);
-      await pagesApi.revokePreviewLink(pageId);
+      await api.revokePreviewLink(id);
       setStatus({ isActive: false });
       setIsOpen(false);
     } catch (err) {
@@ -81,10 +83,10 @@ const PreviewManager = ({ pageId }) => {
     }
   };
 
-  if (!pageId) {
+  if (!id) {
     return (
       <button type="button" disabled className="px-4 py-2.5 bg-zinc-100 text-zinc-400 rounded-xl text-sm font-medium border border-zinc-200 cursor-not-allowed flex items-center gap-2">
-        <Eye className="w-4 h-4" /> Preview
+        <Eye className="w-4 h-4" /> Save to Preview
       </button>
     );
   }

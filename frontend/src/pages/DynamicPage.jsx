@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link, useParams } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { pagesApi } from '../api/pages';
 import { ArrowLeft } from 'lucide-react';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 import PageRenderer from '../components/shared/PageRenderer';
+import SEOHead from '../components/shared/SEOHead'; 
 
 const DynamicPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname; 
-  const params = useParams();
-  const fullSlug = params.slug 
-    ? (params['*'] ? `${params.slug}/${params['*']}` : params.slug) 
-    : params['*'];
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,10 +17,6 @@ const DynamicPage = () => {
   useScrollAnimation();
 
   useEffect(() => {
-    const originalTitle = document.title;
-    const metaDescElement = document.querySelector('meta[name="description"]');
-    const originalDesc = metaDescElement ? metaDescElement.getAttribute('content') : '';
-
     const fetchPage = async () => {
       try {
         setLoading(true);
@@ -31,24 +25,14 @@ const DynamicPage = () => {
         const response = await pagesApi.getPublicPageBySlug(currentPath);
         setPage(response.data);
         
-        // Basic SEO injection
-        if (response.data.metaTitle) {
-          document.title = `${response.data.metaTitle} | Subhaakritee`;
-        } else {
-          document.title = `${response.data.title} | Subhaakritee`;
-        }
-
-        if (metaDescElement && response.data.metaDescription) {
-          metaDescElement.setAttribute('content', response.data.metaDescription);
-        } else if (!metaDescElement && response.data.metaDescription) {
-          const newMeta = document.createElement('meta');
-          newMeta.name = 'description';
-          newMeta.content = response.data.metaDescription;
-          newMeta.setAttribute('data-dynamic-meta', 'true');
-          document.head.appendChild(newMeta);
-        }
       } catch (err) {
         console.error('Failed to load page:', err);
+        
+        if (err.response?.status === 301 && err.response?.data?.data?.redirect) {
+          navigate(err.response.data.data.newUrl, { replace: true });
+          return;
+        }
+
         setError(err.response?.status === 404 ? 'not-found' : 'error');
       } finally {
         setLoading(false);
@@ -56,18 +40,7 @@ const DynamicPage = () => {
     };
 
     fetchPage();
-
-    return () => {
-      document.title = originalTitle;
-      
-      const createdMeta = document.querySelector('meta[data-dynamic-meta="true"]');
-      if (createdMeta) {
-        document.head.removeChild(createdMeta);
-      } else if (metaDescElement) {
-        metaDescElement.setAttribute('content', originalDesc);
-      }
-    };
-  }, [currentPath]); 
+  }, [currentPath, navigate]); 
 
   if (loading) {
     return (
@@ -105,7 +78,12 @@ const DynamicPage = () => {
 
   if (!page) return null;
 
-  return <PageRenderer blocks={page.content?.blocks} />;
+  return (
+    <>
+      <SEOHead data={page} type="page" />
+      <PageRenderer blocks={page.content?.blocks} />
+    </>
+  );
 };
 
 export default DynamicPage;

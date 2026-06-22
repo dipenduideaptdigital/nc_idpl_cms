@@ -12,34 +12,38 @@ export const createBlogPostController = asyncHandler(async (req, res) => {
 });
 
 export const getAdminBlogsGridController = asyncHandler(async (req, res) => {
-  const result = await blogService.getAdminBlogs(req.query);
+  const result = await blogService.getAdminBlogs(req.query, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, data: result.data, meta: result.meta });
 });
 
 export const getAdminBlogByIdController = asyncHandler(async (req, res) => {
-  const blog = await repo.findBlogById(req.params.id);
-  if (!blog) throw new AppError("Blog post not found", StatusCodes.NOT_FOUND);
+  const blog = await blogService.getAdminBlogByIdSecure(req.params.id, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, data: blog });
 });
 
 export const updateBlogPostController = asyncHandler(async (req, res) => {
-  const updated = await blogService.updateBlog(req.params.id, req.body, req.user.id);
+  const updated = await blogService.updateBlog(req.params.id, req.body, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, data: updated });
 });
 
 export const deleteBlogPostController = asyncHandler(async (req, res) => {
-  await blogService.deleteBlog(req.params.id);
+  await blogService.deleteBlog(req.params.id, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, message: "Archived." });
+});
+
+export const getBlogPreviewStatusController = asyncHandler(async (req, res) => {
+  const status = await blogService.getBlogPreviewStatus(req.params.id); 
+  sendResponse({ res, statusCode: StatusCodes.OK, message: "Blog preview link status retrieved successfully.", data: status });
 });
 
 export const generateBlogPreviewLinkController = asyncHandler(async (req, res) => {
   const frontendUrl = process.env.CLIENT_URL || "http://localhost:5173";
-  const result = await blogService.generatePreviewLink(req.params.id, req.user.id, frontendUrl);
+  const result = await blogService.generatePreviewLink(req.params.id, req.user.id, req.user.systemRole?.slug, frontendUrl);
   sendResponse({ res, statusCode: StatusCodes.CREATED, data: result });
 });
 
 export const revokeBlogPreviewLinkController = asyncHandler(async (req, res) => {
-  await blogService.revokePreviewLink(req.params.id);
+  await blogService.revokePreviewLink(req.params.id, req.user.id, req.user.systemRole?.slug);
   sendResponse({ res, statusCode: StatusCodes.OK, message: "Link revoked successfully." });
 });
 
@@ -50,8 +54,30 @@ export const getPublicBlogsGridController = asyncHandler(async (req, res) => {
 
 export const getPublicSingleBlogDetailsController = asyncHandler(async (req, res) => {
   const fingerprint = generateRequestFingerprint(req); 
-  const detailManifest = await blogService.getBlogBySlug(req.params.slug, fingerprint);
-  sendResponse({ res, statusCode: StatusCodes.OK, data: detailManifest });
+  const slug = req.params.slug;
+
+  try {
+    const detailManifest = await blogService.getBlogBySlug(slug, fingerprint);
+    sendResponse({ res, statusCode: StatusCodes.OK, data: detailManifest });
+  } catch (error) {
+    if (error.statusCode === StatusCodes.NOT_FOUND) {
+      const historyRecord = await repo.findBlogIdByOldSlug(slug);
+      
+      if (historyRecord && historyRecord.blog.status === "PUBLISHED" && !historyRecord.blog.deletedAt) {
+        return sendResponse({
+          res,
+          statusCode: 301, 
+          message: "Content has moved permanently.",
+          data: {
+            redirect: true,
+            newSlug: historyRecord.blog.slug,
+            newUrl: `/blog/${historyRecord.blog.slug}`
+          }
+        });
+      }
+    }
+    throw error;
+  }
 });
 
 export const resolvePublicBlogPreviewController = asyncHandler(async (req, res) => {

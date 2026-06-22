@@ -70,6 +70,13 @@ const Hero = ({ data: externalData }) => {
     fetchHeroData();
   }, [externalData]);
 
+  const handleScrollDown = () => {
+    const nextSection = document.getElementById('services-section');
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-900">
@@ -84,7 +91,7 @@ const Hero = ({ data: externalData }) => {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-900">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-900 font-helvetica">
       {/* Main Background Image */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"
@@ -95,11 +102,11 @@ const Hero = ({ data: externalData }) => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent"></div>
       </div>
 
-      <div className="container mx-auto px-8 relative z-10 w-full pt-20 pb-24 md:pb-16 lg:pb-0">
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-8 items-start lg:items-center pt-8 lg:pt-0 w-full">
+      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-8 lg:px-12 relative z-10 pt-20 pb-24 md:pb-16 lg:pb-0">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-12 lg:gap-8 pt-8 lg:pt-0 w-full">
           
           {/* Left Content Area */}
-          <div className="text-white max-w-2xl fadeInLeft flex flex-col items-start text-left w-full">
+          <div className="text-white max-w-xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-[850px] fadeInLeft flex flex-col items-start text-left w-full lg:w-auto mb-20">
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-white/30 backdrop-blur-sm mb-6 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(249,115,22,0.8)]"></span>
@@ -109,16 +116,17 @@ const Hero = ({ data: externalData }) => {
             </div>
             
             {/* Headlines */}
-            <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold leading-[1.1] mb-4 md:mb-6 tracking-tight drop-shadow-lg">
-              {content?.titleLine1 || "End-To-End"} <br className="hidden sm:block" /> {content?.titleLine2 || "Office Interiors"}
+            <h1 className="text-3xl md:text-5xl lg:text-[56px] xl:text-[72px] 2xl:text-[90px] font-bold leading-tight lg:leading-[60px] xl:leading-[76px] 2xl:leading-[93px] mb-4 md:mb-6 drop-shadow-lg font-helvetica">
+              <span className="tracking-normal block whitespace-nowrap">{content?.titleLine1 || "End-to-end"}</span>
+              <span className="tracking-[0.1em] block whitespace-nowrap">{content?.titleLine2 || "Office Interiors"}</span>
             </h1>
             
-            <p className="text-sm md:text-lg text-gray-200 mb-8 md:mb-10 max-w-md font-light leading-relaxed">
-              {content?.subtitle || "We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision."}
+            <p className="text-sm md:text-lg text-gray-200 mb-8 md:mb-10 lg:max-w-[430px] font-light leading-relaxed ml-22">
+              {content?.subtitle || "We specialize in transforming visions into reality. Explore our interior design projects crafted with precision."}
             </p>
             
             {/* CTA Button */}
-            <button className="group inline-flex items-center space-x-4 md:space-x-6 rounded-full border border-white/40 hover:border-white transition-all pl-5 md:pl-6 pr-2 py-2">
+            <button className="group inline-flex items-center space-x-4 md:space-x-6 rounded-full border border-white/40 hover:border-white transition-all pl-5 md:pl-6 pr-2 py-2 ml-20">
               <span className="text-xs md:text-sm font-medium tracking-wide">{content?.buttonText || "BOOK A FREE CONSULTATION"}</span>
               <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary flex items-center justify-center text-white transition-transform group-hover:scale-105">
                 <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5" />
@@ -127,26 +135,25 @@ const Hero = ({ data: externalData }) => {
           </div>
 
           {/* Right Content Area - Glassmorphism Cards */}
-          <div className="flex flex-row h-auto lg:h-[500px] items-center lg:items-end justify-center lg:justify-end gap-4 lg:gap-6 pb-4 fadeInRight w-full mt-32 lg:mt-0">
+          <div className="flex flex-row h-auto lg:h-[400px] xl:h-[450px] 2xl:h-[500px] items-center lg:items-end justify-center lg:justify-end gap-4 lg:gap-4 xl:gap-6 pb-4 fadeInRight shrink-0 w-full lg:w-auto mt-32 lg:mt-0">
             {/* Glass Card */}
-            <div className="w-[150px] sm:w-[240px] lg:w-[280px] h-[150px] sm:h-[240px] lg:h-[280px] bg-[#3a3532]/40 glass-dark rounded-2xl lg:rounded-[2rem] p-4 lg:p-6 shadow-2xl z-20 flex flex-col justify-between shrink-0 transform hover:-translate-y-2 transition-transform duration-500">
+            <div className="w-[150px] sm:w-[240px] lg:w-[190px] xl:w-[230px] 2xl:w-[286px] h-[165px] sm:h-[264px] lg:h-[220px] xl:h-[260px] 2xl:h-[314px] bg-[#3a3532]/40 glass-dark rounded-2xl lg:rounded-[24px] xl:rounded-[30px] 2xl:rounded-[37px] p-5 sm:p-6 lg:p-5 xl:p-6 2xl:p-8 shadow-2xl z-20 flex flex-col justify-between shrink-0 transform hover:-translate-y-2 transition-transform duration-500">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-1">{content?.glassCardNumber || "250+"}</h2>
-                <p className="text-[10px] sm:text-xs text-gray-300 font-light leading-tight">
-                  {content?.glassCardText1 || "My Design of art"}
+                <h2 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-white mb-2">{content?.glassCardNumber || "250+"}</h2>
+                <p className="text-xs sm:text-sm text-gray-200 font-normal leading-relaxed">
+                  {content?.glassCardText1 || "Lorem Ipsum Is Simply Dummy Text"}
                 </p>
               </div>
               
               <div>
-                <div className="w-6 sm:w-8 h-[1px] bg-gray-500 mb-2 lg:mb-4"></div>
-                <p className="text-xs sm:text-lg text-white font-medium leading-tight">
+                <p className="text-sm sm:text-base lg:text-sm xl:text-base 2xl:text-lg text-white font-medium leading-snug">
                   {content?.glassCardText2 || "There Is No One Who Loves Pain Itself"}
                 </p>
               </div>
             </div>
 
             {/* Image Card */}
-            <div className="w-[150px] sm:w-[240px] lg:w-[280px] h-[150px] sm:h-[240px] lg:h-[280px] rounded-2xl lg:rounded-[2rem] overflow-hidden shadow-2xl z-10 border-2 lg:border-4 border-white/10 shrink-0 transform hover:scale-105 transition-all duration-500">
+            <div className="w-[150px] sm:w-[240px] lg:w-[190px] xl:w-[230px] 2xl:w-[286px] h-[165px] sm:h-[264px] lg:h-[220px] xl:h-[260px] 2xl:h-[314px] rounded-2xl lg:rounded-[24px] xl:rounded-[30px] 2xl:rounded-[37px] overflow-hidden shadow-2xl z-10 border-2 lg:border-4 border-white/10 shrink-0 transform hover:scale-105 transition-all duration-500 will-change-transform [backface-visibility:hidden] [transform:translateZ(0)]">
               <img 
                 src={frontImg} 
                 alt="Modern Interior" 
@@ -165,7 +172,10 @@ const Hero = ({ data: externalData }) => {
 
       {/* Bottom Arrow Indicator */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 opal-move-up">
-        <button className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
+        <button 
+          onClick={handleScrollDown}
+          className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer"
+        >
           <ArrowDown className="w-6 h-6 text-primary" />
         </button>
       </div>

@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { pagesApi } from '../api/pages';
+import { blogsApi } from '../api/blogs';
 import { ShieldAlert, AlertTriangle, Clock, Lock, ServerCrash } from 'lucide-react';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 import PageRenderer from '../components/shared/PageRenderer';
+import BlogDetailHero from '../components/blog/BlogDetailHero';
+import BlogBlockParser from '../components/blog/BlogBlockParser';
 
 const PreviewPage = () => {
   const { token } = useParams();
+  const [searchParams] = useSearchParams();
+  const previewType = searchParams.get('type'); 
+  
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +21,6 @@ const PreviewPage = () => {
 
   useEffect(() => {
     const originalTitle = document.title;
-    
     let existingRobots = document.querySelector('meta[name="robots"]');
     let originalRobotsContent = existingRobots ? existingRobots.getAttribute('content') : null;
 
@@ -30,10 +35,7 @@ const PreviewPage = () => {
     }
 
     return () => {
-      // Clean up title
       document.title = originalTitle;
-      
-      // Clean up robots
       const addedMeta = document.querySelector('meta[data-preview="true"]');
       if (addedMeta) {
         document.head.removeChild(addedMeta);
@@ -47,9 +49,27 @@ const PreviewPage = () => {
     const fetchPreview = async () => {
       try {
         setLoading(true);
-        const res = await pagesApi.getPreviewPageData(token);
-        setData(res.data);
-        document.title = `[PREVIEW] ${res.data.page.title} | Subhaakritee`;
+        setError(null);
+        
+        const isBlog = previewType === 'blog' || previewType?.includes('blog');
+        const res = isBlog 
+          ? await blogsApi.resolvePublicBlogPreview(token)
+          : await pagesApi.getPreviewPageData(token);
+          
+        const normalizedData = isBlog ? {
+          isBlog: true,
+          title: res.data.blog.title,
+          expiresAt: res.data.preview.expiresAt,
+          blogData: res.data.blog 
+        } : {
+          isBlog: false,
+          title: res.data.page.title,
+          blocks: res.data.page.content?.blocks,
+          expiresAt: res.data.preview?.expiresAt 
+        };
+
+        setData(normalizedData);
+        document.title = `[PREVIEW] ${normalizedData.title} | Subhaakritee`;
       } catch (err) {
         setError({
           status: err.response?.status || 500,
@@ -60,7 +80,7 @@ const PreviewPage = () => {
       }
     };
     fetchPreview();
-  }, [token]);
+  }, [token, previewType]);
 
   if (loading) {
     return (
@@ -82,7 +102,7 @@ const PreviewPage = () => {
       errorTitle = 'Preview Expired';
       iconBg = 'bg-amber-100';
       iconColor = 'text-amber-600';
-    } else if (error.status === 403) {
+    } else if (error.status === 403 || error.status === 401) {
       ErrorIcon = Lock;
       errorTitle = 'Preview Revoked';
       iconBg = 'bg-zinc-200';
@@ -92,11 +112,6 @@ const PreviewPage = () => {
       errorTitle = 'Invalid Preview Link';
       iconBg = 'bg-red-100';
       iconColor = 'text-red-600';
-    } else if (error.status >= 500) {
-      ErrorIcon = ServerCrash;
-      errorTitle = 'System Error';
-      iconBg = 'bg-rose-100';
-      iconColor = 'text-rose-600';
     }
 
     return (
@@ -116,21 +131,58 @@ const PreviewPage = () => {
   }
 
   return (
-    <div className="relative min-h-screen pb-16"> 
-      <PageRenderer blocks={data.page.content?.blocks} />
+    <div className="relative min-h-screen pb-16 bg-white"> 
+      
+      {/* DYNAMIC ENGINE ROUTER */}
+      {data.isBlog ? (
+        <div className="blog-preview-wrapper font-sans">
+          <BlogDetailHero post={data.blogData} />
+          <div className="container mx-auto px-4 md:px-8 max-w-7xl mt-16 opal-move-up mb-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+              <div className="lg:col-span-8">
+                <article className="bg-transparent">
+                  <div className="flex flex-wrap items-center gap-4 mb-6">
+                    {data.blogData.categories?.map(cat => (
+                      <span key={cat.id || cat.name} className="px-4 py-1.5 bg-[#3B82F6] text-white text-xs font-bold rounded-full uppercase tracking-widest">
+                        {cat.name}
+                      </span>
+                    ))}
+                    <span className="text-zinc-500 text-sm font-medium">
+                      {data.blogData.publishedAt ? new Date(data.blogData.publishedAt).toLocaleDateString() : 'Draft Mode'}
+                    </span>
+                  </div>
+                  <h1 className="font-['Outfit'] text-[36px] md:text-[50px] font-bold text-zinc-900 leading-[1.1] tracking-tight mb-8">
+                    {data.blogData.title}
+                  </h1>
+                  <div className="blog-content-wrapper">
+                    <BlogBlockParser contentPayload={data.blogData.content} />
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Render Landing Page Specific Layout */
+        <PageRenderer blocks={data.blocks} />
+      )}
 
+      {/* PREVIEW BANNER */}
       <div className="fixed bottom-0 left-0 right-0 z-[100] bg-amber-500 text-amber-950 px-4 py-3 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 shadow-[0_-4px_20px_rgba(0,0,0,0.15)] border-t border-amber-400">
         <div className="flex items-center gap-2 font-bold text-sm tracking-wide">
           <AlertTriangle className="w-5 h-5" />
-          PREVIEW MODE 
+          PREVIEW MODE ({data.isBlog ? 'BLOG POST' : 'PAGE'})
         </div>
-        <div className="text-xs font-semibold bg-amber-900/10 border border-amber-900/20 px-3 py-1.5 rounded-full flex items-center gap-2">
-          <Clock className="w-3.5 h-3.5" />
-          Expires: {new Date(data.preview.expiresAt).toLocaleString([], {
-            year: 'numeric', month: 'short', day: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-          })}
-        </div>
+        
+        {data.expiresAt && (
+          <div className="text-xs font-semibold bg-amber-900/10 border border-amber-900/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+            <Clock className="w-3.5 h-3.5" />
+            Expires: {new Date(data.expiresAt).toLocaleString([], {
+              year: 'numeric', month: 'short', day: 'numeric',
+              hour: '2-digit', minute: '2-digit'
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

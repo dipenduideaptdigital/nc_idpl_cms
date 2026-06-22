@@ -16,7 +16,6 @@ export const ALLOWED_TEMPLATES = [
   "about-page"
 ];
 
-// Headless Content Engine Block Structure Definitions (Supporting all 15 Frontend Modules)
 const heroBlockSchema = z.object({ type: z.literal("hero"), data: z.record(z.any()).default({}) });
 const servicesBlockSchema = z.object({ type: z.literal("services"), data: z.record(z.any()).default({}) });
 const aboutBlockSchema = z.object({ type: z.literal("about"), data: z.record(z.any()).default({}) });
@@ -31,8 +30,17 @@ const blogSectionBlockSchema = z.object({ type: z.literal("blog_section"), data:
 const galleryBlockSchema = z.object({ type: z.literal("gallery"), data: z.record(z.any()).default({}) });
 const ctaBlockSchema = z.object({ type: z.literal("cta"), data: z.record(z.any()).default({}) });
 const richTextBlockSchema = z.object({ type: z.literal("richText"), data: z.record(z.any()).default({}) });
+const heroSectionBlockSchema = z.object({ type: z.literal("heroSection"), data: z.record(z.any()).default({}) });
+const whySubhaakriteeBlockSchema = z.object({ type: z.literal("whySubhaakritee"), data: z.record(z.any()).default({}) });
+const metricsBarOneBlockSchema = z.object({ type: z.literal("metricsBarOne"), data: z.record(z.any()).default({}) });
+const modernWorkspaceBlockSchema = z.object({ type: z.literal("modernWorkspace"), data: z.record(z.any()).default({}) });
+const metricsBarTwoBlockSchema = z.object({ type: z.literal("metricsBarTwo"), data: z.record(z.any()).default({}) });
+const spacesStoriesBlockSchema = z.object({ type: z.literal("spacesStories"), data: z.record(z.any()).default({}) });
+const wayWeCreateBlockSchema = z.object({ type: z.literal("wayWeCreate"), data: z.record(z.any()).default({}) });
+const gallerySectionBlockSchema = z.object({ type: z.literal("gallerySection"), data: z.record(z.any()).default({}) });
+const trustedClientsBlockSchema = z.object({ type: z.literal("trustedClients"), data: z.record(z.any()).default({}) });
+const getInTouchBlockSchema = z.object({ type: z.literal("getInTouch"), data: z.record(z.any()).default({}) });
 
-// The dynamic Form Engine block
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
   data: z.object({
@@ -45,7 +53,6 @@ const contactFormBlockSchema = z.object({
   }).strict() 
 });
 
-// Validation gates execution (Combining all 15 modules)
 const blockSchema = z.discriminatedUnion("type", [
   heroBlockSchema,
   servicesBlockSchema,
@@ -62,6 +69,16 @@ const blockSchema = z.discriminatedUnion("type", [
   ctaBlockSchema,
   richTextBlockSchema,
   contactFormBlockSchema,
+  heroSectionBlockSchema,
+  whySubhaakriteeBlockSchema,
+  metricsBarOneBlockSchema,
+  modernWorkspaceBlockSchema,
+  metricsBarTwoBlockSchema,
+  spacesStoriesBlockSchema,
+  wayWeCreateBlockSchema,
+  gallerySectionBlockSchema,
+  trustedClientsBlockSchema,
+  getInTouchBlockSchema,
 ]);
 
 const pageContentSchema = z.object({
@@ -99,6 +116,15 @@ export const createPageSchema = z.object({
   metaKeywords: z.string().trim().max(300, "Meta keywords cannot exceed 300 characters").optional().nullable(),
   
   featuredImageId: z.string().cuid("Invalid Media Asset digital asset cryptographic unique identity mapping").optional().nullable(),
+
+  // SEO Engine Fields
+  includeInSitemap: z.boolean().default(true).optional(),
+  noIndex: z.boolean().default(false).optional(),
+  noFollow: z.boolean().default(false).optional(),
+  canonicalUrl: z.union([z.string().trim().url("Invalid canonical URL format."), z.literal("")]).optional().nullable(),
+  ogTitle: z.string().trim().max(150).optional().nullable(),
+  ogDescription: z.string().trim().max(500).optional().nullable(),
+  ogImageId: z.union([z.string().cuid("Invalid OG Image ID format."), z.literal("")]).optional().nullable(),
 }).strict();
 
 // Core Update Operations Pipeline Matrix Verification Schema 
@@ -119,7 +145,6 @@ export const pageQuerySchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
 
-// Dynamic Route Param hard security locks protecting structural transactional endpoints layer
 export const pageIdParamSchema = z.object({
   id: z.string().cuid("Invalid cryptographic database record or unique execution structural transaction identifier identity format mapped"),
 });
@@ -128,7 +153,6 @@ export const pageSlugParamSchema = z.object({
   slug: z.string().min(1, "Absolute layout path relative network resource endpoint tracking resource tracking signature processing failed"),
 });
 
-// Administrative Revision Version Control Subsystem Parameters Match Integrity Check Locking Loops
 export const pageRevisionParamSchema = z.object({
   id: z.string().cuid("Invalid relational Page context unique validation model master layout ID template mapping token"),
   revisionId: z.string().cuid("Invalid historical version revision database checkpoint identifier cryptographic targeted snapshot identity token format")

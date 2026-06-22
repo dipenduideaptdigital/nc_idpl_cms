@@ -2,13 +2,12 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../shared/errors/AppError.js";
 import { generateSlug } from "../../shared/utils/slugify.js";
 import { serializePage } from "../../shared/utils/serializePage.js";
+import { findMediaById } from "../blogs/blogs.repository.js"; 
 import isEqual from "lodash/isEqual.js";
 import * as repo from "./pages.repository.js";
-import { prisma } from "../../config/db.js";
 
 const MAX_HIERARCHY_DEPTH = 20;
 
-// Guarantees uniqueness among siblings sharing the same parent
 const ensureUniqueSiblingSlug = async (parentId, baseSlug, excludeId = null) => {
   let uniqueSlug = baseSlug;
   let counter = 1;
@@ -19,7 +18,6 @@ const ensureUniqueSiblingSlug = async (parentId, baseSlug, excludeId = null) => 
   return uniqueSlug;
 };
 
-// Generates the absolute path by concatenating the parent's path
 const buildFullPath = async (parentId, slug) => {
   if (!parentId) return `/${slug}`;
   
@@ -27,30 +25,35 @@ const buildFullPath = async (parentId, slug) => {
   if (!parent) throw new AppError("Parent page not found", StatusCodes.NOT_FOUND);
   
   const combined = `${parent.fullPath}/${slug}`;
-  return combined.replace(/\/\//g, '/'); // Prevent double slashes
+  return combined.replace(/\/\//g, '/');
 };
 
-// Recursively updates the fullPath of all descendant pages if a parent's path changes
 const cascadeFullPathUpdate = async (parentId, newParentFullPath, actorId) => {
   const children = await repo.findActiveChildrenByParentId(parentId);
   
   for (const child of children) {
     const newFullPath = `${newParentFullPath}/${child.slug}`.replace(/\/\//g, '/');
     
+    if (child.publishedAt && newFullPath !== child.fullPath) {
+      await repo.createPagePathHistory(child.id, child.fullPath).catch(() => {});
+    }
+    
     await repo.updatePageWithRevision(child.id, { fullPath: newFullPath, updatedById: actorId }, null, actorId);
     await cascadeFullPathUpdate(child.id, newFullPath, actorId);
   }
 };
 
-const validateFeaturedImage = async (mediaId) => {
+const validateFeaturedImageAssetMimeType = async (mediaId) => {
   if (!mediaId) return;
-  const media = await prisma.media.findFirst({
-    where: { id: mediaId, deletedAt: null }
-  });
-  if (!media) throw new AppError("Featured image not found or deleted", StatusCodes.BAD_REQUEST);
+  const mediaNodeRecord = await findMediaById(mediaId);
+  if (!mediaNodeRecord) {
+    throw new AppError("The mapped featured image asset identifier is unavailable or has been removed from media caches.", StatusCodes.BAD_REQUEST);
+  }
+  if (!mediaNodeRecord.mimeType.startsWith("image/")) {
+    throw new AppError("Security layout restriction: Asset format validation failure. Pages featured image assignment explicitly blocks non-image mime types files streams.", StatusCodes.BAD_REQUEST);
+  }
 };
 
-//  Prevents Infinite Circular References using O(1) Set detection
 const validateHierarchy = async (pageId, newParentId) => {
   if (!newParentId) return; 
 
@@ -93,10 +96,17 @@ const buildFullSnapshot = (page) => ({
   parentId: page.parentId,
   menuOrder: page.menuOrder,
   showInMenu: page.showInMenu,
+  includeInSitemap: page.includeInSitemap,
+  noIndex: page.noIndex,
+  noFollow: page.noFollow,
+  canonicalUrl: page.canonicalUrl,
+  ogTitle: page.ogTitle,
+  ogDescription: page.ogDescription,
+  ogImageId: page.ogImageId,
 });
 
 export const createNewPage = async (payload, authorId) => {
-  await validateFeaturedImage(payload.featuredImageId);
+  await validateFeaturedImageAssetMimeType(payload.featuredImageId);
   
   if (payload.parentId) {
     const parentExists = await repo.findPageById(payload.parentId);
@@ -107,7 +117,6 @@ export const createNewPage = async (payload, authorId) => {
   const finalSlug = await ensureUniqueSiblingSlug(payload.parentId, baseSlug);
   const finalFullPath = await buildFullPath(payload.parentId, finalSlug);
 
-  // Fallback protection against absolute global URL collisions
   if (await repo.checkFullPathExists(finalFullPath)) {
     throw new AppError(`The URL path ${finalFullPath} is already in use.`, StatusCodes.CONFLICT);
   }
@@ -139,7 +148,7 @@ export const updateExistingPage = async (id, payload, actorId) => {
   if (!existingPage) throw new AppError("Page not found", StatusCodes.NOT_FOUND);
 
   if (payload.featuredImageId !== undefined) {
-    await validateFeaturedImage(payload.featuredImageId);
+    await validateFeaturedImageAssetMimeType(payload.featuredImageId);
   }
 
   if (payload.parentId !== undefined) {
@@ -147,23 +156,22 @@ export const updateExistingPage = async (id, payload, actorId) => {
   }
 
   const updateData = { updatedById: actorId };
-  
   const allowedFields = [
     "title", "excerpt", "content", "status", "template", 
     "metaTitle", "metaDescription", "metaKeywords", "featuredImageId",
-    "parentId", "menuOrder", "showInMenu" 
+    "parentId", "menuOrder", "showInMenu", "includeInSitemap", "noIndex",
+    "noFollow", "canonicalUrl", "ogTitle", "ogDescription", "ogImageId"
   ];
   
   allowedFields.forEach(field => {
     if (payload[field] !== undefined) updateData[field] = payload[field];
   });
 
-  // Re-calculate slug and fullPath if structural data changed
   const parentIdChanged = payload.parentId !== undefined && payload.parentId !== existingPage.parentId;
-  const slugChanged = payload.slug !== undefined && payload.slug !== existingPage.slug;
+  const slugExplicitlyChanged = payload.slug !== undefined && payload.slug !== existingPage.slug;
   const titleChanged = payload.title !== undefined && payload.title !== existingPage.title && !existingPage.publishedAt;
 
-  if (slugChanged || parentIdChanged || titleChanged) {
+  if (slugExplicitlyChanged || parentIdChanged || titleChanged) {
     const slugSource = payload.slug !== undefined ? payload.slug : (payload.title || existingPage.title);
     const targetParentId = payload.parentId !== undefined ? payload.parentId : existingPage.parentId;
 
@@ -173,11 +181,17 @@ export const updateExistingPage = async (id, payload, actorId) => {
     if (await repo.checkFullPathExists(updateData.fullPath, id)) {
       throw new AppError(`The URL path ${updateData.fullPath} is already in use.`, StatusCodes.CONFLICT);
     }
+    
+    if (existingPage.publishedAt && updateData.fullPath !== existingPage.fullPath) {
+      await repo.createPagePathHistory(id, existingPage.fullPath).catch(() => {});
+    }
   }
 
   if (payload.status === "PUBLISHED" && existingPage.status !== "PUBLISHED") {
     updateData.publishedAt = new Date();
-  } 
+  } else if (existingPage.status === "PUBLISHED") {
+    updateData.publishedAt = existingPage.publishedAt; 
+  }
 
   const stateToCompare = { ...existingPage, ...updateData };
   const existingSnapshot = buildFullSnapshot(existingPage);
@@ -187,7 +201,6 @@ export const updateExistingPage = async (id, payload, actorId) => {
 
   const updatedPage = await repo.updatePageWithRevision(id, updateData, newSnapshot, actorId);
 
-  // If the path changed, ripple the changes down to all descendants
   if (updateData.fullPath && updateData.fullPath !== existingPage.fullPath) {
     await cascadeFullPathUpdate(id, updateData.fullPath, actorId);
   }
@@ -221,6 +234,13 @@ export const duplicatePageDeep = async (originalId, actorId, newParentId = undef
     parentId: targetParentId,
     menuOrder: original.menuOrder,
     showInMenu: original.showInMenu,
+    includeInSitemap: original.includeInSitemap,
+    noIndex: original.noIndex,
+    noFollow: original.noFollow,
+    canonicalUrl: original.canonicalUrl,
+    ogTitle: original.ogTitle,
+    ogDescription: original.ogDescription,
+    ogImageId: original.ogImageId,
     authorId: actorId,
     updatedById: actorId,
     publishedAt: null,
@@ -228,11 +248,7 @@ export const duplicatePageDeep = async (originalId, actorId, newParentId = undef
 
   const newPage = await repo.createPageWithRevision(pageData, actorId);
 
-  // Deep clone all children recursively
-  const children = await prisma.page.findMany({ 
-    where: { parentId: originalId, deletedAt: null } 
-  });
-  
+  const children = await repo.findActiveChildrenByParentId(originalId);
   if (children.length > 0) {
     await Promise.all(
       children.map(child => duplicatePageDeep(child.id, actorId, newPage.id, false))
@@ -242,7 +258,6 @@ export const duplicatePageDeep = async (originalId, actorId, newParentId = undef
   return isRootCall ? serializePage(newPage, "admin") : newPage;
 };
 
-// Aliased to map to the controller
 export const duplicatePage = async (originalId, actorId) => {
   return await duplicatePageDeep(originalId, actorId);
 };
@@ -265,7 +280,6 @@ export const deletePage = async (id, actorId) => {
 export const getPagesList = async (query) => {
   const { page, limit, ...filters } = query;
   const skip = (page - 1) * limit;
-  
   const { pages, total } = await repo.findPagesList({ skip, take: limit, ...filters });
   
   return {
@@ -282,11 +296,8 @@ export const getPublicMenuTree = async () => {
   return await repo.buildPageTree(true, true); 
 };
 
-//searches by fullPath (e.g. /company/team) 
 export const getPublicPageByPath = async (fullPath) => {
-  // Ensure starting slash
   const formattedPath = fullPath.startsWith('/') ? fullPath : `/${fullPath}`;
-  
   const page = await repo.findPageByFullPath(formattedPath);
   
   if (!page || page.status !== "PUBLISHED") {
@@ -294,49 +305,33 @@ export const getPublicPageByPath = async (fullPath) => {
   }
 
   const breadcrumbs = await repo.getPageBreadcrumbs(page.id);
-  
   return { 
     ...serializePage(page, "public"), 
     breadcrumbs 
   };
 };
 
-// REVISION CONTROL PIPELINES (VERSIONING SYSTEM ACTIONS)
-
-// Compiles a comprehensive mutation history for specific dynamic dashboard 
 export const getPageRevisionsList = async (pageId) => {
   const existingPage = await repo.findPageById(pageId);
-  if (!existingPage) {
-    throw new AppError("Target component engine context invalid", StatusCodes.NOT_FOUND);
-  }
+  if (!existingPage) throw new AppError("Target component engine context invalid", StatusCodes.NOT_FOUND);
   return await repo.findPageRevisionHistory(pageId);
 };
 
-// Extracts a singular targeted archival node block snapshot context
 export const getSinglePageRevision = async (pageId, revisionId) => {
   const revision = await repo.findPageRevisionById(pageId, revisionId);
-  if (!revision) {
-    throw new AppError("Targeted archival system revision log mismatch", StatusCodes.NOT_FOUND);
-  }
+  if (!revision) throw new AppError("Targeted archival system revision log mismatch", StatusCodes.NOT_FOUND);
   return revision;
 };
 
-//Transactionally reverses running living metrics to precise past snapshots.
 export const restorePageToRevision = async (pageId, revisionId, actorId) => {
-  // sanity evaluations processing checks
   const existingPage = await repo.findPageById(pageId);
-  if (!existingPage) {
-    throw new AppError("Living system data engine targeted contextual reference missing", StatusCodes.NOT_FOUND);
-  }
+  if (!existingPage) throw new AppError("Living system data engine targeted contextual reference missing", StatusCodes.NOT_FOUND);
 
   const historicRevision = await repo.findPageRevisionById(pageId, revisionId);
-  if (!historicRevision) {
-    throw new AppError("Requested processing change checkpoint parameters validation failed", StatusCodes.NOT_FOUND);
-  }
+  if (!historicRevision) throw new AppError("Requested processing change checkpoint parameters validation failed", StatusCodes.NOT_FOUND);
 
   const snapshotToRestore = historicRevision.snapshot;
 
-  //  Structural safety checks, Enforce collision detection framework rules on path structures
   if (snapshotToRestore.fullPath !== existingPage.fullPath) {
     const isPathTaken = await repo.checkFullPathExists(snapshotToRestore.fullPath, pageId);
     if (isPathTaken) {
@@ -347,10 +342,8 @@ export const restorePageToRevision = async (pageId, revisionId, actorId) => {
     }
   }
 
-  // Trigger atomic workspace state translation mapping
   const restoredPage = await repo.restorePageContentSnapshot(pageId, snapshotToRestore, actorId);
 
-  // If path configuration differs during historic rollback, cascade ripple modification updates across descendants branch
   if (snapshotToRestore.fullPath !== existingPage.fullPath) {
     await cascadeFullPathUpdate(pageId, snapshotToRestore.fullPath, actorId);
   }
