@@ -70,7 +70,6 @@ const login = async ({ email, password, allowedRoles = [] }) => {
     throw new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED);
   }
 
-  // Role Validation mapping with descriptive errors
   if (allowedRoles.length > 0 && !allowedRoles.includes(user.systemRole.slug)) {
     if (["SUPER_ADMIN", "ADMIN"].includes(user.systemRole.slug)) {
       throw new AppError("Access denied. Admins must use the dedicated Admin Portal to sign in.", StatusCodes.FORBIDDEN);
