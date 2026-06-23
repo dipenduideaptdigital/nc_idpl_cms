@@ -63,6 +63,15 @@ const PageList = () => {
       author: { name: 'System' },
       isStatic: true,
       updatedAt: null
+    },
+    {
+      id: 'static-landing-reference-2',
+      title: 'Premium Landing Page (Reference 2)',
+      fullPath: '/hero-preview-2',
+      status: 'SYSTEM',
+      author: { name: 'System' },
+      isStatic: true,
+      updatedAt: null
     }
   ];
 
