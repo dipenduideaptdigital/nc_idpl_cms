@@ -1,26 +1,73 @@
 import { Router } from "express";
-import { updateUserStatusController, updateUserRoleController } from "./users.admin.controller.js";
+import { 
+  updateUserStatusController, 
+  updateUserRoleController,
+  assignUserFunctionalRolesController,
+  getUserFunctionalRolesController,
+  getAllUsersController,  
+  inviteAdminController       
+} from "./users.admin.controller.js";
 import { authenticate } from "../../shared/middlewares/authenticate.middleware.js";
-import { authorizeSystemRoles } from "../../shared/middlewares/authorize.middleware.js";
+import { requirePermission } from "../../shared/middlewares/permission.middleware.js";
 import { validate } from "../../shared/middlewares/validate.middleware.js";
-import { updateUserStatusSchema, updateSystemRoleSchema, userIdParamSchema } from "./users.validation.js";
+import { 
+  updateUserStatusSchema, 
+  updateSystemRoleSchema, 
+  userIdParamSchema,
+  assignFunctionalRolesSchema,
+  inviteAdminSchema,           
+  userQuerySchema          
+} from "./users.validation.js";
 
 const router = Router();
 
-router.use(authenticate, authorizeSystemRoles("SUPER_ADMIN", "ADMIN"));
+// Base authentication
+router.use(authenticate);
+
+//Get All Users (Admin/Staff List)
+router.get(
+  "/",
+  requirePermission("user.view"),
+  validate(userQuerySchema, "query"),
+  getAllUsersController
+);
+
+router.post(
+  "/invite",
+  requirePermission("user.create"),
+  validate(inviteAdminSchema, "body"),
+  inviteAdminController
+);
 
 router.patch(
   "/:id/status",
+  requirePermission("user.suspend"), 
   validate(userIdParamSchema, "params"),
   validate(updateUserStatusSchema, "body"),
   updateUserStatusController
 );
 
 router.patch(
-  "/:id/role",
+  "/:id/system-role",
+  requirePermission("user.edit"), 
   validate(userIdParamSchema, "params"),
   validate(updateSystemRoleSchema, "body"),
   updateUserRoleController
+);
+
+router.get(
+  "/:id/functional-roles",
+  requirePermission("user.view"),
+  validate(userIdParamSchema, "params"),
+  getUserFunctionalRolesController
+);
+
+router.post(
+  "/:id/functional-roles",
+  requirePermission("user.edit"), 
+  validate(userIdParamSchema, "params"),
+  validate(assignFunctionalRolesSchema, "body"),
+  assignUserFunctionalRolesController
 );
 
 export default router;

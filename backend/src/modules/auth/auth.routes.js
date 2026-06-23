@@ -9,6 +9,7 @@ import {
   forgotPasswordController,
   resetPasswordController,
   changePasswordController,
+  setupAdminAccountController,
 } from "./auth.controller.js";
 
 import {
@@ -56,5 +57,7 @@ router.post("/logout", logoutController);
 
 // Logout all devices
 router.post("/logout-all", authenticate, sensitiveOperationRateLimiter, logoutAllDevicesController);
+
+router.post("/setup-admin", setupAdminAccountController);
 
 export default router;

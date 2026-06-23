@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import { Outlet, NavLink, Navigate, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Globe, Inbox, Menu, X, BookOpen, Tag } from 'lucide-react';
+import { Outlet, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { 
+  LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, 
+  Globe, Inbox, Menu, X, BookOpen, Tag
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext'; 
+import { usePermission } from '../../hooks/usePermission'; 
 
 const AdminLayout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isAuthenticated, logoutContext } = useAuth(); 
+  const { hasPermission } = usePermission(); 
+  
   const roleSlug = user?.systemRole?.slug?.toUpperCase();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Role & Auth Validation
   if (!isAuthenticated || !user || (roleSlug !== 'SUPER_ADMIN' && roleSlug !== 'ADMIN')) {
     return <Navigate to="/login?mode=admin" replace />;
   }
@@ -19,15 +25,47 @@ const AdminLayout = () => {
     navigate('/login?mode=admin');
   };
 
+  const canViewSettings = hasPermission('settings.manage') || hasPermission('user.view') || hasPermission('role.view');
+
   const navItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
-    { name: 'Landing pages', icon: FileText, path: '/admin/pages' },
-    { name: 'Blog Posts', icon: BookOpen, path: '/admin/blogs' },
-    { name: 'Categories & Tags', icon: Tag, path: '/admin/blogs/taxonomies' },
-    { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms' },
-    { name: 'Home page', icon: ImageIcon, path: '/admin/home-customization' },
-    { name: 'Settings', icon: Settings, path: '/admin/settings' },
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard', superAdminOnly: true },
+    { name: 'Landing pages', icon: FileText, path: '/admin/pages', permission: 'page.view' },
+    { name: 'Home page', icon: ImageIcon, path: '/admin/home-customization', permission: 'page.edit' },
+    { name: 'Blog Posts', icon: BookOpen, path: '/admin/blogs', permission: 'blog.view' },
+    { name: 'Categories & Tags', icon: Tag, path: '/admin/blogs/taxonomies', permission: 'blog.view' },
+    { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms', permission: 'contact.view' },
   ];
+
+  const visibleNavItems = navItems.filter(item => {
+    if (item.superAdminOnly && roleSlug !== 'SUPER_ADMIN') return false;
+    if (!item.permission && !item.superAdminOnly) return true;
+    return hasPermission(item.permission);
+  });
+
+  const currentPath = location.pathname;
+  if (
+    currentPath === '/admin' || 
+    currentPath === '/admin/' || 
+    (currentPath === '/admin/dashboard' && roleSlug !== 'SUPER_ADMIN')
+  ) {
+    const firstValidPath = visibleNavItems.length > 0 ? visibleNavItems[0].path : null;
+    
+    if (!firstValidPath && canViewSettings) {
+      return <Navigate to="/admin/settings" replace />;
+    }
+
+    if (firstValidPath) {
+      return <Navigate to={firstValidPath} replace />;
+    } else {
+      return (
+        <div className="h-screen w-full flex items-center justify-center bg-zinc-50 flex-col">
+          <h2 className="text-2xl font-bold text-red-600 mb-2">Access Denied</h2>
+          <p className="text-zinc-500 mb-4">You don't have any functional permissions assigned.</p>
+          <button onClick={handleLogout} className="px-4 py-2 bg-zinc-900 text-white rounded-lg">Logout</button>
+        </div>
+      );
+    }
+  }
 
   return (
     <div className="flex h-screen bg-[#f8f9fa] text-zinc-900 overflow-hidden font-sans relative">
@@ -39,7 +77,7 @@ const AdminLayout = () => {
         />
       )}
 
-      {/* Sidebar - Premium Navy Theme */}
+      {/* Sidebar */}
       <aside className={`fixed md:relative w-72 h-full bg-blue-900 text-white flex flex-col transition-transform duration-300 ease-in-out border-r border-blue-800/50 shadow-2xl z-30 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         <div className="p-8 flex items-center justify-between border-b border-blue-800/50">
           <div className="text-2xl font-bold tracking-widest uppercase flex flex-col items-center">
@@ -54,8 +92,8 @@ const AdminLayout = () => {
           </button>
         </div>
 
-        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto">
-          {navItems.map((item) => (
+        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto custom-scrollbar">
+          {visibleNavItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.path}
@@ -72,6 +110,23 @@ const AdminLayout = () => {
               <span className="font-medium tracking-wide text-sm">{item.name}</span>
             </NavLink>
           ))}
+
+          {canViewSettings && (
+            <NavLink
+              to="/admin/settings"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={() =>
+                `flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group ${
+                  location.pathname.includes('/admin/settings')
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50 border border-blue-500/50' 
+                    : 'text-blue-100 hover:bg-blue-800 hover:text-white'
+                }`
+              }
+            >
+              <Settings className="w-5 h-5 transition-transform group-hover:rotate-90 duration-500" strokeWidth={1.5} />
+              <span className="font-medium tracking-wide text-sm">Settings</span>
+            </NavLink>
+          )}
         </nav>
 
         <div className="p-6 border-t border-blue-800/50 space-y-2">

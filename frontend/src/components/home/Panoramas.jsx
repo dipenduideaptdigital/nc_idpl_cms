@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Settings } from 'lucide-react';
-import defaultView from '../../assets/homepage/view.jpg';
+import { FaCog } from 'react-icons/fa';
+import defaultView from '../../assets/homepage/panoramas.png';
 import apiClient from '../../api/client';
 
 const Panoramas = ({ data: externalData }) => {
@@ -57,7 +57,8 @@ const Panoramas = ({ data: externalData }) => {
     return parts.map((part, index) => {
       if (part.startsWith('[') && part.endsWith(']')) {
         return (
-          <span key={index} className="text-primary">
+          // Adjusted color to match Figma's bright blue
+          <span key={index} className="text-[#1388FF]">
             {part.slice(1, -1).split(/\\n|\n/).map((line, lIdx, arr) => (
               <React.Fragment key={lIdx}>
                 {line}
@@ -77,25 +78,24 @@ const Panoramas = ({ data: externalData }) => {
   };
 
   return (
-    <section className="py-10 bg-white overflow-hidden">
-      <div className="container mx-auto px-8 max-w-7xl flex flex-col items-center">
+    <section className="pt-6 md:pt-10 pb-16 md:pb-24 bg-white overflow-hidden">
+      <div className="container mx-auto px-6 md:px-8 max-w-[1400px] flex flex-col items-center">
         
         {/* Centered Header Section */}
         <div className="flex flex-col items-center text-center mb-16 opal-move-up">
-          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300 mb-8">
+          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300 mb-6">
             <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
             <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
               {badgeText}
             </span>
           </div>
           
-          <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 leading-[1.1] max-w-3xl">
+          <h2 className="text-6xl md:text-[70px] font-bold tracking-tight text-black leading-[1.05] max-w-4xl">
             {renderTitle(title)}
           </h2>
         </div>
 
-        {/* Panoramic Image */}
-        <div className="relative w-full max-w-6xl h-[400px] md:h-[600px] rounded-[2.5rem] overflow-hidden shadow-2xl opal-move-up">
+        <div className="relative w-full max-w-7xl h-[400px] md:h-[600px] lg:h-[700px] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden opal-move-up">
           <img 
             src={panoramaImg}
             alt="360 Panoramic View"
@@ -107,9 +107,8 @@ const Panoramas = ({ data: externalData }) => {
             }}
           />
           
-          {/* Settings Icon */}
-          <div className="absolute bottom-8 right-8 cursor-pointer hover:rotate-90 transition-transform duration-500">
-            <Settings className="w-10 h-10 text-white opacity-90" strokeWidth={2.5} />
+          <div className="absolute bottom-6 right-6 md:bottom-10 md:right-10 cursor-pointer hover:rotate-90 transition-transform duration-500">
+            <FaCog className="w-10 h-10 md:w-12 md:h-12 text-white drop-shadow-md" />
           </div>
         </div>
 

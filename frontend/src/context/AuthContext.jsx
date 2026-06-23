@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import apiClient from '../api/client';
+import { parseJwt } from '../utils/jwtHelper'; 
 
 const AuthContext = createContext(null);
 
@@ -8,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
 
-  // Securely verify user on initial load
   const verifySession = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken');
@@ -17,10 +17,18 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      const res = await apiClient.get('/users/me');
+      const res = await apiClient.get('/auth/me'); 
       
       if (res.data.success) {
-        setUser(res.data.data);
+        const tokenPayload = parseJwt(token); 
+        const userWithPerms = {
+          ...res.data.data,
+          permissions: tokenPayload.permissions || []
+        };
+
+        console.log("Logged in User Permissions:", userWithPerms.permissions);
+
+        setUser(userWithPerms);
         setIsAuthenticated(true);
       }
     } catch (error) {
@@ -31,7 +39,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Handle global logout event dispatched by apiClient
   useEffect(() => {
     const handleLogout = () => {
       setUser(null);
@@ -41,35 +48,34 @@ export const AuthProvider = ({ children }) => {
     };
 
     window.addEventListener('auth:logout', handleLogout);
-    
-    // Initial verification
     verifySession();
 
-    return () => {
-      window.removeEventListener('auth:logout', handleLogout);
-    };
+    return () => window.removeEventListener('auth:logout', handleLogout);
   }, [verifySession]);
 
   const loginContext = (userData, token) => {
+    const tokenPayload = parseJwt(token); 
+    const userWithPerms = {
+      ...userData,
+      permissions: tokenPayload.permissions || []
+    };
+
     localStorage.setItem('accessToken', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userWithPerms));
+    setUser(userWithPerms);
     setIsAuthenticated(true);
   };
 
   const logoutContext = async () => {
     try {
-      // Inform backend to revoke refresh token
       await apiClient.post('/auth/logout');
     } catch (error) {
       console.error("Logout API failed, forcing local logout", error);
     } finally {
-      // Force local logout regardless of API success
       window.dispatchEvent(new Event('auth:logout'));
     }
   };
 
-  // Provide a global loading screen while verifying initial session
   if (isInitializing) {
     return (
       <div className="min-h-screen w-full bg-zinc-950 flex items-center justify-center">
@@ -87,8 +93,6 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };

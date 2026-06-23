@@ -8,35 +8,29 @@ import gallery6 from '../../assets/homepage/gallery6.png';
 import apiClient from '../../api/client';
 
 const defaultImages = [
-  gallery1,
-  gallery2,
-  gallery3,
-  gallery4,
-  gallery5,
-  gallery6
+  gallery1, gallery2, gallery3, gallery4, gallery5, gallery6
 ];
 
 const Gallery = () => {
-  const scrollRef = useRef(null);
-  const halfRef = useRef(null);
-  const [isInteracting, setIsInteracting] = useState(false);
+  // Duto alada row er jonno duto alada ref
+  const row1Ref = useRef(null);
+  const row2Ref = useRef(null);
+  const half1Ref = useRef(null);
+  const half2Ref = useRef(null);
+  
   const [content, setContent] = useState(null);
   const [imagesList, setImagesList] = useState(defaultImages);
 
   useEffect(() => {
     let isMounted = true;
-
     const fetchGalleryData = async () => {
       try {
         const res = await apiClient.get('/cms/section/homepage_gallery');
         const { data } = res;
-
         if (data.success && data.data?.content) {
           const fetchedContent = data.data.content;
           if (isMounted) setContent(fetchedContent);
-
           const serverUrl = import.meta.env.VITE_API_URL.replace('/api/v1', '');
-
           if (fetchedContent.images && fetchedContent.images.length > 0) {
             const mapped = fetchedContent.images.map((img, idx) => {
               return img ? `${serverUrl}${img}` : defaultImages[idx % defaultImages.length];
@@ -50,129 +44,131 @@ const Gallery = () => {
         console.error('Failed to fetch gallery content:', error);
       }
     };
-
     fetchGalleryData();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, []);
 
   const bgText = content?.bgText || "gallery";
 
-  const galleryColumns = [
-    {
-      id: 1,
-      marginTop: 'mt-0',
-      topHeight: 'h-[220px]',
-      bottomHeight: 'h-[300px]',
-      images: [
-        imagesList[0] || gallery1,
-        imagesList[1] || gallery2
-      ]
-    },
-    {
-      id: 2,
-      marginTop: 'mt-16 md:mt-24',
-      topHeight: 'h-[150px]',
-      bottomHeight: 'h-[200px]',
-      images: [
-        imagesList[2] || gallery3,
-        imagesList[3] || gallery4
-      ]
-    },
-    {
-      id: 3,
-      marginTop: 'mt-0',
-      topHeight: 'h-[300px]',
-      bottomHeight: 'h-[180px]',
-      images: [
-        imagesList[4] || gallery5,
-        imagesList[5] || gallery6
-      ]
-    }
+  // Data ke duto alada row te vag kora holo
+  const topRowImages = [
+    { id: 't1', img: imagesList[0] || gallery1, aspect: 'aspect-[4/3]', margin: 'mt-0' },
+    { id: 't2', img: imagesList[2] || gallery3, aspect: 'aspect-[16/9]', margin: 'mt-10 md:mt-16' },
+    { id: 't3', img: imagesList[4] || gallery5, aspect: 'aspect-[4/3]', margin: 'mt-0' }
   ];
 
-  const duplicatedSets = [...galleryColumns, ...galleryColumns, ...galleryColumns, ...galleryColumns];
+  const bottomRowImages = [
+    { id: 'b1', img: imagesList[1] || gallery2, aspect: 'aspect-[16/9]', margin: 'mt-0' },
+    { id: 'b2', img: imagesList[3] || gallery4, aspect: 'aspect-[4/3]', margin: 'mt-10 md:mt-16' },
+    { id: 'b3', img: imagesList[5] || gallery6, aspect: 'aspect-[16/9]', margin: 'mt-0' }
+  ];
+
+  const duplicatedTop = [...topRowImages, ...topRowImages, ...topRowImages, ...topRowImages];
+  const duplicatedBottom = [...bottomRowImages, ...bottomRowImages, ...bottomRowImages, ...bottomRowImages];
 
   useEffect(() => {
-    let animationId;
-    
-    const scroll = () => {
-      if (scrollRef.current && halfRef.current && !isInteracting) {
-        scrollRef.current.scrollLeft += 1;
-        if (scrollRef.current.scrollLeft >= halfRef.current.clientWidth) {
-          scrollRef.current.scrollLeft -= halfRef.current.clientWidth;
+    if (row2Ref.current && half2Ref.current) {
+      row2Ref.current.scrollLeft = half2Ref.current.clientWidth;
+    }
+
+    let lastScrollY = window.scrollY;
+
+    const handleVerticalScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY;
+
+      if (row1Ref.current && half1Ref.current) {
+        row1Ref.current.scrollLeft += scrollDelta;
+        
+        // Loop bound checking
+        if (row1Ref.current.scrollLeft >= half1Ref.current.clientWidth) {
+          row1Ref.current.scrollLeft -= half1Ref.current.clientWidth;
+        } else if (row1Ref.current.scrollLeft <= 0) {
+          row1Ref.current.scrollLeft += half1Ref.current.clientWidth;
         }
       }
-      animationId = requestAnimationFrame(scroll);
+
+      // 2nd Row (Bottom) 
+      if (row2Ref.current && half2Ref.current) {
+        row2Ref.current.scrollLeft -= scrollDelta;
+        
+        // Loop bound checking
+        if (row2Ref.current.scrollLeft >= half2Ref.current.clientWidth) {
+          row2Ref.current.scrollLeft -= half2Ref.current.clientWidth;
+        } else if (row2Ref.current.scrollLeft <= 0) {
+          row2Ref.current.scrollLeft += half2Ref.current.clientWidth;
+        }
+      }
+
+      lastScrollY = currentScrollY;
     };
 
-    animationId = requestAnimationFrame(scroll);
-    return () => cancelAnimationFrame(animationId);
-  }, [isInteracting]);
-
-  const handleTouchEnd = () => {
-    setTimeout(() => setIsInteracting(false), 1000);
-  };
+    window.addEventListener('scroll', handleVerticalScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleVerticalScroll);
+  }, []);
 
   return (
-    <section className="py-18 bg-white relative overflow-hidden min-h-[800px]">
-
-      {/* Massive Background Text */}
-      <div className="absolute top-12 md:top-20 left-0 right-0 w-full text-center pointer-events-none z-0">
-        <h2 className="text-[35vw] md:text-[25vw] font-black text-gray-200 tracking-tighter leading-none select-none lowercase">
+    <section className="py-20 md:py-32 bg-white relative overflow-hidden min-h-[700px]">
+      <div className="absolute -top-24 md:-top-16 left-0 w-full flex justify-center pointer-events-none z-0">
+        <h2 className="text-[35vw] md:text-[26vw] font-black text-[#F3F4F6] tracking-[-0.05em] leading-[0.85] select-none lowercase">
           {bgText}
         </h2>
       </div>
 
-      {/* Carousel Container */}
-      <div className="relative z-10 w-full mt-32 md:mt-56 opal-move-up">
+      <div className="relative z-10 w-full mt-12 md:mt-20 opal-move-up flex flex-col gap-4 md:gap-6">
+        
         <div 
-          ref={scrollRef}
-          className={`flex overflow-x-auto hide-scrollbar items-start cursor-grab active:cursor-grabbing ${isInteracting ? 'snap-x snap-mandatory' : ''}`}
+          ref={row1Ref}
+          className="flex overflow-hidden items-start w-full"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          onMouseEnter={() => setIsInteracting(true)}
-          onMouseLeave={() => setIsInteracting(false)}
-          onTouchStart={() => setIsInteracting(true)}
-          onTouchEnd={handleTouchEnd}
         >
+          <div ref={half1Ref} className="flex gap-4 md:gap-6 pr-4 md:pr-6 items-start shrink-0">
+            {duplicatedTop.map((item, index) => (
+              <div key={`t1-${index}`} className={`w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
+                <div className={`w-full rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
+                  <img src={item.img} alt="Gallery Top" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />
+                </div>
+              </div>
+            ))}
+          </div>
           
-          {/* First Half */}
-          <div ref={halfRef} className="flex gap-4 md:gap-6 pr-4 md:pr-6 items-start shrink-0">
-            {duplicatedSets.map((col, index) => (
-              <div 
-                key={`h1-${col.id}-${index}`} 
-                className={`flex flex-col gap-4 md:gap-6 w-[300px] md:w-[420px] shrink-0 snap-center ${col.marginTop}`}
-              >
-                <div className={`w-full rounded-2xl md:rounded-[2rem] overflow-hidden shadow-lg ${col.topHeight}`}>
-                  <img src={col.images[0]} alt="Gallery Top" className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
-                </div>
-                <div className={`w-full rounded-2xl md:rounded-[2rem] overflow-hidden shadow-lg ${col.bottomHeight}`}>
-                  <img src={col.images[1]} alt="Gallery Bottom" className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Second Half */}
           <div className="flex gap-4 md:gap-6 pr-4 md:pr-6 items-start shrink-0">
-            {duplicatedSets.map((col, index) => (
-              <div 
-                key={`h2-${col.id}-${index}`} 
-                className={`flex flex-col gap-4 md:gap-6 w-[300px] md:w-[420px] shrink-0 snap-center ${col.marginTop}`}
-              >
-                <div className={`w-full rounded-2xl md:rounded-[2rem] overflow-hidden shadow-lg ${col.topHeight}`}>
-                  <img src={col.images[0]} alt="Gallery Top" className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
+            {duplicatedTop.map((item, index) => (
+              <div key={`t2-${index}`} className={`w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
+                <div className={`w-full rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
+                  <img src={item.img} alt="Gallery Top" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />
                 </div>
-                <div className={`w-full rounded-2xl md:rounded-[2rem] overflow-hidden shadow-lg ${col.bottomHeight}`}>
-                  <img src={col.images[1]} alt="Gallery Bottom" className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div 
+          ref={row2Ref}
+          className="flex overflow-hidden items-start w-full"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          <div ref={half2Ref} className="flex gap-4 md:gap-6 pr-4 md:pr-6 items-start shrink-0">
+            {duplicatedBottom.map((item, index) => (
+              <div key={`b1-${index}`} className={`w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
+                <div className={`w-full rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
+                  <img src={item.img} alt="Gallery Bottom" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />
                 </div>
               </div>
             ))}
           </div>
 
+          <div className="flex gap-4 md:gap-6 pr-4 md:pr-6 items-start shrink-0">
+            {duplicatedBottom.map((item, index) => (
+              <div key={`b2-${index}`} className={`w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
+                <div className={`w-full rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
+                  <img src={item.img} alt="Gallery Bottom" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+
       </div>
     </section>
   );

@@ -10,6 +10,7 @@ import AdminLayout from './components/layout/AdminLayout';
 /* Pages */
 import Home from './pages/Home';
 import LandingReference from './pages/LandingReference';
+import LandingReference2 from './pages/LandingReference2';
 import LandingContainer from './pages/LandingContainer';
 import DynamicPage from './pages/DynamicPage';
 import PreviewPage from './pages/PreviewPage'; 
@@ -51,18 +52,19 @@ function App() {
             <Route path="blogs/taxonomies" element={<TaxonomyManager />} />
           </Route>
 
+          {/* Public Routes - Main Pages */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<LandingContainer />} />
+            <Route path="/hero-preview-2" element={<LandingReference2 />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
+          </Route>
+
           {/* Public Routes - Landing Pages */}
           <Route element={<LandingLayout />}>
             <Route path="/hero-preview" element={<LandingReference />} />
             <Route path="/preview/:token" element={<PreviewPage />} /> 
             <Route path="/*" element={<DynamicPage />} />
-          </Route>
-
-          {/* Public Routes - Main Pages */}
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<LandingContainer />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogDetail />} />
           </Route>
           
         </Routes>

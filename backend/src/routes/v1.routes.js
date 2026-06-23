@@ -15,6 +15,7 @@ import previewPublicRoutes from "../modules/pages-preview/pages-preview.public.r
 import blogsAdminRoutes from "../modules/blogs/blogs.admin.routes.js";
 import blogsPublicRoutes from "../modules/blogs/blogs.public.routes.js";
 import seoRoutes from "../modules/seo/seo.routes.js";
+import roleRoutes from "../modules/roles/roles.routes.js";
 
 const router = Router();
 
@@ -33,6 +34,7 @@ router.use("/preview", previewPublicRoutes);
 router.use("/blogs", blogsPublicRoutes);
 router.use("/admin/blogs", blogsAdminRoutes);
 router.use("/", seoRoutes);
+router.use("/admin/roles", roleRoutes);
 
 router.get("/health", (req, res) => {
   res.status(200).json({

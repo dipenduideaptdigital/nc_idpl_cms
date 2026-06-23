@@ -2,44 +2,90 @@ import { prisma } from "../../config/db.js";
 import { hashPassword } from "../../shared/utils/password.js";
 import { env } from "../../config/env.js";
 
+const PERMISSIONS = [
+  // PAGES
+  { name: "View Pages", slug: "page.view", module: "PAGES" },
+  { name: "Create Page", slug: "page.create", module: "PAGES" },
+  { name: "Edit Page", slug: "page.edit", module: "PAGES" },
+  { name: "Delete Page", slug: "page.delete", module: "PAGES" },
+  { name: "Publish Page", slug: "page.publish", module: "PAGES" },
+  { name: "Preview Page", slug: "page.preview", module: "PAGES" },
+
+  // BLOGS
+  { name: "View Blogs", slug: "blog.view", module: "BLOGS" },
+  { name: "Create Blog", slug: "blog.create", module: "BLOGS" },
+  { name: "Edit Blog", slug: "blog.edit", module: "BLOGS" },
+  { name: "Delete Blog", slug: "blog.delete", module: "BLOGS" },
+  { name: "Publish Blog", slug: "blog.publish", module: "BLOGS" },
+  { name: "Preview Blog", slug: "blog.preview", module: "BLOGS" },
+
+  // MEDIA
+  { name: "View Media", slug: "media.view", module: "MEDIA" },
+  { name: "Upload Media", slug: "media.upload", module: "MEDIA" },
+  { name: "Edit Media", slug: "media.edit", module: "MEDIA" }, 
+  { name: "Delete Media", slug: "media.delete", module: "MEDIA" },
+
+  // CONTACTS
+  { name: "View Contacts", slug: "contact.view", module: "CONTACTS" },
+  { name: "Assign Contacts", slug: "contact.assign", module: "CONTACTS" }, 
+  { name: "Resolve Contacts", slug: "contact.resolve", module: "CONTACTS" },
+  { name: "Delete Contacts", slug: "contact.delete", module: "CONTACTS" },
+
+  // ADVANCED
+  { name: "Manage SEO", slug: "seo.manage", module: "SEO" },
+  { name: "Manage Settings", slug: "settings.manage", module: "SETTINGS" },
+
+  // ADMIN (Users)
+  { name: "View Users", slug: "user.view", module: "USERS" },
+  { name: "Create User", slug: "user.create", module: "USERS" },
+  { name: "Edit User", slug: "user.edit", module: "USERS" },
+  { name: "Suspend User", slug: "user.suspend", module: "USERS" },
+
+  // ROLES
+  { name: "View Roles", slug: "role.view", module: "ROLES" },
+  { name: "Create Role", slug: "role.create", module: "ROLES" },
+  { name: "Edit Role", slug: "role.edit", module: "ROLES" },
+  { name: "Delete Role", slug: "role.delete", module: "ROLES" },
+  { name: "Delete User", slug: "user.delete", module: "USERS" },
+];
+
 async function main() {
   console.log("Seeding started...");
 
-  // System roles
+  //System Roles
   const superAdminRole = await prisma.systemRole.upsert({
     where: { slug: "SUPER_ADMIN" },
     update: {},
-    create: {
-      name: "Super Admin",
-      slug: "SUPER_ADMIN",
-      description: "Highest level system administrator",
-    },
+    create: { name: "Super Admin", slug: "SUPER_ADMIN", description: "Highest level system administrator" },
   });
 
   const adminRole = await prisma.systemRole.upsert({
     where: { slug: "ADMIN" },
     update: {},
-    create: {
-      name: "Admin",
-      slug: "ADMIN",
-      description: "Administrative user",
-    },
+    create: { name: "Admin", slug: "ADMIN", description: "Administrative user" },
   });
 
   const userRole = await prisma.systemRole.upsert({
     where: { slug: "USER" },
     update: {},
-    create: {
-      name: "User",
-      slug: "USER",
-      description: "Regular platform user",
-    },
+    create: { name: "User", slug: "USER", description: "Regular platform user" },
   });
-
   console.log("System roles seeded");
 
-  // Super admin
-  const existingSuperAdmin = await prisma.user.findUnique({
+  //  Permissions 
+  await prisma.$transaction(
+    PERMISSIONS.map((perm) =>
+      prisma.permission.upsert({
+        where: { slug: perm.slug },
+        update: { name: perm.name, module: perm.module },
+        create: perm,
+      })
+    )
+  );
+  console.log("Permissions seeded (via $transaction)");
+
+  //Super Admin User Initialization
+  let existingSuperAdmin = await prisma.user.findUnique({
     where: { email: env.SUPER_ADMIN_EMAIL },
   });
 
@@ -62,7 +108,7 @@ async function main() {
     console.log("Super admin already exists");
   }
 
-  console.log("Seeding completed");
+  console.log(" Seeding completely finished.");
 }
 
 main()

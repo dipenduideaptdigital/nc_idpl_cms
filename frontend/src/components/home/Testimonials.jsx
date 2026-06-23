@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import apiClient from '../../api/client';
+import team from '../../assets/homepage/review.jpg'; 
 
-const defaultMainImg = "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop";
 const defaultAuthorImg = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop";
 const defaultLogos = ['LOGO 01', 'LOGO 02', 'LOGO 03', 'LOGO 04', 'LOGO 05'];
 
 const Testimonials = ({ data: externalData }) => {
   const [content, setContent] = useState(externalData || null);
-  const [mainImg, setMainImg] = useState(defaultMainImg);
+  const [mainImg, setMainImg] = useState(team); 
   const [authorImg, setAuthorImg] = useState(defaultAuthorImg);
 
   useEffect(() => {
@@ -23,10 +23,8 @@ const Testimonials = ({ data: externalData }) => {
         const img1 = new Image();
         img1.src = mainUrl;
         img1.onload = () => { if (isMounted) setMainImg(mainUrl); };
-        img1.onerror = () => { if (isMounted) setMainImg(defaultMainImg); };
-      } else if (isMounted) {
-        setMainImg(defaultMainImg);
-      }
+        img1.onerror = () => { if (isMounted) setMainImg(team); };
+      } 
 
       if (fetchedContent.authorImage) {
         const authUrl = fetchedContent.authorImage.startsWith('http') ? fetchedContent.authorImage : `${serverUrl}${fetchedContent.authorImage}`;
@@ -81,7 +79,7 @@ const Testimonials = ({ data: externalData }) => {
     return parts.map((part, index) => {
       if (part.startsWith('[') && part.endsWith(']')) {
         return (
-          <span key={index} className="text-primary">
+          <span key={index} className="text-[#3B82F6]">
             {part.slice(1, -1).split(/\\n|\n/).map((line, lIdx, arr) => (
               <React.Fragment key={lIdx}>
                 {line}
@@ -102,12 +100,10 @@ const Testimonials = ({ data: externalData }) => {
 
   return (
     <section className="py-16 md:py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-6 md:px-8 max-w-7xl">
+      <div className="container mx-auto px-6 md:px-8 max-w-[1400px]">
         
-        {/* Top Header Section */}
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16 items-start">
-          {/* Left: Badge */}
-          <div className="fadeInLeft">
+        <div className="flex flex-col lg:flex-row gap-8 md:gap-12 mb-16 items-start">
+          <div className="w-full lg:w-1/3 fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
@@ -116,43 +112,38 @@ const Testimonials = ({ data: externalData }) => {
             </div>
           </div>
           
-          {/* Right: Heading & Description */}
-          <div className="fadeInRight">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
+          <div className="w-full lg:w-2/3 flex flex-col items-start fadeInRight">
+            <h2 className="text-4xl md:text-5xl lg:text-[56px] font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
               {renderTitle(title)}
             </h2>
-            <p className="text-gray-500 max-w-2xl font-light text-sm md:text-base leading-relaxed">
+            <p className="text-gray-500 max-w-[540px] font-normal text-sm md:text-base leading-relaxed">
               {description}
             </p>
           </div>
         </div>
 
-        {/* Middle Section: Image and Review */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-24 items-center">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 mb-24 items-center">
           
-          {/* Left: Image */}
-          <div className="w-full h-[350px] md:h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl fadeInLeft group">
+          <div className="w-full lg:w-[55%] h-[350px] md:h-[450px] rounded-[2.5rem] overflow-hidden fadeInLeft group shrink-0">
             <img 
               src={mainImg} 
               alt="Office Interior" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               onError={(e) => {
-                if (e.currentTarget.src !== defaultMainImg) {
-                  e.currentTarget.src = defaultMainImg;
+                if (e.currentTarget.src !== team) {
+                  e.currentTarget.src = team;
                 }
               }}
             />
           </div>
 
-          {/* Right: Testimonial Content */}
-          <div className="flex flex-col fadeInRight">
+          <div className="w-full lg:w-[45%] flex flex-col fadeInRight">
             
-            {/* Rating Stats row */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-8">
               <div className="text-6xl font-bold text-gray-900 tracking-tighter">{ratingValue}</div>
               
               <div className="flex flex-col items-start sm:items-start gap-1">
-                <div className="bg-primary text-white flex space-x-1 px-3 py-1.5 rounded-full shadow-md">
+                <div className="bg-[#3B82F6] text-white flex space-x-1 px-3 py-1 rounded-full shadow-md">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-3.5 h-3.5 fill-white text-white" />
                   ))}
@@ -160,15 +151,16 @@ const Testimonials = ({ data: externalData }) => {
                 <span className="text-xs font-bold text-gray-900 pl-1">{reviewCount}</span>
               </div>
               
-              <p className="text-xs text-gray-600 font-medium leading-relaxed max-w-[250px] sm:pl-6 sm:border-l border-gray-200">
-                {conceptText}
-              </p>
+              <div className="sm:pl-6 sm:border-l border-gray-200">
+                <p className="text-[11px] md:text-xs text-gray-700 font-bold leading-relaxed max-w-[280px]">
+                  {conceptText}
+                </p>
+              </div>
             </div>
             
             <div className="w-full h-[1px] bg-gray-200 mb-8"></div>
 
-            {/* Testimonial Quote */}
-            <p className="text-gray-600 text-lg md:text-xl font-light leading-relaxed mb-10 max-w-lg">
+            <p className="text-gray-600 text-lg md:text-[20px] font-normal leading-[1.7] mb-10 max-w-[470px]">
               &ldquo;{mainQuote}&rdquo;
             </p>
 
@@ -193,9 +185,8 @@ const Testimonials = ({ data: externalData }) => {
           </div>
         </div>
 
-        {/* Bottom Section: Logos */}
+        {/* Bottom Section */}
         <div className="pt-8 opal-move-up">
-          {/* Divider Text */}
           <div className="flex items-center justify-center mb-16">
             <div className="h-px bg-gray-200 flex-grow max-w-[200px] lg:max-w-[400px]"></div>
             <h3 className="px-6 text-xl md:text-2xl font-bold text-gray-900 whitespace-nowrap">
@@ -204,10 +195,13 @@ const Testimonials = ({ data: externalData }) => {
             <div className="h-px bg-gray-200 flex-grow max-w-[200px] lg:max-w-[400px]"></div>
           </div>
 
-          {/* Logos Grid */}
-          <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-80">
+          <div className="flex flex-wrap justify-between items-center w-full gap-6 mt-4">
             {logos.map((logo, index) => (
-              <h4 key={index} className="text-2xl font-black text-gray-900 tracking-tighter">
+              <h4 
+                key={index} 
+                className="text-[36px] font-bold text-black"
+                style={{ fontFamily: 'var(--font-helvetica)' }}
+              >
                 {logo}
               </h4>
             ))}

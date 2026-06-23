@@ -26,11 +26,9 @@ const Home = () => {
       
       <HowWeWork />
       <OurProjects />
-      <Panoramas />
-      
-      <Team />
-      
       <Testimonials />
+      <Panoramas />
+      <Team />
       <VideoBanner />
       <BlogSection />
       <Gallery />

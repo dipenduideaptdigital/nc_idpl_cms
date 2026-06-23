@@ -35,27 +35,27 @@ const Login = () => {
     try {
       const endpoint = isAdminMode ? '/auth/admin-login' : '/auth/login';
       const res = await apiClient.post(endpoint, formData);
-      
       const { data } = res;
 
       setSuccess('Login successful! Redirecting...');
       
-      loginContext(data.data.user, data.data.accessToken);
-
-      const roleSlug = data.data.user?.systemRole?.slug?.toUpperCase();
+      const tokenPayload = JSON.parse(atob(data.data.accessToken.split('.')[1]));
+      const userPermissions = tokenPayload.permissions || [];
+      const loggedInUser = data.data.user;
+      const roleSlug = loggedInUser?.systemRole?.slug?.toUpperCase();
       const isAdmin = roleSlug === 'SUPER_ADMIN' || roleSlug === 'ADMIN';
 
-      // Redirect after a short delay to show success animation
+      loginContext(loggedInUser, data.data.accessToken);
+
       setTimeout(() => {
         if (isAdmin) {
-          navigate('/admin/home-customization', { replace: true });
+          navigate('/admin', { replace: true }); 
         } else {
           navigate('/', { replace: true });
         }
       }, 1500);
 
     } catch (err) {
-      //  Axios structured error handling
       const errorMessage = err.response?.data?.message || err.message || 'Unable to connect to the server.';
       setError(errorMessage);
     } finally {

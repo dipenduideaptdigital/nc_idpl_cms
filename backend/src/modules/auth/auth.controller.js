@@ -12,6 +12,7 @@ import {
   forgotPassword,
   resetPassword,
   changePassword,
+  setupAdminAccount,
 } from "./auth.service.js";
 
 import {
@@ -83,8 +84,6 @@ export const refreshTokenController = asyncHandler(async (req, res) => {
 // Forgot password
 export const forgotPasswordController = asyncHandler(async (req, res) => {
   await forgotPassword(req.body.email);
-
-  // Always return success to prevent email enumeration
   sendResponse({
     res,
     statusCode: StatusCodes.OK,
@@ -114,7 +113,6 @@ export const changePasswordController = asyncHandler(async (req, res) => {
     newPassword: req.body.newPassword,
   });
 
-  // Clear current session cookie
   res.clearCookie("refreshToken", CLEAR_COOKIE_OPTIONS);
 
   sendResponse({
@@ -124,7 +122,6 @@ export const changePasswordController = asyncHandler(async (req, res) => {
   });
 });
 
-// Logout current device
 export const logoutController = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies?.refreshToken;
 
@@ -149,5 +146,24 @@ export const logoutAllDevicesController = asyncHandler(async (req, res) => {
     res,
     statusCode: StatusCodes.OK,
     message: "Logged out from all devices",
+  });
+});
+
+export const setupAdminAccountController = asyncHandler(async (req, res) => {
+  const { token, password } = req.body;
+
+  if (!token || !password) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: "Token and new password are required."
+    });
+  }
+
+  await setupAdminAccount({ token, password });
+
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Account setup successful! You can now log in.",
   });
 });

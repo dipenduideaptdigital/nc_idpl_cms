@@ -13,7 +13,6 @@ const BlogSection = ({ data: externalData }) => {
   useEffect(() => {
     let isMounted = true;
 
-    // 1. Fetch CMS Headings (Badge & Title)
     const fetchCmsData = async () => {
       if (externalData) {
         if (isMounted) setContent(externalData);
@@ -27,7 +26,6 @@ const BlogSection = ({ data: externalData }) => {
       }
     };
 
-    // 2. Fetch the 3 Latest Dynamic Blogs
     const fetchLatestBlogs = async () => {
       try {
         const res = await blogsApi.getPublicBlogs({ limit: 3 });
@@ -50,7 +48,8 @@ const BlogSection = ({ data: externalData }) => {
   }, [externalData]);
 
   const badgeText = content?.badgeText || "STRAIGHT FROM THE NEWSROOM";
-  const title = content?.title || "Take A Look At [Our Latest \\n Blog] & Articles.";
+  
+  const title = content?.title || "Take A Look At [Our Latest] \\n [Blog] & Articles.";
 
   const renderTitle = (titleText) => {
     if (!titleText) return null;
@@ -81,35 +80,32 @@ const BlogSection = ({ data: externalData }) => {
     <section className="py-20 bg-white overflow-hidden">
       <div className="container mx-auto px-8 max-w-7xl">
         
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 mb-20">
-          <div className="max-w-2xl fadeInLeft">
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300 mb-8">
+        <div className="relative mb-20 w-full flex flex-col md:flex-row md:justify-center items-start pt-6 md:pt-0">
+          
+          <div className="md:absolute left-0 top-0 mb-8 md:mb-0">
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
                 {badgeText}
               </span>
             </div>
-            
-            <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-zinc-900 leading-[1.1]">
-              {renderTitle(title)}
-            </h2>
           </div>
           
-          <div className="fadeInRight pb-4">
-            <Link to="/blog" className="text-sm font-bold text-zinc-900 border-b-2 border-zinc-900 pb-1 hover:text-[#3B82F6] hover:border-[#3B82F6] transition-colors uppercase tracking-wider">
-              View All Articles
-            </Link>
+          <div className="w-full flex justify-start md:justify-center">
+            <div className="text-left fadeInLeft">
+              <h2 className="text-5xl md:text-[56px] font-bold tracking-tight text-zinc-900 leading-[1.15]">
+                {renderTitle(title)}
+              </h2>
+            </div>
           </div>
+          
         </div>
 
-        {/* Dynamic Blog Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {loadingPosts ? (
-            // Loading Skeletons
             [...Array(3)].map((_, i) => (
               <div key={i} className="animate-pulse flex flex-col">
-                <div className="w-full h-64 md:h-80 bg-zinc-200 rounded-[2rem] mb-6"></div>
+                <div className="w-full h-64 md:h-[350px] bg-zinc-200 rounded-[2.5rem] mb-6"></div>
                 <div className="h-4 bg-zinc-200 rounded w-1/3 mb-3"></div>
                 <div className="h-6 bg-zinc-200 rounded w-3/4 mb-3"></div>
                 <div className="h-4 bg-zinc-200 rounded w-full"></div>
@@ -118,7 +114,7 @@ const BlogSection = ({ data: externalData }) => {
           ) : dynamicPosts.length > 0 ? (
             dynamicPosts.map((post) => (
               <Link to={`/blog/${post.slug}`} key={post.id} className="group cursor-pointer flex flex-col opal-move-up">
-                <div className="w-full h-64 md:h-80 rounded-[2rem] overflow-hidden mb-6 shadow-md bg-zinc-100">
+                <div className="w-full h-64 md:h-[350px] rounded-[2.5rem] overflow-hidden mb-6 shadow-sm bg-zinc-100">
                   <img 
                     src={resolveAssetUrl(post.featuredImage?.url, defaultThumbnail)} 
                     alt={post.title} 

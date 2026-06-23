@@ -3,7 +3,6 @@ import { prisma } from "../../config/db.js";
 import { env } from "../../config/env.js";
 import { logger } from "../../config/logger.js";
 import { AppError } from "../../shared/errors/AppError.js";
-
 import {
   findUserByEmail,
   findUserById,
@@ -14,34 +13,46 @@ import {
   findValidPasswordResetToken,
   findRecentPasswordResetToken,
 } from "./auth.repository.js";
-
 import { hashPassword, comparePassword } from "../../shared/utils/password.js";
-
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from "../../shared/utils/jwt.js";
-
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../shared/utils/jwt.js";
 import { hashToken } from "../../shared/utils/tokenHash.js";
 import { generateSecureToken, hashSecureToken } from "../../shared/utils/secureToken.js";
 import { sanitizeUser } from "../../shared/utils/sanitizeUser.js";
 import { normalizeEmail } from "../../shared/utils/normalizeEmail.js";
 import { sendEmail } from "../../shared/services/email.service.js";
 import { passwordResetTemplate } from "../../shared/templates/passwordReset.template.js";
-import {AUTH_BASIC_USER_INCLUDE} from "./auth.constants.js";
+import { AUTH_BASIC_USER_INCLUDE } from "./auth.constants.js";
 
 const REFRESH_TOKEN_EXPIRES_IN_MS = 7 * 24 * 60 * 60 * 1000;
+
+const getUserPermissions = async (userId) => {
+  const userRoles = await prisma.userFunctionalRole.findMany({
+    where: { userId },
+    include: {
+      functionalRole: {
+        include: {
+          permissions: {
+            include: { permission: true }
+          }
+        }
+      }
+    }
+  });
+
+  // Flatten and remove duplicates using Set
+  return Array.from(new Set(
+    userRoles.flatMap(ufr => 
+      ufr.functionalRole.permissions.map(p => p.permission.slug)
+    )
+  ));
+};
 
 const login = async ({ email, password, allowedRoles = [] }) => {
   // Normalize email
   const normalizedEmail = normalizeEmail(email);
 
   // Find user
-  const user = await findUserByEmail(
-    normalizedEmail,
-    AUTH_BASIC_USER_INCLUDE
-  );
+  const user = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
 
   // Invalid user
   if (!user) {
@@ -49,21 +60,12 @@ const login = async ({ email, password, allowedRoles = [] }) => {
   }
 
   // Account status checks
-  if (user.status === "PENDING") {
-    throw new AppError("Account activation pending", StatusCodes.FORBIDDEN);
-  }
-
-  if (user.status === "SUSPENDED") {
-    throw new AppError("Account suspended", StatusCodes.FORBIDDEN);
-  }
-
-  if (user.status === "INACTIVE") {
-    throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
-  }
+  if (user.status === "PENDING") throw new AppError("Account activation pending", StatusCodes.FORBIDDEN);
+  if (user.status === "SUSPENDED") throw new AppError("Account suspended", StatusCodes.FORBIDDEN);
+  if (user.status === "INACTIVE") throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
 
   // Password validation
   const isPasswordMatched = await comparePassword(password, user.password);
-
   if (!isPasswordMatched) {
     throw new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED);
   }
@@ -76,18 +78,15 @@ const login = async ({ email, password, allowedRoles = [] }) => {
     throw new AppError("Access denied. Invalid role for this portal.", StatusCodes.FORBIDDEN);
   }
 
-  // Access token
-  const accessToken = generateAccessToken({
-    userId: user.id,
+  const userPermissionsArray = await getUserPermissions(user.id);
+
+  const accessToken = generateAccessToken({ 
+    userId: user.id, 
     systemRole: user.systemRole.slug,
+    permissions: userPermissionsArray 
   });
-
-  // Refresh token
-  const refreshToken = generateRefreshToken({
-    userId: user.id,
-  });
-
-  // Hash refresh token
+  
+  const refreshToken = generateRefreshToken({ userId: user.id });
   const refreshTokenHash = hashToken(refreshToken);
 
   // Transactional session write
@@ -99,24 +98,16 @@ const login = async ({ email, password, allowedRoles = [] }) => {
         expiresAt: new Date(Date.now() + REFRESH_TOKEN_EXPIRES_IN_MS),
       },
     }),
-
     prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        lastLoginAt: new Date(),
-      },
+      where: { id: user.id },
+      data: { lastLoginAt: new Date() },
     }),
   ]);
-
-  // Sanitize user
-  const safeUser = sanitizeUser(user);
 
   return {
     accessToken,
     refreshToken,
-    user: safeUser,
+    user: sanitizeUser(user),
   };
 };
 
@@ -125,22 +116,13 @@ export const registerUser = async (payload) => {
   const normalizedEmail = normalizeEmail(payload.email);
 
   // Check existing user
-  const existingUser = await findUserByEmail(
-    normalizedEmail,
-    AUTH_BASIC_USER_INCLUDE
-  );
-
+  const existingUser = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
   if (existingUser) {
     throw new AppError("Email already exists", StatusCodes.BAD_REQUEST);
   }
 
   // Find default user role
-  const userSystemRole = await prisma.systemRole.findUnique({
-    where: {
-      slug: "USER",
-    },
-  });
-
+  const userSystemRole = await prisma.systemRole.findUnique({ where: { slug: "USER" } });
   if (!userSystemRole) {
     throw new AppError("Default user role not configured", StatusCodes.INTERNAL_SERVER_ERROR);
   }
@@ -159,9 +141,7 @@ export const registerUser = async (payload) => {
         status: "ACTIVE",
         isEmailVerified: false,
       },
-      include: {
-        systemRole: true,
-      },
+      include: { systemRole: true },
     });
 
     return sanitizeUser(user);
@@ -175,20 +155,12 @@ export const registerUser = async (payload) => {
 
 // User login
 export const loginUser = async (payload) => {
-  return login({
-    email: payload.email,
-    password: payload.password,
-    allowedRoles: ["USER"], 
-  });
+  return login({ email: payload.email, password: payload.password, allowedRoles: ["USER"] });
 };
 
 // Admin login
 export const adminLogin = async (payload) => {
-  return login({
-    email: payload.email,
-    password: payload.password,
-    allowedRoles: ["SUPER_ADMIN", "ADMIN"],
-  });
+  return login({ email: payload.email, password: payload.password, allowedRoles: ["SUPER_ADMIN", "ADMIN"] });
 };
 
 // Refresh access token
@@ -198,7 +170,6 @@ export const refreshAccessToken = async (refreshToken) => {
   }
 
   let decoded;
-
   try {
     decoded = verifyRefreshToken(refreshToken);
   } catch {
@@ -217,31 +188,24 @@ export const refreshAccessToken = async (refreshToken) => {
   const user = storedToken.user;
 
   // User validation
-  if (!user) {
-    throw new AppError("User not found", StatusCodes.UNAUTHORIZED);
-  }
+  if (!user) throw new AppError("User not found", StatusCodes.UNAUTHORIZED);
+  if (user.status !== "ACTIVE") throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
 
-  if (user.status !== "ACTIVE") {
-    throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
-  }
+  const userPermissionsArray = await getUserPermissions(user.id);
 
   // Generate new access token
-  const accessToken = generateAccessToken({
-    userId: user.id,
+  const accessToken = generateAccessToken({ 
+    userId: user.id, 
     systemRole: user.systemRole.slug,
+    permissions: userPermissionsArray 
   });
 
-  return {
-    accessToken,
-  };
+  return { accessToken };
 };
 
 // Logout current device
 export const logoutUser = async (refreshToken) => {
-  if (!refreshToken) {
-    return;
-  }
-
+  if (!refreshToken) return;
   const tokenHash = hashToken(refreshToken);
   await revokeRefreshToken(tokenHash);
 };
@@ -253,76 +217,37 @@ export const logoutAllDevices = async (userId) => {
 
 // Forgot password
 export const forgotPassword = async (email) => {
-  // Normalize email
   const normalizedEmail = normalizeEmail(email);
-
-  // Find user
-  const user = await findUserByEmail(
-    normalizedEmail,
-    AUTH_BASIC_USER_INCLUDE
-  );
+  const user = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
 
   // Silent success to prevent email enumeration
-  if (!user) {
-    return;
-  }
+  if (!user) return;
 
   // Email-based cooldown to prevent reset flooding
   const recentResetRequest = await findRecentPasswordResetToken(user.id);
+  if (recentResetRequest) return;
 
-  if (recentResetRequest) {
-    return;
-  }
-
-  // Generate raw token
+  // Generate tokens
   const rawToken = generateSecureToken();
-
-  // Hash token
   const tokenHash = hashSecureToken(rawToken);
-
-  // Expiration
-  const expiresAt = new Date(
-    Date.now() + Number(env.PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES) * 60 * 1000
-  );
+  const expiresAt = new Date(Date.now() + Number(env.PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES) * 60 * 1000);
 
   // Invalidate old tokens but keep history
   await prisma.passwordResetToken.updateMany({
-    where: {
-      userId: user.id,
-      usedAt: null,
-    },
-    data: {
-      usedAt: new Date(),
-    },
+    where: { userId: user.id, usedAt: null },
+    data: { usedAt: new Date() },
   });
 
   // Store reset token
-  await createPasswordResetToken({
-    tokenHash,
-    userId: user.id,
-    expiresAt,
-  });
+  await createPasswordResetToken({ tokenHash, userId: user.id, expiresAt });
 
   // Reset URL
   const resetUrl = `${env.CLIENT_URL}/reset-password?token=${rawToken}`;
-
-  // Template
-  const html = passwordResetTemplate({
-    resetUrl,
-    expiresInMinutes: env.PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES,
-  });
+  const html = passwordResetTemplate({ resetUrl, expiresInMinutes: env.PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES });
 
   // Send email (non-blocking)
-  void sendEmail({
-    to: user.email,
-    subject: "Password Reset Request",
-    html,
-  }).catch((error) => {
-    logger.error({
-      message: "Password reset email failed",
-      email: user.email,
-      error: error.message,
-    });
+  void sendEmail({ to: user.email, subject: "Password Reset Request", html }).catch((error) => {
+    logger.error({ message: "Password reset email failed", email: user.email, error: error.message });
   });
 };
 
@@ -331,120 +256,102 @@ export const resetPassword = async ({ token, password }) => {
   const tokenHash = hashSecureToken(token);
   const storedToken = await findValidPasswordResetToken(tokenHash);
 
-  if (!storedToken) {
-    throw new AppError("Invalid or expired reset token", StatusCodes.BAD_REQUEST);
-  }
+  if (!storedToken) throw new AppError("Invalid or expired reset token", StatusCodes.BAD_REQUEST);
 
   const user = storedToken.user;
-
-  if (!user) {
-    throw new AppError("User not found", StatusCodes.NOT_FOUND);
-  }
-
-  if (user.status !== "ACTIVE") {
-    throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
-  }
+  if (!user) throw new AppError("User not found", StatusCodes.NOT_FOUND);
+  if (user.status !== "ACTIVE") throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
 
   const isSamePassword = await comparePassword(password, user.password);
-
-  if (isSamePassword) { 
-    throw new AppError(
-      "New password must be different from current password",
-      StatusCodes.BAD_REQUEST
-    );
+  if (isSamePassword) {
+    throw new AppError("New password must be different from current password", StatusCodes.BAD_REQUEST);
   }
 
   const hashedPassword = await hashPassword(password);
-
   const now = new Date();
 
   // Transactional reset flow
   await prisma.$transaction([
-    // Update password
     prisma.user.update({
       where: { id: storedToken.userId },
       data: { password: hashedPassword },
     }),
-
-    // Invalidate all active reset tokens
     prisma.passwordResetToken.updateMany({
-      where: {
-        userId: storedToken.userId,
-        usedAt: null,
-      },
+      where: { userId: storedToken.userId, usedAt: null },
       data: { usedAt: now },
     }),
-
-    // Revoke all active sessions
     prisma.refreshToken.updateMany({
-      where: {
-        userId: storedToken.userId,
-        revokedAt: null,
-      },
+      where: { userId: storedToken.userId, revokedAt: null },
       data: { revokedAt: now },
     }),
   ]);
 };
 
+// Change password
 export const changePassword = async ({ userId, currentPassword, newPassword }) => {
-  // Find user
   const user = await findUserById(userId, AUTH_BASIC_USER_INCLUDE);
 
-  if (!user) {
-    throw new AppError("User not found", StatusCodes.NOT_FOUND);
-  }
+  if (!user) throw new AppError("User not found", StatusCodes.NOT_FOUND);
+  if (user.status !== "ACTIVE") throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
 
-  // Account status validation
-  if (user.status !== "ACTIVE") {
-    throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
-  }
-
-  // Verify current password
   const isCurrentPasswordValid = await comparePassword(currentPassword, user.password);
+  if (!isCurrentPasswordValid) throw new AppError("Current password is incorrect", StatusCodes.BAD_REQUEST);
 
-  if (!isCurrentPasswordValid) {
-    throw new AppError("Current password is incorrect", StatusCodes.BAD_REQUEST);
-  }
-
-  // Prevent password reuse
   const isSamePassword = await comparePassword(newPassword, user.password);
-
   if (isSamePassword) {
-    throw new AppError(
-      "New password must be different from current password",
-      StatusCodes.BAD_REQUEST
-    );
+    throw new AppError("New password must be different from current password", StatusCodes.BAD_REQUEST);
   }
 
-  // Hash new password
   const hashedPassword = await hashPassword(newPassword);
-
   const now = new Date();
 
-  // Transactional security update
   await prisma.$transaction([
-    // Update password
     prisma.user.update({
       where: { id: user.id },
       data: { password: hashedPassword },
     }),
-
-    // Revoke all active sessions
     prisma.refreshToken.updateMany({
-      where: {
-        userId: user.id,
-        revokedAt: null,
-      },
+      where: { userId: user.id, revokedAt: null },
       data: { revokedAt: now },
     }),
-
-    // Invalidate active password reset tokens
     prisma.passwordResetToken.updateMany({
-      where: {
-        userId: user.id,
-        usedAt: null,
-      },
+      where: { userId: user.id, usedAt: null },
       data: { usedAt: now },
+    }),
+  ]);
+
+  return true;
+};
+
+
+export const setupAdminAccount = async ({ token, password }) => {
+  const tokenHash = hashSecureToken(token);
+
+  const invitation = await prisma.adminInvitation.findUnique({
+    where: { tokenHash },
+  });
+
+  if (!invitation) {
+    throw new AppError("Invalid or corrupted invitation link.", StatusCodes.BAD_REQUEST);
+  }
+
+  if (new Date() > invitation.expiresAt) {
+    throw new AppError("This invitation link has expired. Please ask the admin to resend it.", StatusCodes.GONE);
+  }
+
+  const hashedPassword = await hashPassword(password);
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { email: invitation.email },
+      data: {
+        password: hashedPassword,
+        status: "ACTIVE",      
+        isEmailVerified: true,   
+      },
+    }),
+    prisma.adminInvitation.delete({
+      where: { id: invitation.id },
     }),
   ]);
 
