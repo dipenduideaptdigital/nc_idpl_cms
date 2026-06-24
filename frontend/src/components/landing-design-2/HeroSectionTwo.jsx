@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowDown } from 'lucide-react';
 import defaultBg from '../../assets/homepage/landing_page.png';
+import { renderTitle } from '../../utils/titleRenderer';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
@@ -35,8 +36,7 @@ const HeroSectionTwo = ({ data, onScrollDown }) => {
 
           {/* Heading */}
           <h1 className="text-5xl md:text-7xl lg:text-[80px] font-bold text-white tracking-tight leading-[1.08] mb-6 font-helvetica">
-            Find Your <span className="text-[#3b82f6] transition-colors duration-300 hover:text-blue-400">Inspired</span><br />
-            <span className="text-[#3b82f6] transition-colors duration-300 hover:text-blue-400">Interior</span> Design
+            {renderTitle(data?.title || 'Find Your [Inspired]\n[Interior] Design')}
           </h1>
 
           {/* Subtitle */}

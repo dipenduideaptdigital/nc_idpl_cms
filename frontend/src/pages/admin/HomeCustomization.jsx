@@ -197,7 +197,7 @@ const HomeCustomization = () => {
 
   // 10. Video Banner State
   const [videoBannerData, setVideoBannerData] = useState({
-    videoId: 'ScMzIvxBSi4',
+    videoId: 'https://youtu.be/62bIsvRcPv0?si=Rw_dW3mB-EGrxooz',
     image: '',
     title: 'UNLOCK YOUR DREAM \\n HOME TODAY!',
     description: 'We encourage clients to actively participate in discussions, share their ideas, preferences, and feedback.'

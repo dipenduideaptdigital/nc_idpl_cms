@@ -3,6 +3,31 @@ import { Play, X } from 'lucide-react';
 import defaultPlay from '../../assets/homepage/play.jpg';
 import apiClient from '../../api/client';
 
+const getEmbedUrl = (url) => {
+  if (!url) return '';
+  if (url.includes('youtube.com/embed/')) {
+    return url.includes('?') ? `${url}&autoplay=1` : `${url}?autoplay=1`;
+  }
+  
+  let videoId = '';
+  try {
+    if (url.includes('youtu.be/')) {
+      const parts = url.split('youtu.be/');
+      if (parts[1]) {
+        videoId = parts[1].split('?')[0].split('&')[0];
+      }
+    } else if (url.includes('youtube.com/watch')) {
+      const urlParams = new URLSearchParams(url.split('?')[1]);
+      videoId = urlParams.get('v');
+    } else {
+      videoId = url;
+    }
+  } catch (e) {
+    console.error('Error parsing YouTube URL:', e);
+  }
+  return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : url;
+};
+
 const VideoBanner = ({ data: externalData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [content, setContent] = useState(externalData || null);
@@ -50,7 +75,7 @@ const VideoBanner = ({ data: externalData }) => {
     };
   }, [externalData]);
 
-  const videoId = content?.videoId || "ScMzIvxBSi4";
+  const videoId = content?.videoId || "https://youtu.be/62bIsvRcPv0?si=Rw_dW3mB-EGrxooz";
   const title = content?.title || "UNLOCK YOUR DREAM \n HOME TODAY!";
   const description = content?.description || "We encourage clients to actively participate in discussions, share their ideas, preferences, and feedback.";
 
@@ -66,83 +91,81 @@ const VideoBanner = ({ data: externalData }) => {
 
   return (
     <>
-      <section className="py-12 bg-white overflow-hidden">
-        <div className="container mx-auto px-2 sm:px-8 max-w-[1400px]">
+      <section className="relative w-full h-[320px] sm:h-[450px] md:h-[600px] lg:h-[720px] overflow-hidden group opal-move-up">
+        
+        {/* Background Image */}
+        <img 
+          src={coverImg}
+          alt="Office Interior Video Thumbnail" 
+          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          onError={(e) => {
+            if (e.currentTarget.src !== defaultPlay) {
+              e.currentTarget.src = defaultPlay;
+            }
+          }}
+        />
+        
+        {/* Dark Overlays (Soft gradient from bottom for readability) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent transition-opacity duration-500 group-hover:from-black/90"></div>
+
+        {/* Play Button (Centered, translucent white circle with solid play icon) */}
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="w-20 mb-30 h-20 sm:w-32 sm:h-32 lg:w-[130px] lg:h-[130px] rounded-full bg-white/30  flex items-center justify-center transition-transform hover:scale-105 hover:bg-white/40 cursor-pointer"
+          >
+            <Play className="w-8 h-8 sm:w-12 sm:h-12 lg:w-14 lg:h-14 text-white ml-2 lg:ml-3" fill="currentColor" />
+          </button>
+        </div>
+
+        {/* Bottom Content Area */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-12 md:p-16 lg:pb-[70px] lg:pt-0 lg:px-[120px] z-20">
           
-          {/* Video Banner Container */}
-          <div className="relative w-full h-[400px] md:h-[600px] rounded-none sm:rounded-[2rem] overflow-hidden shadow-2xl group opal-move-up">
-            
-            {/* Background Image */}
-            <img 
-              src={coverImg}
-              alt="Office Interior Video Thumbnail" 
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              onError={(e) => {
-                if (e.currentTarget.src !== defaultPlay) {
-                  e.currentTarget.src = defaultPlay;
-                }
-              }}
-            />
-            
-            {/* Dark Overlays */}
-            <div className="absolute inset-0 bg-black/30 transition-opacity duration-500 group-hover:bg-black/40"></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-
-            {/* Play Button (Centered) */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button 
-                onClick={() => setIsModalOpen(true)}
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center transition-transform hover:scale-110 hover:bg-white/40 cursor-pointer"
-              >
-                <Play className="w-10 h-10 md:w-12 md:h-12 text-white ml-2" fill="currentColor" />
-              </button>
-            </div>
-
-            {/* Bottom Content Area */}
-            <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
-              
-              {/* Headlines */}
-              <div className="flex-1">
-                <h2 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold text-white leading-[1.1] tracking-tight">
-                  {renderTitle(title)}
-                </h2>
-              </div>
-              
-              {/* Description Paragraph */}
-              <div className="md:w-1/3 md:mb-4">
-                <p className="text-gray-200 text-sm md:text-base font-light leading-relaxed max-w-sm">
-                  {description}
-                </p>
-              </div>
-              
-            </div>
-            
+          {/* Headlines */}
+          <div className="w-full lg:max-w-[1153px]">
+            <h2 className="text-[32px] sm:text-[60px] md:text-[70px] lg:text-[80px] font-bold text-white leading-[44px] sm:leading-[76px] md:leading-[95px] lg:leading-[120px] ml-5 font-helvetica uppercase tracking-normal">
+              {renderTitle(title)}
+            </h2>
+          </div>
+          
+          {/* Description Paragraph */}
+          <div className="mt-6 lg:mt-0  mb-3 mr-5 lg:absolute lg:bottom-[70px] lg:right-[120px] lg:w-[510px] shrink-0">
+            <p className="text-white text-[30px] md:text-[20px] leading-[30px] font-normal font-helvetica">
+              {description}
+            </p>
           </div>
         </div>
       </section>
 
       {/* Video Modal Overlay */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-12">
-          
-          <button 
-            onClick={() => setIsModalOpen(false)}
-            className="absolute top-6 right-6 md:top-10 md:right-10 text-white/70 hover:text-white transition-colors cursor-pointer"
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 md:p-12 animate-fade-in"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div 
+            className="relative w-full max-w-5xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10"
+            onClick={(e) => e.stopPropagation()}
           >
-            <X className="w-10 h-10" />
-          </button>
-          
-          <div className="w-full max-w-6xl aspect-video rounded-2xl overflow-hidden shadow-2xl bg-black relative">
+            {/* Close Button */}
+            <button 
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white/70 hover:text-white flex items-center justify-center hover:bg-black/80 transition-colors border border-white/10 cursor-pointer"
+              aria-label="Close video"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            {/* Video IFrame */}
             <iframe 
-              className="absolute inset-0 w-full h-full"
-              src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+              className="w-full h-full"
+              src={getEmbedUrl(videoId)}
               title="YouTube video player" 
               frameBorder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
               allowFullScreen
             ></iframe>
           </div>
-          
         </div>
       )}
     </>

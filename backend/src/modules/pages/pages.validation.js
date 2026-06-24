@@ -30,16 +30,17 @@ const blogSectionBlockSchema = z.object({ type: z.literal("blog_section"), data:
 const galleryBlockSchema = z.object({ type: z.literal("gallery"), data: z.record(z.any()).default({}) });
 const ctaBlockSchema = z.object({ type: z.literal("cta"), data: z.record(z.any()).default({}) });
 const richTextBlockSchema = z.object({ type: z.literal("richText"), data: z.record(z.any()).default({}) });
-const heroSectionBlockSchema = z.object({ type: z.literal("heroSection"), data: z.record(z.any()).default({}) });
-const whySubhaakriteeBlockSchema = z.object({ type: z.literal("whySubhaakritee"), data: z.record(z.any()).default({}) });
-const metricsBarOneBlockSchema = z.object({ type: z.literal("metricsBarOne"), data: z.record(z.any()).default({}) });
-const modernWorkspaceBlockSchema = z.object({ type: z.literal("modernWorkspace"), data: z.record(z.any()).default({}) });
-const metricsBarTwoBlockSchema = z.object({ type: z.literal("metricsBarTwo"), data: z.record(z.any()).default({}) });
-const spacesStoriesBlockSchema = z.object({ type: z.literal("spacesStories"), data: z.record(z.any()).default({}) });
-const wayWeCreateBlockSchema = z.object({ type: z.literal("wayWeCreate"), data: z.record(z.any()).default({}) });
-const gallerySectionBlockSchema = z.object({ type: z.literal("gallerySection"), data: z.record(z.any()).default({}) });
-const trustedClientsBlockSchema = z.object({ type: z.literal("trustedClients"), data: z.record(z.any()).default({}) });
-const getInTouchBlockSchema = z.object({ type: z.literal("getInTouch"), data: z.record(z.any()).default({}) });
+const heroSectionTwoBlockSchema = z.object({ type: z.literal("heroSectionTwo"), data: z.record(z.any()).default({}) });
+const aboutSectionTwoBlockSchema = z.object({ type: z.literal("aboutSectionTwo"), data: z.record(z.any()).default({}) });
+const servicesSectionTwoBlockSchema = z.object({ type: z.literal("servicesSectionTwo"), data: z.record(z.any()).default({}) });
+const processSectionTwoBlockSchema = z.object({ type: z.literal("processSectionTwo"), data: z.record(z.any()).default({}) });
+const projectSliderTwoBlockSchema = z.object({ type: z.literal("projectSliderTwo"), data: z.record(z.any()).default({}) });
+const trustedPartnersBlockSchema = z.object({ type: z.literal("trustedPartners"), data: z.record(z.any()).default({}) });
+const statsSectionTwoBlockSchema = z.object({ type: z.literal("statsSectionTwo"), data: z.record(z.any()).default({}) });
+const happySpacesBlockSchema = z.object({ type: z.literal("happySpaces"), data: z.record(z.any()).default({}) });
+const happyCustomersBlockSchema = z.object({ type: z.literal("happyCustomers"), data: z.record(z.any()).default({}) });
+const testimonialsTwoBlockSchema = z.object({ type: z.literal("testimonialsTwo"), data: z.record(z.any()).default({}) });
+const ctaSectionTwoBlockSchema = z.object({ type: z.literal("ctaSectionTwo"), data: z.record(z.any()).default({}) });
 
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
@@ -69,16 +70,17 @@ const blockSchema = z.discriminatedUnion("type", [
   ctaBlockSchema,
   richTextBlockSchema,
   contactFormBlockSchema,
-  heroSectionBlockSchema,
-  whySubhaakriteeBlockSchema,
-  metricsBarOneBlockSchema,
-  modernWorkspaceBlockSchema,
-  metricsBarTwoBlockSchema,
-  spacesStoriesBlockSchema,
-  wayWeCreateBlockSchema,
-  gallerySectionBlockSchema,
-  trustedClientsBlockSchema,
-  getInTouchBlockSchema,
+  heroSectionTwoBlockSchema,
+  aboutSectionTwoBlockSchema,
+  servicesSectionTwoBlockSchema,
+  processSectionTwoBlockSchema,
+  projectSliderTwoBlockSchema,
+  trustedPartnersBlockSchema,
+  statsSectionTwoBlockSchema,
+  happySpacesBlockSchema,
+  happyCustomersBlockSchema,
+  testimonialsTwoBlockSchema,
+  ctaSectionTwoBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { pagesApi } from '../../../api/pages';
-import { 
-  Save, 
-  ArrowLeft, 
+import {
+  Save,
+  ArrowLeft,
   AlertCircle,
   Layout,
   Type,
@@ -41,18 +41,19 @@ const PageEditor = () => {
   }, [isPuckMode]);
 
   const AVAILABLE_BLOCKS = [
-    { type: 'heroSection', label: 'Hero Section' },
-    { type: 'whySubhaakritee', label: 'Why SubhAAkritee?' },
-    { type: 'metricsBarOne', label: 'Metrics Bar 1' },
-    { type: 'modernWorkspace', label: 'Modern Workspace Solutions' },
-    { type: 'metricsBarTwo', label: 'Metrics Bar 2' },
-    { type: 'spacesStories', label: 'Spaces. Stories. Experiences.' },
-    { type: 'wayWeCreate', label: 'The Way We Create' },
-    { type: 'gallerySection', label: 'Gallery Section' },
-    { type: 'trustedClients', label: 'Trusted Clients' },
-    { type: 'getInTouch', label: 'Get In Touch' },
+    { type: 'heroSectionTwo', label: 'Hero Section Two' },
+    { type: 'aboutSectionTwo', label: 'About Section Two' },
+    { type: 'servicesSectionTwo', label: 'Services Section Two' },
+    { type: 'processSectionTwo', label: 'Process Section Two' },
+    { type: 'projectSliderTwo', label: 'Project Slider Two' },
+    { type: 'trustedPartners', label: 'Trusted Partners' },
+    { type: 'statsSectionTwo', label: 'Stats Section Two' },
+    { type: 'happySpaces', label: 'Happy Spaces' },
+    { type: 'happyCustomers', label: 'Happy Customers' },
+    { type: 'testimonialsTwo', label: 'Testimonials Two' },
+    { type: 'ctaSectionTwo', label: 'CTA Section Two' },
     { type: 'richText', label: 'Rich Text Box' },
-    { type: 'contactForm', label: 'Contact Form (Dynamic Engine)' } 
+    { type: 'contactForm', label: 'Contact Form (Dynamic Engine)' }
   ];
 
   const [formData, setFormData] = useState({
@@ -62,7 +63,7 @@ const PageEditor = () => {
     status: 'DRAFT',
     content: { blocks: [] },
     metaTitle: '', metaDescription: '', metaKeywords: '',
-    includeInSitemap: true, noIndex: false, noFollow: false, 
+    includeInSitemap: true, noIndex: false, noFollow: false,
     canonicalUrl: '', ogTitle: '', ogDescription: '', ogImageId: null
   });
 
@@ -82,7 +83,7 @@ const PageEditor = () => {
     try {
       setLoading(true);
       const data = await pagesApi.getPageById(id);
-      
+
       // Merge with default form data to ensure all fields exist
       setFormData({
         title: data.data.title || '',
@@ -117,123 +118,125 @@ const PageEditor = () => {
   // Block Management
   const addBlock = (type) => {
     let defaultData = {};
-    
-    switch(type) {
-      case 'heroSection':
-        defaultData = { titleLine1: 'End-To-End', titleLine2: 'Office Interiors', subtitle: 'For Every Test & Budget', description: "Simply dummy text of the printing and typesetting. Lorem Ipsum has been the industry's standard,", buttonText: 'Book A Free Consultation', backgroundImage: '' }; break;
-      case 'whySubhaakritee':
-        defaultData = { 
-          title: 'WHY subhAAkritee?', 
-          description: 'For Over 26 Years, SubhAAkritee - The Design People Has Delivered Innovative, High-Quality Interior And Architectural Solutions Across Residential And Commercial Spaces. With A Strong Presence In Kolkata, Delhi, Siliguri, And Bhubaneswar, We Transform Spaces Into Functional Works Of Art', 
-          buttonText: 'Get Free Estimated',
-          features: [
-            { icon: 'Award', textLine1: '1,400+ design', textLine2: 'experts' },
-            { icon: 'Home', textLine1: '20,000+ happy', textLine2: 'customers' },
-            { icon: 'ShieldCheck', textLine1: 'Up to 10-years', textLine2: 'material warranty' },
-            { icon: 'CalendarDays', textLine1: '45 days or we', textLine2: 'pay you rent', extraBadge: '45' }
-          ]
+
+    switch (type) {
+      case 'heroSectionTwo':
+        defaultData = { title: 'Find Your [Inspired]\n[Interior] Design', badgeText: 'FAST AND RELIABLE', description: 'Transform your vision into reality with our innovative designs, creating modern spaces that blend functionality, aesthetics, and sustainability.', watermarkText: 'Interior', backgroundImage: '' }; break;
+      case 'aboutSectionTwo':
+        defaultData = {
+          title: 'Architecture\n[And Interiors, Our Dual]\nExpertise',
+          badgeText: 'STARTED IN 1989',
+          paragraph1: 'We believe that every space has the power to inspire, and that great design brings that inspiration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.',
+          paragraph2: 'With a strong presence in Kolkata, Bhubaneswar, and Ranchi, our turnkey office interiors are thoughtfully crafted to enhance productivity, reflect your brand identity, and support the way your team works every day.',
+          buttonText: "Let's Get Started",
+          image1: '', image2: '', image3: ''
         }; break;
-      case 'modernWorkspace':
-        defaultData = { 
-          title: 'Modern Workspace Solutions', 
-          subtitle: 'SubhAAkritee',
+      case 'servicesSectionTwo':
+        defaultData = {
+          title: 'Explore Our [Comprehensive]\n[Interior Design] Services',
+          badgeText: 'OUR SERVICES',
           services: [
-            { icon: 'Hammer', title: 'Modular Kitchen' },
-            { icon: 'Lightbulb', title: 'Lighting / Ceilings' },
-            { icon: 'Archive', title: 'Wardrobes' },
-            { icon: 'Settings', title: 'Smart Homes' },
-            { icon: 'Monitor', title: 'Furniture / Wood Work' },
-            { icon: 'Layout', title: 'Space Saving Furniture' }
+            { title: 'Initial Consultation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' },
+            { title: 'Design & Planning', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' },
+            { title: 'Implementation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' }
           ]
         }; break;
-      case 'spacesStories':
-        defaultData = { 
-          badgeText: 'ARCHITECTURE AND INTERIOR DESIGN', 
-          titleLine1: 'Spaces. Stories.', 
-          titleLine2: 'Experiences.', 
-          description: '26 Years Of Crafting Environments Defined By Excellence.', 
-          buttonText: 'Discover More',
-          images: [
-            '/assets/homepage/gallery1.png', 
-            '/assets/homepage/gallery2.png', 
-            '/assets/homepage/gallery3.png'
-          ]
-        }; break;
-      case 'wayWeCreate':
-        defaultData = { 
-          title: 'The Way We Create', 
-          subtitle: 'Bringing your vision to life in three simple steps.',
+      case 'processSectionTwo':
+        defaultData = {
+          title: 'Description [Architecture]\n[Process] For Exceptional Results.',
+          badgeText: 'GET IN TOUCH',
+          description: 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.',
+          image: '',
           steps: [
-            { icon: 'PenTool', title: 'Consult', desc: "We'll explore ideas and options together." },
-            { icon: 'ClipboardList', title: 'Plan', desc: "We'll build a detailed design plan." },
-            { icon: 'UserCheck', title: 'Execute', desc: "We'll deliver the project flawlessly." }
+            { title: 'Initial Consultation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
+            { title: 'Design & Planning', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
+            { title: 'Implementation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
+            { title: 'Project Handover', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' }
           ]
         }; break;
-      case 'trustedClients':
-        defaultData = { 
-          title: 'Trusted By Thousands', 
-          subtitle: 'See what our clients say about us',
-          reviews: [
-            {
-              text: "SubhAAkritee transformed our office space into a vibrant, functional environment. The team's attention to detail and commitment to our vision was exceptional.",
-              author: "Rajesh Kumar",
-              role: "CEO, TechCorp",
-              rating: 5
-            },
-            {
-              text: "We wanted a modern yet cozy home, and they delivered exactly that. Their material quality and design ideas are top-notch. Highly recommended!",
-              author: "Sneha Patel",
-              role: "Homeowner",
-              rating: 5
-            },
-            {
-              text: "Professional, timely, and incredibly creative. They managed our entire restaurant renovation without a hitch. The 45-day guarantee is real!",
-              author: "Amit Singh",
-              role: "Restaurant Owner",
-              rating: 5
-            }
-          ]
-        }; break;
-      case 'getInTouch':
-        defaultData = { title: 'Get In Touch', subtitle: 'Our friendly team would love to hear from you.', buttonText: 'Send Message', image: '' }; break;
-      case 'metricsBarOne':
+      case 'projectSliderTwo':
         defaultData = {
-          metrics: [
-            { value: '26+', label: 'YEARS EXPERIENCE' },
-            { value: '100+', label: 'PROJECTS DONE' },
-            { value: '100+', label: 'SATISFIED CUSTOMER' },
-            { value: '4+', label: 'LOCATION' }
+          projects: [
+            { title: 'Industrial Elegance Condo', year: '2024', location: 'Kolkata', image: '' },
+            { title: 'Residential Interior Design', year: '2024', location: 'Bhubaneswar', image: '' },
+            { title: 'Serene Space Studio', year: '2024', location: 'Ranchi', image: '' },
+            { title: 'Art Decor Revival', year: '2024', location: 'Kolkata', image: '' },
+            { title: 'Modern Minimalist Oasis', year: '2024', location: 'Siliguri', image: '' },
+            { title: 'Corporate Executive Suite', year: '2024', location: 'Delhi', image: '' }
           ]
         }; break;
-      case 'metricsBarTwo':
+      case 'trustedPartners':
         defaultData = {
-          metrics: [
-            { value: '3,000+', label: 'INTERIOR DESIGNS' },
-            { value: '1,500+', label: 'RENOVATIONS' },
-            { value: '500+', label: 'COMMERCIAL PROJECTS' },
-            { value: '25+', label: 'AWARDS WON' }
+          title: 'OUR [TRUSTED PARTNERS]',
+          partners: [
+            { name: 'Aristo', logo: '', heightClass: 'h-11 md:h-[44px]' },
+            { name: 'Spitze', logo: '', heightClass: 'h-12 md:h-[48px]' },
+            { name: 'Faber', logo: '', heightClass: 'h-11 md:h-[44px]' },
+            { name: 'Everyday', logo: '', heightClass: 'h-12 md:h-[48px]' },
+            { name: 'Fevicol', logo: '', heightClass: 'h-[54px] md:h-[60px]' },
+            { name: 'Urban Ladder', logo: '', heightClass: 'h-11 md:h-[44px]' }
           ]
         }; break;
-      case 'gallerySection':
+      case 'statsSectionTwo':
         defaultData = {
-          images: [
-            '/assets/homepage/gallery1.png', 
-            '/assets/homepage/gallery2.png', 
-            '/assets/homepage/gallery3.png',
-            '/assets/homepage/gallery4.png'
+          title: 'Behind [Every Statistic]\n[Pulses] A Human Story',
+          badgeText: 'TRUSTED EXPERIENCE',
+          buttonText: 'BOOK A FREE CONSULTATION',
+          backgroundImage: '',
+          stats: [
+            { value: '26+', title: 'YEARS EXPERIENCE', description: 'Improving homes with expert craftsmanship for years' },
+            { value: '100', title: 'PROJECTS DONE', description: 'Over 250 successful projects delivered with quality and care' },
+            { value: '100', title: 'SATISFIED CUSTOMER', description: 'Our team of 30 experts ensures top-quality results' },
+            { value: '4+', title: 'LOCATION', description: 'All of our clients are satisfied with our work and service' }
           ]
         }; break;
+      case 'happySpaces':
+        defaultData = {
+          badgeText: 'STRAIGHT FROM THE NEWSROOM',
+          titleLine1: 'Happy Spaces by',
+          titleLine2: 'subhAAkritee',
+          items: [
+            { title: 'Functional Design Trends That Blend Style And Comfort', description: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '', videoUrl: 'https://www.youtube.com/embed/62bIsvRcPv0' },
+            { title: 'Functional Design Trends That Blend Style And Comfort', description: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '', videoUrl: 'https://www.youtube.com/embed/62bIsvRcPv0' },
+            { title: 'Functional Design Trends That Blend Style And Comfort', description: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '', videoUrl: 'https://www.youtube.com/embed/62bIsvRcPv0' }
+          ]
+        }; break;
+      case 'happyCustomers':
+        defaultData = {
+          title: 'OUR [HAPPY CUSTOMERS]',
+          partners: [
+            { name: 'Aristo', logo: '', heightClass: 'h-11 md:h-[44px]' },
+            { name: 'Spitze', logo: '', heightClass: 'h-12 md:h-[48px]' },
+            { name: 'Faber', logo: '', heightClass: 'h-11 md:h-[44px]' },
+            { name: 'Everyday', logo: '', heightClass: 'h-12 md:h-[48px]' },
+            { name: 'Fevicol', logo: '', heightClass: 'h-[54px] md:h-[60px]' },
+            { name: 'Urban Ladder', logo: '', heightClass: 'h-11 md:h-[44px]' }
+          ]
+        }; break;
+      case 'testimonialsTwo':
+        defaultData = {
+          title: 'Here’s What [Warm Words]\n[Our Clients] Say',
+          badgeText: 'OUR CLIENTS SAY',
+          description: 'Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors',
+          mainQuote: 'I absolutely love my the new modern living room! The clean lines, a neutral tones, and minimalist interior create such a calming & stylish atmosphere. Highly recommend their modern interior design services!',
+          authorName: 'Morgan Dufresne',
+          authorRole: 'Company owner',
+          image: '',
+          authorImage: ''
+        }; break;
+      case 'ctaSectionTwo':
+        defaultData = { title: 'Have A Project In [Mind?] Let’s\n[Make] It Happen', badgeText: 'GET IN TOUCH', buttonText: 'BOOK A FREE CONSULTATION' }; break;
       case 'richText':
         defaultData = { content: '' }; break;
-      
+
       case 'contactForm':
-        defaultData = { 
-          formId: '', 
+        defaultData = {
+          formId: '',
           formTitle: 'Get in Touch',
           submitButtonText: 'Submit Inquiry',
-          redirectPath: '' 
+          redirectPath: ''
         }; break;
-        
+
       default:
         defaultData = {};
     }
@@ -243,7 +246,7 @@ const PageEditor = () => {
       type: type,
       data: defaultData
     };
-    
+
     setFormData(prev => ({
       ...prev,
       content: {
@@ -284,7 +287,7 @@ const PageEditor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const payload = { ...formData };
     if (payload.content && payload.content.blocks) {
       payload.content.blocks = payload.content.blocks.map(({ id, ...block }) => block);
@@ -296,13 +299,13 @@ const PageEditor = () => {
     try {
       setSaving(true);
       setError(null);
-      
+
       if (isEditMode) {
         await pagesApi.updatePage(id, payload);
       } else {
         await pagesApi.createPage(payload);
       }
-      
+
       navigate('/admin/pages');
     } catch (err) {
       console.error('Failed to save page:', err);
@@ -323,8 +326,8 @@ const PageEditor = () => {
 
   if (isPuckMode) {
     const puckData = {
-      content: (formData.content?.blocks || []).map(b => ({ 
-        type: b.type, 
+      content: (formData.content?.blocks || []).map(b => ({
+        type: b.type,
         props: { ...(b.data || {}), id: b.id || b.data?.id || `puck-id-${Math.random().toString(36).slice(2)}` }
       })),
       root: { props: { title: formData.title || "" } },
@@ -340,9 +343,9 @@ const PageEditor = () => {
           id: Date.now().toString() + Math.random().toString()
         };
       });
-      
+
       const updatedContent = { ...formData.content, blocks };
-      
+
       // Update local UI immediately and exit Puck mode
       setFormData(prev => ({ ...prev, content: updatedContent }));
       setIsPuckMode(false);
@@ -377,8 +380,8 @@ const PageEditor = () => {
       <div className="fixed inset-0 z-[100] bg-white flex flex-col">
         <div className="flex items-center justify-between p-4 border-b border-zinc-200 bg-zinc-50">
           <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setIsPuckMode(false)} 
+            <button
+              onClick={() => setIsPuckMode(false)}
               className="flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 rounded-xl font-medium hover:bg-zinc-50 transition-colors shadow-sm"
             >
               <ArrowLeft className="w-4 h-4" /> Back to Standard Editor
@@ -399,7 +402,7 @@ const PageEditor = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
         <div className="flex items-center gap-4">
-          <Link 
+          <Link
             to="/admin/pages"
             className="p-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-full transition-colors"
           >
@@ -426,7 +429,7 @@ const PageEditor = () => {
             <option value="PUBLISHED">Published</option>
             {isEditMode && <option value="ARCHIVED">Archived</option>}
           </select>
-          <button 
+          <button
             type="submit"
             disabled={saving}
             className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20 disabled:opacity-70"
@@ -457,7 +460,7 @@ const PageEditor = () => {
               <Layout className="w-5 h-5 text-zinc-400" />
               General Information
             </h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-zinc-700 mb-1">Page Title *</label>
@@ -491,7 +494,7 @@ const PageEditor = () => {
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-zinc-700 mb-1">Excerpt (Short Description)</label>
                 <textarea
@@ -514,8 +517,8 @@ const PageEditor = () => {
                   <Type className="w-5 h-5 text-zinc-400" />
                   Content Blocks
                 </h2>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setIsPuckMode(true)}
                   className="px-3 py-1.5 bg-blue-900 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors flex items-center gap-1.5"
                 >
@@ -580,10 +583,10 @@ const PageEditor = () => {
                       {AVAILABLE_BLOCKS.find(b => b.type === block.type)?.label || block.type}
                     </div>
                     <div className="p-0 border-t border-zinc-200 relative">
-                      <DynamicBlockEditor 
-                        block={block} 
-                        index={index} 
-                        updateBlockData={updateBlockData} 
+                      <DynamicBlockEditor
+                        block={block}
+                        index={index}
+                        updateBlockData={updateBlockData}
                       />
                     </div>
                   </div>
@@ -597,22 +600,22 @@ const PageEditor = () => {
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 space-y-6">
             <h2 className="text-lg font-bold border-b pb-2 flex items-center gap-2">
-              <Settings className="w-5 h-5 text-zinc-400"/> Advanced SEO
+              <Settings className="w-5 h-5 text-zinc-400" /> Advanced SEO
             </h2>
-            
+
             {/* Standard SEO */}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-bold mb-1 text-zinc-700">Meta Title</label>
-                <input type="text" value={formData.metaTitle || ''} onChange={e => setFormData(p => ({...p, metaTitle: e.target.value}))} placeholder="Keep empty to use page title" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
+                <input type="text" value={formData.metaTitle || ''} onChange={e => setFormData(p => ({ ...p, metaTitle: e.target.value }))} placeholder="Keep empty to use page title" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm" />
               </div>
               <div>
                 <label className="block text-sm font-bold mb-1 text-zinc-700">Meta Description</label>
-                <textarea rows="3" value={formData.metaDescription || ''} onChange={e => setFormData(p => ({...p, metaDescription: e.target.value}))} className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm resize-y"/>
+                <textarea rows="3" value={formData.metaDescription || ''} onChange={e => setFormData(p => ({ ...p, metaDescription: e.target.value }))} className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm resize-y" />
               </div>
               <div>
                 <label className="block text-sm font-bold mb-1 text-zinc-700">Meta Keywords</label>
-                <input type="text" value={formData.metaKeywords || ''} onChange={e => setFormData(p => ({...p, metaKeywords: e.target.value}))} placeholder="interior, design, architecture" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
+                <input type="text" value={formData.metaKeywords || ''} onChange={e => setFormData(p => ({ ...p, metaKeywords: e.target.value }))} placeholder="interior, design, architecture" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm" />
                 <p className="text-[10px] text-zinc-400 mt-1">Comma separated</p>
               </div>
             </div>
@@ -620,15 +623,15 @@ const PageEditor = () => {
             {/* Crawler Rules */}
             <div className="pt-4 border-t border-zinc-100 space-y-4">
               <h3 className="text-sm font-bold text-zinc-800">Crawler Instructions</h3>
-              
+
               <div className="flex flex-col gap-3">
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" checked={formData.includeInSitemap} onChange={e => setFormData(p => ({...p, includeInSitemap: e.target.checked}))} className="w-4 h-4 text-[#3B82F6] rounded border-zinc-300 focus:ring-[#3B82F6]"/>
+                  <input type="checkbox" checked={formData.includeInSitemap} onChange={e => setFormData(p => ({ ...p, includeInSitemap: e.target.checked }))} className="w-4 h-4 text-[#3B82F6] rounded border-zinc-300 focus:ring-[#3B82F6]" />
                   <span className="text-sm text-zinc-700 font-medium">Include in Sitemap.xml</span>
                 </label>
-                
+
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" checked={formData.noIndex} onChange={e => setFormData(p => ({...p, noIndex: e.target.checked}))} className="w-4 h-4 text-red-500 rounded border-zinc-300 focus:ring-red-500"/>
+                  <input type="checkbox" checked={formData.noIndex} onChange={e => setFormData(p => ({ ...p, noIndex: e.target.checked }))} className="w-4 h-4 text-red-500 rounded border-zinc-300 focus:ring-red-500" />
                   <div>
                     <span className="text-sm text-zinc-700 font-medium block">noIndex (Hide from Google)</span>
                     <span className="text-xs text-zinc-500">Search engines will drop this page from results.</span>
@@ -636,7 +639,7 @@ const PageEditor = () => {
                 </label>
 
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" checked={formData.noFollow} onChange={e => setFormData(p => ({...p, noFollow: e.target.checked}))} className="w-4 h-4 text-amber-500 rounded border-zinc-300 focus:ring-amber-500"/>
+                  <input type="checkbox" checked={formData.noFollow} onChange={e => setFormData(p => ({ ...p, noFollow: e.target.checked }))} className="w-4 h-4 text-amber-500 rounded border-zinc-300 focus:ring-amber-500" />
                   <div>
                     <span className="text-sm text-zinc-700 font-medium block">noFollow (Ignore Links)</span>
                     <span className="text-xs text-zinc-500">Crawlers won't follow any links on this page.</span>
@@ -648,21 +651,21 @@ const PageEditor = () => {
             {/* Social Graph */}
             <div className="pt-4 border-t border-zinc-100 space-y-4">
               <h3 className="text-sm font-bold text-zinc-800">Social Graph & Advanced</h3>
-              
+
               <div>
                 <label className="block text-sm font-bold mb-1 text-zinc-700">Canonical URL</label>
-                <input type="url" value={formData.canonicalUrl || ''} onChange={e => setFormData(p => ({...p, canonicalUrl: e.target.value}))} placeholder="https://domain.com/original-source" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
+                <input type="url" value={formData.canonicalUrl || ''} onChange={e => setFormData(p => ({ ...p, canonicalUrl: e.target.value }))} placeholder="https://domain.com/original-source" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm" />
                 <p className="text-[10px] text-zinc-400 mt-1">Use only if this content is copied from another URL.</p>
               </div>
 
               <div>
                 <label className="block text-sm font-bold mb-1 text-zinc-700">Social Share Title (OG Title)</label>
-                <input type="text" value={formData.ogTitle || ''} onChange={e => setFormData(p => ({...p, ogTitle: e.target.value}))} placeholder="Facebook/Twitter Title" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm"/>
+                <input type="text" value={formData.ogTitle || ''} onChange={e => setFormData(p => ({ ...p, ogTitle: e.target.value }))} placeholder="Facebook/Twitter Title" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm" />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-bold mb-1 text-zinc-700">Social Share Description (OG Desc)</label>
-                <textarea rows="2" value={formData.ogDescription || ''} onChange={e => setFormData(p => ({...p, ogDescription: e.target.value}))} placeholder="Facebook/Twitter Description" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm resize-y"/>
+                <textarea rows="2" value={formData.ogDescription || ''} onChange={e => setFormData(p => ({ ...p, ogDescription: e.target.value }))} placeholder="Facebook/Twitter Description" className="w-full px-4 py-2 border border-zinc-200 rounded-xl bg-zinc-50/50 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 text-sm resize-y" />
               </div>
             </div>
           </div>

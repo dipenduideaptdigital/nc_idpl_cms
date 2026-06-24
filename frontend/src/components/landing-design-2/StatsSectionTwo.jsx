@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { renderTitle } from '../../utils/titleRenderer';
 import defaultBg from '../../assets/homepage/banner_back.png';
 
 const getAssetUrl = (path) => {
@@ -43,8 +44,7 @@ const StatsSectionTwo = ({ data, onCtaClick }) => {
 
           {/* Heading */}
           <h2 className="text-4xl md:text-5xl lg:text-[60px] font-bold leading-[1.12] tracking-tight font-helvetica text-white mb-2">
-            Behind <span className="text-[#3b82f6]">Every Statistic</span> <br />
-            <span className="text-[#3b82f6]">Pulses</span> A Human Story
+            {renderTitle(data?.title || 'Behind [Every Statistic]\n[Pulses] A Human Story')}
           </h2>
         </div>
 

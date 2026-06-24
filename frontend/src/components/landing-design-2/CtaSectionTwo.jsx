@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { renderTitle } from '../../utils/titleRenderer';
 
 const CtaSectionTwo = ({ data, onCtaClick }) => {
   const badgeText = data?.badgeText || "GET IN TOUCH";
@@ -26,8 +27,7 @@ const CtaSectionTwo = ({ data, onCtaClick }) => {
           <div className="flex flex-col items-start max-w-4xl">
             {/* Double Line Heading */}
             <h2 className="text-4xl md:text-5xl lg:text-[52px] font-bold text-gray-950 tracking-tight leading-[1.12] mb-10 font-helvetica">
-              Have A Project In <span className="text-[#3b82f6]">Mind?</span> Let’s <br />
-              <span className="text-[#3b82f6]">Make</span> It Happen
+              {renderTitle(data?.title || 'Have A Project In [Mind?] Let’s\n[Make] It Happen')}
             </h2>
 
             {/* CTA Button */}

@@ -70,8 +70,19 @@ const Hero = ({ data: externalData }) => {
     fetchHeroData();
   }, [externalData]);
 
+  // Utility to handle 3-line subtitle breaks
+  const renderSubtitle = (text) => {
+    if (!text) return null;
+    return text.split(/\\n|\n/).map((line, index, array) => (
+      <React.Fragment key={index}>
+        {line}
+        {index < array.length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
+
   const handleScrollDown = () => {
-    const nextSection = document.getElementById('services-section');
+    const nextSection = document.getElementById('experience-section');
     if (nextSection) {
       nextSection.scrollIntoView({ behavior: 'smooth' });
     }
@@ -79,7 +90,7 @@ const Hero = ({ data: externalData }) => {
 
   if (isLoading) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-900">
+      <div className="relative h-[650px] lg:h-[750px] xl:h-[800px] w-full flex items-center justify-center overflow-hidden bg-zinc-900">
         <div className="absolute inset-0 bg-black/5"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent"></div>
         <div className="z-10 flex flex-col items-center">
@@ -91,22 +102,23 @@ const Hero = ({ data: externalData }) => {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-900 font-helvetica">
+    // Height fixed to match Figma, removed min-h-screen to fix zoom/crop
+    <div className="relative w-full h-[650px] lg:h-[750px] xl:h-[800px] flex items-center justify-center overflow-hidden bg-zinc-900 font-helvetica">
+      
       {/* Main Background Image */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"
         style={{ backgroundImage: `url(${bgImage})` }}
       >
-        {/* Dark overlay for readability */}
         <div className="absolute inset-0 bg-black/5"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent"></div>
       </div>
 
-      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-8 lg:px-12 relative z-10 pt-20 pb-24 md:pb-16 lg:pb-0">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-12 lg:gap-8 pt-8 lg:pt-0 w-full">
+      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-8 lg:px-12 relative z-10 pt-16 lg:pt-0 pb-16 lg:pb-0">
+        <div className="flex flex-col lg:flex-row justify-between items-center w-full gap-12 lg:gap-8 pt-8 lg:pt-0">
           
           {/* Left Content Area */}
-          <div className="text-white max-w-xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-[850px] fadeInLeft flex flex-col items-start text-left w-full lg:w-auto mb-20">
+          <div className="text-white max-w-xl lg:max-w-2xl xl:max-w-3xl fadeInLeft flex flex-col items-start text-left w-full lg:w-auto">
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-white/30 backdrop-blur-sm mb-6 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(249,115,22,0.8)]"></span>
@@ -134,26 +146,19 @@ const Hero = ({ data: externalData }) => {
             </button>
           </div>
 
-          {/* Right Content Area - Glassmorphism Cards */}
-          <div className="flex flex-row h-auto lg:h-[400px] xl:h-[450px] 2xl:h-[500px] items-center lg:items-end justify-center lg:justify-end gap-4 lg:gap-4 xl:gap-6 pb-4 fadeInRight shrink-0 w-full lg:w-auto mt-32 lg:mt-0">
-            {/* Glass Card */}
-            <div className="w-[150px] sm:w-[240px] lg:w-[190px] xl:w-[230px] 2xl:w-[286px] h-[165px] sm:h-[264px] lg:h-[220px] xl:h-[260px] 2xl:h-[314px] bg-[#3a3532]/40 glass-dark rounded-2xl lg:rounded-[24px] xl:rounded-[30px] 2xl:rounded-[37px] p-5 sm:p-6 lg:p-5 xl:p-6 2xl:p-8 shadow-2xl z-20 flex flex-col justify-between shrink-0 transform hover:-translate-y-2 transition-transform duration-500">
+          {/* Right Content Area - Glassmorphism Cards - Proportions fixed */}
+          <div className="flex flex-row items-center justify-center lg:justify-end gap-6 fadeInRight shrink-0 w-full lg:w-auto mt-0 lg:mt-0">
+            {/* Glass Card - Portrait Ratio */}
+            <div className="w-[160px] h-[220px] md:w-[220px] md:h-[300px] bg-[#3a3532]/40 glass-dark rounded-[24px] p-6 shadow-2xl z-20 flex flex-col justify-between shrink-0">
               <div>
-                <h2 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-white mb-2">{content?.glassCardNumber || "250+"}</h2>
-                <p className="text-xs sm:text-sm text-gray-200 font-normal leading-relaxed">
-                  {content?.glassCardText1 || "Lorem Ipsum Is Simply Dummy Text"}
-                </p>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">{content?.glassCardNumber || "250+"}</h2>
+                <p className="text-xs text-gray-200 font-normal leading-relaxed">{content?.glassCardText1 || "Lorem Ipsum Is Simply Dummy Text"}</p>
               </div>
-              
-              <div>
-                <p className="text-sm sm:text-base lg:text-sm xl:text-base 2xl:text-lg text-white font-medium leading-snug">
-                  {content?.glassCardText2 || "There Is No One Who Loves Pain Itself"}
-                </p>
-              </div>
+              <p className="text-sm text-white font-medium">{content?.glassCardText2 || "There Is No One Who Loves Pain Itself"}</p>
             </div>
 
-            {/* Image Card */}
-            <div className="w-[150px] sm:w-[240px] lg:w-[190px] xl:w-[230px] 2xl:w-[286px] h-[165px] sm:h-[264px] lg:h-[220px] xl:h-[260px] 2xl:h-[314px] rounded-2xl lg:rounded-[24px] xl:rounded-[30px] 2xl:rounded-[37px] overflow-hidden shadow-2xl z-10 border-2 lg:border-4 border-white/10 shrink-0 transform hover:scale-105 transition-all duration-500 will-change-transform [backface-visibility:hidden] [transform:translateZ(0)]">
+            {/* Image Card - Portrait Ratio */}
+            <div className="w-[160px] h-[220px] md:w-[220px] md:h-[300px] rounded-[24px] overflow-hidden shadow-2xl z-10 border-2 border-white/10 shrink-0">
               <img 
                 src={frontImg} 
                 alt="Modern Interior" 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { renderTitle } from '../../utils/titleRenderer';
 
 import img1 from '../../assets/homepage/about3.png';
 import img2 from '../../assets/homepage/about2.png';
@@ -38,10 +39,10 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
       className="py-20 md:py-28 bg-[#f8f8f8] overflow-hidden font-helvetica"
     >
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-[1500px]">
-        <div className="grid lg:grid-cols-[1.9fr_1fr] gap-16 lg:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
           {/* ================= IMAGES ================= */}
-          <div className="relative w-full max-w-[1100px] aspect-[862/767] mx-auto">
+          <div className="relative w-full max-w-[1100px] aspect-[862/767] mx-auto min-w-0">
 
             {/* Left Back Card */}
             <div
@@ -97,7 +98,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
           </div>
 
           {/* ================= CONTENT ================= */}
-          <div className="flex flex-col items-start text-left w-full">
+          <div className="flex flex-col items-start text-left w-full min-w-0">
 
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 bg-white mb-6">
@@ -110,16 +111,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
 
             {/* Heading */}
             <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight mb-8">
-              Architecture
-              <br />
-
-              <span className="text-blue-500 whitespace-nowrap">
-                And Interiors, Our Dual
-              </span>
-
-              <br />
-
-              Expertise
+              {renderTitle(data?.title || 'Architecture\n[And Interiors, Our Dual]\nExpertise', 'text-blue-500')}
             </h2>
 
             {/* Paragraph 1 */}

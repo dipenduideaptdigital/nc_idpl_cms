@@ -1,4 +1,5 @@
 import React from 'react';
+import { renderTitle } from '../../utils/titleRenderer';
 import defaultMainImg from '../../assets/homepage/review.jpg';
 
 const defaultAuthorImg = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop";
@@ -41,8 +42,7 @@ const TestimonialsTwo = ({ data }) => {
           {/* Right Column: Title and Subtitle */}
           <div className="flex flex-col items-start max-w-4xl">
             <h2 className="text-4xl md:text-5xl lg:text-[52px] font-bold text-gray-950 tracking-tight leading-[1.1] mb-6 font-helvetica">
-              Here’s What <span className="text-[#3b82f6]">Warm Words</span> <br />
-              <span className="text-[#3b82f6]">Our Clients</span> Say
+              {renderTitle(data?.title || 'Here’s What [Warm Words]\n[Our Clients] Say')}
             </h2>
             <p className="text-gray-500 text-sm md:text-base leading-relaxed font-normal max-w-3xl">
               {typeof subtitle === 'string' && subtitle.includes('beautifully crafted residential') ? (

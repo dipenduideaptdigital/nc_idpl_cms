@@ -286,158 +286,180 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
   );
 
   switch (type) {
-    case 'heroSection':
+    case 'heroSectionTwo':
       return renderGenericFields([
-        { name: 'titleLine1', type: 'text', defaultValue: 'End-To-End', placeholder: 'End-To-End' },
-        { name: 'titleLine2', type: 'text', defaultValue: 'Office Interiors', placeholder: 'Office Interiors' },
-        { name: 'subtitle', type: 'text', defaultValue: 'For Every Test & Budget', placeholder: 'For Every Test & Budget' },
-        { name: 'description', type: 'textarea', defaultValue: "Simply dummy text of the printing and typesetting. Lorem Ipsum has been the industry's standard,", placeholder: "Simply dummy text..." },
-        { name: 'buttonText', type: 'text', defaultValue: 'Book A Free Consultation', placeholder: 'Book A Free Consultation' },
+        { name: 'title', type: 'textarea', defaultValue: 'Find Your [Inspired]\n[Interior] Design', placeholder: 'Title...' },
+        { name: 'badgeText', type: 'text', defaultValue: 'FAST AND RELIABLE', placeholder: 'FAST AND RELIABLE' },
+        { name: 'description', type: 'textarea', defaultValue: 'Transform your vision into reality with our innovative designs, creating modern spaces that blend functionality, aesthetics, and sustainability.', placeholder: 'Description...' },
+        { name: 'watermarkText', type: 'text', defaultValue: 'Interior', placeholder: 'Interior' },
         { name: 'backgroundImage', type: 'image' },
       ]);
-    case 'whySubhaakritee':
+    case 'aboutSectionTwo':
       return renderGenericFields([
-        { name: 'title', type: 'text', defaultValue: 'WHY subhAAkritee?', placeholder: 'WHY subhAAkritee?' },
-        { name: 'description', type: 'textarea', defaultValue: 'For Over 26 Years, SubhAAkritee - The Design People Has Delivered Innovative, High-Quality Interior And Architectural Solutions Across Residential And Commercial Spaces. With A Strong Presence In Kolkata, Delhi, Siliguri, And Bhubaneswar, We Transform Spaces Into Functional Works Of Art', placeholder: 'For Over 26 Years...' },
-        { name: 'buttonText', type: 'text', defaultValue: 'Get Free Estimated', placeholder: 'Get Free Estimated' },
+        { name: 'title', type: 'textarea', defaultValue: 'Architecture\n[And Interiors, Our Dual]\nExpertise', placeholder: 'Title...' },
+        { name: 'badgeText', type: 'text', defaultValue: 'STARTED IN 1989', placeholder: 'STARTED IN 1989' },
+        { name: 'paragraph1', type: 'textarea', defaultValue: 'We believe that every space has the power to inspire, and that great design brings that inspiration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.', placeholder: 'Paragraph 1...' },
+        { name: 'paragraph2', type: 'textarea', defaultValue: 'With a strong presence in Kolkata, Bhubaneswar, and Ranchi, our turnkey office interiors are thoughtfully crafted to enhance productivity, reflect your brand identity, and support the way your team works every day.', placeholder: 'Paragraph 2...' },
+        { name: 'buttonText', type: 'text', defaultValue: "Let's Get Started", placeholder: "Let's Get Started" },
+        { name: 'image1', type: 'image' },
+        { name: 'image2', type: 'image' },
+        { name: 'image3', type: 'image' }
+      ]);
+    case 'servicesSectionTwo':
+      return renderGenericFields([
+        { name: 'title', type: 'textarea', defaultValue: 'Explore Our [Comprehensive]\n[Interior Design] Services', placeholder: 'Title...' },
+        { name: 'badgeText', type: 'text', defaultValue: 'OUR SERVICES', placeholder: 'OUR SERVICES' },
         { 
-          name: 'features', type: 'array', defaultItem: { icon: 'Award', textLine1: '', textLine2: '' },
+          name: 'services', type: 'array', defaultItem: { title: '', description: '', image: '' },
           defaultArray: [
-            { icon: 'Award', textLine1: '1,400+ design', textLine2: 'experts' },
-            { icon: 'Home', textLine1: '20,000+ happy', textLine2: 'customers' },
-            { icon: 'ShieldCheck', textLine1: 'Up to 10-years', textLine2: 'material warranty' },
-            { icon: 'CalendarDays', textLine1: '45 days or we', textLine2: 'pay you rent', extraBadge: '45' }
+            { title: 'Initial Consultation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' },
+            { title: 'Design & Planning', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' },
+            { title: 'Implementation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' }
           ],
           itemFields: [
-            { name: 'icon', type: 'text', placeholder: 'Icon name (e.g., Award, Home)' },
-            { name: 'textLine1', type: 'text', placeholder: 'Line 1' },
-            { name: 'textLine2', type: 'text', placeholder: 'Line 2' },
-            { name: 'extraBadge', type: 'text', placeholder: 'Extra Badge (optional)' }
+            { name: 'title', type: 'text', placeholder: 'Title' },
+            { name: 'description', type: 'textarea', placeholder: 'Description' },
+            { name: 'image', type: 'image' }
           ]
         }
       ]);
-    case 'modernWorkspace':
+    case 'processSectionTwo':
       return renderGenericFields([
-        { name: 'title', type: 'text', defaultValue: 'Modern Workspace Solutions', placeholder: 'Modern Workspace Solutions' },
-        { name: 'subtitle', type: 'text', defaultValue: '', placeholder: 'Subtitle' },
-        { 
-          name: 'services', type: 'array', defaultItem: { icon: 'Hammer', title: '', desc: '' },
-          defaultArray: [
-            { icon: 'Home', title: 'Renovation & Upgrade', desc: 'Transforming existing offices into contemporary, high-performing spaces.' },
-            { icon: 'Lightbulb', title: 'Lighting & Electrical', desc: 'Efficient lighting systems and seamless electrical planning for optimal performance.' },
-            { icon: 'Archive', title: 'Custom Furniture', desc: 'Ergonomic, bespoke workstations, cabins, and storage solutions.' },
-            { icon: 'Settings', title: 'Turnkey Execution', desc: 'Complete project management from concept and design to final handover.' },
-            { icon: 'Monitor', title: 'Office Interiors', desc: 'Modern, brand-aligned workspace designs that balance aesthetics and functionality.' },
-            { icon: 'Layout', title: 'Space Planning', desc: 'Smart layouts designed to maximize efficiency, workflow, and space utilization.' }
-          ],
-          itemFields: [
-            { name: 'icon', type: 'text', placeholder: 'Icon name (e.g., Hammer)' },
-            { name: 'title', type: 'text', placeholder: 'Service title' },
-            { name: 'desc', type: 'textarea', placeholder: 'Service description' }
-          ]
-        }
-      ]);
-    case 'wayWeCreate':
-      return renderGenericFields([
-        { name: 'title', type: 'text', defaultValue: 'The Way We Create', placeholder: 'The Way We Create' },
-        { name: 'subtitle', type: 'text', defaultValue: 'Structured Planning. Precise Execution. Exceptional Results.', placeholder: 'Subtitle...' },
-        { name: 'buttonText', type: 'text', defaultValue: 'Get Free Estimated', placeholder: 'Get Free Estimated' },
-        { 
-          name: 'steps', type: 'array', defaultItem: { icon: 'PenTool', title: '', desc: '' },
-          defaultArray: [
-            { icon: 'PenTool', title: 'Discover & Design', desc: "Understanding your vision, space, and goals." },
-            { icon: 'ClipboardList', title: 'Build & Manage', desc: "Seamless execution with expert supervision and quality control." },
-            { icon: 'UserCheck', title: 'Deliver & Support', desc: "On-time handover with precision finishing and continued assistance." }
-          ],
-          itemFields: [
-            { name: 'icon', type: 'text', placeholder: 'Icon name (e.g., PenTool, ClipboardList)' },
-            { name: 'title', type: 'text', placeholder: 'Step title' },
-            { name: 'desc', type: 'textarea', placeholder: 'Step description' }
-          ]
-        }
-      ]);
-    case 'trustedClients':
-      return renderGenericFields([
-        { name: 'title', type: 'text', defaultValue: 'Trusted By Our Clients', placeholder: 'Trusted By Our Clients' },
-        { name: 'subtitle', type: 'text', defaultValue: "Hear How We've Transformed Spaces And Exceeded Expectations.", placeholder: 'Subtitle...' },
-        { 
-          name: 'reviews', type: 'array', defaultItem: { text: '', author: '', role: '', rating: '5' },
-          defaultArray: [
-            { text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", author: "Stephanie", role: "", rating: 5 },
-            { text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", author: "Stephanie", role: "", rating: 5 },
-            { text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", author: "Stephanie", role: "", rating: 5 },
-            { text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", author: "Stephanie", role: "", rating: 5 }
-          ],
-          itemFields: [
-            { name: 'text', type: 'textarea', placeholder: 'Review content' },
-            { name: 'author', type: 'text', placeholder: 'Author Name' },
-            { name: 'role', type: 'text', placeholder: 'Role or Title' },
-            { name: 'rating', type: 'text', placeholder: 'Rating (1-5)' }
-          ]
-        }
-      ]);
-    case 'spacesStories':
-      return renderGenericFields([
-        { name: 'titleLine1', type: 'text', defaultValue: 'Spaces. Stories.', placeholder: 'Spaces. Stories.' },
-        { name: 'titleLine2', type: 'text', defaultValue: 'Experiences.', placeholder: 'Experiences.' },
-        { name: 'description', type: 'textarea', defaultValue: '26 Years Of Crafting Environments Defined By Excellence.', placeholder: '26 Years Of...' },
-        { 
-          name: 'images', type: 'array', defaultItem: { url: '', label: '' },
-          defaultArray: [
-            { url: '/assets/homepage/gallery1.png', label: 'Workspace' },
-            { url: '/assets/homepage/gallery2.png', label: 'Commercial' },
-            { url: '/assets/homepage/gallery3.png', label: 'Residential' }
-          ],
-          itemFields: [
-            { name: 'url', type: 'image' },
-            { name: 'label', type: 'text', placeholder: 'e.g. Workspace' }
-          ]
-        }
-      ]);
-    case 'getInTouch':
-      return renderGenericFields([
-        { name: 'title', type: 'text', defaultValue: 'Get In Touch', placeholder: 'Get In Touch' },
-        { name: 'subtitle', type: 'text', defaultValue: 'Our friendly team would love to hear from you.', placeholder: 'Our friendly team would love to hear from you.' },
-        { name: 'buttonText', type: 'text', defaultValue: 'Send Message', placeholder: 'Send Message' },
+        { name: 'title', type: 'textarea', defaultValue: 'Description [Architecture]\n[Process] For Exceptional Results.', placeholder: 'Title...' },
+        { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH', placeholder: 'GET IN TOUCH' },
+        { name: 'description', type: 'textarea', defaultValue: 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.', placeholder: 'Description...' },
         { name: 'image', type: 'image' },
-      ]);
-    case 'metricsBarOne':
-      return renderGenericFields([
         { 
-          name: 'metrics', type: 'array', defaultItem: { value: 'ON-TIME', label: 'DELIVERY' },
+          name: 'steps', type: 'array', defaultItem: { title: '', description: '' },
           defaultArray: [
-            { value: 'ON-TIME', label: 'DELIVERY' },
-            { value: 'BEST', label: 'PRICE' },
-            { value: 'SUPERIOR', label: 'QUALITY' },
-            { value: 'SAFETY', label: 'ASSURED' }
+            { title: 'Initial Consultation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
+            { title: 'Design & Planning', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
+            { title: 'Implementation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
+            { title: 'Project Handover', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' }
           ],
           itemFields: [
-            { name: 'value', type: 'text', placeholder: 'e.g. ON-TIME' },
-            { name: 'label', type: 'text', placeholder: 'e.g. DELIVERY' }
+            { name: 'title', type: 'text', placeholder: 'Step Title' },
+            { name: 'description', type: 'textarea', placeholder: 'Step Description' }
           ]
         }
       ]);
-    case 'metricsBarTwo':
+    case 'projectSliderTwo':
       return renderGenericFields([
         { 
-          name: 'metrics', type: 'array', defaultItem: { value: '0', label: 'METRIC' },
+          name: 'projects', type: 'array', defaultItem: { title: '', year: '2024', location: '', image: '' },
           defaultArray: [
-            { value: '3,000+', label: 'INTERIOR DESIGNS' },
-            { value: '1,500+', label: 'RENOVATIONS' },
-            { value: '500+', label: 'COMMERCIAL PROJECTS' },
-            { value: '25+', label: 'AWARDS WON' }
+            { title: 'Industrial Elegance Condo', year: '2024', location: 'Kolkata', image: '' },
+            { title: 'Residential Interior Design', year: '2024', location: 'Bhubaneswar', image: '' },
+            { title: 'Serene Space Studio', year: '2024', location: 'Ranchi', image: '' },
+            { title: 'Art Decor Revival', year: '2024', location: 'Kolkata', image: '' },
+            { title: 'Modern Minimalist Oasis', year: '2024', location: 'Siliguri', image: '' },
+            { title: 'Corporate Executive Suite', year: '2024', location: 'Delhi', image: '' }
           ],
           itemFields: [
-            { name: 'value', type: 'text', placeholder: 'e.g. 100+' },
-            { name: 'label', type: 'text', placeholder: 'e.g. SATISFIED CUSTOMERS' }
+            { name: 'title', type: 'text', placeholder: 'Project Title' },
+            { name: 'year', type: 'text', placeholder: 'Year' },
+            { name: 'location', type: 'text', placeholder: 'Location' },
+            { name: 'image', type: 'image' }
           ]
         }
       ]);
-    case 'gallerySection':
+    case 'trustedPartners':
       return renderGenericFields([
-        { name: 'title', type: 'text', defaultValue: 'Gallery', placeholder: 'Gallery' },
-        { name: 'subtitle', type: 'text', defaultValue: 'Showcasing Interiors That Inspire, Perform, And Endure', placeholder: 'Subtitle...' },
-        { name: 'images', type: 'arrayString', isImage: true, defaultArray: ['/assets/homepage/gallery1.png', '/assets/homepage/gallery2.png', '/assets/homepage/gallery3.png', '/assets/homepage/gallery4.png', '/assets/homepage/gallery5.png', '/assets/homepage/gallery6.png'] }
+        { name: 'title', type: 'text', defaultValue: 'OUR [TRUSTED PARTNERS]', placeholder: 'OUR [TRUSTED PARTNERS]' },
+        {
+          name: 'partners', type: 'array', defaultItem: { name: '', logo: '', heightClass: 'h-11 md:h-[44px]' },
+          defaultArray: [
+            { name: 'Aristo', logo: '', heightClass: 'h-11 md:h-[44px]' },
+            { name: 'Spitze', logo: '', heightClass: 'h-12 md:h-[48px]' },
+            { name: 'Faber', logo: '', heightClass: 'h-11 md:h-[44px]' },
+            { name: 'Everyday', logo: '', heightClass: 'h-12 md:h-[48px]' },
+            { name: 'Fevicol', logo: '', heightClass: 'h-[54px] md:h-[60px]' },
+            { name: 'Urban Ladder', logo: '', heightClass: 'h-11 md:h-[44px]' }
+          ],
+          itemFields: [
+            { name: 'name', type: 'text', placeholder: 'Brand name' },
+            { name: 'logo', type: 'image' },
+            { name: 'heightClass', type: 'text', placeholder: 'e.g. h-11 md:h-[44px]' }
+          ]
+        }
+      ]);
+    case 'statsSectionTwo':
+      return renderGenericFields([
+        { name: 'title', type: 'textarea', defaultValue: 'Behind [Every Statistic]\n[Pulses] A Human Story', placeholder: 'Title...' },
+        { name: 'badgeText', type: 'text', defaultValue: 'TRUSTED EXPERIENCE', placeholder: 'TRUSTED EXPERIENCE' },
+        { name: 'buttonText', type: 'text', defaultValue: 'BOOK A FREE CONSULTATION', placeholder: 'BOOK A FREE CONSULTATION' },
+        { name: 'backgroundImage', type: 'image' },
+        { 
+          name: 'stats', type: 'array', defaultItem: { value: '0', title: '', description: '' },
+          defaultArray: [
+            { value: '26+', title: 'YEARS EXPERIENCE', description: 'Improving homes with expert craftsmanship for years' },
+            { value: '100', title: 'PROJECTS DONE', description: 'Over 250 successful projects delivered with quality and care' },
+            { value: '100', title: 'SATISFIED CUSTOMER', description: 'Our team of 30 experts ensures top-quality results' },
+            { value: '4+', title: 'LOCATION', description: 'All of our clients are satisfied with our work and service' }
+          ],
+          itemFields: [
+            { name: 'value', type: 'text', placeholder: 'e.g. 26+' },
+            { name: 'title', type: 'text', placeholder: 'Title' },
+            { name: 'description', type: 'textarea', placeholder: 'Description' }
+          ]
+        }
+      ]);
+    case 'happySpaces':
+      return renderGenericFields([
+        { name: 'badgeText', type: 'text', defaultValue: 'STRAIGHT FROM THE NEWSROOM', placeholder: 'STRAIGHT FROM THE NEWSROOM' },
+        { name: 'titleLine1', type: 'text', defaultValue: 'Happy Spaces by', placeholder: 'Happy Spaces by' },
+        { name: 'titleLine2', type: 'text', defaultValue: 'subhAAkritee', placeholder: 'subhAAkritee' },
+        { 
+          name: 'items', type: 'array', defaultItem: { title: '', description: '', image: '', videoUrl: '' },
+          defaultArray: [
+            { title: 'Functional Design Trends That Blend Style And Comfort', description: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '', videoUrl: 'https://www.youtube.com/embed/62bIsvRcPv0' },
+            { title: 'Functional Design Trends That Blend Style And Comfort', description: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '', videoUrl: 'https://www.youtube.com/embed/62bIsvRcPv0' },
+            { title: 'Functional Design Trends That Blend Style And Comfort', description: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '', videoUrl: 'https://www.youtube.com/embed/62bIsvRcPv0' }
+          ],
+          itemFields: [
+            { name: 'title', type: 'text', placeholder: 'Title' },
+            { name: 'description', type: 'textarea', placeholder: 'Description' },
+            { name: 'image', type: 'image' },
+            { name: 'videoUrl', type: 'text', placeholder: 'YouTube Embed URL' }
+          ]
+        }
+      ]);
+    case 'happyCustomers':
+      return renderGenericFields([
+        { name: 'title', type: 'text', defaultValue: 'OUR [HAPPY CUSTOMERS]', placeholder: 'OUR [HAPPY CUSTOMERS]' },
+        {
+          name: 'partners', type: 'array', defaultItem: { name: '', logo: '', heightClass: 'h-11 md:h-[44px]' },
+          defaultArray: [
+            { name: 'Aristo', logo: '', heightClass: 'h-11 md:h-[44px]' },
+            { name: 'Spitze', logo: '', heightClass: 'h-12 md:h-[48px]' },
+            { name: 'Faber', logo: '', heightClass: 'h-11 md:h-[44px]' },
+            { name: 'Everyday', logo: '', heightClass: 'h-12 md:h-[48px]' },
+            { name: 'Fevicol', logo: '', heightClass: 'h-[54px] md:h-[60px]' },
+            { name: 'Urban Ladder', logo: '', heightClass: 'h-11 md:h-[44px]' }
+          ],
+          itemFields: [
+            { name: 'name', type: 'text', placeholder: 'Brand name' },
+            { name: 'logo', type: 'image' },
+            { name: 'heightClass', type: 'text', placeholder: 'e.g. h-11 md:h-[44px]' }
+          ]
+        }
+      ]);
+    case 'testimonialsTwo':
+      return renderGenericFields([
+        { name: 'title', type: 'textarea', defaultValue: 'Here’s What [Warm Words]\n[Our Clients] Say', placeholder: 'Title...' },
+        { name: 'badgeText', type: 'text', defaultValue: 'OUR CLIENTS SAY', placeholder: 'OUR CLIENTS SAY' },
+        { name: 'description', type: 'textarea', defaultValue: 'Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors', placeholder: 'Description...' },
+        { name: 'mainQuote', type: 'textarea', defaultValue: 'I absolutely love my the new modern living room! The clean lines, a neutral tones, and minimalist interior create such a calming & stylish atmosphere. Highly recommend their modern interior design services!', placeholder: 'Main Quote...' },
+        { name: 'authorName', type: 'text', defaultValue: 'Morgan Dufresne', placeholder: 'Author Name' },
+        { name: 'authorRole', type: 'text', defaultValue: 'Company owner', placeholder: 'Author Role' },
+        { name: 'image', type: 'image' },
+        { name: 'authorImage', type: 'image' },
+      ]);
+    case 'ctaSectionTwo':
+      return renderGenericFields([
+        { name: 'title', type: 'textarea', defaultValue: 'Have A Project In [Mind?] Let’s\n[Make] It Happen', placeholder: 'Title...' },
+        { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH', placeholder: 'GET IN TOUCH' },
+        { name: 'buttonText', type: 'text', defaultValue: 'BOOK A FREE CONSULTATION', placeholder: 'BOOK A FREE CONSULTATION' }
       ]);
     case 'richText':
       return (

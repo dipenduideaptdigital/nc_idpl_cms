@@ -1,4 +1,5 @@
 import React from 'react';
+import { renderTitle } from '../../utils/titleRenderer';
 import img1 from '../../assets/homepage/view.jpg';
 import img2 from '../../assets/homepage/about_img.png';
 import img3 from '../../assets/homepage/gallery4.png';
@@ -46,7 +47,7 @@ const ServicesSectionTwo = ({ data }) => {
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
         
         {/* Header Grid */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-16 md:mb-20 text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 lg:gap-12 mb-16 md:mb-20 text-left">
           {/* Tagline Badge */}
           <div className="shrink-0">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm">
@@ -60,8 +61,7 @@ const ServicesSectionTwo = ({ data }) => {
           {/* Main Title */}
           <div className="max-w-4xl">
             <h2 className="text-4xl md:text-5xl lg:text-[48px] font-bold leading-[1.15] tracking-tight font-helvetica text-white">
-              Explore Our <span className="text-[#3b82f6]">Comprehensive</span> <br />
-              <span className="text-[#3b82f6]">Interior Design</span> Services
+              {renderTitle(data?.title || 'Explore Our [Comprehensive]\n[Interior Design] Services')}
             </h2>
           </div>
         </div>

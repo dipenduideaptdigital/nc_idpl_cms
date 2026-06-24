@@ -330,7 +330,7 @@ export const createPagePathHistory = async (pageId, oldFullPath) => {
 export const findPageIdByOldPath = async (oldFullPath) => {
   const history = await prisma.pagePathHistory.findUnique({
     where: { oldFullPath },
-    include: { page: { select: { fullPath: true, status: true, deletedAt: null } } }
+    include: { page: { select: { fullPath: true, status: true, deletedAt: true } } }
   });
   return history;
 };

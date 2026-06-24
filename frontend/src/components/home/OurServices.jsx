@@ -287,9 +287,9 @@ const OurServices = ({ data: externalData }) => {
           <img
             src={countingImg}
             alt="3D Floor Plan Rendering"
-            className="w-full max-w-[1100px] object-cover scale-110"
+            className="w-full max-w-[1100px] object-cover scale-100" 
             style={{ 
-              transform: `translateX(${houseTranslateX}px) scale(1.1)`, 
+              transform: `translateX(${houseTranslateX}px) scale(1)`, 
               transition: 'transform 0.1s ease-out' 
             }}
             onError={(e) => {

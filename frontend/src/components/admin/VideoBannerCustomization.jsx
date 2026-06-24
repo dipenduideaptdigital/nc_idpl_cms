@@ -21,7 +21,7 @@ const VideoBannerCustomization = ({
           <h3 className="text-sm font-bold tracking-widest text-zinc-400 uppercase mb-4">Text Content</h3>
           
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">YouTube Video ID (e.g. ScMzIvxBSi4)</label>
+            <label className="block text-sm font-medium text-zinc-700 mb-2">YouTube Video Link or ID (e.g. https://www.youtube.com/watch?v=ScMzIvxBSi4)</label>
             <input 
               type="text" 
               name="videoId"

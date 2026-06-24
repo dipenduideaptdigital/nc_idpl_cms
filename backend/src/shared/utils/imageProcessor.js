@@ -14,7 +14,7 @@ export const processImageBuffer = async (buffer, originalName) => {
         fit: "inside",
         withoutEnlargement: true, 
       })
-      .webp({ quality: 80, effort: 4 }) 
+      .webp({ quality: 95, effort: 6 }) 
       .toBuffer({ resolveWithObject: true });
 
     const thumbBuffer = await sharp(buffer)
@@ -22,7 +22,7 @@ export const processImageBuffer = async (buffer, originalName) => {
         fit: "cover",
         position: "entropy",
       })
-      .webp({ quality: 60 })
+      .webp({ quality: 80 })
       .toBuffer();
 
     return {

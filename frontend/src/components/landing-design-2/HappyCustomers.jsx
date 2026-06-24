@@ -1,4 +1,6 @@
 import React from 'react';
+import { renderTitle } from '../../utils/titleRenderer';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 // Import logos from assets/logos/
 import aristoLogo from '../../assets/logos/aristo.png';
@@ -8,8 +10,8 @@ import everydayLogo from '../../assets/logos/everyday.png';
 import fevicolLogo from '../../assets/logos/fevicol.png';
 import urbanLogo from '../../assets/logos/urban.png';
 
-const HappyCustomers = () => {
-  const partnersList = [
+const HappyCustomers = ({ data }) => {
+  const fallbackList = [
     { name: 'Aristo', logo: aristoLogo, heightClass: 'h-11 md:h-[44px]' },
     { name: 'Spitze', logo: spitzLogo, heightClass: 'h-12 md:h-[48px]' },
     { name: 'Faber', logo: faberLogo, heightClass: 'h-11 md:h-[44px]' },
@@ -17,6 +19,14 @@ const HappyCustomers = () => {
     { name: 'Fevicol', logo: fevicolLogo, heightClass: 'h-[54px] md:h-[60px]' },
     { name: 'Urban Ladder', logo: urbanLogo, heightClass: 'h-11 md:h-[44px]' },
   ];
+
+  const partnersList = data?.partners?.length > 0 
+    ? data.partners.map((p, idx) => ({
+        name: p.name || `Partner ${idx + 1}`,
+        logo: resolveAssetUrl(p.logo, fallbackList[idx % fallbackList.length].logo),
+        heightClass: p.heightClass || 'h-11 md:h-[44px]'
+      }))
+    : fallbackList;
 
   return (
     <section className="pt-6 pb-16 md:pt-8 md:pb-20 bg-white text-gray-900 font-helvetica overflow-hidden">
@@ -29,7 +39,7 @@ const HappyCustomers = () => {
           </div>
           <div className="relative bg-white px-8 md:px-12">
             <h2 className="text-sm md:text-[15px] font-bold tracking-[0.25em] text-gray-900 font-helvetica flex items-center gap-1.5 uppercase leading-none">
-              OUR <span className="text-[#3b82f6]">HAPPY CUSTOMERS</span>
+              {renderTitle(data?.title || 'OUR [HAPPY CUSTOMERS]')}
             </h2>
           </div>
         </div>

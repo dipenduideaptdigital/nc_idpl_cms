@@ -153,7 +153,7 @@ export const testimonialsSchema = z.object({
 // Video Banner Section
 export const videoBannerSchema = z.object({
   content: z.object({
-    videoId: z.string().max(50).optional(), 
+    videoId: z.string().max(255).optional(), 
     image: z.string().optional(),
     title: z.string().max(150).optional(),
     description: z.string().max(1000).optional(),

@@ -1,4 +1,5 @@
 import React from 'react';
+import { renderTitle } from '../../utils/titleRenderer';
 import imgLeft from '../../assets/homepage/about_img.png';
 
 const getAssetUrl = (path, fallback) => {
@@ -41,7 +42,7 @@ const ProcessSectionTwo = ({ data }) => {
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
         
         {/* Split Header Block (Matches the layout of ServicesSectionTwo) */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-12 md:mb-14 text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 lg:gap-12 mb-12 md:mb-14 text-left">
           {/* Left: Tagline Badge */}
           <div className="shrink-0">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-gray-300 bg-white">
@@ -55,8 +56,7 @@ const ProcessSectionTwo = ({ data }) => {
           {/* Right: Main Title & Description */}
           <div className="max-w-4xl">
             <h2 className="text-4xl md:text-5xl lg:text-[48px] font-bold text-gray-900 leading-[1.15] tracking-tight mb-6 font-helvetica">
-              Description <span className="text-[#3b82f6]">Architecture</span> <br />
-              <span className="text-[#3b82f6]">Process</span> For Exceptional Results.
+              {renderTitle(data?.title || 'Description [Architecture]\n[Process] For Exceptional Results.')}
             </h2>
             <p className="text-gray-500 text-sm md:text-base font-normal leading-relaxed max-w-2xl">
               {data?.description || 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.'}
