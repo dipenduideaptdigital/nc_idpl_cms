@@ -20,6 +20,11 @@ const OurProjects = ({ data: externalData }) => {
   const [content, setContent] = useState(externalData || null);
   const [projectsList, setProjectsList] = useState(defaultProjectsData);
   const [interiorImg, setInteriorImg] = useState(defaultInterior);
+  
+  // Mouse Drag States
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftPos, setScrollLeftPos] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -28,7 +33,6 @@ const OurProjects = ({ data: externalData }) => {
       if (isMounted) setContent(fetchedContent);
       const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
 
-      // Resolve project images
       if (fetchedContent.projects && fetchedContent.projects.length > 0) {
         const mapped = fetchedContent.projects.map((p, idx) => {
           const defaultImg = defaultProjectsData[idx % defaultProjectsData.length].image;
@@ -42,7 +46,6 @@ const OurProjects = ({ data: externalData }) => {
         setProjectsList(defaultProjectsData);
       }
 
-      // Resolve bottom graphic image
       if (fetchedContent.bottomImage) {
         const botUrl = fetchedContent.bottomImage.startsWith('http') ? fetchedContent.bottomImage : `${serverUrl}${fetchedContent.bottomImage}`;
         const img = new Image();
@@ -78,9 +81,55 @@ const OurProjects = ({ data: externalData }) => {
     };
   }, [externalData]);
 
+  const infiniteProjects = [
+    ...projectsList, ...projectsList, ...projectsList, 
+    ...projectsList, ...projectsList, ...projectsList, ...projectsList
+  ];
+
+  useEffect(() => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = carouselRef.current.scrollWidth / 3;
+    }
+  }, [projectsList]);
+
+  const handleScroll = () => {
+    if (!carouselRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+    
+    if (scrollLeft + clientWidth >= scrollWidth - 100) {
+      carouselRef.current.scrollLeft = scrollLeft - (scrollWidth / 3);
+    }
+
+    if (scrollLeft <= 100) {
+      carouselRef.current.scrollLeft = scrollLeft + (scrollWidth / 3);
+    }
+  };
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.pageX - carouselRef.current.offsetLeft);
+    setScrollLeftPos(carouselRef.current.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; 
+    carouselRef.current.scrollLeft = scrollLeftPos - walk;
+  };
+
   const badgeText = content?.badgeText || "OUR PROJECT";
-  const title = content?.title || "Creative [Projects That Define] Our Style";
-  const description = content?.description || "Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors.";
+  const title = content?.title || "Creative [Projects That \\n Define] Our Style";
+  const description = content?.description || "Our portfolio showcases a diverse range of projects, from beautifully crafted \n residential spaces functional and stylish commercial interiors";
 
   const renderTitle = (titleText) => {
     if (!titleText) return null;
@@ -88,7 +137,7 @@ const OurProjects = ({ data: externalData }) => {
     return parts.map((part, index) => {
       if (part.startsWith('[') && part.endsWith(']')) {
         return (
-          <span key={index} className="text-primary">
+          <span key={index} className="text-[#3B82F6]">
             {part.slice(1, -1).split(/\\n|\n/).map((line, lIdx, arr) => (
               <React.Fragment key={lIdx}>
                 {line}
@@ -108,55 +157,66 @@ const OurProjects = ({ data: externalData }) => {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-6 md:px-8 max-w-7xl">
-        
-        {/* Top Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 mb-20">
+    <section className="pt-16 md:pt-24 bg-white overflow-hidden">
+      
+      {/* Top Header Section */}
+      <div className="w-full relative mb-16 md:mb-24 px-6 md:px-8">
+        <div className="container mx-auto max-w-7xl relative">
           
-          <div className="max-w-2xl fadeInLeft">
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300 mb-8">
+          {/* Badge: Absolute to left */}
+          <div className="md:absolute left-0 top-0 mb-8 md:mb-0 fadeInLeft">
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
                 {badgeText}
               </span>
             </div>
-            
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-[1.1]">
-              {renderTitle(title)}
-            </h2>
           </div>
           
-          <div className="max-w-md pb-2 fadeInRight">
-            <p className="text-gray-500 text-sm font-light leading-relaxed">
-              {description}
-            </p>
+          <div className="flex flex-col items-center w-full">
+            <div className="flex flex-col items-start w-fit fadeInRight md:pl-32 lg:pl-0">
+              <h2 className="text-4xl md:text-5xl lg:text-[64px] font-bold tracking-tight text-gray-900 leading-[1.05] text-left">
+                {renderTitle(title)}
+              </h2>
+              <p className="text-gray-500 text-sm md:text-base font-normal leading-relaxed max-w-[550px] text-left mt-6 whitespace-pre-line">
+                {description}
+              </p>
+            </div>
           </div>
+          
         </div>
+      </div>
 
-        {/* Carousel Section */}
-        <div 
-          className="flex overflow-x-auto gap-8 pb-16 snap-x snap-mandatory hide-scrollbar opal-move-up"
-          ref={carouselRef}
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {projectsList.map((project, index) => {
-            const isEven = index % 2 === 0;
-            const marginTopClass = isEven ? 'mt-12 md:mt-24' : 'mt-0';
+      {/* Carousel Section */}
+      <div 
+        className={`flex w-full overflow-x-auto hide-scrollbar opal-move-up select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        ref={carouselRef}
+        onScroll={handleScroll}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        <div className="flex gap-6 md:gap-10 px-0 pb-12 items-start shrink-0">
+          {infiniteProjects.map((project, index) => {
+            const originalIndex = index % 5; 
+            const isEven = originalIndex % 2 === 0;
+            const marginTopClass = isEven ? 'mt-0' : 'mt-16 md:mt-24';
 
             return (
               <div 
-                key={project.id || index} 
-                className={`min-w-[320px] md:min-w-[380px] snap-center flex flex-col ${marginTopClass} transition-all duration-300 hover:-translate-y-2`}
+                key={`${project.id}-${index}`} 
+                className={`w-[250px] md:w-[320px] lg:w-[360px] shrink-0 flex flex-col ${marginTopClass}`}
               >
                 {/* Image Card */}
-                <div className="relative w-full h-[400px] md:h-[500px] rounded-[2.5rem] overflow-hidden mb-8 shadow-lg group">
+                <div className="relative w-full h-[380px] md:h-[500px] rounded-[2.5rem] overflow-hidden mb-6 shadow-sm group bg-zinc-100 pointer-events-none">
                   <img 
                     src={project.image} 
                     alt={project.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     onError={(e) => {
-                      const defaultImg = defaultProjectsData[index % defaultProjectsData.length].image;
+                      const defaultImg = defaultProjectsData[originalIndex].image;
                       if (e.currentTarget.src !== defaultImg) {
                         e.currentTarget.src = defaultImg;
                       }
@@ -164,7 +224,7 @@ const OurProjects = ({ data: externalData }) => {
                   />
                   {/* Category Pill */}
                   <div className="absolute top-6 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full border border-white/40 bg-white/10 backdrop-blur-md text-white text-[10px] tracking-widest uppercase shadow-sm">
+                    <span className="px-5 py-2 rounded-full border border-white/30 bg-white/10 backdrop-blur-md text-white text-[10px] tracking-widest uppercase shadow-sm whitespace-nowrap">
                       {project.category}
                     </span>
                   </div>
@@ -172,8 +232,8 @@ const OurProjects = ({ data: externalData }) => {
 
                 {/* Card Text */}
                 <div className="px-2">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{project.title}</h3>
-                  <p className="text-sm text-gray-500 font-light leading-relaxed max-w-xs">
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{project.title}</h3>
+                  <p className="text-sm text-gray-500 font-normal leading-relaxed">
                     {project.description}
                   </p>
                 </div>
@@ -181,19 +241,17 @@ const OurProjects = ({ data: externalData }) => {
             );
           })}
         </div>
-
       </div>
 
       {/* Bottom Section: Typography & Image */}
-      <div className="relative w-full mt-24 pt-20 pb-16 flex flex-col items-center justify-end min-h-[400px] opal-move-up">
-        {/* Huge Background Typography */}
-        <div className="absolute top-0 left-0 right-0 overflow-hidden flex justify-center pointer-events-none z-0">
-          <h2 className="text-[22vw] font-black text-gray-100 leading-none select-none">
+      <div className="relative w-full mt-24 pt-24 md:pt-36 pb-16 flex flex-col items-center justify-end min-h-[400px] opal-move-up">
+        
+        <div className="absolute -top-10 md:-top-20 left-0 right-0 overflow-hidden flex justify-center pointer-events-none z-0">
+          <h2 className="text-[25vw] md:text-[22vw] font-black text-[#F3F4F6] leading-none select-none">
             Interior
           </h2>
         </div>
 
-        {/* Foreground Image */}
         <div className="container mx-auto px-8 md:px-28 relative z-10">
           <img 
             src={interiorImg} 
