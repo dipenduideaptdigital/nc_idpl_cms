@@ -13,6 +13,7 @@ import {
   resetPassword,
   changePassword,
   setupAdminAccount,
+  getMe
 } from "./auth.service.js";
 
 import {
@@ -165,5 +166,16 @@ export const setupAdminAccountController = asyncHandler(async (req, res) => {
     res,
     statusCode: StatusCodes.OK,
     message: "Account setup successful! You can now log in.",
+  });
+});
+
+export const meController = asyncHandler(async (req, res) => {
+  const userData = await getMe(req.user.id);
+
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Current user fetched successfully",
+    data: userData,
   });
 });

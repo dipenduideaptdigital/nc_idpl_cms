@@ -10,6 +10,7 @@ import {
   resetPasswordController,
   changePasswordController,
   setupAdminAccountController,
+  meController
 } from "./auth.controller.js";
 
 import {
@@ -52,6 +53,7 @@ router.post("/reset-password", sensitiveOperationRateLimiter, validate(resetPass
 // Change password
 router.patch("/change-password", authenticate, sensitiveOperationRateLimiter, validate(changePasswordSchema), changePasswordController);
 
+router.get("/me", authenticate, meController);
 // Logout current device
 router.post("/logout", logoutController);
 

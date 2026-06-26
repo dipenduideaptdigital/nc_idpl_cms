@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, Phone, Search } from 'lucide-react';
 import { pagesApi } from '../../api/pages';
 import { Link, useLocation } from 'react-router-dom';
+import logo from '../../assets/logos/Subhaakriti_Logo.png'; 
 
 const Navbar = () => {
   const [pages, setPages] = useState([]);
@@ -21,16 +22,13 @@ const Navbar = () => {
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-50 px-8 py-6 flex items-center justify-between text-white bg-gradient-to-b from-black/50 to-transparent">
-      {/* Logo */}
-      <Link to="/" className="flex flex-col items-center cursor-pointer">
-        <div className="text-3xl font-light tracking-widest relative">
-          subh<span className="font-medium">AA</span>kritee
-          <span className="absolute top-1 -right-4 text-[10px]">&trade;</span>
-          <div className="absolute -bottom-1 left-0 right-0 h-[1px] bg-white/70"></div>
-        </div>
-        <div className="text-[10px] tracking-[0.2em] mt-1.5 uppercase opacity-80">
-          The Design People
-        </div>
+      {/* Logo Section */}
+      <Link to="/" className="flex items-center cursor-pointer">
+        <img 
+          src={logo} 
+          alt="Subhaakritee Logo" 
+          className="h-12 md:h-14 w-auto object-contain" 
+        />
       </Link>
 
       {/* Navigation Links */}
@@ -74,9 +72,9 @@ const Navbar = () => {
         <Link to="/blog" className="hover:text-gray-300 transition-colors py-2">
           Blog
         </Link>
-        <a href="#" className="hover:text-gray-300 transition-colors py-2">
+        <Link to="/contact" className="hover:text-gray-300 transition-colors py-2">
           Contact Us
-        </a>
+        </Link>
       </div>
 
       {/* Right Actions */}

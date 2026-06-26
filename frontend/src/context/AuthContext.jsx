@@ -20,20 +20,19 @@ export const AuthProvider = ({ children }) => {
       const res = await apiClient.get('/auth/me'); 
       
       if (res.data.success) {
-        const tokenPayload = parseJwt(token); 
-        const userWithPerms = {
+        const userWithFreshPerms = {
           ...res.data.data,
-          permissions: tokenPayload.permissions || []
+          permissions: res.data.data.permissions || []
         };
 
-        console.log("Logged in User Permissions:", userWithPerms.permissions);
-
-        setUser(userWithPerms);
+        setUser(userWithFreshPerms);
         setIsAuthenticated(true);
       }
     } catch (error) {
       setUser(null);
       setIsAuthenticated(false);
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
     } finally {
       setIsInitializing(false);
     }

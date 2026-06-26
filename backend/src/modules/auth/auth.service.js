@@ -356,3 +356,25 @@ export const setupAdminAccount = async ({ token, password }) => {
 
   return true;
 };
+
+
+export const getMe = async (userId) => {
+  const user = await findUserById(userId, AUTH_BASIC_USER_INCLUDE);
+  
+  if (!user) {
+    throw new AppError("User not found", StatusCodes.NOT_FOUND);
+  }
+
+  if (user.status !== "ACTIVE") {
+    throw new AppError("Account is inactive or suspended", StatusCodes.FORBIDDEN);
+  }
+
+  const freshPermissions = await getUserPermissions(userId);
+
+  const sanitizedUser = sanitizeUser(user);
+  
+  return {
+    ...sanitizedUser,
+    permissions: freshPermissions
+  };
+};

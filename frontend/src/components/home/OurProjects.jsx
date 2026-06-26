@@ -92,6 +92,18 @@ const OurProjects = ({ data: externalData }) => {
     }
   }, [projectsList]);
 
+  useEffect(() => {
+    if (isDragging) return; 
+
+    const autoScrollInterval = setInterval(() => {
+      if (carouselRef.current) {
+        carouselRef.current.scrollBy({ left: 350, behavior: 'smooth' });
+      }
+    }, 3000);
+
+    return () => clearInterval(autoScrollInterval);
+  }, [isDragging]);
+
   const handleScroll = () => {
     if (!carouselRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;

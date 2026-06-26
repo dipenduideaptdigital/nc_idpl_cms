@@ -16,6 +16,7 @@ import DynamicPage from './pages/DynamicPage';
 import PreviewPage from './pages/PreviewPage'; 
 import Login from './pages/Login';
 import Register from './pages/Register';
+// import ContactUs from './pages/ContactUs';
 import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import AdminSetup from './pages/AdminSetup';
@@ -80,6 +81,7 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<LandingContainer />} />
             <Route path="/hero-preview-2" element={<LandingReference2 />} />
+            {/* <Route path="/contact" element={<ContactUs />} /> */}
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
           </Route>
