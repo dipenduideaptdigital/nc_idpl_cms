@@ -1,31 +1,22 @@
-// import React, { useEffect } from 'react';
-// import ContactBanner from '../components/contact/ContactBanner';
-// import ContactInfo from '../components/contact/ContactInfo';
-// import ContactMap from '../components/contact/ContactMap';
-// import ContactCTA from '../components/contact/ContactCTA';
-// // Tumi jodi kono shared CTA use koro, seta ekhane import korte paro
+import React, { useEffect } from 'react';
+import ContactBanner from '../components/contact/ContactBanner';
+import ContactInfo from '../components/contact/ContactInfo';
+import useScrollAnimation from '../hooks/useScrollAnimation';
 
-// const ContactUs = () => {
-//   useEffect(() => {
-//     document.title = 'Contact Us | Subhaakritee';
-//     window.scrollTo({ top: 0, behavior: 'smooth' });
-//   }, []);
+const ContactUs = () => {
+  useScrollAnimation(); 
 
-//   return (
-//     <div className="min-h-screen bg-white font-helvetica">
-//       {/* Figma: "Banners (1).jpg" er moto hero banner */}
-//       <ContactBanner />
-      
-//       {/* Figma: "Get in Touch.jpg" er moto info cards ar form */}
-//       <ContactInfo />
-      
-//       {/* Figma: "Map.jpg" er moto map section */}
-//       <ContactMap />
-      
-//       {/* Figma: "CTA.jpg" er moto bottom CTA section */}
-//       <ContactCTA />
-//     </div>
-//   );
-// };
+  useEffect(() => {
+    document.title = 'Contact Us | Subhaakritee';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
-// export default ContactUs;
+  return (
+    <div className="min-h-screen bg-white font-helvetica">
+      <ContactBanner />
+      <ContactInfo />
+    </div>
+  );
+};
+
+export default ContactUs;

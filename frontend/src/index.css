@@ -19,6 +19,10 @@ body {
   color: #111827;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Glassmorphism utilities */
 .glass {
   background: rgba(255, 255, 255, 0.1);

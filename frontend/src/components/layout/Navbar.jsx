@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, Phone, Search } from 'lucide-react';
 import { pagesApi } from '../../api/pages';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logos/logo2.svg'; 
 
 const Navbar = () => {
   const [pages, setPages] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPages = async () => {
@@ -20,6 +21,26 @@ const Navbar = () => {
     fetchPages();
   }, [location.pathname]);
 
+  const handleNavClick = (e, targetId) => {
+    e.preventDefault();
+    
+    if (location.pathname !== '/') {
+      navigate(`/#${targetId}`);
+    } else {
+      const element = document.getElementById(targetId);
+      if (element) {
+        const headerOffset = 0; 
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   return (
     <nav className="absolute top-0 left-0 right-0 z-50 px-8 py-6 flex items-center justify-between text-white bg-gradient-to-b from-black/50 to-transparent">
       {/* Logo Section */}
@@ -32,19 +53,38 @@ const Navbar = () => {
       </Link>
 
       {/* Navigation Links */}
-      <div className="hidden lg:flex items-center space-x-8 text-sm font-light">
-        <a href="#" className="flex items-center hover:text-gray-300 transition-colors">
-          Home <ChevronDown className="w-4 h-4 ml-1 opacity-70" />
+      <div className="hidden lg:flex items-center space-x-12 text-base font-light">
+        <a 
+          href="/#about" 
+          onClick={(e) => handleNavClick(e, 'about')} 
+          className="flex items-center hover:text-gray-300 transition-colors"
+        >
+          About
         </a>
-        <a href="#" className="flex items-center hover:text-gray-300 transition-colors">
-          Services <ChevronDown className="w-4 h-4 ml-1 opacity-70" />
+        <a 
+          href="/#services" 
+          onClick={(e) => handleNavClick(e, 'services')} 
+          className="flex items-center hover:text-gray-300 transition-colors"
+        >
+          Services
         </a>
-        <a href="#" className="flex items-center hover:text-gray-300 transition-colors">
-          Projects <ChevronDown className="w-4 h-4 ml-1 opacity-70" />
+        <a 
+          href="/#process" 
+          onClick={(e) => handleNavClick(e, 'process')} 
+          className="flex items-center hover:text-gray-300 transition-colors"
+        >
+          Process
+        </a>
+        <a 
+          href="/#projects" 
+          onClick={(e) => handleNavClick(e, 'projects')} 
+          className="flex items-center hover:text-gray-300 transition-colors"
+        >
+          Projects
         </a>
         
         {/* Dynamic Pages Dropdown */}
-        <div className="relative group">
+        {/* <div className="relative group">
           <button className="flex items-center hover:text-gray-300 transition-colors py-2">
             Pages <ChevronDown className="w-4 h-4 ml-1 opacity-70" />
           </button>
@@ -67,14 +107,15 @@ const Navbar = () => {
               <div className="px-4 py-3 text-sm text-gray-500 italic">No pages found</div>
             )}
           </div>
-        </div>
+        </div> */}
 
-        <Link to="/blog" className="hover:text-gray-300 transition-colors py-2">
+        <a 
+          href="/#blog" 
+          onClick={(e) => handleNavClick(e, 'blog')} 
+          className="hover:text-gray-300 transition-colors py-2"
+        >
           Blog
-        </Link>
-        <Link to="/contact" className="hover:text-gray-300 transition-colors py-2">
-          Contact Us
-        </Link>
+        </a>
       </div>
 
       {/* Right Actions */}
@@ -87,9 +128,11 @@ const Navbar = () => {
           </div>
         </div>
         
-        <button className="bg-primary hover:bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-lg hover:shadow-blue-500/30">
-          Get A Quote!
-        </button>
+        <Link to="/contact">
+          <button className="bg-primary hover:bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-lg hover:shadow-blue-500/30">
+            Get A Quote!
+          </button>
+        </Link>
 
         <button className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all">
           <Search className="w-4 h-4" />

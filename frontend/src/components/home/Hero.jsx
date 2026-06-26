@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, ArrowDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import apiClient from '../../api/client'; 
 import defaultHeroback from '../../assets/homepage/banner_back.png';
 import defaultHerofront from '../../assets/homepage/banner_front.png';
@@ -138,12 +139,15 @@ const Hero = ({ data: externalData }) => {
             </p>
             
             {/* CTA Button */}
-            <button className="group inline-flex items-center space-x-4 md:space-x-6 rounded-full border border-white/40 hover:border-white transition-all pl-5 md:pl-6 pr-2 py-2 ml-20">
+            <Link 
+              to="/contact" 
+              className="group inline-flex items-center space-x-4 md:space-x-6 rounded-full border border-white/40 hover:border-white transition-all pl-5 md:pl-6 pr-2 py-2 ml-20"
+            >
               <span className="text-xs md:text-sm font-medium tracking-wide">{content?.buttonText || "BOOK A FREE CONSULTATION"}</span>
               <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary flex items-center justify-center text-white transition-transform group-hover:scale-105">
                 <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5" />
               </div>
-            </button>
+            </Link>
           </div>
 
           {/* Right Content Area - Glassmorphism Cards - Proportions fixed */}

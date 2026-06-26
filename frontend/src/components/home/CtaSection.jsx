@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import apiClient from '../../api/client';
 
 const CtaSection = ({ data: externalData }) => {
@@ -82,15 +83,17 @@ const CtaSection = ({ data: externalData }) => {
               {renderTitle(title)}
             </h2>
             
-            {/* CTA Button */}
-            <button className="group inline-flex items-center space-x-4 rounded-full border border-zinc-300 hover:border-[#3B82F6] transition-colors pl-6 pr-2 py-2 opal-move-up cursor-pointer">
-              <span className="text-[13px] font-bold tracking-wider text-zinc-600 uppercase group-hover:text-zinc-900 transition-colors">
-                {buttonText}
-              </span>
-              <div className="w-10 h-10 rounded-full bg-[#3B82F6] flex items-center justify-center text-white transition-transform group-hover:scale-105 shadow-md">
-                <ArrowUpRight className="w-5 h-5" strokeWidth={2.5} />
-              </div>
-            </button>
+            {/* CTA Button*/}
+            <Link to="/contact">
+              <button className="group inline-flex items-center space-x-4 rounded-full border border-zinc-300 hover:border-[#3B82F6] transition-colors pl-6 pr-2 py-2 opal-move-up cursor-pointer">
+                <span className="text-[13px] font-bold tracking-wider text-zinc-600 uppercase group-hover:text-zinc-900 transition-colors">
+                  {buttonText}
+                </span>
+                <div className="w-10 h-10 rounded-full bg-[#3B82F6] flex items-center justify-center text-white transition-transform group-hover:scale-105 shadow-md">
+                  <ArrowUpRight className="w-5 h-5" strokeWidth={2.5} />
+                </div>
+              </button>
+            </Link>
           </div>
 
         </div>
