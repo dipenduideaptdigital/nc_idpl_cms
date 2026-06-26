@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, Phone, Search } from 'lucide-react';
 import { pagesApi } from '../../api/pages';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '../../assets/logos/Subhaakriti_Logo.png'; 
+import logo from '../../assets/logos/logo2.svg'; 
 
 const Navbar = () => {
   const [pages, setPages] = useState([]);
@@ -27,7 +27,7 @@ const Navbar = () => {
         <img 
           src={logo} 
           alt="Subhaakritee Logo" 
-          className="h-12 md:h-14 w-auto object-contain" 
+          className="h-10 md:h-12 w-auto object-contain" 
         />
       </Link>
 
