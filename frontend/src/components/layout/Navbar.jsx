@@ -84,7 +84,7 @@ const Navbar = () => {
         </a>
         
         {/* Dynamic Pages Dropdown */}
-        {/* <div className="relative group">
+        <div className="relative group">
           <button className="flex items-center hover:text-gray-300 transition-colors py-2">
             Pages <ChevronDown className="w-4 h-4 ml-1 opacity-70" />
           </button>
@@ -107,7 +107,7 @@ const Navbar = () => {
               <div className="px-4 py-3 text-sm text-gray-500 italic">No pages found</div>
             )}
           </div>
-        </div> */}
+        </div>
 
         <a 
           href="/#blog" 
