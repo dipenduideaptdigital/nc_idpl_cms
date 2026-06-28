@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { pagesApi } from '../../../api/pages';
+import Can from '../../../components/shared/Can';
 import { 
   FileText, 
   Plus, 
@@ -117,13 +118,16 @@ const PageList = () => {
           </h1>
           <p className="text-zinc-500 text-sm mt-1">Manage your website's pages and content.</p>
         </div>
-        <Link 
-          to="/admin/pages/create"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20"
-        >
-          <Plus className="w-4 h-4" />
-          Create New Page
-        </Link>
+        
+        <Can permission="page.create">
+          <Link 
+            to="/admin/pages/create"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20"
+          >
+            <Plus className="w-4 h-4" />
+            Create New Page
+          </Link>
+        </Can>
       </div>
 
       {error && (
@@ -189,15 +193,17 @@ const PageList = () => {
                             {page.fullPath || `/${page.slug}`}
                           </span>
                           
-                          <a 
-                            href={page.fullPath?.startsWith('/') ? page.fullPath : `/${page.fullPath || page.slug}`}
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-zinc-400 hover:text-zinc-700 transition-colors"
-                            title="View Public Page"
-                          >
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
+                          <Can permission="page.preview">
+                            <a 
+                              href={page.fullPath?.startsWith('/') ? page.fullPath : `/${page.fullPath || page.slug}`}
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-zinc-400 hover:text-zinc-700 transition-colors"
+                              title="View Public Page"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </Can>
                         </div>
                       </div>
                     </td>
@@ -219,25 +225,30 @@ const PageList = () => {
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         {!page.isStatic && (
                           <>
-                            <Link 
-                              to={`/admin/pages/edit/${page.id}`}
-                              className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                              title="Edit Page"
-                            >
-                              <Edit3 className="w-4 h-4" />
-                            </Link>
-                            <button 
-                              onClick={() => handleDelete(page.id)}
-                              disabled={isDeleting === page.id}
-                              className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                              title="Delete Page"
-                            >
-                              {isDeleting === page.id ? (
-                                <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                              ) : (
-                                <Trash2 className="w-4 h-4" />
-                              )}
-                            </button>
+                            <Can permission="page.edit">
+                              <Link 
+                                to={`/admin/pages/edit/${page.id}`}
+                                className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                title="Edit Page"
+                              >
+                                <Edit3 className="w-4 h-4" />
+                              </Link>
+                            </Can>
+                            
+                            <Can permission="page.delete">
+                              <button 
+                                onClick={() => handleDelete(page.id)}
+                                disabled={isDeleting === page.id}
+                                className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                                title="Delete Page"
+                              >
+                                {isDeleting === page.id ? (
+                                  <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                                ) : (
+                                  <Trash2 className="w-4 h-4" />
+                                )}
+                              </button>
+                            </Can>
                           </>
                         )}
                         {page.isStatic && (

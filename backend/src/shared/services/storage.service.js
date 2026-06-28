@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PUBLIC_DIR = path.join(__dirname, "../../../public");
 
-// Ensure directories exist
+// Ensure directories 
 const UPLOAD_DIR = path.join(PUBLIC_DIR, "uploads");
 const THUMB_DIR = path.join(PUBLIC_DIR, "uploads/thumbs");
 

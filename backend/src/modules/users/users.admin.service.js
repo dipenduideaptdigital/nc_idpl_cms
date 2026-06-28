@@ -158,41 +158,40 @@ export const getAllUsersPaginated = async (queryMatrix) => {
   return { users, total, page, limit, totalPages: Math.ceil(total / limit) };
 };
 
-export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalRoleIds, inviterId }) => {
+export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalRoleIds = [], inviterId }) => {
   const normalizedEmail = normalizeEmail(email);
 
-  // Check if user already exists
   const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existingUser) {
     if (existingUser.status === "PENDING") {
-      throw new AppError("A pending invitation already exists for this email. Please ask them to check their inbox or delete the pending account first.", StatusCodes.CONFLICT);
+      throw new AppError("A pending invitation already exists for this email.", StatusCodes.CONFLICT);
     }
     throw new AppError("A user with this email already exists.", StatusCodes.CONFLICT);
   }
 
-  // Validate System Role
   const systemRole = await prisma.systemRole.findUnique({ where: { slug: systemRoleSlug } });
   if (!systemRole || !["ADMIN", "SUPER_ADMIN"].includes(systemRoleSlug)) {
     throw new AppError("Invalid system role for invitation.", StatusCodes.BAD_REQUEST);
   }
 
   // Validate Functional Roles
-  if (functionalRoleIds && functionalRoleIds.length > 0) {
+  if (functionalRoleIds.length > 0) {
     const validRolesCount = await prisma.functionalRole.count({ where: { id: { in: functionalRoleIds } } });
     if (validRolesCount !== functionalRoleIds.length) {
       throw new AppError("One or more functional role IDs are invalid.", StatusCodes.BAD_REQUEST);
     }
   }
 
-  // Generate Security Tokens
   const rawToken = generateSecureToken();
   const tokenHash = hashSecureToken(rawToken);
-  const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000); 
+  const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
 
   return await prisma.$transaction(async (tx) => {
     await tx.adminInvitation.deleteMany({ where: { email: normalizedEmail } });
 
     const dummyPassword = await hashPassword(crypto.randomBytes(20).toString("hex"));
+
+    // Create Pending User
     const newUser = await tx.user.create({
       data: {
         name,
@@ -204,17 +203,15 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
       }
     });
 
-    // MAP THE FUNCTIONAL ROLES 
+    // EXPLICIT FUNCTIONAL ROLE MAPPING
     if (functionalRoleIds && functionalRoleIds.length > 0) {
-      await tx.userFunctionalRole.createMany({
-        data: functionalRoleIds.map(roleId => ({
-          userId: newUser.id,
-          functionalRoleId: roleId
-        }))
-      });
+      const roleMappings = functionalRoleIds.map(rId => ({
+        userId: newUser.id,
+        functionalRoleId: rId
+      }));
+      await tx.userFunctionalRole.createMany({ data: roleMappings });
     }
 
-    // Create Invitation Record
     const invitation = await tx.adminInvitation.create({
       data: {
         email: normalizedEmail,
@@ -225,10 +222,9 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
       }
     });
 
-    // Fire Email 
     const setupUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/admin-setup?token=${rawToken}&email=${encodeURIComponent(normalizedEmail)}`;
     
-    sendEmail({
+    void sendEmail({
       to: normalizedEmail,
       subject: "Invitation to Subhaakritee Admin Portal",
       html: `

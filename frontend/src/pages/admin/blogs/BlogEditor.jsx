@@ -5,6 +5,7 @@ import apiClient from '../../../api/client';
 import { resolveAssetUrl } from '../../../utils/assetResolver';
 import { Save, ArrowLeft, Layout, Type, Plus, Trash2, Settings, ChevronDown, Upload, Calendar } from 'lucide-react';
 import DynamicBlockEditor from '../../../components/admin/DynamicBlockEditor';
+import Can from '../../../components/shared/Can';
 import PreviewManager from '../../../components/admin/PreviewManager';
 
 const BlogEditor = () => {
@@ -147,12 +148,21 @@ const BlogEditor = () => {
         </div>
         <div className="flex items-center gap-3">
           
-          <PreviewManager id={isEditMode ? id : null} entityType="blog" />
+          <Can permission="blog.preview">
+            <PreviewManager id={isEditMode ? id : null} entityType="blog" />
+          </Can>
 
-          <select value={formData.status} onChange={e => setFormData(p => ({...p, status: e.target.value}))} className="px-4 py-2.5 border border-zinc-200 rounded-xl bg-zinc-50 text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-900/10">
+          <select 
+            value={formData.status} 
+            onChange={e => setFormData(p => ({...p, status: e.target.value}))} 
+            className="px-4 py-2.5 border border-zinc-200 rounded-xl bg-zinc-50 text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-900/10"
+          >
             <option value="DRAFT">Draft</option>
-            <option value="PUBLISHED">Published</option>
-            <option value="SCHEDULED">Scheduled</option>
+            
+            <Can permission="blog.publish">
+              <option value="PUBLISHED">Published</option>
+              <option value="SCHEDULED">Scheduled</option>
+            </Can>
           </select>
           
           <button type="submit" disabled={saving} className="flex items-center gap-2 px-6 py-2.5 bg-[#3B82F6] text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-sm focus:ring-2 focus:ring-[#3B82F6]/20 disabled:opacity-70">

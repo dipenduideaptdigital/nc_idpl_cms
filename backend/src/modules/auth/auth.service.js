@@ -39,7 +39,6 @@ const getUserPermissions = async (userId) => {
     }
   });
 
-  // Flatten and remove duplicates using Set
   return Array.from(new Set(
     userRoles.flatMap(ufr => 
       ufr.functionalRole.permissions.map(p => p.permission.slug)
@@ -48,13 +47,10 @@ const getUserPermissions = async (userId) => {
 };
 
 const login = async ({ email, password, allowedRoles = [] }) => {
-  // Normalize email
   const normalizedEmail = normalizeEmail(email);
 
-  // Find user
   const user = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
 
-  // Invalid user
   if (!user) {
     throw new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED);
   }
@@ -64,7 +60,6 @@ const login = async ({ email, password, allowedRoles = [] }) => {
   if (user.status === "SUSPENDED") throw new AppError("Account suspended", StatusCodes.FORBIDDEN);
   if (user.status === "INACTIVE") throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
 
-  // Password validation
   const isPasswordMatched = await comparePassword(password, user.password);
   if (!isPasswordMatched) {
     throw new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED);
@@ -88,7 +83,6 @@ const login = async ({ email, password, allowedRoles = [] }) => {
   const refreshToken = generateRefreshToken({ userId: user.id });
   const refreshTokenHash = hashToken(refreshToken);
 
-  // Transactional session write
   await prisma.$transaction([
     prisma.refreshToken.create({
       data: {
@@ -106,31 +100,29 @@ const login = async ({ email, password, allowedRoles = [] }) => {
   return {
     accessToken,
     refreshToken,
-    user: sanitizeUser(user),
+    user: {
+      ...sanitizeUser(user),
+      permissions: userPermissionsArray
+    },
   };
 };
 
-// User registration
 export const registerUser = async (payload) => {
   const normalizedEmail = normalizeEmail(payload.email);
 
-  // Check existing user
   const existingUser = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
   if (existingUser) {
     throw new AppError("Email already exists", StatusCodes.BAD_REQUEST);
   }
 
-  // Find default user role
   const userSystemRole = await prisma.systemRole.findUnique({ where: { slug: "USER" } });
   if (!userSystemRole) {
     throw new AppError("Default user role not configured", StatusCodes.INTERNAL_SERVER_ERROR);
   }
 
-  // Hash password
   const hashedPassword = await hashPassword(payload.password);
 
   try {
-    // Create user
     const user = await prisma.user.create({
       data: {
         name: payload.name,
@@ -152,17 +144,14 @@ export const registerUser = async (payload) => {
   }
 };
 
-// User login
 export const loginUser = async (payload) => {
   return login({ email: payload.email, password: payload.password, allowedRoles: ["USER"] });
 };
 
-// Admin login
 export const adminLogin = async (payload) => {
   return login({ email: payload.email, password: payload.password, allowedRoles: ["SUPER_ADMIN", "ADMIN"] });
 };
 
-// Refresh access token
 export const refreshAccessToken = async (refreshToken) => {
   if (!refreshToken) {
     throw new AppError("Refresh token missing", StatusCodes.UNAUTHORIZED);
@@ -186,13 +175,11 @@ export const refreshAccessToken = async (refreshToken) => {
 
   const user = storedToken.user;
 
-  // User validation
   if (!user) throw new AppError("User not found", StatusCodes.UNAUTHORIZED);
   if (user.status !== "ACTIVE") throw new AppError("Account inactive", StatusCodes.FORBIDDEN);
 
   const userPermissionsArray = await getUserPermissions(user.id);
 
-  // Generate new access token
   const accessToken = generateAccessToken({ 
     userId: user.id, 
     systemRole: user.systemRole.slug,
@@ -219,10 +206,8 @@ export const forgotPassword = async (email) => {
   const normalizedEmail = normalizeEmail(email);
   const user = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
 
-  // Silent success to prevent email enumeration
   if (!user) return;
 
-  // Email-based cooldown to prevent reset flooding
   const recentResetRequest = await findRecentPasswordResetToken(user.id);
   if (recentResetRequest) return;
 
@@ -244,7 +229,6 @@ export const forgotPassword = async (email) => {
   const resetUrl = `${env.CLIENT_URL}/reset-password?token=${rawToken}`;
   const html = passwordResetTemplate({ resetUrl, expiresInMinutes: env.PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES });
 
-  // Send email (non-blocking)
   void sendEmail({ to: user.email, subject: "Password Reset Request", html }).catch((error) => {
     logger.error({ message: "Password reset email failed", email: user.email, error: error.message });
   });

@@ -9,4 +9,4 @@ export const Can = ({ permission, children, fallback = null }) => {
   
   return fallback ? <>{fallback}</> : null;
 };
-
+export default Can;

@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('user');
     } finally {
       setIsInitializing(false);
     }
@@ -43,7 +42,6 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('user');
     };
 
     window.addEventListener('auth:logout', handleLogout);
@@ -56,11 +54,10 @@ export const AuthProvider = ({ children }) => {
     const tokenPayload = parseJwt(token); 
     const userWithPerms = {
       ...userData,
-      permissions: tokenPayload.permissions || []
+      permissions: userData.permissions || tokenPayload?.permissions || []
     };
 
     localStorage.setItem('accessToken', token);
-    localStorage.setItem('user', JSON.stringify(userWithPerms));
     setUser(userWithPerms);
     setIsAuthenticated(true);
   };

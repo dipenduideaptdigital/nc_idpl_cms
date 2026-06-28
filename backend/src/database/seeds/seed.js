@@ -19,6 +19,12 @@ const PERMISSIONS = [
   { name: "Publish Blog", slug: "blog.publish", module: "BLOGS" },
   { name: "Preview Blog", slug: "blog.preview", module: "BLOGS" },
 
+  // TAXONOMY (Categories & Tags)
+  { name: "View Taxonomy", slug: "taxonomy.view", module: "BLOGS" },
+  { name: "Create Taxonomy", slug: "taxonomy.create", module: "BLOGS" },
+  { name: "Edit Taxonomy", slug: "taxonomy.edit", module: "BLOGS" },
+  { name: "Delete Taxonomy", slug: "taxonomy.delete", module: "BLOGS" },
+
   // MEDIA
   { name: "View Media", slug: "media.view", module: "MEDIA" },
   { name: "Upload Media", slug: "media.upload", module: "MEDIA" },
@@ -47,6 +53,12 @@ const PERMISSIONS = [
   { name: "Edit Role", slug: "role.edit", module: "ROLES" },
   { name: "Delete Role", slug: "role.delete", module: "ROLES" },
   { name: "Delete User", slug: "user.delete", module: "USERS" },
+
+  //CONTACT-FORMS
+  { name: "View Contact Forms", slug: "contact_form.view", module: "CONTACT_FORMS" },
+  { name: "Create Contact Form", slug: "contact_form.create", module: "CONTACT_FORMS" },
+  { name: "Edit Contact Form", slug: "contact_form.edit", module: "CONTACT_FORMS" },
+  { name: "Delete Contact Form", slug: "contact_form.delete", module: "CONTACT_FORMS" },
 ];
 
 async function main() {

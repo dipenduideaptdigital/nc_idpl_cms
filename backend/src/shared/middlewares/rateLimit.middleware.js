@@ -12,7 +12,7 @@ const rateLimitHandler = (message) => {
   };
 };
 
-// Common rate limit factory
+// Common rate limit 
 const createRateLimiter = ({
   windowMs,
   max,
@@ -52,7 +52,7 @@ export const refreshTokenRateLimiter = createRateLimiter({
   message: "Too many token refresh requests.",
 });
 
-// Sensitive operations limiter
+// operations limiter
 export const sensitiveOperationRateLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 5,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { contactFormsApi } from '../../../api/contactForms';
+import { Can } from '../../../components/shared/Can';
 import { Save, ArrowLeft, AlertCircle, Settings, Mail, Link as LinkIcon, Plus, X } from 'lucide-react';
 
 const ContactFormEditor = () => {
@@ -104,9 +105,11 @@ const ContactFormEditor = () => {
             </div>
             <div className="ml-3 text-sm font-medium text-zinc-700">{formData.isActive ? 'Active' : 'Disabled'}</div>
           </label>
-          <button type="submit" disabled={saving} className="flex items-center gap-2 px-6 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm disabled:opacity-70">
-            {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <Save className="w-4 h-4" />} Save Form
-          </button>
+          <Can permission={isEditMode ? 'contact_form.edit' : 'contact_form.create'}>
+            <button type="submit" disabled={saving} className="flex items-center gap-2 px-6 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm disabled:opacity-70">
+              {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <Save className="w-4 h-4" />} Save Form
+            </button>
+          </Can>
         </div>
       </div>
 

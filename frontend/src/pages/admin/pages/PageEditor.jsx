@@ -17,6 +17,7 @@ import PreviewManager from '../../../components/admin/PreviewManager';
 import { Puck } from '@measured/puck';
 import '@measured/puck/puck.css';
 import { puckConfig } from '../../../config/puck.config';
+import Can from '../../../components/shared/Can';
 
 const PageEditor = () => {
   const { id } = useParams();
@@ -418,7 +419,9 @@ const PageEditor = () => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <PreviewManager id={isEditMode ? id : null} entityType="page" />
+          <Can permission="page.preview">
+            <PreviewManager id={isEditMode ? id : null} entityType="page" />
+          </Can>
           <select
             name="status"
             value={formData.status}
@@ -426,7 +429,14 @@ const PageEditor = () => {
             className="px-4 py-2.5 border border-zinc-200 rounded-xl bg-zinc-50 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900/10 cursor-pointer"
           >
             <option value="DRAFT">Draft</option>
-            <option value="PUBLISHED">Published</option>
+            
+            <Can 
+              permission="page.publish" 
+              fallback={<option value="PUBLISHED" disabled>Published (Requires Permission)</option>}
+            >
+              <option value="PUBLISHED">Published</option>
+            </Can>
+
             {isEditMode && <option value="ARCHIVED">Archived</option>}
           </select>
           <button

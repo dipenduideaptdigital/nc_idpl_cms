@@ -14,7 +14,6 @@ export const authenticate = async (req, res, next) => {
     }
 
     let decoded;
-
     try {
       decoded = verifyAccessToken(accessToken);
     } catch {
@@ -27,13 +26,15 @@ export const authenticate = async (req, res, next) => {
       throw new AppError("User no longer exists", StatusCodes.UNAUTHORIZED);
     }
 
-    // Account status checks
     if (user.status !== "ACTIVE") {
       throw new AppError("Account is not active", StatusCodes.FORBIDDEN);
     }
 
-    // Attach user
-    req.user = user;
+    req.user = {
+      ...user,
+      permissions: decoded.permissions || [] 
+    };
+
     next();
   } catch (error) {
     next(error);

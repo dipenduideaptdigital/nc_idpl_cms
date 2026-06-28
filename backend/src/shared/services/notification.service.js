@@ -5,7 +5,7 @@ export const queueAdminNotificationEmail = async (submissionData, targetedInboxD
     try {
       const recipients = Array.isArray(targetedInboxDistributionList) && targetedInboxDistributionList.length > 0 
         ? targetedInboxDistributionList 
-        : ["default-it-ops-lead-intake@subhaakritee.internal"]; // Resilient structural system operations email fallback configuration parameters
+        : ["default-it-ops-lead-intake@subhaakritee.internal"];
 
       logger.info(`NotificationQueue: Processing outbound background message worker loop tracking payload context for Submission ID: ${submissionData.id}`);
       logger.info(`NotificationQueue: Dispatching leads payload metadata strictly down onto target dynamic distribution list routes channels map: [${recipients.join(", ")}]`);

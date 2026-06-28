@@ -50,9 +50,11 @@ const validateScheduleDate = (status, publishedAt) => {
   }
 };
 
-const enforceContentOwnershipBoundary = (resourceRecord, executingActorId, executingActorRoleSlug) => {
+const enforceContentOwnershipBoundary = (resourceRecord, executingActorId, executingActorRoleSlug, userPermissions = []) => {
   const normalizedRole = executingActorRoleSlug?.toUpperCase();
-  if (normalizedRole === "SUPER_ADMIN") return; 
+  if (normalizedRole === "SUPER_ADMIN") return;
+  
+  if (userPermissions.includes('blog.edit')) return;
 
   if (resourceRecord.authorId !== executingActorId) {
     throw new AppError("Access Denied: You do not possess structural identity rights ownership to modify or read this targeted private content record profile.", StatusCodes.FORBIDDEN);
@@ -93,10 +95,10 @@ export const createBlog = async (payload, authorId) => {
   }
 };
 
-export const updateBlog = async (id, payload, actorId, actorRoleSlug) => {
+export const updateBlog = async (id, payload, actorId, actorRoleSlug, userPermissions = []) => {
   const existing = await repo.findBlogById(id);
   if (!existing) throw new AppError("Blog record reference unavailable in backend systems.", StatusCodes.NOT_FOUND);
-  enforceContentOwnershipBoundary(existing, actorId, actorRoleSlug);
+  enforceContentOwnershipBoundary(existing, actorId, actorRoleSlug, userPermissions);
 
   validateScheduleDate(payload.status, payload.publishedAt);
 
@@ -155,23 +157,26 @@ export const getPublicBlogs = async (query) => {
   return { data: records, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
 };
 
-export const getAdminBlogs = async (query, actorId, actorRoleSlug) => {
+export const getAdminBlogs = async (query, actorId, actorRoleSlug, userPermissions = []) => {
   const { page, limit, ...filters } = query;
   const skip = (page - 1) * limit;
-  
+
   const normalizedRole = actorRoleSlug?.toUpperCase();
   if (normalizedRole !== "SUPER_ADMIN") {
-    filters.authorId = actorId; 
+    if (!userPermissions.includes('blog.edit')) {
+      filters.authorId = actorId;
+    }
   }
 
   const { records, total } = await repo.findBlogsPaginated({ skip, take: limit, ...filters }, false);
   return { data: records, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
 };
 
-export const getAdminBlogByIdSecure = async (id, actorId, actorRoleSlug) => {
+export const getAdminBlogByIdSecure = async (id, actorId, actorRoleSlug, userPermissions = []) => {
   const blog = await repo.findBlogById(id);
   if (!blog) throw new AppError("Blog post not found", StatusCodes.NOT_FOUND);
-  enforceContentOwnershipBoundary(blog, actorId, actorRoleSlug);
+  enforceContentOwnershipBoundary(blog, actorId, actorRoleSlug, userPermissions);
+  
   return blog;
 };
 
@@ -191,10 +196,10 @@ export const getBlogBySlug = async (slug, fingerprint) => {
   return { blog, relatedPosts, navigationSiblings, sidebar };
 };
 
-export const deleteBlog = async (id, actorId, actorRoleSlug) => {
+export const deleteBlog = async (id, actorId, actorRoleSlug, userPermissions = []) => {
   const post = await repo.findBlogById(id);
   if (!post) throw new AppError("Target blog post record reference identity failed to resolve.", StatusCodes.NOT_FOUND);
-  enforceContentOwnershipBoundary(post, actorId, actorRoleSlug);
+  enforceContentOwnershipBoundary(post, actorId, actorRoleSlug, userPermissions);
   return await repo.deleteBlogAndPreviewTokens(id);
 };
 
@@ -221,10 +226,11 @@ export const getBlogPreviewStatus = async (blogId) => {
   };
 };
 
-export const generatePreviewLink = async (blogId, userId, userRoleSlug, baseUrl) => {
+export const generatePreviewLink = async (blogId, userId, userRoleSlug, userPermissions = [], baseUrl) => {
   const blog = await repo.findBlogById(blogId);
   if (!blog) throw new AppError("Blog not found.", StatusCodes.NOT_FOUND);
-  enforceContentOwnershipBoundary(blog, userId, userRoleSlug);
+  
+  enforceContentOwnershipBoundary(blog, userId, userRoleSlug, userPermissions);
   
   const rawToken = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
@@ -237,10 +243,12 @@ export const generatePreviewLink = async (blogId, userId, userRoleSlug, baseUrl)
   });
   return { previewUrl: `${baseUrl}/preview/${rawToken}?type=blog` };
 };
-export const revokePreviewLink = async (blogId, actorId, actorRoleSlug) => {
+
+export const revokePreviewLink = async (blogId, actorId, actorRoleSlug, userPermissions = []) => {
   const blog = await repo.findBlogById(blogId);
   if (!blog) throw new AppError("Target blog reference pointer invalid.", StatusCodes.NOT_FOUND);
-  enforceContentOwnershipBoundary(blog, actorId, actorRoleSlug);
+  enforceContentOwnershipBoundary(blog, actorId, actorRoleSlug, userPermissions);
+  
   return await repo.revokePreviewToken(blogId);
 };
 

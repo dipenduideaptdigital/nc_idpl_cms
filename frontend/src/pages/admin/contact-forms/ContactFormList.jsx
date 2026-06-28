@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { contactFormsApi } from '../../../api/contactForms';
+import { Can } from '../../../components/shared/Can';
 import { Inbox, Plus, Edit3, Trash2, AlertCircle, Search } from 'lucide-react';
 
 const ContactFormList = () => {
@@ -66,12 +67,14 @@ const ContactFormList = () => {
           </h1>
           <p className="text-zinc-500 text-sm mt-1">Create and manage your dynamic lead capture forms.</p>
         </div>
-        <Link 
-          to="/admin/contact-forms/create"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20"
-        >
-          <Plus className="w-4 h-4" /> Create Form
-        </Link>
+        <Can permission="contact_form.create">
+          <Link 
+            to="/admin/contact-forms/create"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20"
+          >
+            <Plus className="w-4 h-4" /> Create Form
+          </Link>
+        </Can>
       </div>
 
       {error && (
@@ -127,12 +130,19 @@ const ContactFormList = () => {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Link to={`/admin/contact-forms/edit/${form.id}`} className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                        <Edit3 className="w-4 h-4" />
-                      </Link>
-                      <button onClick={() => handleDelete(form.id)} disabled={isDeleting === form.id} className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                        {isDeleting === form.id ? <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                      </button>
+                      
+                      <Can permission="contact_form.edit">
+                        <Link to={`/admin/contact-forms/edit/${form.id}`} className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                          <Edit3 className="w-4 h-4" />
+                        </Link>
+                      </Can>
+
+                      <Can permission="contact_form.delete">
+                        <button onClick={() => handleDelete(form.id)} disabled={isDeleting === form.id} className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                          {isDeleting === form.id ? <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                        </button>
+                      </Can>
+
                     </div>
                   </td>
                 </tr>

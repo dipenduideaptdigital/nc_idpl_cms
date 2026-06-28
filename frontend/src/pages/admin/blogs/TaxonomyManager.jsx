@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Folder, Plus, Trash2, AlertCircle } from 'lucide-react';
 import { blogsApi } from '../../../api/blogs';
+import { Can } from '../../../components/shared/Can';
 
 const TaxonomyManager = () => {
   const [categories, setCategories] = useState([]);
@@ -18,7 +19,7 @@ const TaxonomyManager = () => {
     setLoading(true);
     try {
       const [catRes, tagRes] = await Promise.all([
-        blogsApi.getPublicCategories(), // or your admin specific endpoints
+        blogsApi.getPublicCategories(),
         blogsApi.getPublicTags()
       ]);
       setCategories(catRes.data || []);
@@ -85,10 +86,12 @@ const TaxonomyManager = () => {
             <h2 className="text-lg font-bold">Categories</h2>
           </div>
           <div className="p-6">
-            <form onSubmit={handleAddCategory} className="flex gap-2 mb-6">
-              <input type="text" value={newCat} onChange={(e)=>setNewCat(e.target.value)} placeholder="New Category Name" className="flex-1 px-4 py-2 border rounded-xl bg-zinc-50 focus:ring-2 focus:ring-blue-500 outline-none text-sm"/>
-              <button type="submit" className="bg-zinc-900 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1 hover:bg-zinc-800"><Plus className="w-4 h-4"/> Add</button>
-            </form>
+            <Can permission="taxonomy.create">
+              <form onSubmit={handleAddCategory} className="flex gap-2 mb-6">
+                <input type="text" value={newCat} onChange={(e)=>setNewCat(e.target.value)} placeholder="New Category Name" className="flex-1 px-4 py-2 border rounded-xl bg-zinc-50 focus:ring-2 focus:ring-blue-500 outline-none text-sm"/>
+                <button type="submit" className="bg-zinc-900 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1 hover:bg-zinc-800"><Plus className="w-4 h-4"/> Add</button>
+              </form>
+            </Can>
             <div className="space-y-2 max-h-[400px] overflow-y-auto">
               {categories.map(c => (
                 <div key={c.id} className="flex justify-between items-center p-3 border rounded-xl hover:bg-zinc-50 transition-colors">
@@ -96,7 +99,11 @@ const TaxonomyManager = () => {
                     <span className="font-bold text-sm text-zinc-800 block">{c.name}</span>
                     <span className="text-xs text-zinc-400 font-mono">/{c.slug}</span>
                   </div>
-                  <button onClick={() => handleDelete(c.id, 'category')} className="text-zinc-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg"><Trash2 className="w-4 h-4"/></button>
+                  <button onClick={() => handleDelete(c.id, 'category')} className="text-zinc-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg">
+                    <Can permission="taxonomy.delete">
+                      <Trash2 className="w-4 h-4"/>
+                    </Can>
+                  </button>
                 </div>
               ))}
             </div>
@@ -118,7 +125,11 @@ const TaxonomyManager = () => {
               {tags.map(t => (
                 <div key={t.id} className="flex items-center gap-2 pl-3 pr-1 py-1 border border-zinc-200 bg-zinc-50 rounded-full text-sm font-medium">
                   #{t.name}
-                  <button onClick={() => handleDelete(t.id, 'tag')} className="text-zinc-400 hover:text-red-500 bg-white rounded-full p-1 shadow-sm"><Trash2 className="w-3 h-3"/></button>
+                  <Can permission="taxonomy.delete">
+                    <button onClick={() => handleDelete(t.id, 'tag')} className="text-zinc-400 hover:text-red-500 bg-white rounded-full p-1 shadow-sm">
+                      <Trash2 className="w-3 h-3"/>
+                    </button>
+                  </Can>
                 </div>
               ))}
             </div>

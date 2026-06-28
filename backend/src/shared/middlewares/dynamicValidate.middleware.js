@@ -19,6 +19,6 @@ export const dynamicCmsValidator = async (req, res, next) => {
     
     next();
   } catch (error) {
-    next(error); // This will pass the Zod validation error to our global error handler
+    next(error);
   }
 };

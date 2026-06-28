@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { blogsApi } from '../../../api/blogs';
+import Can from '../../../components/shared/Can';
 import { 
   FileText, Plus, Edit3, Trash2, Search, 
   ExternalLink, AlertCircle, Clock, Eye 
@@ -145,15 +146,25 @@ const BlogList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <a href={`/blog/${blog.slug}`} target="_blank" rel="noopener noreferrer" className="p-2 text-zinc-400 hover:text-[#3B82F6] hover:bg-blue-50 rounded-lg transition-colors">
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                      <Link to={`/admin/blogs/edit/${blog.id}`} className="p-2 text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">
-                        <Edit3 className="w-4 h-4" />
-                      </Link>
-                      <button onClick={() => handleDelete(blog.id)} disabled={isDeleting === blog.id} className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                        {isDeleting === blog.id ? <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div> : <Trash2 className="w-4 h-4" />}
-                      </button>
+                      
+                      <Can permission="blog.preview">
+                        <a href={`/blog/${blog.slug}`} target="_blank" rel="noopener noreferrer" className="p-2 text-zinc-400 hover:text-[#3B82F6] hover:bg-blue-50 rounded-lg transition-colors">
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </Can>
+
+                      <Can permission="blog.edit">
+                        <Link to={`/admin/blogs/edit/${blog.id}`} className="p-2 text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">
+                          <Edit3 className="w-4 h-4" />
+                        </Link>
+                      </Can>
+
+                      <Can permission="blog.delete">
+                        <button onClick={() => handleDelete(blog.id)} disabled={isDeleting === blog.id} className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                          {isDeleting === blog.id ? <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div> : <Trash2 className="w-4 h-4" />}
+                        </button>
+                      </Can>
+
                     </div>
                   </td>
                 </tr>
