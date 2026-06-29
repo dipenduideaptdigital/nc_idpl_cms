@@ -19,6 +19,7 @@ import Register from './pages/Register';
 import ContactUs from './pages/ContactUs';
 import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
+import Projects from './pages/Projects';
 import AdminSetup from './pages/AdminSetup';
 
 /* Admin Pages */
@@ -84,6 +85,7 @@ function App() {
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
+            <Route path="/projects" element={<Projects />} />
           </Route>
           
         </Routes>
