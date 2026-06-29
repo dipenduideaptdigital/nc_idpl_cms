@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tag, Folder, Plus, Trash2, AlertCircle } from 'lucide-react';
+import { Archive, Stamp, Plus, Trash2, AlertCircle } from 'lucide-react';
 import { blogsApi } from '../../../api/blogs';
 import { Can } from '../../../components/shared/Can';
 
@@ -66,73 +66,142 @@ const TaxonomyManager = () => {
     }
   };
 
-  if (loading) return <div className="p-10 flex justify-center"><div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-zinc-900"></div></div>;
+  if (loading) {
+    return (
+      <div className="p-10 flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 border-2 border-[#DDD6C7] border-t-[#B5563A] rounded-full animate-spin"></div>
+        <p className="text-sm font-mono uppercase tracking-wider text-[#8A8378]">Retrieving records…</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 max-w-5xl mx-auto">
-      <div>
-        <h1 className="text-2xl font-bold text-zinc-900">Categories & Tags</h1>
-        <p className="text-zinc-500 text-sm mt-1">Manage blog classification taxonomies.</p>
+    <div className="max-w-5xl mx-auto text-[#2B2A28]">
+
+      {/* Masthead */}
+      <div className="border-b-4 border-double border-[#2B2A28] pb-4 mb-8">
+        <p className="text-[11px] uppercase tracking-[0.3em] text-[#B5563A] font-bold mb-1.5">Taxonomy Register</p>
+        <h1 className="text-3xl font-serif font-bold text-[#2B2A28]">Categories &amp; Tags</h1>
+        <p className="text-sm text-[#8A8378] mt-1 font-serif italic">Manage blog classification taxonomies.</p>
       </div>
 
-      {error && <div className="bg-red-50 text-red-700 p-4 rounded-xl flex gap-2"><AlertCircle className="w-5 h-5"/> {error}</div>}
+      {error && (
+        <div className="border border-[#B5563A]/30 bg-[#B5563A]/5 text-[#8a3a26] px-4 py-3 mb-6 flex items-center gap-2 font-mono text-sm">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" /> {error}
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
-        {/* Categories Panel */}
-        <div className="bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-hidden">
-          <div className="p-6 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50">
-            <Folder className="w-5 h-5 text-blue-500" />
-            <h2 className="text-lg font-bold">Categories</h2>
-          </div>
-          <div className="p-6">
-            <Can permission="taxonomy.create">
-              <form onSubmit={handleAddCategory} className="flex gap-2 mb-6">
-                <input type="text" value={newCat} onChange={(e)=>setNewCat(e.target.value)} placeholder="New Category Name" className="flex-1 px-4 py-2 border rounded-xl bg-zinc-50 focus:ring-2 focus:ring-blue-500 outline-none text-sm"/>
-                <button type="submit" className="bg-zinc-900 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1 hover:bg-zinc-800"><Plus className="w-4 h-4"/> Add</button>
-              </form>
-            </Can>
-            <div className="space-y-2 max-h-[400px] overflow-y-auto">
-              {categories.map(c => (
-                <div key={c.id} className="flex justify-between items-center p-3 border rounded-xl hover:bg-zinc-50 transition-colors">
-                  <div>
-                    <span className="font-bold text-sm text-zinc-800 block">{c.name}</span>
-                    <span className="text-xs text-zinc-400 font-mono">/{c.slug}</span>
-                  </div>
-                  <button onClick={() => handleDelete(c.id, 'category')} className="text-zinc-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg">
-                    <Can permission="taxonomy.delete">
-                      <Trash2 className="w-4 h-4"/>
-                    </Can>
-                  </button>
-                </div>
-              ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-10">
+
+        {/* Categories Drawer */}
+        <div>
+          <div className="flex items-end justify-between border-b-2 border-[#2B2A28] pb-2 mb-5">
+            <div className="flex items-center gap-2">
+              <Archive className="w-4 h-4 text-[#B5563A]" />
+              <h2 className="font-serif text-lg font-bold tracking-tight">Categories</h2>
             </div>
+            <span className="font-mono text-[11px] text-[#8A8378] tabular-nums">
+              {String(categories.length).padStart(2, '0')} entries
+            </span>
+          </div>
+
+          <Can permission="taxonomy.create">
+            <form onSubmit={handleAddCategory} className="flex gap-0 mb-6 border border-[#DDD6C7] focus-within:border-[#B5563A] transition-colors">
+              <input
+                type="text"
+                value={newCat}
+                onChange={(e) => setNewCat(e.target.value)}
+                placeholder="Name a new category…"
+                className="flex-1 px-3 py-2.5 bg-transparent outline-none text-sm font-serif placeholder:text-[#8A8378]/70"
+              />
+              <button
+                type="submit"
+                className="bg-[#2B2A28] text-[#FAF7F0] px-4 text-sm font-mono uppercase tracking-wide flex items-center gap-1.5 hover:bg-[#B5563A] transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" /> File
+              </button>
+            </form>
+          </Can>
+
+          <div className="space-y-0 max-h-[400px] overflow-y-auto">
+            {categories.length === 0 && (
+              <p className="text-sm font-serif italic text-[#8A8378] py-4">No categories filed yet.</p>
+            )}
+            {categories.map((c, idx) => (
+              <div
+                key={c.id}
+                className="flex justify-between items-center py-3 border-b border-dotted border-[#DDD6C7] group"
+              >
+                <div className="flex items-baseline gap-3 min-w-0">
+                  <span className="font-mono text-[11px] text-[#B5563A] tabular-nums flex-shrink-0">
+                    No.{String(idx + 1).padStart(3, '0')}
+                  </span>
+                  <div className="min-w-0">
+                    <span className="font-serif font-semibold text-[15px] block truncate">{c.name}</span>
+                    <span className="text-[11px] text-[#8A8378] font-mono">/{c.slug}</span>
+                  </div>
+                </div>
+                <Can permission="taxonomy.delete">
+                  <button
+                    onClick={() => handleDelete(c.id, 'category')}
+                    className="text-[#DDD6C7] hover:text-[#B5563A] p-1.5 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </Can>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Tags Panel */}
-        <div className="bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-hidden">
-          <div className="p-6 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50">
-            <Tag className="w-5 h-5 text-emerald-500" />
-            <h2 className="text-lg font-bold">Tags</h2>
-          </div>
-          <div className="p-6">
-            <form onSubmit={handleAddTag} className="flex gap-2 mb-6">
-              <input type="text" value={newTag} onChange={(e)=>setNewTag(e.target.value)} placeholder="New Tag Name" className="flex-1 px-4 py-2 border rounded-xl bg-zinc-50 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"/>
-              <button type="submit" className="bg-zinc-900 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1 hover:bg-zinc-800"><Plus className="w-4 h-4"/> Add</button>
-            </form>
-            <div className="flex flex-wrap gap-2 max-h-[400px] overflow-y-auto">
-              {tags.map(t => (
-                <div key={t.id} className="flex items-center gap-2 pl-3 pr-1 py-1 border border-zinc-200 bg-zinc-50 rounded-full text-sm font-medium">
-                  #{t.name}
-                  <Can permission="taxonomy.delete">
-                    <button onClick={() => handleDelete(t.id, 'tag')} className="text-zinc-400 hover:text-red-500 bg-white rounded-full p-1 shadow-sm">
-                      <Trash2 className="w-3 h-3"/>
-                    </button>
-                  </Can>
-                </div>
-              ))}
+        {/* Tags Drawer */}
+        <div>
+          <div className="flex items-end justify-between border-b-2 border-[#2B2A28] pb-2 mb-5">
+            <div className="flex items-center gap-2">
+              <Stamp className="w-4 h-4 text-[#5B6B4F]" />
+              <h2 className="font-serif text-lg font-bold tracking-tight">Tags</h2>
             </div>
+            <span className="font-mono text-[11px] text-[#8A8378] tabular-nums">
+              {String(tags.length).padStart(2, '0')} entries
+            </span>
+          </div>
+
+          <form onSubmit={handleAddTag} className="flex gap-0 mb-6 border border-[#DDD6C7] focus-within:border-[#5B6B4F] transition-colors">
+            <input
+              type="text"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              placeholder="Name a new tag…"
+              className="flex-1 px-3 py-2.5 bg-transparent outline-none text-sm font-serif placeholder:text-[#8A8378]/70"
+            />
+            <button
+              type="submit"
+              className="bg-[#2B2A28] text-[#FAF7F0] px-4 text-sm font-mono uppercase tracking-wide flex items-center gap-1.5 hover:bg-[#5B6B4F] transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" /> Stamp
+            </button>
+          </form>
+
+          <div className="flex flex-wrap gap-2.5 max-h-[400px] overflow-y-auto content-start">
+            {tags.length === 0 && (
+              <p className="text-sm font-serif italic text-[#8A8378] py-4 w-full">No tags stamped yet.</p>
+            )}
+            {tags.map((t) => (
+              <div
+                key={t.id}
+                className="flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 border border-dashed border-[#5B6B4F]/40 bg-[#5B6B4F]/[0.04] text-[#3F4A38] text-[13px] font-mono"
+              >
+                {t.name}
+                <Can permission="taxonomy.delete">
+                  <button
+                    onClick={() => handleDelete(t.id, 'tag')}
+                    className="text-[#5B6B4F]/50 hover:text-[#B5563A] p-0.5"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </Can>
+              </div>
+            ))}
           </div>
         </div>
 

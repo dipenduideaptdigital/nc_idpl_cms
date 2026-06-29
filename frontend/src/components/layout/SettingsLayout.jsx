@@ -23,36 +23,37 @@ const SettingsLayout = () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 animate-in fade-in duration-500 font-sans">
-      
+    <div className="flex flex-col lg:flex-row gap-10 max-w-6xl mx-auto text-[#2B2A28]">
+
       {/* Settings Navigation Sidebar */}
-      <div className="lg:w-64 flex-shrink-0">
-        <div className="bg-white rounded-2xl shadow-sm border border-zinc-100 p-4 sticky top-6">
-          <div className="flex items-center gap-3 mb-6 px-2">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-              <Settings className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="font-bold text-zinc-900 leading-tight">Settings</h2>
-              <p className="text-xs text-zinc-500 font-medium">Manage workspace</p>
-            </div>
+      <div className="lg:w-60 flex-shrink-0">
+        <div className="sticky top-6 border-r border-[#DDD6C7] lg:pr-6">
+          <div className="border-b-4 border-double border-[#2B2A28] pb-3 mb-5">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#3F5C73] font-bold mb-1">Workspace</p>
+            <h2 className="font-serif text-xl font-bold text-[#2B2A28] flex items-center gap-2">
+              <Settings className="w-4.5 h-4.5 text-[#3F5C73]" />
+              Settings
+            </h2>
           </div>
 
-          <nav className="space-y-1">
-            {visibleTabs.map((tab) => (
+          <nav className="space-y-0.5">
+            {visibleTabs.map((tab, idx) => (
               <NavLink
                 key={tab.name}
                 to={tab.path}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-semibold ${
-                    isActive 
-                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' 
-                      : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
+                  `flex items-center gap-3 px-3 py-2.5 transition-colors text-sm font-mono uppercase tracking-wide border-l-2 ${
+                    isActive
+                      ? 'border-[#B5563A] text-[#2B2A28] bg-[#F3EFE4]/50'
+                      : 'border-transparent text-[#8A8378] hover:text-[#2B2A28] hover:border-[#DDD6C7]'
                   }`
                 }
               >
-                <tab.icon className="w-4 h-4" />
-                {tab.name}
+                <span className="text-[10px] text-[#B5563A] tabular-nums w-4 flex-shrink-0">
+                  {String(idx + 1).padStart(2, '0')}
+                </span>
+                <tab.icon className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">{tab.name}</span>
               </NavLink>
             ))}
           </nav>

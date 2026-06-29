@@ -5,7 +5,10 @@ import {
   assignUserFunctionalRolesController,
   getUserFunctionalRolesController,
   getAllUsersController,  
-  inviteAdminController       
+  inviteAdminController,
+  getUserDetailsController,
+  revokeSessionsController,
+  cancelInviteController 
 } from "./users.admin.controller.js";
 import { authenticate } from "../../shared/middlewares/authenticate.middleware.js";
 import { requirePermission } from "../../shared/middlewares/permission.middleware.js";
@@ -21,7 +24,7 @@ import {
 
 const router = Router();
 
-// Base authentication
+// Base 
 router.use(authenticate);
 
 //Get All Users (Admin/Staff List)
@@ -68,6 +71,30 @@ router.post(
   validate(userIdParamSchema, "params"),
   validate(assignFunctionalRolesSchema, "body"),
   assignUserFunctionalRolesController
+);
+
+
+// Profile Details 
+router.get(
+  "/:id/details",
+  requirePermission("user.view"),
+  validate(userIdParamSchema, "params"),
+  getUserDetailsController
+);
+
+// Force Logout (Revoke Sessions)
+router.post(
+  "/:id/revoke-sessions",
+  requirePermission("user.suspend"),
+  validate(userIdParamSchema, "params"),
+  revokeSessionsController
+);
+
+// Cancel Pending Invitation
+router.delete(
+  "/invite/cancel",
+  requirePermission("user.delete"), 
+  cancelInviteController 
 );
 
 export default router;

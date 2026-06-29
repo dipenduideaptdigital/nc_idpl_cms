@@ -245,3 +245,69 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
     return invitation;
   });
 };
+
+
+export const getUserDetailedProfile = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: {
+      systemRole: true,
+      functionalRoles: {
+        include: {
+          functionalRole: {
+            include: {
+              permissions: {
+                include: { permission: true }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+
+  if (!user) throw new AppError("User not found", StatusCodes.NOT_FOUND);
+
+  const permissionsSet = new Set();
+  user.functionalRoles.forEach(fr => {
+    fr.functionalRole.permissions.forEach(p => {
+      permissionsSet.add(p.permission.slug);
+    });
+  });
+
+  // We expand this later to include PageRevisions or ContactLogs
+  const recentActivity = await prisma.blogRevision.findMany({
+    where: { actorId: userId },
+    orderBy: { createdAt: 'desc' },
+    take: 5,
+    include: { blog: { select: { title: true } } }
+  });
+
+  return {
+    ...user,
+    permissionsList: Array.from(permissionsSet),
+    recentActivity
+  };
+};
+
+export const revokeUserSessions = async (targetUserId) => {
+  await checkLastSuperAdmin(targetUserId); 
+  
+  await prisma.refreshToken.updateMany({
+    where: { userId: targetUserId, revokedAt: null },
+    data: { revokedAt: new Date() },
+  });
+  
+  return { message: "All active sessions for this user have been terminated." };
+};
+
+export const cancelInvitation = async (email) => {
+  const normalizedEmail = normalizeEmail(email);
+  
+  return await prisma.$transaction(async (tx) => {
+    await tx.adminInvitation.deleteMany({ where: { email: normalizedEmail } });
+    await tx.user.deleteMany({ where: { email: normalizedEmail, status: "PENDING" } });
+    
+    return { message: "Invitation cancelled and pending account removed successfully." };
+  });
+};

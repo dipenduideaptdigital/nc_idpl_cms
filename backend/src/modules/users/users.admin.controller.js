@@ -71,3 +71,22 @@ export const inviteAdminController = asyncHandler(async (req, res) => {
   });
   sendResponse({ res, statusCode: StatusCodes.CREATED, message: "Invitation sent successfully." });
 });
+
+
+export const getUserDetailsController = asyncHandler(async (req, res) => {
+  const details = await adminService.getUserDetailedProfile(req.params.id);
+  sendResponse({ res, statusCode: StatusCodes.OK, data: details });
+});
+
+export const revokeSessionsController = asyncHandler(async (req, res) => {
+  const result = await adminService.revokeUserSessions(req.params.id);
+  sendResponse({ res, statusCode: StatusCodes.OK, message: result.message });
+});
+
+export const cancelInviteController = asyncHandler(async (req, res) => {
+  if (!req.body.email) {
+    throw new AppError("Email is required to cancel an invitation.", StatusCodes.BAD_REQUEST);
+  }
+  const result = await adminService.cancelInvitation(req.body.email);
+  sendResponse({ res, statusCode: StatusCodes.OK, message: result.message });
+});
