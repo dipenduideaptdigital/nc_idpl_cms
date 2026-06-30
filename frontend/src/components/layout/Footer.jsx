@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaInstagram, FaTwitter, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import logo from '../../assets/logos/logo2.svg';
 
 const Footer = () => {
   return (
@@ -11,19 +12,13 @@ const Footer = () => {
           
           {/* Column 1: Logo & Info */}
           <div className="space-y-6 flex flex-col items-center text-center lg:items-start lg:text-left">
-            <div className="flex flex-col items-center lg:items-start cursor-pointer group">
-              <div className="text-4xl font-light tracking-widest relative pb-1 transition-transform group-hover:scale-105">
-                subh<span className="font-bold text-white">AA</span>kritee
-                <span className="absolute top-1 -right-4 text-xs opacity-70">&trade;</span>
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-              </div>
-              <div className="text-[9px] tracking-[0.25em] mt-2 uppercase font-semibold text-gray-300">
-                Interior Architecture
-              </div>
-              <div className="text-[7px] tracking-[0.35em] uppercase text-gray-500 mt-1">
-                The Design People
-              </div>
-            </div>
+            <Link to="/" className="flex items-center cursor-pointer transition-transform hover:scale-105">
+              <img 
+                src={logo} 
+                alt="Subhaakritee Logo" 
+                className="h-10 md:h-12 w-auto object-contain" 
+              />
+            </Link>
             
             <p className="text-gray-400 text-sm leading-relaxed max-w-[280px] font-light">
               We transform your vision into beautifully crafted, highly functional living and working spaces.

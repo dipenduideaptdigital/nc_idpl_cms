@@ -174,7 +174,6 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
     throw new AppError("Invalid system role for invitation.", StatusCodes.BAD_REQUEST);
   }
 
-  // Validate Functional Roles
   if (functionalRoleIds.length > 0) {
     const validRolesCount = await prisma.functionalRole.count({ where: { id: { in: functionalRoleIds } } });
     if (validRolesCount !== functionalRoleIds.length) {
@@ -186,10 +185,10 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
   const tokenHash = hashSecureToken(rawToken);
   const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
 
-  return await prisma.$transaction(async (tx) => {
-    await tx.adminInvitation.deleteMany({ where: { email: normalizedEmail } });
+  const dummyPassword = await hashPassword(crypto.randomBytes(20).toString("hex"));
 
-    const dummyPassword = await hashPassword(crypto.randomBytes(20).toString("hex"));
+  const invitation = await prisma.$transaction(async (tx) => {
+    await tx.adminInvitation.deleteMany({ where: { email: normalizedEmail } });
 
     // Create Pending User
     const newUser = await tx.user.create({
@@ -203,7 +202,6 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
       }
     });
 
-    // EXPLICIT FUNCTIONAL ROLE MAPPING
     if (functionalRoleIds && functionalRoleIds.length > 0) {
       const roleMappings = functionalRoleIds.map(rId => ({
         userId: newUser.id,
@@ -212,7 +210,7 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
       await tx.userFunctionalRole.createMany({ data: roleMappings });
     }
 
-    const invitation = await tx.adminInvitation.create({
+    return await tx.adminInvitation.create({
       data: {
         email: normalizedEmail,
         tokenHash,
@@ -221,31 +219,30 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
         expiresAt
       }
     });
+  }); 
 
-    const setupUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/admin-setup?token=${rawToken}&email=${encodeURIComponent(normalizedEmail)}`;
-    
-    void sendEmail({
-      to: normalizedEmail,
-      subject: "Invitation to Subhaakritee Admin Portal",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-          <h2 style="color: #2563eb;">Welcome to Subhaakritee!</h2>
-          <p>Hi ${name}, you have been invited to join as a Staff Member.</p>
-          <p>Your access permissions have already been configured by the admin. Please click the button below to set up your secure password and activate your account:</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${setupUrl}" style="background-color: #2563eb; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-              Setup My Account
-            </a>
-          </div>
-          <p style="font-size: 12px; color: #888;">This secure link is valid for 48 hours.</p>
+  const setupUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/admin-setup?token=${rawToken}&email=${encodeURIComponent(normalizedEmail)}`;
+  
+  sendEmail({
+    to: normalizedEmail,
+    subject: "Invitation to Subhaakritee Admin Portal",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+        <h2 style="color: #2563eb;">Welcome to Subhaakritee!</h2>
+        <p>Hi ${name}, you have been invited to join as a Staff Member.</p>
+        <p>Your access permissions have already been configured by the admin. Please click the button below to set up your secure password and activate your account:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${setupUrl}" style="background-color: #2563eb; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            Setup My Account
+          </a>
         </div>
-      `
-    }).catch(err => logger.error({ message: "Invite email failed", error: err.message }));
+        <p style="font-size: 12px; color: #888;">This secure link is valid for 48 hours.</p>
+      </div>
+    `
+  }).catch(err => logger.error({ message: "Invite email failed", error: err.message }));
 
-    return invitation;
-  });
+  return invitation;
 };
-
 
 export const getUserDetailedProfile = async (userId) => {
   const user = await prisma.user.findUnique({

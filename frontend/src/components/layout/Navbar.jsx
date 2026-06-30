@@ -67,13 +67,13 @@ const Navbar = () => {
         >
           Services
         </a>
-        <a 
+        {/* <a 
           href="/#process" 
           onClick={(e) => handleNavClick(e, 'process')} 
           className="flex items-center hover:text-gray-300 transition-colors"
         >
           Process
-        </a>
+        </a> */}
         <Link 
           to="/projects" 
           className="flex items-center hover:text-gray-300 transition-colors"
@@ -112,6 +112,12 @@ const Navbar = () => {
           className="hover:text-gray-300 transition-colors py-2"
         >
           Blog
+        </Link>
+        <Link 
+          to="/contact" 
+          className="flex items-center hover:text-gray-300 transition-colors"
+        >
+          Contact Us
         </Link>
       </div>
 

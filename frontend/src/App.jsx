@@ -22,6 +22,7 @@ import BlogDetail from './pages/BlogDetail';
 import Projects from './pages/Projects';
 import AdminSetup from './pages/AdminSetup';
 import AboutUs from './pages/AboutUs';
+import ServicePage from './pages/ServicePage';
 
 /* Admin Pages */
 import Dashboard from './pages/admin/Dashboard';
@@ -90,6 +91,7 @@ function App() {
             <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/about" element={<AboutUs />} />
+            <Route path="/services" element={<ServicePage />} />
           </Route>
           
         </Routes>
