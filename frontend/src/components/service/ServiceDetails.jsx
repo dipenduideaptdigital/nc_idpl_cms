@@ -27,18 +27,10 @@ const SPACES_TYPES = [
 ];
 
 const FAQS = [
-  {
-    question: "How long does a commercial interior project take?",
-    answer: "The timeline varies depending on the scale and complexity of the project. A standard office fit-out might take 8-12 weeks, while a large commercial building can take several months. We provide a detailed timeline during the consultation phase."
-  },
-  {
-    question: "Do you provide custom furniture for commercial spaces?",
-    answer: "Yes, we design and manufacture custom furniture tailored to your brand identity and space requirements, ensuring both functionality and aesthetic appeal."
-  },
-  {
-    question: "Will interior design work disrupt my business operations?",
-    answer: "We strive to minimize disruption. Depending on your needs, we can schedule construction and installation work during off-hours, weekends, or in phased sections."
-  }
+  "How long does a commercial interior project take?",
+  "Do you provide custom furniture for commercial spaces?",
+  "Will interior design work disrupt my business operations?",
+  "What is the standard payment structure for the project?" 
 ];
 
 const ServiceDetails = () => {
@@ -152,41 +144,25 @@ const ServiceDetails = () => {
                 ))}
               </div>
 
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 pt-6 border-t border-gray-100">
-                Frequently Asked Questions
-              </h3>
-              
-              <div className="space-y-4">
-                {FAQS.map((faq, index) => (
-                  <div 
-                    key={index} 
-                    className={`border rounded-2xl transition-all duration-300 overflow-hidden ${
-                      openFaq === index ? 'border-[#3B82F6] bg-blue-50/30' : 'border-gray-200 bg-white'
-                    }`}
-                  >
-                    <button 
-                      onClick={() => toggleFaq(index)}
-                      className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
-                    >
-                      <span className={`text-[17px] font-bold ${openFaq === index ? 'text-[#3B82F6]' : 'text-gray-900'}`}>
-                        {faq.question}
-                      </span>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${openFaq === index ? 'bg-[#3B82F6] text-white' : 'bg-gray-100 text-gray-500'}`}>
-                        {openFaq === index ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                      </div>
-                    </button>
-                    
+              <div className="mt-16 pt-10">
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
+                  Frequently Asked Questions
+                </h3>
+                
+                <div className="flex flex-col border-t border-gray-200">
+                  {FAQS.map((question, index) => (
                     <div 
-                      className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${
-                        openFaq === index ? 'max-h-[500px] pb-6 opacity-100' : 'max-h-0 opacity-0'
-                      }`}
+                      key={index} 
+                      className="border-b border-gray-200 bg-transparent flex items-center justify-between py-3 md:py-5"
                     >
-                      <p className="text-gray-600 leading-relaxed text-[15px]">
-                        {faq.answer}
-                      </p>
+                      <span className="text-[18px] md:text-[20px] font-bold text-gray-900">
+                        {question}
+                      </span>
+                      
+                
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
             </div>
