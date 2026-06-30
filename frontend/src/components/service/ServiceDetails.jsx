@@ -12,8 +12,9 @@ const SERVICES_LIST = [
   { name: 'Interior 2D/3D Layouts', path: '/services/residential', active: false },
   { name: 'Renovation And Remodelling', path: '/services/commercial', active: true },
   { name: 'Outdoor & Landscape Design', path: '/services/hospitality', active: false },
-  { name: 'Workspace Design', path: '/services/workspace', active: false },
-  { name: 'Custom Furniture', path: '/services/furniture', active: false },
+  { name: 'Interior Design Consultation', path: '/services/workspace', active: false },
+  { name: 'Commercial Interior Design', path: '/services/furniture', active: false },
+  { name: 'Residential Interior Design', path: '/services/residence', active: false },
 ];
 
 const SPACES_TYPES = [
@@ -53,9 +54,6 @@ const ServiceDetails = () => {
         
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
           
-          {/* =======================================
-              LEFT SIDEBAR (30%)
-          ======================================= */}
           <div className="w-full lg:w-[32%] flex flex-col space-y-10 shrink-0">
             
             <div className="bg-white rounded-[24px] pt-8 pb-4">
@@ -63,7 +61,6 @@ const ServiceDetails = () => {
                     Other Services
                 </h3>
                 
-                {/* UPDATE 2: Container-e px-10 dewa hoyeche */}
                 <div className="flex flex-col px-10">
                     {SERVICES_LIST.map((service, index) => {
                     const isActive = service.active;
@@ -77,9 +74,8 @@ const ServiceDetails = () => {
                             isActive ? 'border-t-[2px] border-[#3B82F6]' : 'border-t border-gray-200'
                         } ${isLast ? 'border-b border-gray-200' : ''}`}
                         >
-                        {/* UPDATE 3: pl-4 lg:pl-6 add kora hoyeche jate text left theke ektu chhere ashe */}
                         <div className="flex items-center space-x-4 md:space-x-5 transform group-hover:translate-x-2 transition-transform duration-300 pr-4 pl-4 lg:pl-6">
-                            <span className={`text-[17px] lg:text-[19px] font-bold leading-[1.2] capitalize font-helvetica transition-colors ${isActive ? 'text-[#3B82F6]' : 'text-gray-900 group-hover:text-[#3B82F6]'}`}>
+                            <span className={`text-[17px] lg:text-[19px] font-base leading-[1.2] capitalize font-helvetica transition-colors ${isActive ? 'text-[#3B82F6]' : 'text-gray-900 group-hover:text-[#3B82F6]'}`}>
                             {service.name}
                             </span>
                         </div>
@@ -89,7 +85,6 @@ const ServiceDetails = () => {
                 </div>
                 </div>
 
-            {/* 2. Promo / Contact Box with Service2.png */}
             <div className="relative w-full h-[400px] rounded-[24px] overflow-hidden group">
               <img 
                 src={service2} 
@@ -113,12 +108,11 @@ const ServiceDetails = () => {
           </div>
 
 
-          {/* =======================================
-              RIGHT CONTENT (70%)
-          ======================================= */}
+          {/* ===============
+              RIGHT CONTENT 
+          =================== */}
           <div className="w-full lg:w-[68%] flex flex-col">
             
-            {/* Featured Hero Image (Service1.png) */}
             <div className="w-full h-[400px] md:h-[500px] rounded-[32px] overflow-hidden mb-10">
               <img 
                 src={service1} 
@@ -127,7 +121,6 @@ const ServiceDetails = () => {
               />
             </div>
 
-            {/* Main Content Body */}
             <div className="pr-0 lg:pr-8">
               <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-6 tracking-tight leading-tight">
                 Commercial Interior Design
@@ -140,8 +133,6 @@ const ServiceDetails = () => {
               <p className="text-gray-600 leading-relaxed text-[17px] mb-10">
                 Our commercial interior design services are tailored to meet the unique demands of businesses. We blend strategic space planning with innovative design elements to craft environments that stir creativity, evoke emotion, and drive success. From conceptualization to final execution, we manage every detail meticulously.
               </p>
-
-              {/* Two Small Images Grid (Service3.png & Service4.png) */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                 <div className="h-[280px] rounded-[24px] overflow-hidden">
                   <img src={service3} alt="Service detail 1" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
@@ -151,7 +142,6 @@ const ServiceDetails = () => {
                 </div>
               </div>
 
-              {/* Types of Spaces & Key Elements (Bullet Points) */}
               <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Types of Commercial Spaces</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 mb-12">
                 {SPACES_TYPES.map((type, idx) => (
@@ -162,7 +152,6 @@ const ServiceDetails = () => {
                 ))}
               </div>
 
-              {/* FAQ Section */}
               <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 pt-6 border-t border-gray-100">
                 Frequently Asked Questions
               </h3>
