@@ -61,7 +61,7 @@ const Navbar = () => {
           About
         </Link>
         <Link 
-          to="/cervices" 
+          to="/services" 
           className="flex items-center hover:text-gray-300 transition-colors"
         >
           Services
