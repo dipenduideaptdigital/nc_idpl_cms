@@ -60,13 +60,12 @@ const Navbar = () => {
         >
           About
         </Link>
-        <a 
-          href="/#services" 
-          onClick={(e) => handleNavClick(e, 'services')} 
+        <Link 
+          to="/cervices" 
           className="flex items-center hover:text-gray-300 transition-colors"
         >
           Services
-        </a>
+        </Link>
         {/* <a 
           href="/#process" 
           onClick={(e) => handleNavClick(e, 'process')} 
