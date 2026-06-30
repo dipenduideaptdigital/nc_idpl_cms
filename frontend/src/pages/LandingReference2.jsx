@@ -13,14 +13,14 @@ import CtaSectionTwo from '../components/landing-design-2/CtaSectionTwo';
 
 const LandingReference2 = () => {
   const handleScrollDown = () => {
-    const nextSection = document.getElementById('services-section');
+    const nextSection = document.getElementById('about');
     if (nextSection) {
       nextSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const handleCtaClick = () => {
-    console.log("CTA Clicked");
+    window.dispatchEvent(new Event('open-consultation-modal'));
   };
 
   return (

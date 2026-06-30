@@ -67,7 +67,7 @@ const HappySpaces = ({ data }) => {
   ];
 
   return (
-    <section className="py-20 md:py-24 bg-white text-gray-900 font-helvetica overflow-hidden relative select-none">
+    <section id="blog" className="py-20 md:py-24 bg-white text-gray-900 font-helvetica overflow-hidden relative select-none">
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
         
         {/* Header containing Badge and Centered Title */}

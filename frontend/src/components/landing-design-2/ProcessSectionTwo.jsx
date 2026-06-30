@@ -38,7 +38,7 @@ const ProcessSectionTwo = ({ data }) => {
   ];
 
   return (
-    <section className="py-18 md:py-20 bg-[#f8f9fa] text-gray-900 font-helvetica overflow-hidden">
+    <section id="process" className="py-18 md:py-20 bg-[#f8f9fa] text-gray-900 font-helvetica overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
         
         {/* Split Header Block (Matches the layout of ServicesSectionTwo) */}

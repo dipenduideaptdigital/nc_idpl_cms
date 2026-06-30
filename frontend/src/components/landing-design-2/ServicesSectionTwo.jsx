@@ -14,36 +14,46 @@ const getAssetUrl = (path, fallback) => {
 };
 
 const ServicesSectionTwo = ({ data }) => {
-  const resolvedImg1 = data?.services?.[0]?.image ? getAssetUrl(data.services[0].image, img1) : img1;
-  const resolvedImg2 = data?.services?.[1]?.image ? getAssetUrl(data.services[1].image, img2) : img2;
-  const resolvedImg3 = data?.services?.[2]?.image ? getAssetUrl(data.services[2].image, img3) : img3;
+  const fallbackImages = [img1, img2, img3];
 
-  const servicesList = [
-    {
-      num: '01',
-      title: data?.services?.[0]?.title || 'Initial Consultation',
-      desc: data?.services?.[0]?.description || 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
-      image: resolvedImg1,
-      imageAtTop: true,
-    },
-    {
-      num: '02',
-      title: data?.services?.[1]?.title || 'Initial Consultation',
-      desc: data?.services?.[1]?.description || 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
-      image: resolvedImg2,
-      imageAtTop: false,
-    },
-    {
-      num: '03',
-      title: data?.services?.[2]?.title || 'Initial Consultation',
-      desc: data?.services?.[2]?.description || 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
-      image: resolvedImg3,
-      imageAtTop: true,
-    },
-  ];
+  // Use data.services if provided and not empty, otherwise default to three placeholder services
+  const rawServices = data?.services && data.services.length > 0 
+    ? data.services 
+    : [
+        { 
+          title: 'Initial Consultation', 
+          description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+          image: img1
+        },
+        { 
+          title: 'Design & Planning', 
+          description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+          image: img2
+        },
+        { 
+          title: 'Implementation', 
+          description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+          image: img3
+        }
+      ];
+
+  const servicesList = rawServices.map((service, idx) => {
+    const num = String(idx + 1).padStart(2, '0');
+    const fallback = fallbackImages[idx % fallbackImages.length];
+    const resolvedImg = service?.image ? getAssetUrl(service.image, fallback) : fallback;
+    const imageAtTop = idx % 2 === 0;
+
+    return {
+      num,
+      title: service?.title || 'Initial Consultation',
+      desc: service?.description || 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+      image: resolvedImg,
+      imageAtTop,
+    };
+  });
 
   return (
-    <section className="py-10 md:py-23 bg-[#111111] text-white font-helvetica overflow-hidden">
+    <section id="services" className="py-10 md:py-23 bg-[#111111] text-white font-helvetica overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
         
         {/* Header Grid */}
@@ -66,8 +76,8 @@ const ServicesSectionTwo = ({ data }) => {
           </div>
         </div>
 
-        {/* 3-Cards Alternating Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Alternating Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {servicesList.map((service, idx) => (
             <div 
               key={idx}
@@ -82,8 +92,7 @@ const ServicesSectionTwo = ({ data }) => {
                       alt={service.title} 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       onError={(e) => {
-                        const fallback = idx === 0 ? img1 : img3;
-                        e.currentTarget.src = fallback;
+                        e.currentTarget.src = fallbackImages[idx % fallbackImages.length];
                       }}
                     />
                   </div>
@@ -127,7 +136,7 @@ const ServicesSectionTwo = ({ data }) => {
                       alt={service.title} 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       onError={(e) => {
-                        e.currentTarget.src = img2;
+                        e.currentTarget.src = fallbackImages[idx % fallbackImages.length];
                       }}
                     />
                   </div>

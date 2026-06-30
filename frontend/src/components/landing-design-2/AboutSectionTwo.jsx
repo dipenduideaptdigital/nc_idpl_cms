@@ -35,7 +35,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
 
   return (
     <section
-      id="services-section"
+      id="about"
       className="py-20 md:py-28 bg-[#f8f8f8] overflow-hidden font-helvetica"
     >
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-[1500px]">

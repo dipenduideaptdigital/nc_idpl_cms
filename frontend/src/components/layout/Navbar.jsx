@@ -54,13 +54,12 @@ const Navbar = () => {
 
       {/* Navigation Links */}
       <div className="hidden lg:flex items-center space-x-12 text-base font-light">
-        <a 
-          href="/#about" 
-          onClick={(e) => handleNavClick(e, 'about')} 
+        <Link 
+          to="/about" 
           className="flex items-center hover:text-gray-300 transition-colors"
         >
           About
-        </a>
+        </Link>
         <a 
           href="/#services" 
           onClick={(e) => handleNavClick(e, 'services')} 
@@ -75,13 +74,12 @@ const Navbar = () => {
         >
           Process
         </a>
-        <a 
-          href="/#projects" 
-          onClick={(e) => handleNavClick(e, 'projects')} 
+        <Link 
+          to="/projects" 
           className="flex items-center hover:text-gray-300 transition-colors"
         >
           Projects
-        </a>
+        </Link>
         
         {/* Dynamic Pages Dropdown */}
         <div className="relative group">
@@ -109,13 +107,12 @@ const Navbar = () => {
           </div>
         </div>
 
-        <a 
-          href="/#blog" 
-          onClick={(e) => handleNavClick(e, 'blog')} 
+        <Link 
+          to="/blog" 
           className="hover:text-gray-300 transition-colors py-2"
         >
           Blog
-        </a>
+        </Link>
       </div>
 
       {/* Right Actions */}

@@ -101,7 +101,7 @@ const ProjectSliderTwo = ({ data }) => {
   };
 
   return (
-    <section className="w-full bg-[#121212] overflow-hidden relative group/slider">
+    <section id="projects" className="w-full bg-[#121212] overflow-hidden relative group/slider">
       {/* Scroll Container */}
       <div
         ref={containerRef}

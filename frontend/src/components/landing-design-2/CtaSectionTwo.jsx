@@ -7,7 +7,7 @@ const CtaSectionTwo = ({ data, onCtaClick }) => {
   const buttonText = data?.buttonText || "BOOK A FREE CONSULTATION";
 
   return (
-    <section className="py-20 md:py-24 bg-white text-gray-900 font-helvetica overflow-hidden select-none border-t border-gray-100">
+    <section id="cta" className="py-20 md:py-24 bg-white text-gray-900 font-helvetica overflow-hidden select-none border-t border-gray-100">
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
         
         {/* Split Grid Layout */}

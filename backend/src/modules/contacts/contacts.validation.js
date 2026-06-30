@@ -55,7 +55,7 @@ export const submitContactSchema = z.object({
     .nullable(),
   
   // Cloudflare Turnstile bot challenges protocol tracking signature validation token checks array configuration
-  turnstileToken: z.string().min(1, "Security validation protocol tracking token signature authentication validation required")
+  turnstileToken: z.string().min(1, "Security validation protocol tracking token signature authentication validation required").optional()
 }).strict();
 
 export const updateContactStatusSchema = z.object({

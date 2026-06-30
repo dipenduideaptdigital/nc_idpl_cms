@@ -3,7 +3,7 @@ import { usersApi } from '../../../api/users';
 import { rolesApi } from '../../../api/roles';
 import { 
   Users, Search, Shield, UserPlus, CheckCircle, PowerOff, 
-  Trash2, Mail, X, Loader2, AlertTriangle, Eye, Clock, Key
+  Trash2, Mail, X, Loader2, AlertTriangle, Eye, Clock, Key, Activity 
 } from 'lucide-react';
 import { Can } from '../../../components/shared/Can';
 import { useAuth } from '../../../context/AuthContext';
@@ -355,7 +355,7 @@ const UsersList = () => {
         </div>
       )}
 
-      {/* --- DETAILS MODAL --- */}
+      {/*DETAILS MODAL*/}
       {detailsModalUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2B2A28]/60 backdrop-blur-sm p-4">
           <div className="bg-[#FAF7F0] border border-[#DDD6C7] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -401,6 +401,31 @@ const UsersList = () => {
                     )}
                   </div>
 
+                  <div>
+                    <h3 className="text-[12px] font-mono font-bold uppercase tracking-wider text-[#2B2A28] mb-3 flex items-center gap-2 border-b border-dotted border-[#DDD6C7] pb-2">
+                      <Activity className="w-4 h-4 text-[#8A8378]" /> Recent Activity
+                    </h3>
+                    {detailsModalUser.recentActivity?.length > 0 ? (
+                      <div className="space-y-4 pt-1">
+                        {detailsModalUser.recentActivity.map((activity, idx) => (
+                          <div key={activity.id || idx} className="flex flex-col gap-1 border-l-2 border-[#3F5C73]/40 pl-3 py-0.5">
+                            <span className="text-[14px] text-[#2B2A28] font-serif font-medium">
+                              Updated blog: <span className="italic text-[#3F5C73]">{activity.blog?.title}</span>
+                            </span>
+                            <span className="text-[10px] font-mono text-[#8A8378] tracking-wide">
+                              {new Date(activity.createdAt).toLocaleString(undefined, { 
+                                year: 'numeric', month: 'short', day: 'numeric', 
+                                hour: '2-digit', minute: '2-digit' 
+                              })}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-[#8A8378] font-serif italic">No recent system activity logged for this user.</p>
+                    )}
+                  </div>
+
                   {currentUser.id !== detailsModalUser.id && (
                     <div>
                       <h3 className="text-[12px] font-mono font-bold uppercase tracking-wider text-[#B5563A] mb-3 flex items-center gap-2 border-b border-dotted border-[#B5563A]/30 pb-2"><Shield className="w-4 h-4" /> Security Controls</h3>
@@ -424,7 +449,7 @@ const UsersList = () => {
         </div>
       )}
 
-      {/* --- INVITE MODAL --- */}
+      {/*INVITE MODAL*/}
       {isInviteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2B2A28]/60 backdrop-blur-sm p-4">
           <div className="bg-[#FAF7F0] border border-[#DDD6C7] w-full max-w-lg shadow-2xl overflow-hidden">
@@ -475,7 +500,7 @@ const UsersList = () => {
         </div>
       )}
 
-      {/* --- EDIT ROLES MODAL --- */}
+      {/*EDIT ROLES MODAL*/}
       {editingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2B2A28]/60 backdrop-blur-sm p-4">
           <div className="bg-[#FAF7F0] border border-[#DDD6C7] w-full max-w-lg shadow-2xl overflow-hidden">

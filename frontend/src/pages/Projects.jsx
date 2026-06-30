@@ -128,10 +128,10 @@ const Projects = () => {
       />
 
       {/* Hero Banner Component */}
-      <ProjectsHero title="Our Projects" heroImg={heroImg} />
+      <ProjectsHero title="Projects" heroImg={heroImg} />
 
       {/* Main Content Area */}
-      <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl mt-20">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-[1728px] mt-20">
         
         {/* Search & Filter Component */}
         <ProjectsFilter 

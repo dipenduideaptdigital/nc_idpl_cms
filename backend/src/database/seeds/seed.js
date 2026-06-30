@@ -64,7 +64,7 @@ const PERMISSIONS = [
 async function main() {
   console.log("Seeding started...");
 
-  //System Roles
+  // System Roles
   const superAdminRole = await prisma.systemRole.upsert({
     where: { slug: "SUPER_ADMIN" },
     update: {},
@@ -84,7 +84,7 @@ async function main() {
   });
   console.log("System roles seeded");
 
-  //  Permissions 
+  // Permissions 
   await prisma.$transaction(
     PERMISSIONS.map((perm) =>
       prisma.permission.upsert({
@@ -96,7 +96,7 @@ async function main() {
   );
   console.log("Permissions seeded (via $transaction)");
 
-  //Super Admin User Initialization
+  // Super Admin User Initialization
   let existingSuperAdmin = await prisma.user.findUnique({
     where: { email: env.SUPER_ADMIN_EMAIL },
   });
@@ -114,13 +114,28 @@ async function main() {
         isEmailVerified: true,
       },
     });
-
     console.log("Super admin seeded");
   } else {
     console.log("Super admin already exists");
   }
 
-  console.log(" Seeding completely finished.");
+  const defaultContactFormId = "cmqzjpzfz0000t00s7pd31okk"; 
+  
+  const defaultForm = await prisma.contactForm.upsert({
+    where: { slug: "main-contact" },
+    update: {},
+    create: {
+      id: defaultContactFormId,
+      name: "Main Contact Page",
+      slug: "main-contact",
+      successMessage: "Thank you! Your submission has been successfully processed. We will get back to you soon.",
+      notifyEmails: ["dipendu.ideaptdigital@gmail.com"], 
+      isActive: true,
+    }
+  });
+  console.log(`Default Contact Form seeded with ID: ${defaultForm.id}`);
+
+  console.log("Seeding completely finished.");
 }
 
 main()

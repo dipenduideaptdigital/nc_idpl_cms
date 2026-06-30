@@ -27,7 +27,7 @@ router.use("/cms", cmsRoutes);
 router.use("/pages", pagesPublicRoutes);
 router.use("/admin/pages", pagesAdminRoutes);
 router.use("/contacts", contactPublicRoutes);
-router.use("/admin", contactAdminRoutes);
+router.use("/admin/contacts", contactAdminRoutes);
 router.use("/admin/contact-forms", contactFormsAdminRoutes);
 router.use("/admin/pages", previewAdminRoutes);
 router.use("/preview", previewPublicRoutes);

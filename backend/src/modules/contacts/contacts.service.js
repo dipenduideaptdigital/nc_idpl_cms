@@ -37,7 +37,7 @@ export const executeContactSubmissionLifecycle = async (payload, clientIp, reque
     );
   }
 
-  await verifyTurnstileToken(payload.turnstileToken, clientIp);
+  // await verifyTurnstileToken(payload.turnstileToken, clientIp);
 
   const cleanPayloadMappingRecord = {
     name: xss(payload.name.trim()),

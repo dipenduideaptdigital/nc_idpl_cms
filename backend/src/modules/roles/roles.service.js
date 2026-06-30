@@ -4,7 +4,6 @@ import { generateSlug } from "../../shared/utils/slugify.js";
 import { prisma } from "../../config/db.js";
 import * as repo from "./roles.repository.js";
 
-// Helper: Verify all permission IDs exist in DB
 const validatePermissionIds = async (permissionIds) => {
   if (!permissionIds || permissionIds.length === 0) return;
   const count = await prisma.permission.count({

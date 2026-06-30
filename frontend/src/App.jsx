@@ -21,6 +21,7 @@ import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import Projects from './pages/Projects';
 import AdminSetup from './pages/AdminSetup';
+import AboutUs from './pages/AboutUs';
 
 /* Admin Pages */
 import Dashboard from './pages/admin/Dashboard';
@@ -29,6 +30,7 @@ import PageList from './pages/admin/pages/PageList';
 import PageEditor from './pages/admin/pages/PageEditor';
 import ContactFormList from './pages/admin/contact-forms/ContactFormList';
 import ContactFormEditor from './pages/admin/contact-forms/ContactFormEditor';
+import ContactInbox from './pages/admin/contacts/ContactInbox';
 import BlogList from './pages/admin/blogs/BlogList';
 import BlogEditor from './pages/admin/blogs/BlogEditor';
 import TaxonomyManager from './pages/admin/blogs/TaxonomyManager';
@@ -58,6 +60,7 @@ function App() {
             <Route path="contact-forms" element={<ContactFormList />} />
             <Route path="contact-forms/create" element={<ContactFormEditor />} />
             <Route path="contact-forms/edit/:id" element={<ContactFormEditor />} />
+            <Route path="contacts/inbox" element={<ContactInbox />} />
             <Route path="blogs" element={<BlogList />} />
             <Route path="blogs/create" element={<BlogEditor />} />
             <Route path="blogs/edit/:id" element={<BlogEditor />} />
@@ -74,6 +77,7 @@ function App() {
           {/* Public Routes - Landing Pages */}
           <Route element={<LandingLayout />}>
             <Route path="/hero-preview" element={<LandingReference />} />
+            <Route path="/hero-preview-2" element={<LandingReference2 />} />
             <Route path="/preview/:token" element={<PreviewPage />} /> 
             <Route path="/*" element={<DynamicPage />} />
           </Route>
@@ -81,11 +85,11 @@ function App() {
           {/* Public Routes - Main Pages */}
           <Route element={<MainLayout />}>
             <Route path="/" element={<LandingContainer />} />
-            <Route path="/hero-preview-2" element={<LandingReference2 />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/about" element={<AboutUs />} />
           </Route>
           
         </Routes>
