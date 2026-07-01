@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { ChevronRight, CheckCircle2, Phone, Plus, Minus, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Images based on your mapping
-import service1 from '../../assets/service/Service1.png'; // Main right image
-import service2 from '../../assets/service/Service2.png'; // Left sidebar promo image
-import service3 from '../../assets/service/Service3.png'; // Small image 1
-import service4 from '../../assets/service/Service4.png'; // Small image 2
+import service1 from '../../assets/service/Service1.png'; 
+import service2 from '../../assets/service/Service2.png'; 
+import disruptiveInnovation from '../../assets/service/disruptive-innovation.png';
+import service3 from '../../assets/service/Service3.png'; 
+import service4 from '../../assets/service/Service4.png'; 
 
 const SERVICES_LIST = [
   { name: 'Interior 2D/3D Layouts', path: '/services/residential', active: false },
@@ -17,6 +17,28 @@ const SERVICES_LIST = [
   { name: 'Residential Interior Design', path: '/services/residence', active: false },
 ];
 
+const FEATURES = [
+  {
+    title: "Space Optimization",
+    description:
+      "Through The Best Smart Space Optimisation Interior Design.",
+  },
+  {
+    title: "Space Optimization",
+    description:
+      "Through The Best Smart Space Optimisation Interior Design.",
+  },
+  {
+    title: "Space Optimization",
+    description:
+      "Through The Best Smart Space Optimisation Interior Design.",
+  },
+  {
+    title: "Space Optimization",
+    description:
+      "Through The Best Smart Space Optimisation Interior Design.",
+  },
+];
 const SPACES_TYPES = [
   "Corporate Offices & Headquarters",
   "Retail Stores & Showrooms",
@@ -48,7 +70,7 @@ const ServiceDetails = () => {
           
           <div className="w-full lg:w-[32%] flex flex-col space-y-10 shrink-0">
             
-            <div className="bg-white rounded-[24px] pt-8 pb-4">
+            <div className="bg-white rounded-[24px] pt-15 pb-15">
                 <h3 className="text-3xl lg:text-[32px] font-bold text-gray-900 mb-8 text-center px-4">
                     Other Services
                 </h3>
@@ -77,32 +99,17 @@ const ServiceDetails = () => {
                 </div>
                 </div>
 
-            <div className="relative w-full h-[400px] rounded-[24px] overflow-hidden group">
+            <div className="relative w-full h-screen rounded-[24px] overflow-hidden group">
               <img 
                 src={service2} 
                 alt="Need Design Help" 
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-black/20"></div>
-              
-              <div className="absolute inset-0 p-8 flex flex-col justify-end text-white text-center">
-                <div className="w-14 h-14 bg-[#3B82F6] rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Phone className="w-6 h-6 text-white" />
-                </div>
-                <h4 className="text-2xl font-bold mb-3">Need Interior Help?</h4>
-                <p className="text-gray-300 text-sm mb-6">Talk to our experts and get a free consultation today.</p>
-                <a href="/contact" className="inline-flex items-center justify-center gap-2 bg-white text-gray-900 font-bold py-3.5 px-6 rounded-xl hover:bg-gray-100 transition-colors">
-                  Contact Us <ArrowRight className="w-4 h-4" />
-                </a>
-              </div>
             </div>
 
           </div>
 
-
-          {/* ===============
-              RIGHT CONTENT 
-          =================== */}
+          {/* Right Content*/}
           <div className="w-full lg:w-[68%] flex flex-col">
             
             <div className="w-full h-[400px] md:h-[500px] rounded-[32px] overflow-hidden mb-10">
@@ -114,17 +121,41 @@ const ServiceDetails = () => {
             </div>
 
             <div className="pr-0 lg:pr-8">
-              <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-6 tracking-tight leading-tight">
-                Commercial Interior Design
-              </h2>
-              <p className="text-gray-600 leading-relaxed text-[17px] mb-10">
-                Commercial interior design focuses on creating professional spaces that are both highly functional and aesthetically inspiring. Whether it is an office, a retail store, or a hospitality venue, the environment must reflect the brand's identity while optimizing workflow, productivity, and customer experience.
+              <h1 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-2 tracking-tight leading-tight">
+                About The Service
+              </h1>
+              <p className="text-gray-600 text-[16px] leading-7 mb-10">
+                Commercial interior design is constantly evolving, with a new trends emerging to meet the changing to needs and preferences of the businesses and their customers. One of the most significant trends in that's recent years is biophilic design, which involves incorporating natural elements like plants, wood, and stone into the design.
+                <br />
+                <br />
+                A growing demand for adaptable layouts that can accommodate changing needs. This might include modular movable partitions. Sustainability is alsokey trend in commercial interior design.
               </p>
 
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">About The Service</h3>
-              <p className="text-gray-600 leading-relaxed text-[17px] mb-10">
-                Our commercial interior design services are tailored to meet the unique demands of businesses. We blend strategic space planning with innovative design elements to craft environments that stir creativity, evoke emotion, and drive success. From conceptualization to final execution, we manage every detail meticulously.
-              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-10 mb-14">
+                {FEATURES.map((item, index) => (
+                  <div className="flex items-center gap-4">
+
+                    <div className="w-16 h-16 rounded-full bg-[#198CF4] flex items-center justify-center shrink-0">
+                      <img
+                        src={disruptiveInnovation}
+                        alt={item.title}
+                        className="w-8 h-8 object-contain"
+                      />
+                    </div>
+
+                    <div className="flex flex-col justify-center">
+                      <h3 className="text-[20px] font-bold text-[#222] leading-tight">
+                        {item.title}
+                      </h3>
+
+                      <p className="text-[13px] font-semibold leading-[20px] text-[#444] max-w-[230px]">
+                        {item.description}
+                      </p>
+                    </div>
+
+                  </div>
+                ))}
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                 <div className="h-[280px] rounded-[24px] overflow-hidden">
                   <img src={service3} alt="Service detail 1" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
@@ -134,17 +165,57 @@ const ServiceDetails = () => {
                 </div>
               </div>
 
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Types of Commercial Spaces</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 mb-12">
-                {SPACES_TYPES.map((type, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#3B82F6] shrink-0" />
-                    <span className="text-gray-700 font-medium text-[16px]">{type}</span>
-                  </div>
-                ))}
+              <h1 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-2 tracking-tight leading-tight">
+                Types Of Commercial Spaces
+              </h1>
+              <p className="text-gray-600 text-[16px] leading-7 mb-10">
+                In design, we bring characteristics of the natural world into built spaces, such as water, greenery, and natural light, or elements like wood and stone. Encouraging the use of natural systems and processes in design allows for exposure to nature, and in turn, these design approaches improve health and wellbeing. There are a number of possible benefits, including reduced heart rate variability and pulse rates, decreased blood pressure, and increased activity in our nervous systems, to name a few.
+              </p>
+
+              <h1 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-2 tracking-tight leading-tight">
+                Key Elements Of Interior Design
+              </h1>
+              <p className="text-gray-600 leading-relaxed text-[17px] mb-8">
+                Several key elements are essential to successful commercial interior design. These include space planning, lighting design, material selection, furniture and fixtures, color and texture, technology integration, and acoustics.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-8">
+                {/* Left Column */}
+                <div className="flex flex-col space-y-5">
+                  {[
+                    "We provide high quality design services.",
+                    "Project on time and Latest Design.",
+                    "Scientific Skills For getting a better result.",
+                    "Renovations Benefit of Service"
+                  ].map((item, idx) => (
+                    <div key={`left-${idx}`} className="flex items-center gap-3">
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#3B82F6] shrink-0"></div>
+                      <span className="text-gray-900 text-[16px]">{item}</span>
+                    </div>
+                  ))}
+                </div>
+                {/* Right Column */}
+                <div className="flex flex-col space-y-5">
+                  {[
+                    "Flexible with any structure of the building",
+                    "Commitment to customer service",
+                    "Experienced, time-served engineers",
+                    "We are confident about our projects."
+                  ].map((item, idx) => (
+                    <div key={`right-${idx}`} className="flex items-center gap-3">
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#3B82F6] shrink-0"></div>
+                      <span className="text-gray-900 text-[16px]">{item}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="mt-16 pt-10">
+              <p className="text-gray-600 leading-relaxed text-[17px] mb-12">
+                Commercial interior design is a dynamic and multifaceted field that plays a critical role in the success of businesses across a wide range of industries. By blending creativity with practicality, commercial interior design
+              </p>
+              
+
+              <div className="mt-8 pt-10">
                 <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
                   Frequently Asked Questions
                 </h3>
@@ -159,7 +230,6 @@ const ServiceDetails = () => {
                         {question}
                       </span>
                       
-                
                     </div>
                   ))}
                 </div>
