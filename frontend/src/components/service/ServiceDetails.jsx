@@ -49,10 +49,10 @@ const SPACES_TYPES = [
 ];
 
 const FAQS = [
-  "How long does a commercial interior project take?",
-  "Do you provide custom furniture for commercial spaces?",
-  "Will interior design work disrupt my business operations?",
-  "What is the standard payment structure for the project?" 
+  "What Interior Design Services Do You Offer?",
+  "What Services Do You Offer?",
+  "What Is Your Design Process?",
+  "How Do You Establish Your Design Fees?" 
 ];
 
 const ServiceDetails = () => {
@@ -175,7 +175,7 @@ const ServiceDetails = () => {
               <h1 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-2 tracking-tight leading-tight">
                 Key Elements Of Interior Design
               </h1>
-              <p className="text-gray-600 leading-relaxed text-[17px] mb-8">
+              <p className="text-gray-600 text-[16px] leading-7 mb-10">
                 Several key elements are essential to successful commercial interior design. These include space planning, lighting design, material selection, furniture and fixtures, color and texture, technology integration, and acoustics.
               </p>
 
@@ -210,7 +210,7 @@ const ServiceDetails = () => {
                 </div>
               </div>
 
-              <p className="text-gray-600 leading-relaxed text-[17px] mb-12">
+              <p className="text-gray-600 text-[16px] leading-7 mb-10">
                 Commercial interior design is a dynamic and multifaceted field that plays a critical role in the success of businesses across a wide range of industries. By blending creativity with practicality, commercial interior design
               </p>
               
@@ -220,11 +220,11 @@ const ServiceDetails = () => {
                   Frequently Asked Questions
                 </h3>
                 
-                <div className="flex flex-col border-t border-gray-200">
+                <div className="flex flex-col border-t border-gray-500">
                   {FAQS.map((question, index) => (
                     <div 
                       key={index} 
-                      className="border-b border-gray-200 bg-transparent flex items-center justify-between py-3 md:py-5"
+                      className="border-b border-gray-500 bg-transparent flex items-center justify-between py-3 md:py-5"
                     >
                       <span className="text-[18px] md:text-[20px] font-bold text-gray-900">
                         {question}
