@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import apiClient from '../../api/client';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 import team from '../../assets/homepage/review.jpg'; 
+import defaultLogo from '../../assets/logos/LOGO.png';
 
 const defaultAuthorImg = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop";
-const defaultLogos = ['LOGO 01', 'LOGO 02', 'LOGO 03', 'LOGO 04', 'LOGO 05'];
+const defaultLogos = ['', '', '', '', ''];
 
 const Testimonials = ({ data: externalData }) => {
   const [content, setContent] = useState(externalData || null);
@@ -71,7 +73,8 @@ const Testimonials = ({ data: externalData }) => {
   const authorName = content?.authorName || "Morgan Dufresne";
   const authorRole = content?.authorRole || "Company owner";
   const bottomText = content?.bottomText || "Our Website [75000+] VIP Customer";
-  const logos = content?.logos || defaultLogos;
+  const rawLogos = (Array.isArray(content?.logos) && content.logos.length > 0) ? content.logos : defaultLogos;
+  const activeLogos = [...rawLogos, '', '', '', '', ''].slice(0, 5); 
 
   const renderTitle = (titleText) => {
     if (!titleText) return null;
@@ -195,16 +198,26 @@ const Testimonials = ({ data: externalData }) => {
             <div className="h-px bg-gray-200 flex-grow max-w-[200px] lg:max-w-[400px]"></div>
           </div>
 
-          <div className="flex flex-wrap justify-between items-center w-full gap-6 mt-4">
-            {logos.map((logo, index) => (
-              <h4 
-                key={index} 
-                className="text-[36px] font-bold text-black"
-                style={{ fontFamily: 'var(--font-helvetica)' }}
-              >
-                {logo}
-              </h4>
-            ))}
+          <div className="flex flex-wrap justify-between items-center w-full gap-6 mt-4 px-4 md:px-8">
+        
+            {activeLogos.map((logo, index) => {
+              const isUrl = logo && (logo.startsWith('/') || logo.startsWith('http'));
+              const logoUrl = isUrl ? resolveAssetUrl(logo) : defaultLogo;
+              
+              return (
+                <img 
+                  key={index} 
+                  src={logoUrl}
+                  alt={`Client Partner Logo ${index + 1}`}
+                  className="h-10 md:h-14 lg:h-16 w-auto object-contain opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0"
+                  onError={(e) => {
+                    if (!e.currentTarget.src.includes('logo2.svg')) {
+                      e.currentTarget.src = defaultLogo;
+                    }
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
 

@@ -83,7 +83,7 @@ const HappySpaces = ({ data }) => {
           </div>
 
           {/* Centered Heading */}
-          <div className="w-full text-center ml-8">
+          <div className="w-full text-center">
             <h2 className="text-4xl md:text-[70px] font-bold text-gray-950 tracking-[0em] leading-tight md:leading-[74px] font-sans">
               {data?.titleLine1 || 'Happy Spaces by'}<br />
               <span className="text-[#3b82f6]">{data?.titleLine2 || 'subhAAkritee'}</span>

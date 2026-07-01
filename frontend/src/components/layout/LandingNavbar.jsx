@@ -12,21 +12,11 @@ const LandingNavbar = () => {
     e.preventDefault();
     setIsOpen(false);
 
-    const isMainPath = 
-      location.pathname === '/' || 
-      location.pathname === '/hero-preview-2' || 
-      location.pathname.startsWith('/preview/') || 
-      location.pathname === '/hero-preview';
-
-    if (!isMainPath) {
-      navigate(`/#${targetId}`);
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-      const element = document.getElementById(targetId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        navigate(`/#${targetId}`);
-      }
+      navigate(`/#${targetId}`);
     }
   };
 

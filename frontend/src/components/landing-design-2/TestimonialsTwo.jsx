@@ -41,7 +41,7 @@ const TestimonialsTwo = ({ data }) => {
 
           {/* Right Column: Title and Subtitle */}
           <div className="flex flex-col items-start max-w-4xl">
-            <h2 className="text-4xl md:text-5xl lg:text-[52px] font-bold text-gray-950 tracking-tight leading-[1.1] mb-6 font-helvetica">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold text-gray-950 tracking-tight leading-[1.1] mb-6 font-helvetica">
               {renderTitle(data?.title || 'Here’s What [Warm Words]\n[Our Clients] Say')}
             </h2>
             <p className="text-gray-500 text-sm md:text-base leading-relaxed font-normal max-w-3xl">
@@ -76,7 +76,7 @@ const TestimonialsTwo = ({ data }) => {
             <div className="w-full h-[1px] bg-gray-200 mb-10"></div>
 
             {/* Testimonial Quote */}
-            <blockquote className="text-[#4B4B4B] text-lg md:text-[26px] font-normal leading-relaxed md:leading-[28px] tracking-[0em] mb-10 max-w-2xl font-helvetica">
+            <blockquote className="text-[#4B4B4B] text-lg md:text-[26px] font-normal leading-relaxed md:leading-[36px] tracking-[0em] mb-10 max-w-2xl font-helvetica">
               “{quote}”
             </blockquote>
 

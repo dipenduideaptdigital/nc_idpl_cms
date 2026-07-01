@@ -77,16 +77,16 @@ const ServicesSectionTwo = ({ data }) => {
         </div>
 
         {/* Alternating Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {servicesList.map((service, idx) => (
             <div 
               key={idx}
-              className="bg-white rounded-[32px] p-6 md:p-8 flex flex-col h-[430px] md:h-[450px] shadow-2xl hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden text-gray-900"
+              className="bg-white rounded-2xl md:rounded-[32px] p-4 sm:p-6 md:p-8 flex flex-col min-h-[300px] sm:min-h-[360px] md:min-h-[450px] h-full shadow-2xl hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden text-gray-900"
             >
               {service.imageAtTop ? (
                 <>
                   {/* Top Image */}
-                  <div className="w-full h-[190px] rounded-[24px] overflow-hidden mb-6 shrink-0">
+                  <div className="w-full h-[100px] sm:h-[140px] md:h-[190px] rounded-xl md:rounded-[24px] overflow-hidden mb-4 md:mb-6 shrink-0">
                     <img 
                       src={service.image} 
                       alt={service.title} 
@@ -99,15 +99,15 @@ const ServicesSectionTwo = ({ data }) => {
 
                   {/* Bottom Content Area */}
                   <div className="flex flex-col text-left">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 leading-[1.2]">
+                    <div className="flex justify-between items-start mb-2 md:mb-3">
+                      <h3 className="text-xs sm:text-lg md:text-2xl font-bold text-gray-900 leading-[1.2]">
                         {service.title}
                       </h3>
-                      <span className="text-4xl md:text-[44px] font-extrabold text-[#3b82f6] leading-none shrink-0 ml-4">
+                      <span className="text-2xl sm:text-3xl md:text-[44px] font-extrabold text-[#3b82f6] leading-none shrink-0 ml-2 md:ml-4">
                         {service.num}
                       </span>
                     </div>
-                    <p className="text-gray-500 text-[14px] leading-relaxed font-normal">
+                    <p className="text-gray-500 text-[10px] sm:text-xs md:text-[14px] leading-relaxed font-normal">
                       {service.desc}
                     </p>
                   </div>
@@ -115,22 +115,22 @@ const ServicesSectionTwo = ({ data }) => {
               ) : (
                 <>
                   {/* Top Content Area */}
-                  <div className="flex flex-col text-left mb-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 leading-[1.2]">
+                  <div className="flex flex-col text-left mb-4 md:mb-6">
+                    <div className="flex justify-between items-start mb-2 md:mb-3">
+                      <h3 className="text-xs sm:text-lg md:text-2xl font-bold text-gray-900 leading-[1.2]">
                         {service.title}
                       </h3>
-                      <span className="text-4xl md:text-[44px] font-extrabold text-[#3b82f6] leading-none shrink-0 ml-4">
+                      <span className="text-2xl sm:text-3xl md:text-[44px] font-extrabold text-[#3b82f6] leading-none shrink-0 ml-2 md:ml-4">
                         {service.num}
                       </span>
                     </div>
-                    <p className="text-gray-500 text-[14px] leading-relaxed font-normal">
+                    <p className="text-gray-500 text-[10px] sm:text-xs md:text-[14px] leading-relaxed font-normal">
                       {service.desc}
                     </p>
                   </div>
 
                   {/* Bottom Image */}
-                  <div className="w-full h-[190px] rounded-[24px] overflow-hidden shrink-0 mt-auto">
+                  <div className="w-full h-[100px] sm:h-[140px] md:h-[190px] rounded-xl md:rounded-[24px] overflow-hidden shrink-0 mt-auto">
                     <img 
                       src={service.image} 
                       alt={service.title} 

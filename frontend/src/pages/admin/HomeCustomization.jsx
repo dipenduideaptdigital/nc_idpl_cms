@@ -192,7 +192,7 @@ const HomeCustomization = () => {
     authorName: 'Morgan Dufresne',
     authorRole: 'Company owner',
     bottomText: 'Our Website [75000+] VIP Customer',
-    logos: ['LOGO 01', 'LOGO 02', 'LOGO 03', 'LOGO 04', 'LOGO 05']
+    logos: ['', '', '', '', '']
   });
 
   // 10. Video Banner State
@@ -239,6 +239,7 @@ const HomeCustomization = () => {
   const [previewTeamImage, setPreviewTeamImage] = useState('');
   const [previewTestimonialsMain, setPreviewTestimonialsMain] = useState('');
   const [previewTestimonialsAuthor, setPreviewTestimonialsAuthor] = useState('');
+  const [previewTestimonialsLogos, setPreviewTestimonialsLogos] = useState(['', '', '', '', '']);
   const [previewVideoBannerCover, setPreviewVideoBannerCover] = useState('');
   const [previewBlogPosts, setPreviewBlogPosts] = useState(['', '', '']);
   const [previewGalleryImages, setPreviewGalleryImages] = useState(['', '', '', '', '', '']);
@@ -255,6 +256,7 @@ const HomeCustomization = () => {
   const teamImageRef = useRef(null);
   const testimonialsMainRef = useRef(null);
   const testimonialsAuthorRef = useRef(null);
+  const testimonialsLogoRefs = useRef([]);
   const videoBannerRef = useRef(null);
   const blogImageRefs = useRef([]);
   const galleryImageRefs = useRef([]);
@@ -376,6 +378,9 @@ const HomeCustomization = () => {
           setTestimonialsData(content);
           if (content.image) setPreviewTestimonialsMain(getAssetUrl(content.image));
           if (content.authorImage) setPreviewTestimonialsAuthor(getAssetUrl(content.authorImage));
+          if (content.logos) {
+            setPreviewTestimonialsLogos(content.logos.map(img => img ? getAssetUrl(img) : ''));
+          }
         }
       }
 
@@ -531,12 +536,49 @@ const HomeCustomization = () => {
     setTestimonialsData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleTestimonialsLogoChange = (index, value) => {
-    setTestimonialsData(prev => {
-      const updatedLogos = [...prev.logos];
-      updatedLogos[index] = value;
-      return { ...prev, logos: updatedLogos };
-    });
+  const handleTestimonialsLogoUpload = async (e, index) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPreviewTestimonialsLogos(prev => {
+        const newList = [...prev];
+        newList[index] = event.target.result;
+        return newList;
+      });
+    };
+    reader.readAsDataURL(file);
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      setErrorMsg('');
+      const res = await apiClient.post('/uploads/image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const { data } = res;
+      if (data.success && data.data.url) {
+        const uploadedUrl = data.data.url;
+        setTestimonialsData(prev => {
+          const newLogos = [...prev.logos];
+          newLogos[index] = uploadedUrl;
+          return { ...prev, logos: newLogos };
+        });
+      }
+    } catch (error) {
+      console.error(`Failed to upload logo ${index}:`, error);
+      setErrorMsg(`Upload Failed: ${error.response?.data?.message || 'File must be an image (Max 5MB)'}`);
+      
+      setPreviewTestimonialsLogos(prev => {
+        const newList = [...prev];
+        newList[index] = testimonialsData.logos[index] ? getAssetUrl(testimonialsData.logos[index]) : '';
+        return newList;
+      });
+    } finally {
+      e.target.value = '';
+    }
   };
 
   // Video Banner
@@ -993,12 +1035,14 @@ const HomeCustomization = () => {
         <TestimonialsCustomization
           testimonialsData={testimonialsData}
           onChange={handleTestimonialsInputChange}
-          onLogoChange={handleTestimonialsLogoChange}
           previewMain={previewTestimonialsMain}
           previewAuthor={previewTestimonialsAuthor}
           mainImageRef={testimonialsMainRef}
           authorImageRef={testimonialsAuthorRef}
           onImageUpload={handleImageUpload}
+          onLogoUpload={handleTestimonialsLogoUpload}
+          previewLogos={previewTestimonialsLogos}
+          logoRefs={testimonialsLogoRefs}
         />
       )}
 

@@ -148,7 +148,7 @@ const ProjectSliderTwo = ({ data }) => {
       {showLeftArrow && (
         <button
           onClick={() => handleScroll('left')}
-          className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md border border-white/10 opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 shadow-xl"
+          className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md border border-white/10 opacity-100 lg:opacity-0 lg:group-hover/slider:opacity-100 transition-opacity duration-300 shadow-xl"
           aria-label="Slide Left"
         >
           <ChevronLeft className="w-6 h-6" />
@@ -158,7 +158,7 @@ const ProjectSliderTwo = ({ data }) => {
       {showRightArrow && (
         <button
           onClick={() => handleScroll('right')}
-          className="absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md border border-white/10 opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 shadow-xl"
+          className="absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md border border-white/10 opacity-100 lg:opacity-0 lg:group-hover/slider:opacity-100 transition-opacity duration-300 shadow-xl"
           aria-label="Slide Right"
         >
           <ChevronRight className="w-6 h-6" />

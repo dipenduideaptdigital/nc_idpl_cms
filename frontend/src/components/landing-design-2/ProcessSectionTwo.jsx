@@ -68,7 +68,7 @@ const ProcessSectionTwo = ({ data }) => {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.25fr] gap-10 md:gap-12 items-stretch">
           
           {/* Left: Large Showcase Image */}
-          <div className="w-full h-full min-h-[380px] lg:min-h-0 rounded-[32px] overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.06)] bg-white">
+          <div className="w-full h-full min-h-[300px] sm:min-h-[380px] lg:min-h-0 rounded-[32px] overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.06)] bg-white">
             <img 
               src={resolvedImg} 
               alt="Process Staircase" 
@@ -80,24 +80,24 @@ const ProcessSectionTwo = ({ data }) => {
           </div>
 
           {/* Right: 2x2 Grid of Process Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 w-full">
+          <div className="grid grid-cols-2 gap-4 md:gap-8 w-full">
             {stepsList.map((step, idx) => (
               <div 
                 key={idx} 
-                className="bg-white rounded-[28px] p-8 flex flex-col items-start text-left shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-gray-100/50 hover:shadow-[0_15px_45px_rgba(0,0,0,0.06)] transition-all duration-500 group"
+                className="bg-white rounded-2xl md:rounded-[28px] p-4 sm:p-6 md:p-8 flex flex-col items-start text-left shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-gray-100/50 hover:shadow-[0_15px_45px_rgba(0,0,0,0.06)] transition-all duration-500 group"
               >
                 {/* Large soft-blue gradient number */}
-                <span className="text-6xl md:text-7xl font-extrabold bg-gradient-to-b from-[#3b82f6]/35 to-[#3b82f6]/5 bg-clip-text text-transparent leading-none mb-5 select-none tracking-tighter shrink-0 font-helvetica">
+                <span className="text-5xl md:text-7xl font-extrabold bg-gradient-to-b from-[#3b82f6]/35 to-[#3b82f6]/5 bg-clip-text text-transparent leading-none mb-4 md:mb-5 select-none tracking-tighter shrink-0 font-helvetica">
                   {step.num}
                 </span>
                 
                 {/* Title */}
-                <h3 className="text-xl font-bold text-gray-900 mb-3 tracking-tight group-hover:text-[#3b82f6] transition-colors duration-300 font-helvetica">
+                <h3 className="text-xs sm:text-base md:text-xl font-bold text-gray-900 mb-2 md:mb-3 tracking-tight group-hover:text-[#3b82f6] transition-colors duration-300 font-helvetica">
                   {step.title}
                 </h3>
                 
                 {/* Description */}
-                <p className="text-gray-500 text-[14px] leading-relaxed font-normal">
+                <p className="text-gray-500 text-[10px] sm:text-xs md:text-[14px] leading-relaxed font-normal">
                   {step.desc}
                 </p>
               </div>

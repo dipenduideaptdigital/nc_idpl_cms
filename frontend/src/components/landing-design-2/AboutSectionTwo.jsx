@@ -39,14 +39,14 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
       className="py-20 md:py-28 bg-[#f8f8f8] overflow-hidden font-helvetica"
     >
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-[1500px]">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
 
           {/* ================= IMAGES ================= */}
           <div className="relative w-full max-w-[1100px] aspect-[862/767] mx-auto min-w-0">
 
             {/* Left Back Card */}
             <div
-              className="absolute overflow-hidden shadow-lg z-10 rounded-[24px]"
+              className="absolute overflow-hidden shadow-lg z-10 rounded-2xl md:rounded-[24px]"
               style={{
                 left: '-8%',
                 top: '8%',
@@ -63,7 +63,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
 
             {/* Right Back Card */}
             <div
-              className="absolute overflow-hidden shadow-lg z-20 rounded-[24px]"
+              className="absolute overflow-hidden shadow-lg z-20 rounded-2xl md:rounded-[24px]"
               style={{
                 left: '54%',
                 top: '0%',
@@ -80,7 +80,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
 
             {/* Center Front Card */}
             <div
-              className="absolute overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.18)] z-30 rounded-[24px]"
+              className="absolute overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.18)] z-30 rounded-2xl md:rounded-[24px]"
               style={{
                 left: '23%',
                 top: '35%',
@@ -110,7 +110,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
             </div>
 
             {/* Heading */}
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight mb-8">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight mb-8">
               {renderTitle(data?.title || 'Architecture\n[And Interiors, Our Dual]\nExpertise', 'text-blue-500')}
             </h2>
 

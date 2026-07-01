@@ -4,12 +4,14 @@ import { User, Upload } from 'lucide-react';
 const TestimonialsCustomization = ({
   testimonialsData,
   onChange,
-  onLogoChange,
   previewMain,
   previewAuthor,
   mainImageRef,
   authorImageRef,
-  onImageUpload
+  onImageUpload,
+  onLogoUpload,
+  previewLogos,
+  logoRefs
 }) => {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
@@ -205,15 +207,29 @@ const TestimonialsCustomization = ({
             />
           </div>
 
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {(testimonialsData.logos || []).map((logo, index) => (
-              <div key={index}>
-                <label className="block text-xs font-medium text-zinc-500 mb-1">Logo Name {index + 1}</label>
+              <div key={index} className="flex flex-col items-center">
+                <label className="block text-xs font-medium text-zinc-500 mb-2">Client Logo {index + 1}</label>
+                <div 
+                  onClick={() => logoRefs.current[index]?.click()}
+                  className="w-full h-24 bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl flex items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 transition-colors overflow-hidden relative"
+                >
+                  {previewLogos && previewLogos[index] ? (
+                    <img src={previewLogos[index]} alt={`Logo ${index + 1}`} className="w-full h-full object-contain p-3" />
+                  ) : (
+                    <div className="flex flex-col items-center text-zinc-400">
+                      <Upload className="w-5 h-5 mb-1" />
+                      <span className="text-[10px] font-medium">Upload</span>
+                    </div>
+                  )}
+                </div>
                 <input 
-                  type="text" 
-                  value={logo || ''}
-                  onChange={(e) => onLogoChange(index, e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 text-sm font-bold tracking-tight text-center"
+                  type="file"
+                  ref={el => logoRefs.current[index] = el}
+                  onChange={(e) => onLogoUpload(e, index)}
+                  className="hidden"
+                  accept="image/*"
                 />
               </div>
             ))}

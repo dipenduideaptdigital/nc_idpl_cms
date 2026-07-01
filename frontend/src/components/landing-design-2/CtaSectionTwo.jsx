@@ -26,7 +26,7 @@ const CtaSectionTwo = ({ data, onCtaClick }) => {
           {/* Right Column: Title and CTA Button */}
           <div className="flex flex-col items-start max-w-4xl">
             {/* Double Line Heading */}
-            <h2 className="text-4xl md:text-5xl lg:text-[52px] font-bold text-gray-950 tracking-tight leading-[1.12] mb-10 font-helvetica">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold text-gray-950 tracking-tight leading-[1.12] mb-10 font-helvetica">
               {renderTitle(data?.title || 'Have A Project In [Mind?] Let’s\n[Make] It Happen')}
             </h2>
 

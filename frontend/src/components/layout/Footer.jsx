@@ -8,10 +8,10 @@ const Footer = () => {
     <footer className="bg-zinc-950 text-white pt-20 pb-8 px-6">
       <div className="container mx-auto max-w-7xl">
         {/* Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
           
           {/* Column 1: Logo & Info */}
-          <div className="space-y-6 flex flex-col items-center text-center lg:items-start lg:text-left">
+          <div className="space-y-6 flex flex-col items-start text-left sm:items-center sm:text-center lg:items-start lg:text-left">
             <Link to="/" className="flex items-center cursor-pointer transition-transform hover:scale-105">
               <img 
                 src={logo} 
@@ -26,7 +26,7 @@ const Footer = () => {
             
             <div className="space-y-2 pt-2">
               <h4 className="text-sm font-semibold tracking-wider text-gray-200 uppercase">Kolkata</h4>
-              <p className="text-gray-400 text-xs leading-relaxed max-w-[200px] font-light mx-auto lg:mx-0">
+              <p className="text-gray-400 text-xs leading-relaxed max-w-[200px] font-light mx-0 sm:mx-auto lg:mx-0">
                 Office: AG 40, Sector II, Salt Lake City,<br />
                 Kolkata: 700091
               </p>
@@ -34,9 +34,9 @@ const Footer = () => {
           </div>
 
           {/* Column 2: Company Links */}
-          <div className="col-span-1 lg:pl-8 flex flex-col items-center text-center lg:items-start lg:text-left">
+          <div className="col-span-1 lg:pl-8 flex flex-col items-start text-left sm:items-center sm:text-center lg:items-start lg:text-left">
             <h4 className="text-sm font-semibold tracking-wider text-gray-200 uppercase mb-5">Company</h4>
-            <ul className="space-y-3 text-gray-400 font-light text-sm flex flex-col items-center lg:items-start">
+            <ul className="space-y-3 text-gray-400 font-light text-sm flex flex-col items-start sm:items-center lg:items-start">
               <li><Link to="/about" className="hover:text-blue-500 hover:translate-x-1 inline-block transition-all">About Us</Link></li>
               <li><Link to="/services" className="hover:text-blue-500 hover:translate-x-1 inline-block transition-all">Services</Link></li>
               <li><Link to="/careers" className="hover:text-blue-500 hover:translate-x-1 inline-block transition-all">Careers</Link></li>
@@ -47,9 +47,9 @@ const Footer = () => {
           </div>
 
           {/* Column 3: Support Links */}
-          <div className="col-span-1 flex flex-col items-center text-center lg:items-start lg:text-left">
+          <div className="col-span-1 flex flex-col items-start text-left sm:items-center sm:text-center lg:items-start lg:text-left">
             <h4 className="text-sm font-semibold tracking-wider text-gray-200 uppercase mb-5">Support</h4>
-            <ul className="space-y-3 text-gray-400 font-light text-sm flex flex-col items-center lg:items-start">
+            <ul className="space-y-3 text-gray-400 font-light text-sm flex flex-col items-start sm:items-center lg:items-start">
               <li><Link to="/projects" className="hover:text-blue-500 hover:translate-x-1 inline-block transition-all">Our Projects</Link></li>
               <li><Link to="/partners" className="hover:text-blue-500 hover:translate-x-1 inline-block transition-all">Partners</Link></li>
               <li><Link to="/terms" className="hover:text-blue-500 hover:translate-x-1 inline-block transition-all">Terms & Conditions</Link></li>
@@ -58,7 +58,7 @@ const Footer = () => {
           </div>
 
           {/* Column 4: Contact & Socials */}
-          <div className="space-y-8 flex flex-col items-center text-center lg:items-start lg:text-left">
+          <div className="space-y-8 flex flex-col items-start text-left sm:items-center sm:text-center lg:items-start lg:text-left">
             <div>
               <h4 className="text-sm font-semibold tracking-wider text-gray-200 uppercase mb-5">Get in Touch</h4>
               <h3 className="text-2xl font-light mb-2 hover:text-blue-500 transition-colors cursor-pointer">+91 9831-637-409</h3>

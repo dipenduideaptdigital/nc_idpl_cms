@@ -21,7 +21,7 @@ const LandingLayout = () => {
   }, []);
 
   return (
-    <div className="font-sans antialiased text-gray-900 bg-white min-h-screen flex flex-col relative">
+    <div className="font-sans antialiased text-gray-900 bg-white min-h-screen flex flex-col relative overflow-x-hidden">
       <LandingNavbar />
       <main className="flex-grow">
         <Outlet />

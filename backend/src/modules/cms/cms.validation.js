@@ -146,14 +146,14 @@ export const testimonialsSchema = z.object({
     authorName: z.string().max(100).optional(),
     authorRole: z.string().max(100).optional(),
     bottomText: z.string().max(200).optional(),
-    logos: z.array(z.string().max(100)).optional(),
+    logos: z.array(z.string()).optional(),
   }),
 });
 
 // Video Banner Section
 export const videoBannerSchema = z.object({
   content: z.object({
-    videoId: z.string().max(255).optional(), 
+    videoId: z.string().max(255).optional(),
     image: z.string().optional(),
     title: z.string().max(150).optional(),
     description: z.string().max(1000).optional(),

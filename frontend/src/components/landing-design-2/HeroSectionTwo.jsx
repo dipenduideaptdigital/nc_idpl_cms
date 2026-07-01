@@ -47,7 +47,7 @@ const HeroSectionTwo = ({ data, onScrollDown }) => {
       </div>
 
       {/* Bottom Area containing Divider, Watermark, and Circle Button */}
-      <div className="relative z-10 w-full  md:px-12 lg:px-20 pb-15 md:pb-20">
+      <div className="relative z-10 w-full px-6 md:px-12 lg:px-20 pb-16 md:pb-20">
         {/* Horizontal Divider Line */}
         <div className="w-full h-[1px] bg-white/15 mb-6"></div>
 
@@ -83,7 +83,7 @@ const HeroSectionTwo = ({ data, onScrollDown }) => {
       </div>
 
       {/* Large Watermark Text */}
-      <div className="absolute -bottom-6 md:-bottom-10 lg:-bottom-12 left-1/2 -translate-x-1/2 select-none pointer-events-none z-[1] overflow-hidden w-full text-right max-w-[1440px] pl-6 mb-12 ml-10">
+      <div className="absolute -bottom-6 md:-bottom-10 lg:-bottom-12 left-1/2 -translate-x-1/2 select-none pointer-events-none z-[1] overflow-hidden w-full text-right max-w-[1440px] pl-6 mb-12 ml-0 md:ml-10">
         <h2 className="whitespace-nowrap text-[50px] sm:text-[100px] md:text-[150px] lg:text-[160px] xl:text-[230px] font-bold text-white/20 tracking-[0.08em] font-serif leading-none">
           {data?.watermarkText || 'Interior'}
         </h2>

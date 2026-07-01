@@ -1,4 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Render } from '@measured/puck';
+import { config } from '../config/puck.config';
+import { pagesApi } from '../api/pages';
 import ServiceBanner from '../components/service/ServiceBanner';
 import ServiceDetails from '../components/service/ServiceDetails';
 import CtaSection from '../components/home/CtaSection'; 
@@ -6,18 +9,49 @@ import useScrollAnimation from '../hooks/useScrollAnimation';
 
 const ServicePage = () => {
   useScrollAnimation();
+  const [pageData, setPageData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = 'Services | Subhaakritee';
+    const fetchServicePage = async () => {
+      try {
+        const response = await pagesApi.getPublicPageBySlug('services'); 
+        const data = response.data || response;
+        
+        if (data) {
+          setPageData(data);
+          document.title = `${data.title || 'Services'} | Subhaakritee`;
+        }
+      } catch (error) {
+        console.error("Failed to fetch service page content. Showing static fallback.", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServicePage();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white font-helvetica">
-      <ServiceBanner title="Commercial Interior" subTitle="Services" />
-      <ServiceDetails />
-      <CtaSection />
-      
+      {pageData && pageData.content ? (
+        <Render config={config} data={pageData.content} />
+      ) : (
+        <>
+          <ServiceBanner title="Commercial Interior" subTitle="Services" />
+          <ServiceDetails />
+          <CtaSection />
+        </>
+      )}
     </div>
   );
 };

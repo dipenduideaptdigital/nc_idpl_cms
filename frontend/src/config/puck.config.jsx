@@ -317,6 +317,28 @@ export const puckConfig = {
           </div>
         </div>
       )
-    }
+    },
+    ServiceBanner: {
+      fields: {
+        title: { type: "text" },
+        subTitle: { type: "text" },
+        backgroundImage: { 
+          type: "custom", 
+          render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> 
+        }
+      },
+      defaultProps: {
+        title: "Residential Interior",
+        subTitle: "Services",
+        backgroundImage: ""
+      },
+      render: ({ title, subTitle, backgroundImage }) => (
+        <ServiceBannerBlock 
+          title={title} 
+          subTitle={subTitle} 
+          backgroundImage={backgroundImage} 
+        />
+      )
+    },
   }
 };
