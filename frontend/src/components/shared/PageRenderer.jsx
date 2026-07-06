@@ -13,6 +13,8 @@ import BlogSection from '../home/BlogSection';
 import Gallery from '../home/Gallery';
 import CtaSection from '../home/CtaSection';
 import ContactFormBlock from '../blocks/ContactFormBlock';
+import ContactBannerBlock from '../blocks/ContactBannerBlock';
+import ContactInfoBlock from '../blocks/ContactInfoBlock';
 import HeroSectionTwo from '../landing-design-2/HeroSectionTwo';
 import AboutSectionTwo from '../landing-design-2/AboutSectionTwo';
 import ServicesSectionTwo from '../landing-design-2/ServicesSectionTwo';
@@ -24,6 +26,9 @@ import HappySpaces from '../landing-design-2/HappySpaces';
 import HappyCustomers from '../landing-design-2/HappyCustomers';
 import TestimonialsTwo from '../landing-design-2/TestimonialsTwo';
 import CtaSectionTwo from '../landing-design-2/CtaSectionTwo';
+import ServiceBannerBlock from '../blocks/ServiceBannerBlock';
+import ServiceDetailsBlock from '../blocks/ServiceDetailsBlock';
+import CtaSectionBlock from '../blocks/CtaSectionBlock';
 
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
@@ -43,6 +48,11 @@ const BlockMapper = memo(({ block, index }) => {
     case 'gallery': return <Gallery key={index} data={data} />;
     case 'cta': return <CtaSection key={index} data={data} />;
     case 'contactForm': return <ContactFormBlock key={index} data={data} />;
+    case 'contactBanner': return <ContactBannerBlock key={index} {...data} />;
+    case 'contactInfo': return <ContactInfoBlock key={index} {...data} />;
+    case 'serviceBanner': return <ServiceBannerBlock key={index} {...data} />;
+    case 'serviceDetails': return <ServiceDetailsBlock key={index} {...data} />;
+    case 'ctaSection': return <CtaSectionBlock key={index} {...data} />;
     case 'heroSectionTwo': return <HeroSectionTwo key={index} data={data} />;
     case 'aboutSectionTwo': return <AboutSectionTwo key={index} data={data} />;
     case 'servicesSectionTwo': return <ServicesSectionTwo key={index} data={data} />;

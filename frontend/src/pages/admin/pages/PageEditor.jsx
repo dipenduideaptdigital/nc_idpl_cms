@@ -54,7 +54,12 @@ const PageEditor = () => {
     { type: 'testimonialsTwo', label: 'Testimonials Two' },
     { type: 'ctaSectionTwo', label: 'CTA Section Two' },
     { type: 'richText', label: 'Rich Text Box' },
-    { type: 'contactForm', label: 'Contact Form (Dynamic Engine)' }
+    { type: 'contactForm', label: 'Contact Form (Dynamic Engine)' },
+    { type: 'serviceBanner', label: 'Service Banner' },
+    { type: 'serviceDetails', label: 'Service Details Main Content' },
+    { type: 'ctaSection', label: 'Call To Action (CTA) Section' },
+    { type: 'contactBanner', label: 'Contact Us Banner' },
+    { type: 'contactInfo', label: 'Contact Info & Form' }
   ];
 
   const [formData, setFormData] = useState({
@@ -237,7 +242,66 @@ const PageEditor = () => {
           submitButtonText: 'Submit Inquiry',
           redirectPath: ''
         }; break;
+      case 'serviceBanner':
+        defaultData = { 
+          title: 'Residential Interior', 
+          subTitle: 'Services', 
+          backgroundImage: '' 
+        }; 
+        break;
+        
+      case 'serviceDetails':
+        defaultData = {
+          aboutTitle: "About The Service",
+          aboutDescription: "Commercial interior design is constantly evolving...",
+          typesTitle: "Types Of Commercial Spaces",
+          typesDescription: "In design, we bring characteristics...",
+          elementsTitle: "Key Elements Of Interior Design",
+          elementsDescription: "Several key elements are essential...",
+          footerDescription: "Commercial interior design is a dynamic...",
+          sidebarServices: [{ name: 'Renovation And Remodelling', path: '/services/commercial', active: true }],
+          features: [{ title: "Space Optimization", description: "Through The Best Smart Space Optimisation." }],
+          leftBullets: [{ text: "We provide high quality design services." }],
+          rightBullets: [{ text: "Flexible with any structure of the building" }],
+          faqs: [{ question: "What Interior Design Services Do You Offer?" }],
+          sidebarImage: "",
+          mainImage: "",
+          midImage1: "",
+          midImage2: ""
+        }; 
+        break;
+        
+      case 'ctaSection':
+        defaultData = { 
+          badgeText: "GET IN TOUCH", 
+          title: "Have A Project In [Mind? Let's]\n[Make] It Happen", 
+          buttonText: "BOOK A FREE CONSULTATION" 
+        }; 
+        break;
+      
+      case 'contactBanner':
+        defaultData = {
+          title: "Contact Us",
+          breadcrumbText: "Contact Us",
+          backgroundImage: ""
+        };
+        break;
 
+      case 'contactInfo':
+        defaultData = {
+          badgeText: 'GET IN TOUCH',
+          title: "Have a Project In [Mind? Let's]\n[Make] It Happen.",
+          addressTitle: 'Address:',
+          addressText: 'Office: AG 40 , Sector II, Salt Lake\nCity, Kolkata: 700091',
+          supportTitle: 'Support',
+          supportPhone: '+91 9831-637-409',
+          supportEmail: 'Subhaakritee@Hotmail.Com',
+          workspaceImage: '',
+          mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.2865910793613!2d88.4287856!3d22.5683416!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0275003b137ecb%3A0x633513a0c56d7870!2sSector%20V%2C%20Bidhannagar%2C%20Kolkata!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin',
+          formId: 'cmqzjpzfz0000t00s7pd31okk'
+        };
+        break;
+        
       default:
         defaultData = {};
     }

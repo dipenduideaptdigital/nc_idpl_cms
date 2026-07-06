@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { pagesApi } from '../../../api/pages';
 import Can from '../../../components/shared/Can';
 import { 
@@ -18,11 +18,17 @@ const PageList = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDeleting, setIsDeleting] = useState(null);
+  
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isSitePagesMode = location.pathname.includes('/admin/site-pages');
+
+  const basePath = isSitePagesMode ? '/admin/site-pages' : '/admin/pages';
 
   useEffect(() => {
     fetchPages();
-  }, []);
+  }, [location.pathname]); 
 
   const fetchPages = async () => {
     try {
@@ -76,7 +82,26 @@ const PageList = () => {
     }
   ];
 
-  const allPages = [...staticPages, ...pages];
+  const coreSiteSlugs = [
+    'services', 'service', 
+    'about', 'about-us', 
+    'projects', 'project', 'our-projects',
+    'contact', 'contact-us', 
+    'blog', 'blogs',
+    'home', 'homepage'
+  ];
+
+  // Filter based on the current mode
+  const relevantPages = pages.filter(page => {
+    const currentSlug = (page.slug || '').toLowerCase().trim();
+    if (isSitePagesMode) {
+      return coreSiteSlugs.includes(currentSlug);
+    } else {
+      return !coreSiteSlugs.includes(currentSlug);
+    }
+  });
+
+  const allPages = isSitePagesMode ? relevantPages : [...staticPages, ...relevantPages];
 
   const filteredPages = allPages.filter(page => 
     page.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -114,14 +139,18 @@ const PageList = () => {
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
             <FileText className="w-6 h-6 text-zinc-900" />
-            Pages
+            {isSitePagesMode ? 'Site Pages' : 'Landing Pages'}
           </h1>
-          <p className="text-zinc-500 text-sm mt-1">Manage your website's pages and content.</p>
+          <p className="text-zinc-500 text-sm mt-1">
+            {isSitePagesMode 
+              ? 'Manage main website pages like Services, About Us, etc.' 
+              : 'Manage your marketing and landing pages.'}
+          </p>
         </div>
         
         <Can permission="page.create">
           <Link 
-            to="/admin/pages/create"
+            to={`${basePath}/create`}
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20"
           >
             <Plus className="w-4 h-4" />
@@ -227,7 +256,7 @@ const PageList = () => {
                           <>
                             <Can permission="page.edit">
                               <Link 
-                                to={`/admin/pages/edit/${page.id}`}
+                                to={`${basePath}/edit/${page.id}`}
                                 className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                 title="Edit Page"
                               >
@@ -266,10 +295,10 @@ const PageList = () => {
                       <p className="text-lg font-medium text-zinc-900">No pages found</p>
                       <p className="text-sm mt-1">Get started by creating a new page.</p>
                       <Link 
-                        to="/admin/pages/create"
+                        to={`${basePath}/create`}
                         className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-800"
                       >
-                        Create your first page & rarr;
+                        Create your first page &rarr;
                       </Link>
                     </div>
                   </td>

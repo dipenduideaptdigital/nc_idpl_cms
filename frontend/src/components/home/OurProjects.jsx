@@ -176,8 +176,8 @@ const OurProjects = ({ data: externalData }) => {
         <div className="container mx-auto max-w-7xl relative">
           
           {/* Badge: Absolute to left */}
-          <div className="md:absolute left-0 top-0 mb-8 md:mb-0 fadeInLeft">
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
+          <div className="md:absolute left-0 top-0 mb-8 md:mb-0 fadeInLeft ">
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300   ">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
                 {badgeText}
@@ -185,12 +185,12 @@ const OurProjects = ({ data: externalData }) => {
             </div>
           </div>
           
-          <div className="flex flex-col items-center w-full">
+          <div className="flex flex-col items-center w-full ml-20 ">
             <div className="flex flex-col items-start w-fit fadeInRight md:pl-32 lg:pl-0">
-              <h2 className="text-4xl md:text-5xl lg:text-[64px] font-bold tracking-tight text-gray-900 leading-[1.05] text-left">
+              <h2 className="text-4xl md:text-5xl lg:text-[62px] font-bold tracking-tight text-gray-900 leading-[1.05] text-left">
                 {renderTitle(title)}
               </h2>
-              <p className="text-gray-500 text-sm md:text-base font-normal leading-relaxed max-w-[550px] text-left mt-6 whitespace-pre-line">
+              <p className="text-gray-500 text-sm md:text-[19px] font-normal leading-relaxed max-w-[550px] text-left mt-6 whitespace-pre-line ml-10 ">
                 {description}
               </p>
             </div>
@@ -201,7 +201,7 @@ const OurProjects = ({ data: externalData }) => {
 
       {/* Carousel Section */}
       <div 
-        className={`flex w-full overflow-x-auto hide-scrollbar opal-move-up select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        className={`flex w-full   overflow-x-auto hide-scrollbar opal-move-up select-none   ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
         ref={carouselRef}
         onScroll={handleScroll}
         onMouseDown={handleMouseDown}
@@ -210,7 +210,7 @@ const OurProjects = ({ data: externalData }) => {
         onMouseMove={handleMouseMove}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        <div className="flex gap-6 md:gap-10 px-0 pb-12 items-start shrink-0">
+        <div className="flex gap-6 md:gap-10 px-0 pb-12 items-start shrink-0 mt-4">
           {infiniteProjects.map((project, index) => {
             const originalIndex = index % 5; 
             const isEven = originalIndex % 2 === 0;
@@ -259,12 +259,12 @@ const OurProjects = ({ data: externalData }) => {
       <div className="relative w-full mt-24 pt-24 md:pt-36 pb-16 flex flex-col items-center justify-end min-h-[400px] opal-move-up">
         
         <div className="absolute -top-10 md:-top-20 left-0 right-0 overflow-hidden flex justify-center pointer-events-none z-0">
-          <h2 className="text-[25vw] md:text-[22vw] font-black text-[#F3F4F6] leading-none select-none">
+          <h2 className="text-[25vw] md:text-[22vw] font-black text-[#F3F4F6] leading-[1.25] select-none">
             Interior
           </h2>
         </div>
 
-        <div className="container mx-auto px-8 md:px-28 relative z-10">
+        <div className="container mx-auto px-8 md:px-14 relative z-12">
           <img 
             src={interiorImg} 
             alt="Interior Panoramic" 

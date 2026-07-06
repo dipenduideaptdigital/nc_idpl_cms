@@ -13,7 +13,31 @@ const Navbar = () => {
     const fetchPages = async () => {
       try {
         const response = await pagesApi.getPublicPages();
-        setPages(response.data || []);
+        
+        const excludeSlugs = [
+          'services', 'service', 
+          'about', 'about-us', 
+          'projects', 'project', 'our-projects',
+          'contact', 'contact-us', 
+          'blog', 'blogs',
+          'home', 'homepage'
+        ];
+        
+        const filteredPages = (response.data || []).filter(page => {
+          const currentSlug = (page.slug || '').toLowerCase().trim();
+          
+          if (excludeSlugs.includes(currentSlug)) {
+            return false;
+          }
+
+          if (page.showInMenu === false) {
+            return false;
+          }
+
+          return true;
+        });
+        
+        setPages(filteredPages);
       } catch (err) {
         console.error('Failed to load navbar pages:', err);
       }
@@ -66,13 +90,6 @@ const Navbar = () => {
         >
           Services
         </Link>
-        {/* <a 
-          href="/#process" 
-          onClick={(e) => handleNavClick(e, 'process')} 
-          className="flex items-center hover:text-gray-300 transition-colors"
-        >
-          Process
-        </a> */}
         <Link 
           to="/projects" 
           className="flex items-center hover:text-gray-300 transition-colors"

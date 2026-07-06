@@ -12,6 +12,11 @@ import TestimonialsTwo from '../components/landing-design-2/TestimonialsTwo';
 import CtaSectionTwo from '../components/landing-design-2/CtaSectionTwo';
 import ContactFormBlock from '../components/blocks/ContactFormBlock';
 import ImageField from '../components/admin/ImageField';
+import ServiceBannerBlock from '../components/blocks/ServiceBannerBlock';
+import ServiceDetailsBlock from '../components/blocks/ServiceDetailsBlock';
+import CtaSectionBlock from '../components/blocks/CtaSectionBlock';
+import ContactBannerBlock from '../components/blocks/ContactBannerBlock';
+import ContactInfoBlock from '../components/blocks/ContactInfoBlock';
 
 export const puckConfig = {
   components: {
@@ -318,7 +323,7 @@ export const puckConfig = {
         </div>
       )
     },
-    ServiceBanner: {
+    serviceBanner: {
       fields: {
         title: { type: "text" },
         subTitle: { type: "text" },
@@ -339,6 +344,124 @@ export const puckConfig = {
           backgroundImage={backgroundImage} 
         />
       )
+    },
+
+    serviceDetails: {
+      fields: {
+        sidebarServices: {
+          type: "array",
+          arrayFields: {
+            name: { type: "text" },
+            path: { type: "text" },
+            active: { type: "radio", options: [{ label: "Yes", value: true }, { label: "No", value: false }] }
+          },
+        },
+        sidebarImage: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
+        mainImage: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
+        aboutTitle: { type: "text" },
+        aboutDescription: { type: "textarea" },
+        features: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+            description: { type: "textarea" }
+          }
+        },
+        midImage1: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
+        midImage2: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
+        typesTitle: { type: "text" },
+        typesDescription: { type: "textarea" },
+        elementsTitle: { type: "text" },
+        elementsDescription: { type: "textarea" },
+        leftBullets: {
+          type: "array",
+          arrayFields: { text: { type: "text" } }
+        },
+        rightBullets: {
+          type: "array",
+          arrayFields: { text: { type: "text" } }
+        },
+        footerDescription: { type: "textarea" },
+        faqs: {
+          type: "array",
+          arrayFields: { question: { type: "text" } }
+        }
+      },
+      defaultProps: {
+        aboutTitle: "About The Service",
+        aboutDescription: "Commercial interior design is constantly evolving...",
+        typesTitle: "Types Of Commercial Spaces",
+        typesDescription: "In design, we bring characteristics...",
+        elementsTitle: "Key Elements Of Interior Design",
+        elementsDescription: "Several key elements are essential...",
+        footerDescription: "Commercial interior design is a dynamic...",
+        sidebarServices: [
+          { name: 'Renovation And Remodelling', path: '/services/commercial', active: true }
+        ],
+        features: [
+          { title: "Space Optimization", description: "Through The Best Smart Space Optimisation." }
+        ],
+        leftBullets: [{ text: "We provide high quality design services." }],
+        rightBullets: [{ text: "Flexible with any structure of the building" }],
+        faqs: [{ question: "What Interior Design Services Do You Offer?" }]
+      },
+      render: (props) => <ServiceDetailsBlock {...props} />
+    },
+    ctaSection: {
+      fields: {
+        badgeText: { type: "text" },
+        title: { type: "textarea" },
+        buttonText: { type: "text" }
+      },
+      defaultProps: {
+        badgeText: "GET IN TOUCH",
+        title: "Have A Project In [Mind? Let's]\n[Make] It Happen",
+        buttonText: "BOOK A FREE CONSULTATION"
+      },
+      render: (props) => <CtaSectionBlock {...props} />
+    },
+    contactBanner: {
+      fields: {
+        title: { type: "text" },
+        breadcrumbText: { type: "text" },
+        backgroundImage: { 
+          type: "custom", 
+          render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> 
+        }
+      },
+      defaultProps: {
+        title: "Contact Us",
+        breadcrumbText: "Contact Us",
+        backgroundImage: ""
+      },
+      render: (props) => <ContactBannerBlock {...props} />
+    },
+    contactInfo: {
+      fields: {
+        badgeText: { type: "text" },
+        title: { type: "textarea" },
+        addressTitle: { type: "text" },
+        addressText: { type: "textarea" },
+        supportTitle: { type: "text" },
+        supportPhone: { type: "text" },
+        supportEmail: { type: "text" },
+        workspaceImage: { type: "custom", render: ({ value, name, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        mapIframeUrl: { type: "textarea" },
+        formId: { type: "text" }
+      },
+      defaultProps: {
+        badgeText: 'GET IN TOUCH',
+        title: "Have a Project In [Mind? Let's]\n[Make] It Happen.",
+        addressTitle: 'Address:',
+        addressText: 'Office: AG 40 , Sector II, Salt Lake\nCity, Kolkata: 700091',
+        supportTitle: 'Support',
+        supportPhone: '+91 9831-637-409',
+        supportEmail: 'Subhaakritee@Hotmail.Com',
+        workspaceImage: '',
+        mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.2750390190535!2d88.4239845759714!3d22.568803433116515!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0275adab7574c3%3A0xc34375b42d334df5!2sSubhaakritee!5e0!3m2!1sen!2sin!4v1709123456789!5m2!1sen!2sin', // Default Google Map URL
+        formId: 'cmqzjpzfz0000t00s7pd31okk'
+      },
+      render: (props) => <ContactInfoBlock {...props} />
     },
   }
 };

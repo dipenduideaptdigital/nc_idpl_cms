@@ -58,6 +58,9 @@ function App() {
             <Route path="pages" element={<PageList />} />
             <Route path="pages/create" element={<PageEditor />} />
             <Route path="pages/edit/:id" element={<PageEditor />} />
+            <Route path="site-pages" element={<PageList />} />
+            <Route path="site-pages/create" element={<PageEditor />} />
+            <Route path="site-pages/edit/:id" element={<PageEditor />} />
             <Route path="contact-forms" element={<ContactFormList />} />
             <Route path="contact-forms/create" element={<ContactFormEditor />} />
             <Route path="contact-forms/edit/:id" element={<ContactFormEditor />} />

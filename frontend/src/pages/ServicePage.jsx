@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Render } from '@measured/puck';
-import { config } from '../config/puck.config';
 import { pagesApi } from '../api/pages';
 import ServiceBanner from '../components/service/ServiceBanner';
 import ServiceDetails from '../components/service/ServiceDetails';
 import CtaSection from '../components/home/CtaSection'; 
 import useScrollAnimation from '../hooks/useScrollAnimation';
+import PageRenderer from '../components/shared/PageRenderer'; 
 
 const ServicePage = () => {
   useScrollAnimation();
@@ -43,8 +42,10 @@ const ServicePage = () => {
 
   return (
     <div className="min-h-screen bg-white font-helvetica">
-      {pageData && pageData.content ? (
-        <Render config={config} data={pageData.content} />
+      {pageData && pageData.content?.blocks?.length > 0 ? (
+        
+        <PageRenderer blocks={pageData.content.blocks} />
+        
       ) : (
         <>
           <ServiceBanner title="Commercial Interior" subTitle="Services" />

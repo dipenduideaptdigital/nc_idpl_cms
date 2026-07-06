@@ -41,6 +41,11 @@ const happySpacesBlockSchema = z.object({ type: z.literal("happySpaces"), data: 
 const happyCustomersBlockSchema = z.object({ type: z.literal("happyCustomers"), data: z.record(z.any()).default({}) });
 const testimonialsTwoBlockSchema = z.object({ type: z.literal("testimonialsTwo"), data: z.record(z.any()).default({}) });
 const ctaSectionTwoBlockSchema = z.object({ type: z.literal("ctaSectionTwo"), data: z.record(z.any()).default({}) });
+const serviceBannerBlockSchema = z.object({ type: z.literal("serviceBanner"), data: z.record(z.any()).default({}) });
+const serviceDetailsBlockSchema = z.object({ type: z.literal("serviceDetails"), data: z.record(z.any()).default({}) });
+const ctaSectionBlockSchema = z.object({ type: z.literal("ctaSection"), data: z.record(z.any()).default({}) });
+const contactBannerBlockSchema = z.object({ type: z.literal("contactBanner"), data: z.record(z.any()).default({}) });
+const contactInfoBlockSchema = z.object({ type: z.literal("contactInfo"), data: z.record(z.any()).default({}) });
 
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
@@ -81,6 +86,11 @@ const blockSchema = z.discriminatedUnion("type", [
   happyCustomersBlockSchema,
   testimonialsTwoBlockSchema,
   ctaSectionTwoBlockSchema,
+  serviceBannerBlockSchema,
+  serviceDetailsBlockSchema,
+  ctaSectionBlockSchema,
+  contactBannerBlockSchema,
+  contactInfoBlockSchema,
 ]);
 
 const pageContentSchema = z.object({
