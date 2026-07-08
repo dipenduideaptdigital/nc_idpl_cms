@@ -1,6 +1,9 @@
 import React from 'react';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
-const ProjectsHero = ({ title = 'Our Projects', heroImg }) => {
+const ProjectsHero = ({ title = 'Our Projects', backgroundImage }) => {
+  const bgImageUrl = resolveAssetUrl(backgroundImage, '/default-hero.jpg');
+
   return (
     <div 
       className="relative w-full mx-auto flex items-center justify-center bg-zinc-950 overflow-hidden"
@@ -14,7 +17,7 @@ const ProjectsHero = ({ title = 'Our Projects', heroImg }) => {
     >
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-80 scale-105 transition-transform duration-[10000ms]"
-        style={{ backgroundImage: `url(${heroImg})` }}
+        style={{ backgroundImage: `url(${bgImageUrl})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-945 via-zinc-950/40 to-transparent"></div>
       </div>

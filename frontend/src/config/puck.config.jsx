@@ -22,6 +22,8 @@ import AboutExperienceBlock from '../components/blocks/AboutExperienceBlock';
 import AboutProcessBlock from '../components/blocks/AboutProcessBlock';
 import TimelineBlock from '../components/blocks/TimelineBlock';
 import AboutAwardsBlock from '../components/blocks/AboutAwardsBlock';
+import AboutGalleryBlock from '../components/blocks/AboutGalleryBlock';
+import ProjectsHero from '../components/projects/ProjectsHero';
 
 export const puckConfig = {
   components: {
@@ -582,6 +584,51 @@ export const puckConfig = {
         ]
       },
       render: (props) => <AboutAwardsBlock {...props} />
+    },
+
+    aboutGallery: {
+      fields: {
+        backgroundImage: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
+        badgeText: { type: "text" },
+        title: { type: "textarea" },
+        description: { type: "textarea" },
+        galleryItems: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+            image: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> }
+          },
+          defaultItemProps: { title: 'Project Title', image: '' }
+        }
+      },
+      defaultProps: {
+        backgroundImage: "",
+        badgeText: "OUR GALLERY",
+        title: "Interior \n Design",
+        description: "Lorem ipsum dolor sit amet consectetur. Magna nunc porttitor convallis faucibus laoreet.",
+        galleryItems: [
+          { title: 'Project 1', image: '' },
+          { title: 'Project 2', image: '' },
+          { title: 'Project 3', image: '' },
+          { title: 'Project 4', image: '' }
+        ]
+      },
+      render: (props) => <AboutGalleryBlock {...props} />
+    },
+    
+    projectsBanner: {
+      fields: {
+        title: { type: "text" },
+        backgroundImage: { 
+          type: "custom", 
+          render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> 
+        }
+      },
+      defaultProps: {
+        title: "Projects",
+        backgroundImage: ""
+      },
+      render: (props) => <ProjectsHero title={props.title} heroImg={props.backgroundImage} />
     },
   }
 };

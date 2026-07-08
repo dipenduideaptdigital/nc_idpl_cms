@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticate } from "../../shared/middlewares/authenticate.middleware.js";
 import { authorizeSystemRoles } from "../../shared/middlewares/authorize.middleware.js";
-import { requirePermission } from "../../shared/middlewares/permission.middleware.js"; // Import added
+import { requirePermission } from "../../shared/middlewares/permission.middleware.js"; 
 import { validate } from "../../shared/middlewares/validate.middleware.js";
 import * as controller from "./pages.controller.js";
 import { 
@@ -16,7 +16,6 @@ const router = Router();
 
 router.use(authenticate, authorizeSystemRoles("SUPER_ADMIN", "ADMIN"));
 
-// Structural Creation Layer
 router.post(
   "/", 
   requirePermission("page.create"), 

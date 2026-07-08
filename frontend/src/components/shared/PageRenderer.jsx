@@ -34,6 +34,8 @@ import AboutExperienceBlock from '../blocks/AboutExperienceBlock';
 import AboutProcessBlock from '../blocks/AboutProcessBlock';
 import TimelineBlock from '../blocks/TimelineBlock';
 import AboutAwardsBlock from '../blocks/AboutAwardsBlock';
+import AboutGalleryBlock from '../blocks/AboutGalleryBlock';
+import ProjectsHero from '../projects/ProjectsHero';
 
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
@@ -63,6 +65,7 @@ const BlockMapper = memo(({ block, index }) => {
     case 'aboutProcess': return <AboutProcessBlock key={index} {...data} />;
     case 'timeline': return <TimelineBlock key={index} {...data} />;
     case 'aboutAwards': return <AboutAwardsBlock key={index} {...data} />;
+    case 'aboutGallery': return <AboutGalleryBlock key={index} {...data} />;
     case 'heroSectionTwo': return <HeroSectionTwo key={index} data={data} />;
     case 'aboutSectionTwo': return <AboutSectionTwo key={index} data={data} />;
     case 'servicesSectionTwo': return <ServicesSectionTwo key={index} data={data} />;
@@ -74,6 +77,7 @@ const BlockMapper = memo(({ block, index }) => {
     case 'happyCustomers': return <HappyCustomers key={index} data={data} />;
     case 'testimonialsTwo': return <TestimonialsTwo key={index} data={data} />;
     case 'ctaSectionTwo': return <CtaSectionTwo key={index} data={data} />;
+    case 'projectsBanner': return <ProjectsHero key={index} {...data} />;
     case 'richText':
       return (
         <div key={index} className="py-12 md:py-24 overflow-hidden w-full">
@@ -102,7 +106,7 @@ const PageRenderer = memo(({ blocks }) => {
   }
 
   return (
-    <div className="animate-in fade-in duration-700 min-h-screen">
+    <div className="animate-in fade-in duration-700">
       {blocks.map((block, index) => (
         <BlockMapper key={block.id || index} block={block} index={index} />
       ))}

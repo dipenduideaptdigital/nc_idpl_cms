@@ -21,9 +21,12 @@ const ProjectEditor = () => {
     if (isEditMode) {
       projectsApi.getProjectById(id).then(res => {
         const data = res.data;
-        // Ensure array format for UI
+        
         if (!data.bulletPoints || data.bulletPoints.length === 0) data.bulletPoints = [''];
         if (!data.spaces || data.spaces.length === 0) data.spaces = [{ size: '', label: '' }];
+        
+        data.featuredImageId = data.featuredImage?.url || data.featuredImageId || '';
+        
         setFormData(data);
       }).catch(console.error);
     }
@@ -53,12 +56,18 @@ const ProjectEditor = () => {
     setSaving(true);
     try {
       const payload = { ...formData };
+      
       payload.bulletPoints = payload.bulletPoints.filter(b => b.trim() !== '');
       payload.spaces = payload.spaces.filter(s => s.size.trim() !== '' && s.label.trim() !== '');
 
       if (!payload.featuredImageId || payload.featuredImageId.trim() === '') {
         payload.featuredImageId = null; 
       }
+
+      delete payload.id;
+      delete payload.createdAt;
+      delete payload.updatedAt;
+      delete payload.featuredImage;
 
       if (isEditMode) await projectsApi.updateProject(id, payload);
       else await projectsApi.createProject(payload);

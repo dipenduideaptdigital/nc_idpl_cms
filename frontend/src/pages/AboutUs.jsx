@@ -54,7 +54,7 @@ const AboutUs = () => {
           <AboutExperience />
           <AboutProcess />
           <Timeline />
-          <AboutAwards />
+          {/* <AboutAwards /> */}
           <AboutGallery />
           <Cta />
         </>

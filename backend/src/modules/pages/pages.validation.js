@@ -51,6 +51,8 @@ const aboutExperienceBlockSchema = z.object({ type: z.literal("aboutExperience")
 const aboutProcessBlockSchema = z.object({ type: z.literal("aboutProcess"), data: z.record(z.any()).default({}) });
 const timelineBlockSchema = z.object({ type: z.literal("timeline"), data: z.record(z.any()).default({}) });
 const aboutAwardsBlockSchema = z.object({ type: z.literal("aboutAwards"), data: z.record(z.any()).default({}) });
+const aboutGalleryBlockSchema = z.object({ type: z.literal("aboutGallery"), data: z.record(z.any()).default({}) });
+const projectsBannerBlockSchema = z.object({ type: z.literal("projectsBanner"), data: z.record(z.any()).default({}) });
 
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
@@ -101,6 +103,8 @@ const blockSchema = z.discriminatedUnion("type", [
   aboutProcessBlockSchema,
   timelineBlockSchema,
   aboutAwardsBlockSchema,
+  aboutGalleryBlockSchema,
+  projectsBannerBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

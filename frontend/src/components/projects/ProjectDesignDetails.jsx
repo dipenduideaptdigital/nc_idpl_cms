@@ -35,12 +35,10 @@ const ProjectDesignDetails = ({ project }) => {
           Design in Details
         </h2>
         
-        {/* Dynamic Details theke asha data (whitespace-pre-line diye paragraph format thik kora holo) */}
         <p className="text-zinc-500 text-[15px] md:text-[16px] leading-relaxed mb-10 whitespace-pre-line">
           {project.details || project.description || 'Details coming soon for this project.'}
         </p>
 
-        {/* Highlights List - 2 Column Checklist */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 md:gap-y-0 mb-16">
           {/* Left Column */}
           <div className="flex flex-col space-y-6">
@@ -72,7 +70,6 @@ const ProjectDesignDetails = ({ project }) => {
           </div>
         </div>
 
-        {/* Metrics Grid Cards with thin borders and rounded corners */}
         <div className="border border-zinc-200 rounded-[24px] overflow-hidden grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-zinc-200 bg-white mb-15">
           {spaces.map((space, idx) => (
             <div key={idx} className="p-8 text-center flex flex-col justify-center items-center">

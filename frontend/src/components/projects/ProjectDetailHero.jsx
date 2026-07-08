@@ -5,7 +5,6 @@ import { resolveAssetUrl } from '../../utils/assetResolver';
 const ProjectDetailHero = ({ project }) => {
   if (!project) return null;
 
-  // Resolve Image URL
   const bgImageUrl = resolveAssetUrl(project.featuredImage?.url || project.featuredImageId, '/default-project.png');
 
   return (
@@ -19,15 +18,13 @@ const ProjectDetailHero = ({ project }) => {
         transform: 'rotate(0deg)'
       }}
     >
-      {/* Background Image */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-80"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ 
           backgroundImage: `url(${bgImageUrl})`
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/45 to-transparent"></div>
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent"></div>
       </div>
 
       {/* Styled text & breadcrumbs */}

@@ -17,17 +17,17 @@ const AboutExperience = () => {
             <div className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 w-max mb-8">
               <span className="w-2 h-2 rounded-full bg-orange-500"></span>
               <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-600">
-                Started in 1989
+                Who We Are
               </span>
             </div>
 
             {/* Heading */}
             <h2 className="text-[36px] md:text-[44px] lg:text-[48px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111827] whitespace-nowrap">
-              We Shape <span className="text-[#228BFF]">Interior Designs,</span>
+              We Design <span className="text-[#228BFF]">Spaces ,</span>
               <br />
-              <span className="text-[#228BFF]">Crafting Timeless</span> And Inspiring
+              <span className="text-[#228BFF]">That Deliver</span> Lasting
               <br />
-              Spaces
+              Impact
             </h2>
 
             <div className="flex flex-row items-stretch gap-6 lg:gap-10 mt-10 lg:mt-16">
@@ -75,10 +75,7 @@ const AboutExperience = () => {
               
               {/* Text */}
               <p className="text-[#4B5563] leading-relaxed text-[16px] pr-2">
-                We believe that every space has the power to inspire, and that
-                great design brings that inspiration to life. Our mission is to
-                craft environments that stir creativity, evoke emotion, and
-                reflect the essence of those who inhabit them.
+                subhAAkritee is an architecture and interior design firm creating thoughtful residential and commercial spaces since 2002. We combine 10 creativity, functionality, and meticulous attention to detail to deliver bespoke design solutions tailored to each client’s needs and aspirations. From concept to completion, our focus is on crafting elegant, practical, and enduring environments that enhance everyday living and leave a lasting impression.
               </p>
 
               {/* Button */}

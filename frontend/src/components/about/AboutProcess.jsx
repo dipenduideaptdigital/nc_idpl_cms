@@ -2,10 +2,10 @@ import React from 'react';
 import imagePath from '../../assets/aboutUs/02.png';
 
 const PROCESS_DATA = [
-  { number: '01', title: 'Concept Design', desc: 'Initial ideation and space planning.' },
-  { number: '02', title: 'Space Planning', desc: 'Detailed layout and functionality.' },
-  { number: '03', title: 'Design Execution', desc: 'Crafting and site management.' },
-  { number: '04', title: 'Final Finishing', desc: 'Polished results and handover.' },
+  { number: '01', title: 'Vision', desc: 'To create timeless, inspiring spaces that seamlessly blend design excellence, functionality, and the unique aspirations of every client.' },
+  { number: '02', title: 'Purpose', desc: 'To deliver innovative architectural and interior design solutions that combine creativity, technical expertise, and seamless execution, creating functional, elegant spaces that truly reflect our clients’ needs and aspirations.' },
+  { number: '03', title: 'Philosophy', desc: 'Great design is more than aesthetics—it creates spaces that are functional,timeless, and enriching to everyday life .' },
+  { number: '04', title: 'Our Promise', desc: 'To deliver complete architecture and interior solutions that enhance everyday living—on time, with the quality we promise.' },
 ];
 
 const AboutProcess = () => {

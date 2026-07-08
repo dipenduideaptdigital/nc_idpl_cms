@@ -147,11 +147,15 @@ const Navbar = () => {
           </div>
         </div>
         
-        <Link to="/contact">
-          <button className="bg-primary hover:bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-lg hover:shadow-blue-500/30">
-            Get A Quote!
-          </button>
-        </Link>
+        <button 
+          onClick={(e) => {
+            e.preventDefault();
+            window.dispatchEvent(new Event('open-consultation-modal'));
+          }}
+          className="bg-primary hover:bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-lg hover:shadow-blue-500/30 cursor-pointer"
+        >
+          Get A Quote!
+        </button>
 
         <button className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all">
           <Search className="w-4 h-4" />

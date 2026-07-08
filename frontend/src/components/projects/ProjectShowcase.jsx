@@ -49,7 +49,7 @@ const ProjectShowcase = ({ currentProjectSlug }) => {
         {relatedProjects.map((project) => (
           <Link 
             key={project.id}
-            to={`/projects/${project.slug}`} // ID er bodole Slug use hocche
+            to={`/projects/${project.slug}`}
             className="group flex flex-col text-left cursor-pointer transition-all duration-300"
           >
             <div className="w-full rounded-[2.2rem] overflow-hidden aspect-[4/5] shadow-md group-hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1.5 bg-zinc-100">

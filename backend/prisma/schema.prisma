@@ -215,7 +215,7 @@ model Media {
   
   featuredInPages Page[]    
   featuredInBlogs Blog[]    
-  featuredInProjects Project[]
+  featuredInProjects Project[] @relation("ProjectFeaturedImage")
 
   ogImageForPages Page[]    @relation("PageOgImage")
   ogImageForBlogs Blog[]    @relation("BlogOgImage")
@@ -572,7 +572,7 @@ model Project {
   spaces          Json?
 
   featuredImageId String?
-  featuredImage   Media?     @relation(fields: [featuredImageId], references: [id], onDelete: SetNull)
+  featuredImage   Media?     @relation("ProjectFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
 
   metaTitle       String?
   metaDescription String?    @db.Text
@@ -581,6 +581,7 @@ model Project {
   
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+  
   @@index([category])
   @@index([status])
   @@map("projects")
