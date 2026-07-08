@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import bigImg from '../../assets/aboutUs/big.png';
@@ -15,8 +15,68 @@ const GALLERY_DATA = [
 ];
 
 const AboutGallery = () => {
+  const [visibleCards, setVisibleCards] = useState(3.2);
+  const [currentIndex, setCurrentIndex] = useState(4); // Start at first item of the middle set
+  const [isTransitioning, setIsTransitioning] = useState(true);
+
+  // Triple the data to enable seamless loop wrapping
+  const tripledData = [...GALLERY_DATA, ...GALLERY_DATA, ...GALLERY_DATA];
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setVisibleCards(1.2);
+      } else if (window.innerWidth < 1024) {
+        setVisibleCards(2.2);
+      } else {
+        setVisibleCards(3.2);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleNext = () => {
+    if (!isTransitioning) return;
+    setCurrentIndex((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (!isTransitioning) return;
+    setCurrentIndex((prev) => prev - 1);
+  };
+
+  useEffect(() => {
+    const total = GALLERY_DATA.length;
+    // When we transition past the boundaries, reset position instantly
+    if (currentIndex >= total * 2) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrentIndex(currentIndex - total);
+      }, 700); // must match the transition duration
+      return () => clearTimeout(timer);
+    } else if (currentIndex < total) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrentIndex(currentIndex + total);
+      }, 700);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex]);
+
+  useEffect(() => {
+    if (!isTransitioning) {
+      const frame = requestAnimationFrame(() => {
+        setIsTransitioning(true);
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+  }, [isTransitioning]);
+
   return (
-    <section className="relative w-full min-h-[950px] font-helvetica overflow-hidden flex items-center">
+    <section className="relative w-full py-20 font-helvetica overflow-hidden flex flex-col justify-center min-h-[650px] lg:min-h-[750px]">
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <img
@@ -24,65 +84,50 @@ const AboutGallery = () => {
           alt="Gallery Background"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/25" />
+        {/* Subtle overlay darkening to keep white text readable */}
+        <div className="absolute inset-0 bg-black/20" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-8 lg:px-16">
-        <div className="flex flex-col lg:flex-row items-stretch gap-12">
+      {/* Content Container */}
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 w-full">
 
-          {/* LEFT */}
-          <div className="w-full lg:w-[30%] flex flex-col">
-
-            {/* Badge  */}
-            <div className="inline-flex items-center gap-2 border border-white/40 rounded-full px-4 py-1.5 mb-6 w-fit">
-              <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
-              <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-white">
+          {/* LEFT COLUMN: TEXT */}
+          <div className="w-full lg:w-[38%] flex flex-col justify-center text-left ml-15 shrink-0">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 border border-white/30 rounded-full px-4 py-1.5 mb-6    w-fit bg-white/5 backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
+              <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white">
                 OUR GALLERY
               </span>
             </div>
 
-            <div className="flex-1">
-              <h2 className="text-[68px] md:text-[82px] lg:text-[76px] font-black text-white font-helvetica leading-[1] tracking-[-0.02em] mb-6">
-                Interior <br />
-                Design
-              </h2>
+            <h2 className="text-[52px] md:text-[68px] lg:text-[100px] font-black text-white font-['Outfit'] leading-[1] tracking-tight mb-6">
+              Interior <br />
+              Design
+            </h2>
 
-              <p className="text-[15px] lg:text-[16px] text-white/85 leading-[1.8] max-w-[420px]">
-                Discover our curated collection of stunning interior spaces,
-                crafted with passion, precision, and an eye for timeless design.
-              </p>
-            </div>
-
-            {/* Buttons */}
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4">
-              <button
-                aria-label="Previous"
-                className="w-10 h-10 rounded-full border border-white/50 flex items-center justify-center text-white hover:bg-white/15 transition"
-              >
-                <ArrowLeft size={22} />
-              </button>
-
-              <button
-                aria-label="Next"
-                className="w-10 h-10 rounded-full border border-white/50 flex items-center justify-center text-white hover:bg-white/15 transition"
-              >
-                <ArrowRight size={22} />
-              </button>
-            </div>
+            <p className="text-[14px] lg:text-[15px] text-white leading-relaxed max-w-[360px] font-normal">
+              Lorem ipsum dolor sit amet consectetur. Magna nunc porttitor convallis faucibus laoreet.
+            </p>
           </div>
 
-          {/* RIGHT */}
-          <div className="flex-[1.4]">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 items-start">
-
-              {GALLERY_DATA.map((item) => (
+          {/* RIGHT COLUMN: SLIDER */}
+          <div className="w-full lg:w-[70%] overflow-hidden mt-8">
+            <div 
+              className="flex gap-6"
+              style={{ 
+                transform: `translateX(-${currentIndex * (239 + 24)}px)`,
+                transition: isTransitioning ? 'transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none',
+              }}
+            >
+              {tripledData.map((item, index) => (
                 <div
-                key={item.id}
-                className="flex flex-col group cursor-pointer"
-              >
-                  {/* Image */}
-                  <div className="overflow-hidden rounded-[20px]">
+                  key={`${item.id}-${index}`}
+                  className="flex-shrink-0 flex flex-col group cursor-pointer w-[239px]"
+                >
+                  {/* Card Container */}
+                  <div className="overflow-hidden rounded-[32px] w-[220px] h-[300px] relative shadow-lg hover:shadow-2xl transition-all duration-500 border-2 border-white/10 group-hover:border-white/20">
                     <img
                       src={item.src}
                       alt={item.title}
@@ -91,15 +136,33 @@ const AboutGallery = () => {
                   </div>
 
                   {/* Title */}
-                  <h4 className="text-center text-white font-bold text-[16px] lg:text-[18px] mt-3">
+                  <h4 className="text-center text-white font-bold text-[16px] lg:text-[18px] mt-4">
                     {item.title}
                   </h4>
                 </div>
               ))}
-
             </div>
           </div>
 
+        </div>
+
+        {/* CENTERED BUTTONS BELOW THE COLUMNS */}
+        <div className="flex items-center justify-center gap-4 mt-12 lg:mt-16 z-20 ml-15">
+          <button
+            onClick={handlePrev}
+            aria-label="Previous"
+            className="w-12 h-12 rounded-full border border-white/50 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 cursor-pointer active:scale-95 bg-black/10 backdrop-blur-sm"
+          >
+            <ArrowLeft size={20} />
+          </button>
+
+          <button
+            onClick={handleNext}
+            aria-label="Next"
+            className="w-12 h-12 rounded-full border border-white/50 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 cursor-pointer active:scale-95 bg-black/10 backdrop-blur-sm"
+          >
+            <ArrowRight size={20} />
+          </button>
         </div>
       </div>
     </section>

@@ -34,11 +34,11 @@ const AboutExperience = () => {
               
               <div className="flex flex-col justify-start py-2 lg:py-4 gap-4">
                 
-                <div className="text-[120px] sm:text-[160px] lg:text-[260px] font-black leading-[0.75] tracking-[-0.06em] text-[#111827] -ml-2 lg:-ml-3">
+                <div className="text-[120px] sm:text-[160px] lg:text-[260px] font-black leading-[0.75] tracking-[-0.06em] text-[#111827] -ml-2 lg:-ml-3 scale-y-125 origin-center">
                   26
                 </div>
                 
-                <div>
+                <div className="text-right pt-15">
                   <h3 className="text-[18px] lg:text-[22px] font-bold leading-[1] text-[#111827]">
                     Years Of
                     <br />

@@ -17,6 +17,11 @@ import ServiceDetailsBlock from '../components/blocks/ServiceDetailsBlock';
 import CtaSectionBlock from '../components/blocks/CtaSectionBlock';
 import ContactBannerBlock from '../components/blocks/ContactBannerBlock';
 import ContactInfoBlock from '../components/blocks/ContactInfoBlock';
+import AboutBannerBlock from '../components/blocks/AboutBannerBlock';
+import AboutExperienceBlock from '../components/blocks/AboutExperienceBlock';
+import AboutProcessBlock from '../components/blocks/AboutProcessBlock';
+import TimelineBlock from '../components/blocks/TimelineBlock';
+import AboutAwardsBlock from '../components/blocks/AboutAwardsBlock';
 
 export const puckConfig = {
   components: {
@@ -462,6 +467,121 @@ export const puckConfig = {
         formId: 'cmqzjpzfz0000t00s7pd31okk'
       },
       render: (props) => <ContactInfoBlock {...props} />
+    },
+
+    aboutBanner: {
+      fields: {
+        title: { type: "text" },
+        breadcrumbText: { type: "text" },
+        backgroundImage: { 
+          type: "custom", 
+          render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> 
+        }
+      },
+      defaultProps: { title: "About Us", breadcrumbText: "About Us", backgroundImage: "" },
+      render: (props) => <AboutBannerBlock {...props} />
+    },
+    
+    aboutExperience: {
+      fields: {
+        badgeText: { type: "text" },
+        title: { type: "textarea" },
+        yearsOfExperience: { type: "text" },
+        experienceTitle: { type: "textarea" },
+        paragraph: { type: "textarea" },
+        buttonText: { type: "text" },
+        buttonLink: { type: "text" },
+        image1: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
+        image2: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: {
+        badgeText: "Started in 1989",
+        title: "We Shape [Interior Designs,]\n[Crafting Timeless] And Inspiring\nSpaces",
+        yearsOfExperience: "26",
+        experienceTitle: "Years Of\nExperience",
+        paragraph: "We believe that every space has the power to inspire...",
+        buttonText: "Learn More",
+        buttonLink: "#",
+        image1: "",
+        image2: ""
+      },
+      render: (props) => <AboutExperienceBlock {...props} />
+    },
+
+    aboutProcess: {
+      fields: {
+        backgroundImage: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
+        steps: {
+          type: "array",
+          arrayFields: {
+            number: { type: "text" },
+            title: { type: "text" },
+            desc: { type: "textarea" }
+          },
+          defaultItemProps: { number: '01', title: 'Step Title', desc: 'Description' }
+        }
+      },
+      defaultProps: {
+        backgroundImage: "",
+        steps: [
+          { number: '01', title: 'Concept Design', desc: 'Initial ideation and space planning.' },
+          { number: '02', title: 'Space Planning', desc: 'Detailed layout and functionality.' },
+          { number: '03', title: 'Design Execution', desc: 'Crafting and site management.' },
+          { number: '04', title: 'Final Finishing', desc: 'Polished results and handover.' }
+        ]
+      },
+      render: (props) => <AboutProcessBlock {...props} />
+    },
+
+    timeline: {
+      fields: {
+        badgeText: { type: "text" },
+        title: { type: "textarea" },
+        items: {
+          type: "array",
+          arrayFields: {
+            year: { type: "text" },
+            description: { type: "textarea" },
+            image: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> }
+          },
+          defaultItemProps: { year: '2025', description: 'Description here...', image: '' }
+        }
+      },
+      defaultProps: {
+        badgeText: "GET IN TOUCH",
+        title: "Our History [Is Full Of]\n[Interesting] Stages And\nEvents.",
+        items: [
+          { year: '1990', description: 'A business house born out of passion for fish keeping.', image: '' },
+          { year: '2010', description: 'Expanded our operations to new territories.', image: '' }
+        ]
+      },
+      render: (props) => <TimelineBlock {...props} />
+    },
+    
+    aboutAwards: {
+      fields: {
+        badgeText: { type: "text" },
+        title: { type: "textarea" },
+        mainImage: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
+        awards: {
+          type: "array",
+          arrayFields: {
+            year: { type: "text" },
+            title: { type: "text" }
+          },
+          defaultItemProps: { year: '2025', title: 'Award Title' }
+        }
+      },
+      defaultProps: {
+        badgeText: "AWARD & ACHIEVEMENT",
+        title: "Design That [Speaks Our]\n[Industry] Awards",
+        mainImage: "",
+        awards: [
+          { year: '2020', title: 'Residential Interior Design' },
+          { year: '2021', title: 'Outdoor & Landscape Design' }
+        ]
+      },
+      render: (props) => <AboutAwardsBlock {...props} />
     },
   }
 };

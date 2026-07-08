@@ -81,7 +81,7 @@ export const getPublicSingleBlogDetailsController = asyncHandler(async (req, res
 });
 
 export const resolvePublicBlogPreviewController = asyncHandler(async (req, res) => {
-  const rawToken = req.params.token; 
+  const rawToken = req.body.token;
   const blogNodeData = await blogService.resolvePreviewToken(rawToken);
   res.set("X-Robots-Tag", "noindex, nofollow");
   sendResponse({ res, statusCode: StatusCodes.OK, data: blogNodeData });

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, 
-  Globe, Inbox, Menu, X, BookOpen, Tag, Layers 
+  Globe, Inbox, Menu, X, BookOpen, Tag, Layers, Briefcase,
 } from 'lucide-react'; 
 import { useAuth } from '../../context/AuthContext'; 
 import { usePermission } from '../../hooks/usePermission'; 
@@ -36,6 +36,7 @@ const AdminLayout = () => {
     { name: 'Categories & Tags', icon: Tag, path: '/admin/blogs/taxonomies', permission: 'blog.view' },
     { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms', permission: 'contact.view' },
     { name: 'Contact Inbox', icon: Inbox, path: '/admin/contacts/inbox', permission: 'contact.view' },
+    { name: 'Projects', icon: Briefcase, path: '/admin/projects', permission: 'page.view' },
   ];
 
   const visibleNavItems = navItems.filter(item => {

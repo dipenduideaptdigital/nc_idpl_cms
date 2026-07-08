@@ -6,7 +6,8 @@ import * as controller from "./blogs.controller.js";
 const router = Router();
 
 router.get("/", validate(blogQuerySchema, "query"), controller.getPublicBlogsGridController);
-router.get("/preview/:token", validate(blogPreviewTokenParamSchema, "params"), controller.resolvePublicBlogPreviewController);
+//router.get("/preview/:token", validate(blogPreviewTokenParamSchema, "params"), controller.resolvePublicBlogPreviewController);
+router.post("/preview/resolve", validate(blogPreviewTokenParamSchema, "body"), controller.resolvePublicBlogPreviewController);
 
 router.get("/categories", controller.getAllCategoriesController);
 router.get("/tags", controller.getAllTagsController);

@@ -22,7 +22,7 @@ export const blogsApi = {
   },
 
   resolvePublicBlogPreview: async (token) => {
-    const response = await apiClient.get(`/blogs/preview/${token}`);
+    const response = await apiClient.post(`/blogs/preview/resolve`, { token });
     return response.data;
   },
 

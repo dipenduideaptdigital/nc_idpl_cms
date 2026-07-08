@@ -46,6 +46,11 @@ const serviceDetailsBlockSchema = z.object({ type: z.literal("serviceDetails"), 
 const ctaSectionBlockSchema = z.object({ type: z.literal("ctaSection"), data: z.record(z.any()).default({}) });
 const contactBannerBlockSchema = z.object({ type: z.literal("contactBanner"), data: z.record(z.any()).default({}) });
 const contactInfoBlockSchema = z.object({ type: z.literal("contactInfo"), data: z.record(z.any()).default({}) });
+const aboutBannerBlockSchema = z.object({ type: z.literal("aboutBanner"), data: z.record(z.any()).default({}) });
+const aboutExperienceBlockSchema = z.object({ type: z.literal("aboutExperience"), data: z.record(z.any()).default({}) });
+const aboutProcessBlockSchema = z.object({ type: z.literal("aboutProcess"), data: z.record(z.any()).default({}) });
+const timelineBlockSchema = z.object({ type: z.literal("timeline"), data: z.record(z.any()).default({}) });
+const aboutAwardsBlockSchema = z.object({ type: z.literal("aboutAwards"), data: z.record(z.any()).default({}) });
 
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
@@ -91,6 +96,11 @@ const blockSchema = z.discriminatedUnion("type", [
   ctaSectionBlockSchema,
   contactBannerBlockSchema,
   contactInfoBlockSchema,
+  aboutBannerBlockSchema,
+  aboutExperienceBlockSchema,
+  aboutProcessBlockSchema,
+  timelineBlockSchema,
+  aboutAwardsBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

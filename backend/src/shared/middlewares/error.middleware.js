@@ -6,6 +6,6 @@ export const globalErrorHandler = (err, req, res, next) => {
   return res.status(statusCode).json({
     success: false,
     message: err.message || "Something went wrong",
-    stack: process.NODE_ENV === "development" ? err.stack : undefined,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
   });
 };

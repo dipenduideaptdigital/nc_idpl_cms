@@ -16,7 +16,7 @@ export const createPreviewLinkController = asyncHandler(async (req, res) => {
 });
 
 export const getPreviewPageDataController = asyncHandler(async (req, res) => {
-  const pageData = await previewService.resolvePreviewToken(req.params.token);
+  const pageData = await previewService.resolvePreviewToken(req.body.token);
   res.set("X-Robots-Tag", "noindex, nofollow");
   
   sendResponse({ 

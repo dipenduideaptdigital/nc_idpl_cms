@@ -52,7 +52,7 @@ export const pagesApi = {
   },
 
   getPreviewPageData: async (token) => {
-    const response = await apiClient.get(`/preview/${token}`);
+    const response = await apiClient.post(`/preview/resolve`, { token });
     return response.data;
   },
 };

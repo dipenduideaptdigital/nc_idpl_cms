@@ -23,12 +23,15 @@ import Projects from './pages/Projects';
 import AdminSetup from './pages/AdminSetup';
 import AboutUs from './pages/AboutUs';
 import ServicePage from './pages/ServicePage';
+import ProjectDetail from './pages/ProjectDetail';
 
 /* Admin Pages */
 import Dashboard from './pages/admin/Dashboard';
 import HomeCustomization from './pages/admin/HomeCustomization';
 import PageList from './pages/admin/pages/PageList';
 import PageEditor from './pages/admin/pages/PageEditor';
+import ProjectList from './pages/admin/projects/ProjectList';
+import ProjectEditor from './pages/admin/projects/ProjectEditor';
 import ContactFormList from './pages/admin/contact-forms/ContactFormList';
 import ContactFormEditor from './pages/admin/contact-forms/ContactFormEditor';
 import ContactInbox from './pages/admin/contacts/ContactInbox';
@@ -40,6 +43,7 @@ import GeneralSettings from './pages/admin/settings/GeneralSettings';
 import RolesList from './pages/admin/roles/RolesList';
 import RoleEditor from './pages/admin/roles/RoleEditor';
 import UsersList from './pages/admin/users/UsersList';
+
 
 function App() {
   return (
@@ -61,6 +65,9 @@ function App() {
             <Route path="site-pages" element={<PageList />} />
             <Route path="site-pages/create" element={<PageEditor />} />
             <Route path="site-pages/edit/:id" element={<PageEditor />} />
+            <Route path="projects" element={<ProjectList />} />
+            <Route path="projects/create" element={<ProjectEditor />} />
+            <Route path="projects/edit/:id" element={<ProjectEditor />} />
             <Route path="contact-forms" element={<ContactFormList />} />
             <Route path="contact-forms/create" element={<ContactFormEditor />} />
             <Route path="contact-forms/edit/:id" element={<ContactFormEditor />} />
@@ -93,6 +100,7 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/services" element={<ServicePage />} />
           </Route>

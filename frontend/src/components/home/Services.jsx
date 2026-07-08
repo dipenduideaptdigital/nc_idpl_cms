@@ -82,11 +82,13 @@ const Services = ({ data: externalData }) => {
               key={index} 
               className="group border border-gray-200 rounded-[2rem] p-8 hover:shadow-2xl hover:border-primary/30 hover:-translate-y-2 transform transition-all duration-500 bg-white opal-move-up flex flex-col justify-between"
             >
-              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 whitespace-pre-line leading-tight group-hover:text-primary transition-colors">
-                {service.title}
-              </h3>
+              <div className="flex items-center justify-center h-24 w-full mb-2">
+                <h3 className="text-xl md:text-2xl font-bold text-gray-900 text-center whitespace-pre-line leading-tight group-hover:text-primary transition-colors">
+                  {service.title}
+                </h3>
+              </div>
               
-              <div className="w-full h-[1px] bg-gray-300 mb-6"></div>
+              <div className="w-full h-[1px] bg-gray-300 mb-2"></div>
               
               <p className="text-gray-400 text-sm font-light leading-relaxed">
                 {service.description}

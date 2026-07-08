@@ -29,6 +29,11 @@ import CtaSectionTwo from '../landing-design-2/CtaSectionTwo';
 import ServiceBannerBlock from '../blocks/ServiceBannerBlock';
 import ServiceDetailsBlock from '../blocks/ServiceDetailsBlock';
 import CtaSectionBlock from '../blocks/CtaSectionBlock';
+import AboutBannerBlock from '../blocks/AboutBannerBlock';
+import AboutExperienceBlock from '../blocks/AboutExperienceBlock';
+import AboutProcessBlock from '../blocks/AboutProcessBlock';
+import TimelineBlock from '../blocks/TimelineBlock';
+import AboutAwardsBlock from '../blocks/AboutAwardsBlock';
 
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
@@ -53,6 +58,11 @@ const BlockMapper = memo(({ block, index }) => {
     case 'serviceBanner': return <ServiceBannerBlock key={index} {...data} />;
     case 'serviceDetails': return <ServiceDetailsBlock key={index} {...data} />;
     case 'ctaSection': return <CtaSectionBlock key={index} {...data} />;
+    case 'aboutBanner': return <AboutBannerBlock key={index} {...data} />;
+    case 'aboutExperience': return <AboutExperienceBlock key={index} {...data} />;
+    case 'aboutProcess': return <AboutProcessBlock key={index} {...data} />;
+    case 'timeline': return <TimelineBlock key={index} {...data} />;
+    case 'aboutAwards': return <AboutAwardsBlock key={index} {...data} />;
     case 'heroSectionTwo': return <HeroSectionTwo key={index} data={data} />;
     case 'aboutSectionTwo': return <AboutSectionTwo key={index} data={data} />;
     case 'servicesSectionTwo': return <ServicesSectionTwo key={index} data={data} />;

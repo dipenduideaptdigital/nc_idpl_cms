@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronRight, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, X, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import defaultGallery4 from '../../assets/homepage/gallery4.png';
+import apiClient from '../../api/client';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
@@ -22,29 +23,50 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
     message: ''
   });
 
+  const [status, setStatus] = useState({ loading: false, success: false, error: null });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Submitted:', formData);
-    
-    // Reset form immediately
-    setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      message: ''
-    });
-    
-    // Instantly close modal if applicable
-    if (onClose) {
-      onClose();
-    } else {
-      alert('Message sent successfully!');
+    setStatus({ loading: true, success: false, error: null });
+
+    try {
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+      const payload = {
+        name: fullName,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        formId: data?.formId || "cmqzjpzfz0000t00s7pd31okk"
+      };
+
+      await apiClient.post('/contacts/submit', payload);
+
+      setStatus({ loading: false, success: true, error: null });
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        message: ''
+      });
+
+      if (isModal && onClose) {
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('GetInTouch form submission failed:', err);
+      setStatus({ 
+        loading: false, 
+        success: false, 
+        error: err.response?.data?.message || 'Something went wrong. Please try again later.' 
+      });
     }
   };
 
@@ -73,6 +95,20 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Status Messages */}
+            {status.success && (
+              <div className="bg-emerald-50 text-emerald-700 p-4 rounded-xl flex items-center gap-3 text-sm font-medium">
+                <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
+                <span>Message sent successfully!</span>
+              </div>
+            )}
+            {status.error && (
+              <div className="bg-red-50 text-red-700 p-4 rounded-xl flex items-center gap-3 text-sm font-medium">
+                <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
+                <span>{status.error}</span>
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-5">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">First Name</label>
@@ -80,10 +116,11 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
                   type="text" 
                   name="firstName"
                   required
+                  disabled={status.loading}
                   value={formData.firstName}
                   onChange={handleChange}
                   placeholder="First Name" 
-                  className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#c87632]/50 transition-all bg-gray-50/50" 
+                  className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#c87632]/50 transition-all bg-gray-50/50 disabled:opacity-50" 
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -91,10 +128,11 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
                 <input 
                   type="text" 
                   name="lastName"
+                  disabled={status.loading}
                   value={formData.lastName}
                   onChange={handleChange}
                   placeholder="Last Name" 
-                  className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#c87632]/50 transition-all bg-gray-50/50" 
+                  className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#c87632]/50 transition-all bg-gray-50/50 disabled:opacity-50" 
                 />
               </div>
             </div>
@@ -105,10 +143,11 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
                 type="email" 
                 name="email"
                 required
+                disabled={status.loading}
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@company.com" 
-                className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#c87632]/50 transition-all bg-gray-50/50" 
+                className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#c87632]/50 transition-all bg-gray-50/50 disabled:opacity-50" 
               />
             </div>
 
@@ -121,10 +160,11 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
                 <input 
                   type="tel" 
                   name="phone"
+                  disabled={status.loading}
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="+91 98316 37409" 
-                  className="w-full px-4 py-3 text-sm focus:outline-none bg-transparent" 
+                  className="w-full px-4 py-3 text-sm focus:outline-none bg-transparent disabled:opacity-50" 
                 />
               </div>
             </div>
@@ -135,18 +175,21 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
                 rows="4" 
                 name="message"
                 required
+                disabled={status.loading}
                 value={formData.message}
                 onChange={handleChange}
                 placeholder="Leave us a message..." 
-                className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#c87632]/50 transition-all bg-gray-50/50 resize-none" 
+                className="w-full border border-gray-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#c87632]/50 transition-all bg-gray-50/50 resize-none disabled:opacity-50" 
               ></textarea>
             </div>
 
             <button 
               type="submit"
-              className="w-full bg-[#cd7f32] hover:bg-orange-700 text-white font-semibold py-3.5 rounded-md transition-colors flex justify-center items-center gap-2 shadow-md mt-2 cursor-pointer"
+              disabled={status.loading}
+              className="w-full bg-[#cd7f32] hover:bg-orange-700 text-white font-semibold py-3.5 rounded-md transition-colors flex justify-center items-center gap-2 shadow-md mt-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
             >
-              {data?.buttonText || 'Send Message'} <ChevronRight className="w-4 h-4" />
+              {status.loading ? 'Sending...' : (data?.buttonText || 'Send Message')}{' '}
+              {status.loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ChevronRight className="w-4 h-4" />}
             </button>
           </form>
         </div>
