@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authenticate } from "../../shared/middlewares/authenticate.middleware.js";
 import { authorizeSystemRoles } from "../../shared/middlewares/authorize.middleware.js";
+import { requirePermission } from "../../shared/middlewares/permission.middleware.js";
 import { validate } from "../../shared/middlewares/validate.middleware.js";
 import { pageIdParamSchema } from "../pages/pages.validation.js";
 import { createPreviewLinkController, revokePreviewLinkController, getPreviewStatusController } from "./pages-preview.controller.js";
@@ -8,9 +9,8 @@ import { createPreviewLinkController, revokePreviewLinkController, getPreviewSta
 const router = Router();
 
 router.use(authenticate, authorizeSystemRoles("SUPER_ADMIN", "ADMIN"));
-
-router.post("/:id/preview-link", validate(pageIdParamSchema, "params"), createPreviewLinkController);
-router.delete("/:id/preview-link", validate(pageIdParamSchema, "params"), revokePreviewLinkController);
-router.get("/:id/preview-link", validate(pageIdParamSchema, "params"), getPreviewStatusController);
+router.post("/:id/preview-link", requirePermission("page.preview"), validate(pageIdParamSchema, "params"), createPreviewLinkController);
+router.delete("/:id/preview-link", requirePermission("page.preview"), validate(pageIdParamSchema, "params"), revokePreviewLinkController);
+router.get("/:id/preview-link", requirePermission("page.preview"), validate(pageIdParamSchema, "params"), getPreviewStatusController);
 
 export default router;

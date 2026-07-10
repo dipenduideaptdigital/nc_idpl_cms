@@ -36,7 +36,7 @@ const AdminLayout = () => {
     { name: 'Categories & Tags', icon: Tag, path: '/admin/blogs/taxonomies', permission: 'blog.view' },
     { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms', permission: 'contact.view' },
     { name: 'Contact Inbox', icon: Inbox, path: '/admin/contacts/inbox', permission: 'contact.view' },
-    { name: 'Projects', icon: Briefcase, path: '/admin/projects', permission: 'page.view' },
+    { name: 'Projects', icon: Briefcase, path: '/admin/projects', permission: 'project.view' },
   ];
 
   const visibleNavItems = navItems.filter(item => {

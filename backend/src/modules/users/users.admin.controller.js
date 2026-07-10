@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
 import { sendResponse } from "../../shared/utils/apiResponse.js";
+import { AppError } from "../../shared/errors/AppError.js";
 import * as adminService from "./users.admin.service.js";
 
 export const updateUserStatusController = asyncHandler(async (req, res) => {

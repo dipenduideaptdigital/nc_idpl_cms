@@ -12,10 +12,12 @@ import {
   FileText,
   PenTool
 } from 'lucide-react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const ContactFormBlock = ({ data }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   // Extract data from the Page Builder
   const { formId, formTitle, submitButtonText, redirectPath } = data || {};
@@ -45,16 +47,24 @@ const ContactFormBlock = ({ data }) => {
       return;
     }
 
+    if (!executeRecaptcha) {
+      setStatus('error');
+      setFeedbackMsg('Security verification is still loading. Please try again in a moment.');
+      return;
+    }
+
     setStatus('loading');
     setFeedbackMsg('');
 
     try {
+      const recaptchaToken = await executeRecaptcha('contact_form_block');
+      
       // Assemble payload matching backend requirements
       const payload = {
         ...formData,
         formId: formId,
         sourcePage: location.pathname, 
-        turnstileToken: 'mock-sandbox-pass-token-signature' 
+        recaptchaToken
       };
 
       const response = await contactsApi.submitContactForm(payload);
@@ -293,6 +303,13 @@ const ContactFormBlock = ({ data }) => {
                 </>
               )}
             </button>
+
+            <p className="text-[10px] text-zinc-500 text-center mt-4 px-2 leading-relaxed">
+              This site is protected by reCAPTCHA and the Google{' '}
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer" className="text-blue-500 hover:underline mx-1">Privacy Policy</a> and{' '}
+              <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer" className="text-blue-500 hover:underline mx-1">Terms of Service</a> apply.
+            </p>
+
           </form>
 
         </div>

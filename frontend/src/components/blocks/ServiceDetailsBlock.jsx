@@ -26,11 +26,12 @@ const ServiceDetailsBlock = ({
   return (
     <section className="py-20 lg:py-28 bg-[#F8F9FA] font-helvetica">
       <div className="container mx-auto max-w-[1400px] px-6 lg:px-10">
+
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
           
-          {/* Left Sidebar */}
-          <div className="w-full lg:w-[32%] flex flex-col space-y-10 shrink-0">
-            <div className="bg-white rounded-[24px] pt-15 pb-15">
+          {/* Left Sidebar / Top Section on Mobile */}
+          <div className="w-full lg:w-[32%] flex flex-col sm:flex-row lg:flex-col gap-6 sm:gap-8 lg:space-y-10 lg:gap-0 shrink-0">
+            <div className="w-full sm:w-1/2 lg:w-full bg-white rounded-[24px] pt-10 pb-10 lg:pt-15 lg:pb-15 shadow-sm border border-gray-100/50">
               <h3 className="text-3xl lg:text-[32px] font-bold text-gray-900 mb-8 text-center px-4">
                   Other Services
               </h3>
@@ -58,7 +59,7 @@ const ServiceDetailsBlock = ({
               </div>
             </div>
 
-            <div className="relative w-full h-screen rounded-[24px] overflow-hidden group">
+            <div className="relative w-full sm:w-1/2 lg:w-full h-[300px] sm:h-auto lg:h-[450px] xl:h-[600px] rounded-[24px] overflow-hidden group">
               <img 
                 src={resolveAssetUrl(sidebarImage, '/default-sidebar.png')} 
                 alt="Sidebar Image" 
@@ -69,7 +70,8 @@ const ServiceDetailsBlock = ({
 
           {/* Right Content */}
           <div className="w-full lg:w-[68%] flex flex-col">
-            <div className="w-full h-[400px] md:h-[500px] rounded-[32px] overflow-hidden mb-10">
+            {/* Main Image */}
+            <div className="hidden lg:block w-full h-[500px] rounded-[32px] overflow-hidden mb-10">
               <img 
                 src={resolveAssetUrl(mainImage, '/default-main.png')} 
                 alt="Service Main" 
@@ -86,7 +88,7 @@ const ServiceDetailsBlock = ({
                 {aboutDescription}
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-10 mb-14">
+              <div className="grid grid-cols-2 gap-y-8 gap-x-4 sm:gap-x-10 mb-14">
                 {features.map((item, index) => (
                   <div key={index} className="flex items-center gap-4">
                     <div className="w-16 h-16 rounded-full bg-[#198CF4] flex items-center justify-center shrink-0">
@@ -116,7 +118,7 @@ const ServiceDetailsBlock = ({
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" 
                   />
                 </div>
-                <div className="h-[280px] rounded-[24px] overflow-hidden">
+                <div className="hidden md:block h-[280px] rounded-[24px] overflow-hidden">
                   <img
                     src={resolveAssetUrl(midImage2, '/default-mid2.png')} 
                     alt="Detail 2" 

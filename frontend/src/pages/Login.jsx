@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import heroback from '../assets/homepage/banner_back.png';
+import logo from '../assets/logos/logo2.svg';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
@@ -10,6 +12,7 @@ const Login = () => {
   const { loginContext } = useAuth();
   const [searchParams] = useSearchParams();
   const isAdminMode = searchParams.get('mode') === 'admin';
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -32,9 +35,22 @@ const Login = () => {
     setSuccess('');
     setLoading(true);
 
+    if (!executeRecaptcha) {
+      setError("Security verification is still loading. Please try again in a moment.");
+      setLoading(false);
+      return;
+    }
+
     try {
+      const recaptchaToken = await executeRecaptcha('login');
+
       const endpoint = isAdminMode ? '/auth/admin-login' : '/auth/login';
-      const res = await apiClient.post(endpoint, formData);
+      const payload = {
+        ...formData,
+        recaptchaToken
+      };
+
+      const res = await apiClient.post(endpoint, payload);
       const { data } = res;
 
       setSuccess('Login successful! Redirecting...');
@@ -76,23 +92,15 @@ const Login = () => {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      {/* Background Decorative Glow Panels */}
       <div 
         className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none transition-all duration-1000"
-        style={{
-          backgroundColor: activeColor,
-          opacity: 0.15,
-        }}
+        style={{ backgroundColor: activeColor, opacity: 0.15 }}
       />
       <div 
         className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none transition-all duration-1000"
-        style={{
-          backgroundColor: activeColor,
-          opacity: 0.1,
-        }}
+        style={{ backgroundColor: activeColor, opacity: 0.1 }}
       />
 
-      {/* Main Glass Container */}
       <div 
         className="relative w-full max-w-md backdrop-blur-2xl bg-zinc-950/45 border rounded-[2rem] p-8 text-white transition-all duration-500 shadow-2xl flex flex-col items-center"
         style={{
@@ -100,14 +108,16 @@ const Login = () => {
           boxShadow: `0 0 50px ${shadowColor}, inset 0 0 20px rgba(255, 255, 255, 0.02)`,
         }}
       >
-        {/* Brand Logo Header */}
+        {/* Logo Section  */}
         <div className="flex flex-col items-center mb-8 cursor-pointer select-none">
-          <div className="text-3xl font-light tracking-widest relative">
-            subh<span className="font-medium">AA</span>kritee
-            <span className="absolute top-1 -right-4 text-[10px]">&trade;</span>
-            <div className="absolute -bottom-1 left-0 right-0 h-[1px] bg-white/30"></div>
-          </div>
-          <div className="text-[9px] tracking-[0.22em] mt-1.5 uppercase opacity-60">
+          <Link to="/" className="flex items-center justify-center hover:opacity-90 transition-opacity">
+            <img 
+              src={logo} 
+              alt="Subhaakritee Logo" 
+              className="h-10 md:h-12 w-auto object-contain brightness-0 invert" 
+            />
+          </Link>
+          <div className="text-[9px] tracking-[0.22em] mt-3 uppercase opacity-60 text-center">
             The Design People
           </div>
         </div>
@@ -116,7 +126,6 @@ const Login = () => {
           {isAdminMode ? 'Admin Portal Sign In' : 'Welcome Back'}
         </h2>
 
-        {/* Error Callout */}
         {error && (
           <div className="w-full flex items-start gap-3 bg-red-950/45 border border-red-500/30 text-red-200 text-sm p-4 rounded-2xl mb-6 animate-shake animate-duration-300">
             <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
@@ -124,7 +133,6 @@ const Login = () => {
           </div>
         )}
 
-        {/* Success Callout */}
         {success && (
           <div className="w-full flex items-start gap-3 bg-emerald-950/45 border border-emerald-500/30 text-emerald-200 text-sm p-4 rounded-2xl mb-6">
             <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
@@ -132,9 +140,7 @@ const Login = () => {
           </div>
         )}
 
-        {/* Form Fields */}
         <form onSubmit={handleSubmit} className="w-full space-y-5">
-          {/* Email field */}
           <div className="space-y-2">
             <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase block">
               Email Address
@@ -149,9 +155,7 @@ const Login = () => {
                 onChange={handleInputChange}
                 placeholder="you@example.com"
                 className="w-full pl-12 pr-4 py-3.5 bg-zinc-900/60 border border-white/10 rounded-2xl text-white placeholder:text-zinc-600 focus:outline-none transition-all duration-300 text-sm"
-                style={{
-                  borderColor: 'rgba(255, 255, 255, 0.08)',
-                }}
+                style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }}
                 onFocus={(e) => {
                   e.target.style.borderColor = activeColor;
                   e.target.style.boxShadow = `0 0 12px rgba(59,130,246,0.2)`;
@@ -164,7 +168,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Password field */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase block">
@@ -187,9 +190,7 @@ const Login = () => {
                 onChange={handleInputChange}
                 placeholder="••••••••"
                 className="w-full pl-12 pr-12 py-3.5 bg-zinc-900/60 border border-white/10 rounded-2xl text-white placeholder:text-zinc-600 focus:outline-none transition-all duration-300 text-sm"
-                style={{
-                  borderColor: 'rgba(255, 255, 255, 0.08)',
-                }}
+                style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }}
                 onFocus={(e) => {
                   e.target.style.borderColor = activeColor;
                   e.target.style.boxShadow = `0 0 12px rgba(59,130,246,0.2)`;
@@ -209,7 +210,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -231,7 +231,6 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Navigation to Register */}
         <div className="mt-6 text-sm text-zinc-400">
           New to subAAkritee?{' '}
           <Link to="/register" className="text-blue-500 hover:text-blue-400 font-medium transition-colors">
@@ -239,10 +238,18 @@ const Login = () => {
           </Link>
         </div>
 
-        {/* Footer Info */}
-        <p className="text-[10px] text-zinc-500 text-center mt-8 leading-relaxed max-w-[280px]">
-          Secured access using corporate credentials. Managed by internal IT operations &trade;.
-        </p>
+        {/*  Google reCAPTCHA Compliance Text */}
+        <div className="mt-8 pt-6 border-t border-white/10 w-full text-center space-y-3">
+          <p className="text-[10px] text-zinc-500 leading-relaxed max-w-[280px] mx-auto">
+            This site is protected by reCAPTCHA and the Google{' '}
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-400 hover:underline transition-colors">Privacy Policy</a> and{' '}
+            <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-400 hover:underline transition-colors">Terms of Service</a> apply.
+          </p>
+          <p className="text-[10px] text-zinc-600 leading-relaxed max-w-[280px] mx-auto">
+            Secured access using corporate credentials. Managed by internal IT operations &trade;.
+          </p>
+        </div>
+        
       </div>
     </div>
   );

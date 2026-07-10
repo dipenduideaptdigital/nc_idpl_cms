@@ -3,6 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { projectsApi } from '../../../api/projects';
 import ImageField from '../../../components/admin/ImageField';
 import { Save, ArrowLeft, Plus, Trash2 } from 'lucide-react';
+import Can from '../../../components/shared/Can';
 
 const ProjectEditor = () => {
   const { id } = useParams();
@@ -87,9 +88,11 @@ const ProjectEditor = () => {
           <Link to="/admin/projects" className="p-2 hover:bg-zinc-100 rounded-full"><ArrowLeft className="w-5 h-5"/></Link>
           <h1 className="text-2xl font-bold">{isEditMode ? 'Edit Project' : 'Add New Project'}</h1>
         </div>
-        <button type="submit" disabled={saving} className="px-6 py-2.5 bg-zinc-900 text-white rounded-xl flex items-center gap-2">
-          <Save className="w-4 h-4" /> Save
-        </button>
+        <Can permission={isEditMode ? 'project.edit' : 'project.create'}>
+          <button type="submit" disabled={saving} className="px-6 py-2.5 bg-zinc-900 text-white rounded-xl flex items-center gap-2">
+            <Save className="w-4 h-4" /> Save
+          </button>
+        </Can>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

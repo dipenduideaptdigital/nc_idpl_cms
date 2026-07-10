@@ -22,6 +22,7 @@ import { normalizeEmail } from "../../shared/utils/normalizeEmail.js";
 import { sendEmail } from "../../shared/services/email.service.js";
 import { passwordResetTemplate } from "../../shared/templates/passwordReset.template.js";
 import { AUTH_BASIC_USER_INCLUDE } from "./auth.constants.js";
+import { verifyRecaptchaToken } from "../../shared/services/recaptcha.service.js";
 
 const REFRESH_TOKEN_EXPIRES_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -46,7 +47,12 @@ const getUserPermissions = async (userId) => {
   ));
 };
 
-const login = async ({ email, password, allowedRoles = [] }) => {
+const login = async ({ email, password, recaptchaToken, clientIp, allowedRoles = [] }) => {
+  
+  if (recaptchaToken) {
+    await verifyRecaptchaToken(recaptchaToken, clientIp);
+  }
+
   const normalizedEmail = normalizeEmail(email);
 
   const user = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
@@ -107,7 +113,11 @@ const login = async ({ email, password, allowedRoles = [] }) => {
   };
 };
 
-export const registerUser = async (payload) => {
+export const registerUser = async (payload, clientIp) => {
+  if (payload.recaptchaToken) {
+    await verifyRecaptchaToken(payload.recaptchaToken, clientIp);
+  }
+
   const normalizedEmail = normalizeEmail(payload.email);
 
   const existingUser = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
@@ -144,12 +154,24 @@ export const registerUser = async (payload) => {
   }
 };
 
-export const loginUser = async (payload) => {
-  return login({ email: payload.email, password: payload.password, allowedRoles: ["USER"] });
+export const loginUser = async (payload, clientIp) => {
+  return login({ 
+    email: payload.email, 
+    password: payload.password, 
+    recaptchaToken: payload.recaptchaToken,
+    clientIp,
+    allowedRoles: ["USER"] 
+  });
 };
 
-export const adminLogin = async (payload) => {
-  return login({ email: payload.email, password: payload.password, allowedRoles: ["SUPER_ADMIN", "ADMIN"] });
+export const adminLogin = async (payload, clientIp) => {
+  return login({ 
+    email: payload.email, 
+    password: payload.password, 
+    recaptchaToken: payload.recaptchaToken,
+    clientIp,
+    allowedRoles: ["SUPER_ADMIN", "ADMIN"] 
+  });
 };
 
 export const refreshAccessToken = async (refreshToken) => {
@@ -201,8 +223,11 @@ export const logoutAllDevices = async (userId) => {
   await revokeAllUserTokens(userId);
 };
 
-// Forgot password
-export const forgotPassword = async (email) => {
+export const forgotPassword = async (email, recaptchaToken, clientIp) => {
+  if (recaptchaToken) {
+    await verifyRecaptchaToken(recaptchaToken, clientIp);
+  }
+
   const normalizedEmail = normalizeEmail(email);
   const user = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
 
@@ -306,7 +331,6 @@ export const changePassword = async ({ userId, currentPassword, newPassword }) =
   return true;
 };
 
-
 export const setupAdminAccount = async ({ token, password }) => {
   const tokenHash = hashSecureToken(token);
 
@@ -340,7 +364,6 @@ export const setupAdminAccount = async ({ token, password }) => {
 
   return true;
 };
-
 
 export const getMe = async (userId) => {
   const user = await findUserById(userId, AUTH_BASIC_USER_INCLUDE);

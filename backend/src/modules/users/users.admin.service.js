@@ -6,6 +6,7 @@ import { generateSecureToken, hashSecureToken } from "../../shared/utils/secureT
 import { hashPassword } from "../../shared/utils/password.js";
 import { sendEmail } from "../../shared/services/email.service.js";
 import { normalizeEmail } from "../../shared/utils/normalizeEmail.js";
+import { logger } from "../../config/logger.js";
 
 const checkLastSuperAdmin = async (targetUserId) => {
   const targetUser = await prisma.user.findUnique({ where: { id: targetUserId }, include: { systemRole: true } });

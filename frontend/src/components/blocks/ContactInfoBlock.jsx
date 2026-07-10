@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronRight, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import apiClient from '../../api/client';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 
@@ -15,6 +16,7 @@ const ContactInfoBlock = ({
   mapIframeUrl,
   formId
 }) => {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -36,16 +38,24 @@ const ContactInfoBlock = ({
       return;
     }
 
+    if (!executeRecaptcha) {
+      setStatus({ loading: false, success: false, error: 'Security verification is loading. Please try again in a moment.' });
+      return;
+    }
+
     setStatus({ loading: true, success: false, error: null });
 
     try {
+      const recaptchaToken = await executeRecaptcha('contact_info');
+
       const fullName = `${formData.firstName} ${formData.lastName}`.trim();
       const payload = {
         name: fullName,
         email: formData.email,
         phone: formData.contactNo,
         message: formData.message,
-        formId: formId 
+        formId: formId,
+        recaptchaToken 
       };
 
       await apiClient.post('/contacts/submit', payload);
@@ -63,6 +73,17 @@ const ContactInfoBlock = ({
       });
     }
   };
+
+  // Iframe URL Extractor
+  const getSafeMapUrl = (input) => {
+    if (!input) return '';
+    if (input.includes('<iframe')) {
+      const match = input.match(/src="([^"]+)"/);
+      return match ? match[1] : '';
+    }
+    return input;
+  };
+  const finalMapUrl = getSafeMapUrl(mapIframeUrl);
 
   // For rendering highlighted title
   const renderTitle = (titleText) => {
@@ -192,8 +213,8 @@ const ContactInfoBlock = ({
                 ></textarea>
               </div>
 
-              <div className="pt-2">
-                <button type="submit" disabled={status.loading} className="group inline-flex items-center justify-between w-fit border border-gray-300 hover:border-gray-400 bg-white rounded-full transition-colors duration-300 pl-6 pr-1.5 py-1.5 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed">
+              <div className="pt-2 flex flex-col md:flex-row items-center justify-between gap-4">
+                <button type="submit" disabled={status.loading} className="group inline-flex items-center justify-between w-full md:w-fit border border-gray-300 hover:border-gray-400 bg-white rounded-full transition-colors duration-300 pl-6 pr-1.5 py-1.5 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed">
                   <span className="text-[13px] md:text-sm font-bold text-gray-800 pr-10">
                     {status.loading ? 'Sending...' : 'Send Message'}
                   </span>
@@ -201,6 +222,13 @@ const ContactInfoBlock = ({
                     {status.loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ChevronRight className="w-4 h-4" />}
                   </div>
                 </button>
+                
+                {/* Google Compliance Text */}
+                <p className="text-[10px] text-gray-400 text-center md:text-right max-w-[200px]">
+                  This site is protected by reCAPTCHA and the Google 
+                  <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer" className="text-blue-500 hover:underline mx-1">Privacy Policy</a> and 
+                  <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer" className="text-blue-500 hover:underline mx-1">Terms of Service</a> apply.
+                </p>
               </div>
             </form>
           </div>
@@ -209,9 +237,9 @@ const ContactInfoBlock = ({
       
       {/* Map Iframe */}
       <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] opal-move-up mt-12 md:mt-16 bg-zinc-100">
-        {mapIframeUrl ? (
+        {finalMapUrl ? (
           <iframe 
-            src={mapIframeUrl} 
+            src={finalMapUrl} 
             className="w-full h-full border-0" 
             allowFullScreen 
             loading="lazy" 

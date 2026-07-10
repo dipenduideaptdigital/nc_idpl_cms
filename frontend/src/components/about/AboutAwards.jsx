@@ -18,11 +18,11 @@ const AboutAwards = () => {
     <section className="py-20 lg:py-24 bg-white font-helvetica overflow-hidden">
       <div className="container mx-auto max-w-[1300px] px-6 lg:px-8">
         
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2.5fr] gap-8 md:gap-12 mb-16 lg:mb-20 items-start">
+        <div className="flex flex-col items-center lg:grid lg:grid-cols-[1fr_2.5fr] gap-6 lg:gap-12 mb-12 lg:mb-20 items-start w-full">
           
           {/* Left: Badge */}
-          <div>
-            <div className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-4 py-1.5 w-max">
+          <div className="flex justify-center lg:justify-start w-full">
+            <div className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-4 py-1.5 w-max bg-white">
               <span className="w-1.5 h-1.5 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] font-bold tracking-[0.18em] uppercase text-gray-500">
                 AWARD & ACHIEVEMENT
@@ -31,8 +31,8 @@ const AboutAwards = () => {
           </div>
 
           {/* Heading */}
-          <div>
-            <h2 className="text-[40px] md:text-[48px] lg:text-[54px] font-bold tracking-tight text-[#111827] leading-[1.1]">
+          <div className="text-center lg:text-left w-full">
+            <h2 className="text-[32px] sm:text-[40px] md:text-[48px] lg:text-[54px] font-bold tracking-tight text-[#111827] leading-[1.1]">
               Design That <span className="text-[#0084FF]">Speaks Our</span>
               <br className="hidden md:block" />
               <span className="text-[#0084FF]">Industry</span> Awards
@@ -61,18 +61,19 @@ const AboutAwards = () => {
               return (
                 <div
                   key={index}
-                  className={`group flex items-center justify-between py-[20px] lg:py-[24px] cursor-pointer transition-colors border-t ${
+                  className={`group flex items-center justify-between py-[16px] lg:py-[24px] cursor-pointer transition-colors border-t ${
                     isActive ? 'border-t-[2px] border-[#0084FF]' : 'border-t border-gray-300'
                   } ${isLast ? 'border-b border-b-gray-300' : ''}`}
                   onMouseEnter={() => setActiveAward(award.year)}
+                  onClick={() => setActiveAward(award.year)}
                 >
                   
                   {/* Year & Title */}
                   <div className="flex items-center space-x-6 md:space-x-10 transform group-hover:translate-x-2 transition-transform duration-300">
-                    <span className="text-[18px] md:text-[20px] font-medium text-[#111827] w-12">
+                    <span className="text-[16px] sm:text-[18px] lg:text-[20px] font-medium text-[#111827] w-12 sm:w-16 shrink-0 text-left">
                       {award.year}
                     </span>
-                    <span className="text-[20px] md:text-[24px] font-bold text-[#111827] leading-tight capitalize">
+                    <span className="text-[16px] sm:text-[20px] lg:text-[24px] font-bold text-[#111827] leading-tight capitalize text-left">
                       {award.title}
                     </span>
                   </div>

@@ -23,4 +23,6 @@ export const env = cleanEnv(process.env, {
   SMTP_PASS: str(),
   FROM_EMAIL: str(),
   FROM_NAME: str(),
+
+  RECAPTCHA_SECRET_KEY: str({ default: "" }), 
 });

@@ -15,28 +15,3 @@ export const authorizeSystemRoles = (...allowedRoles) => {
     next();
   };
 };
-
-export const authorizePermissions = (...requiredPermissions) => {
-  return (req, res, next) => {
-    // Super admin bypass
-    if (req.user.systemRole.slug === "SUPER_ADMIN") {
-      return next();
-    }
-
-    const userPermissions = req.user.functionalRoles.flatMap((role) =>
-      role.functionalRole.permissions.map(
-        (permissionRelation) => permissionRelation.permission.slug
-      )
-    );
-
-    const hasPermission = requiredPermissions.every((permission) =>
-      userPermissions.includes(permission)
-    );
-
-    if (!hasPermission) {
-      throw new AppError("Insufficient permissions", StatusCodes.FORBIDDEN);
-    }
-
-    next();
-  };
-};

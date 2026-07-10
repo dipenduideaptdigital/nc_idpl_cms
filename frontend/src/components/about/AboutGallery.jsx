@@ -75,6 +75,11 @@ const AboutGallery = () => {
     }
   }, [isTransitioning]);
 
+  const isMobileOrTablet = visibleCards < 3.2;
+  const translateXValue = isMobileOrTablet 
+    ? `translateX(calc(50% - 110px - ${currentIndex * 244}px))` 
+    : `translateX(-${currentIndex * 244}px)`;
+
   return (
     <section className="relative w-full py-20 font-helvetica overflow-hidden flex flex-col justify-center min-h-[650px] lg:min-h-[750px]">
       {/* Background */}
@@ -93,16 +98,16 @@ const AboutGallery = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 w-full">
 
           {/* LEFT COLUMN: TEXT */}
-          <div className="w-full lg:w-[38%] flex flex-col justify-center text-left ml-15 shrink-0">
+          <div className="w-full lg:w-[38%] flex flex-col justify-center items-center lg:items-start text-center lg:text-left lg:ml-12 mx-auto shrink-0">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 border border-white/30 rounded-full px-4 py-1.5 mb-6    w-fit bg-white/5 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 border border-white/30 rounded-full px-4 py-1.5 mb-6 w-fit bg-white/5 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
               <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white">
                 Our Approach
               </span>
             </div>
 
-            <h2 className="text-[52px] md:text-[68px] lg:text-[90px] font-black text-white font-['Outfit'] leading-[1.15] tracking-tight mb-6">
+            <h2 className="text-[36px] xs:text-[44px] md:text-[60px] lg:text-[90px] font-black text-white font-['Outfit'] leading-[1.15] tracking-tight mb-6">
               Designing Beyond the<br />
               Expected
             </h2>
@@ -117,17 +122,17 @@ const AboutGallery = () => {
             <div 
               className="flex gap-6"
               style={{ 
-                transform: `translateX(-${currentIndex * (239 + 24)}px)`,
+                transform: translateXValue,
                 transition: isTransitioning ? 'transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none',
               }}
             >
               {tripledData.map((item, index) => (
                 <div
                   key={`${item.id}-${index}`}
-                  className="flex-shrink-0 flex flex-col group cursor-pointer w-[239px]"
+                  className="flex-shrink-0 flex flex-col group cursor-pointer w-[220px]"
                 >
                   {/* Card Container */}
-                  <div className="overflow-hidden rounded-[32px] w-[220px] h-[300px] relative shadow-lg hover:shadow-2xl transition-all duration-500 border-2 border-white/10 group-hover:border-white/20">
+                  <div className="overflow-hidden rounded-[32px] w-full h-[300px] relative shadow-lg hover:shadow-2xl transition-all duration-500 border-2 border-white/10 group-hover:border-white/20">
                     <img
                       src={item.src}
                       alt={item.title}
@@ -147,7 +152,7 @@ const AboutGallery = () => {
         </div>
 
         {/* CENTERED BUTTONS BELOW THE COLUMNS */}
-        <div className="flex items-center justify-center gap-4 mt-12 lg:mt-16 z-20 ml-15">
+        <div className="flex items-center justify-center gap-4 mt-12 lg:mt-16 z-20 lg:ml-12">
           <button
             onClick={handlePrev}
             aria-label="Previous"

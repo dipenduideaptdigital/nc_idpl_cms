@@ -24,6 +24,8 @@ import AdminSetup from './pages/AdminSetup';
 import AboutUs from './pages/AboutUs';
 import ServicePage from './pages/ServicePage';
 import ProjectDetail from './pages/ProjectDetail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 /* Admin Pages */
 import Dashboard from './pages/admin/Dashboard';
@@ -52,6 +54,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin-setup" element={<AdminSetup />} />
           
           {/* Admin Routes */}

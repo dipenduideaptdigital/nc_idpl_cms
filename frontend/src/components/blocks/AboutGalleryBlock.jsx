@@ -16,6 +16,25 @@ const AboutGalleryBlock = ({ backgroundImage, badgeText, title, description, gal
 
   const tripledData = [...items, ...items, ...items];
 
+  const renderTitle = (titleText) => {
+    if (!titleText) return null;
+    const parts = titleText.split(/(\[[^\]]+\])/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('[') && part.endsWith(']')) {
+        return (
+          <span key={index} className="text-[#0084FF]">
+            {part.slice(1, -1).split(/\\n|\n/).map((line, lIdx, arr) => (
+              <React.Fragment key={lIdx}>{line}{lIdx < arr.length - 1 && <br className="hidden md:block" />}</React.Fragment>
+            ))}
+          </span>
+        );
+      }
+      return part.split(/\\n|\n/).map((line, lIdx, arr) => (
+        <React.Fragment key={lIdx}>{line}{lIdx < arr.length - 1 && <br className="hidden md:block" />}</React.Fragment>
+      ));
+    });
+  };
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -70,6 +89,11 @@ const AboutGalleryBlock = ({ backgroundImage, badgeText, title, description, gal
     }
   }, [isTransitioning]);
 
+  const isMobileOrTablet = visibleCards < 3.2;
+  const translateXValue = isMobileOrTablet 
+    ? `translateX(calc(50% - 110px - ${currentIndex * 244}px))` 
+    : `translateX(-${currentIndex * 244}px)`;
+
   return (
     <section className="relative w-full py-20 font-helvetica overflow-hidden flex flex-col justify-center min-h-[650px] lg:min-h-[750px]">
       {/* Background */}
@@ -87,17 +111,17 @@ const AboutGalleryBlock = ({ backgroundImage, badgeText, title, description, gal
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 w-full">
 
           {/* LEFT COLUMN: TEXT */}
-          <div className="w-full lg:w-[38%] flex flex-col justify-center text-left ml-0 lg:ml-15 shrink-0">
+          <div className="w-full lg:w-[38%] flex flex-col justify-center items-center lg:items-start text-center lg:text-left lg:ml-12 mx-auto shrink-0">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 border border-white/30 rounded-full px-4 py-1.5 mb-6 w-fit bg-white/5 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
               <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white">
-                {badgeText || 'OUR GALLERY'}
+                {badgeText || 'Our Approach'}
               </span>
             </div>
 
-            <h2 className="text-[52px] md:text-[68px] lg:text-[100px] font-black text-white font-['Outfit'] leading-[1] tracking-tight mb-6 whitespace-pre-line">
-              {title || 'Interior \n Design'}
+            <h2 className="text-[36px] xs:text-[44px] md:text-[60px] lg:text-[90px] font-black text-white font-['Outfit'] leading-[1.15] tracking-tight mb-6">
+              {renderTitle(title || 'Designing Beyond the\nExpected')}
             </h2>
 
             <p className="text-[14px] lg:text-[15px] text-white leading-relaxed max-w-[360px] font-normal whitespace-pre-line">
@@ -110,16 +134,16 @@ const AboutGalleryBlock = ({ backgroundImage, badgeText, title, description, gal
             <div 
               className="flex gap-6"
               style={{ 
-                transform: `translateX(-${currentIndex * (239 + 24)}px)`,
+                transform: translateXValue,
                 transition: isTransitioning ? 'transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none',
               }}
             >
               {tripledData.map((item, index) => (
                 <div
                   key={`${index}`}
-                  className="flex-shrink-0 flex flex-col group cursor-pointer w-[239px]"
+                  className="flex-shrink-0 flex flex-col group cursor-pointer w-[220px]"
                 >
-                  <div className="overflow-hidden rounded-[32px] w-[220px] h-[300px] relative shadow-lg hover:shadow-2xl transition-all duration-500 border-2 border-white/10 group-hover:border-white/20">
+                  <div className="overflow-hidden rounded-[32px] w-full h-[300px] relative shadow-lg hover:shadow-2xl transition-all duration-500 border-2 border-white/10 group-hover:border-white/20">
                     <img
                       src={resolveAssetUrl(item.image, '/default-gallery.png')}
                       alt={item.title}
@@ -137,7 +161,7 @@ const AboutGalleryBlock = ({ backgroundImage, badgeText, title, description, gal
         </div>
 
         {/* CENTERED BUTTONS BELOW THE COLUMNS */}
-        <div className="flex items-center justify-center gap-4 mt-12 lg:mt-16 z-20 ml-0 lg:ml-15">
+        <div className="flex items-center justify-center gap-4 mt-12 lg:mt-16 z-20 lg:ml-12">
           <button
             onClick={handlePrev}
             className="w-12 h-12 rounded-full border border-white/50 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 cursor-pointer active:scale-95 bg-black/10 backdrop-blur-sm"

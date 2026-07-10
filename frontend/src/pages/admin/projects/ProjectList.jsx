@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { projectsApi } from '../../../api/projects';
 import { Plus, Edit3, Trash2, Briefcase, AlertCircle } from 'lucide-react';
+import Can from '../../../components/shared/Can';
 
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
@@ -30,7 +31,7 @@ const ProjectList = () => {
         await projectsApi.deleteProject(id);
         setProjects(projects.filter(p => p.id !== id));
       } catch (err) {
-        alert('Failed to delete project.');
+        alert(err.response?.data?.message || 'Failed to delete project.');
       }
     }
   };
@@ -46,9 +47,12 @@ const ProjectList = () => {
           </h1>
           <p className="text-zinc-500 text-sm">Add, update, or remove portfolio projects.</p>
         </div>
-        <Link to="/admin/projects/create" className="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Add Project
-        </Link>
+        
+        <Can permission="project.create">
+          <Link to="/admin/projects/create" className="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 flex items-center gap-2">
+            <Plus className="w-4 h-4" /> Add Project
+          </Link>
+        </Can>
       </div>
 
       {error && <div className="p-4 bg-red-50 text-red-600 rounded-xl flex items-center gap-2"><AlertCircle className="w-5 h-5"/> {error}</div>}
@@ -74,8 +78,19 @@ const ProjectList = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4 text-right space-x-3">
-                  <Link to={`/admin/projects/edit/${project.id}`} className="text-blue-500 hover:text-blue-700"><Edit3 className="w-4 h-4 inline" /></Link>
-                  <button onClick={() => handleDelete(project.id)} className="text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4 inline" /></button>
+                  
+                  <Can permission="project.edit">
+                    <Link to={`/admin/projects/edit/${project.id}`} className="text-blue-500 hover:text-blue-700">
+                      <Edit3 className="w-4 h-4 inline" />
+                    </Link>
+                  </Can>
+
+                  <Can permission="project.delete">
+                    <button onClick={() => handleDelete(project.id)} className="text-red-500 hover:text-red-700">
+                      <Trash2 className="w-4 h-4 inline" />
+                    </button>
+                  </Can>
+
                 </td>
               </tr>
             ))}

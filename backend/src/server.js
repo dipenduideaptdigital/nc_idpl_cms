@@ -4,9 +4,11 @@ import app from "./app.js";
 import { env } from "./config/env.js";
 import { logger } from "./config/logger.js";
 
+// all jobs
 import { cleanupExpiredTokens } from "./jobs/cleanupExpiredTokens.job.js";
 import { initMediaCleanupJob } from "./jobs/cleanupOrphanMedia.job.js";
 import { initPreviewCleanupJob } from "./jobs/cleanupPreviewTokens.job.js";
+import { initBlogJobs } from "./jobs/blogs.job.js";
 
 const server = http.createServer(app);
 
@@ -27,6 +29,7 @@ const startServer = async () => {
     cleanupExpiredTokens();
     initMediaCleanupJob();
     initPreviewCleanupJob();
+    initBlogJobs();
     logger.info("Background jobs initialized.");
 
     server.listen(PORT, () => {

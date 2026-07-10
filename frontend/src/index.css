@@ -49,6 +49,9 @@ html {
   scrollbar-width: none;  /* Firefox */
 }
 
+.grecaptcha-badge { 
+  visibility: hidden !important; 
+}
 /* Animations */
 @keyframes opalMoveUp {
   0% { transform: translateY(60px); opacity: 0; }

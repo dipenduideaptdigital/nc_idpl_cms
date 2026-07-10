@@ -1,11 +1,10 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../shared/errors/AppError.js";
-import { verifyTurnstileToken } from "../../shared/services/turnstile.service.js";
+import { verifyRecaptchaToken } from "../../shared/services/recaptcha.service.js";
 import { queueAdminNotificationEmail } from "../../shared/services/notification.service.js";
 import * as formRepo from "../contactForms/contactForms.repository.js";
 import * as repo from "./contacts.repository.js";
 import xss from "xss";
-
 
 export const executeContactSubmissionLifecycle = async (payload, clientIp, requestFingerprint) => {
   const currentWindowTrafficVolume = await repo.checkRateLimitThreshold(requestFingerprint, 10 * 60 * 1000);
@@ -37,7 +36,9 @@ export const executeContactSubmissionLifecycle = async (payload, clientIp, reque
     );
   }
 
-  // await verifyTurnstileToken(payload.turnstileToken, clientIp);
+  if (payload.recaptchaToken) {
+    await verifyRecaptchaToken(payload.recaptchaToken, clientIp);
+  }
 
   const cleanPayloadMappingRecord = {
     name: xss(payload.name.trim()),

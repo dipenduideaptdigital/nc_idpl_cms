@@ -47,8 +47,18 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "https://challenges.cloudflare.com"], 
-        frameSrc: ["'self'", "https://challenges.cloudflare.com", "https://www.youtube.com"], 
+        scriptSrc: [
+          "'self'", 
+          "'unsafe-inline'", 
+          "https://www.google.com/recaptcha/", 
+          "https://www.gstatic.com/recaptcha/"
+        ], 
+        frameSrc: [
+          "'self'", 
+          "https://www.youtube.com", 
+          "https://www.google.com/recaptcha/",
+          "https://recaptcha.google.com/recaptcha/"
+        ], 
         imgSrc: ["'self'", "data:", "blob:", "*"],
         connectSrc: ["'self'", ...allowedOriginsWhitelistArray] 
       }

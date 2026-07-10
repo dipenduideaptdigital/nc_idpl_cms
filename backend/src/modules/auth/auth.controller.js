@@ -21,9 +21,14 @@ import {
   CLEAR_COOKIE_OPTIONS,
 } from "../../config/cookies.js";
 
+const getClientIp = (req) => {
+  return req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress || "127.0.0.1";
+};
+
 // User registration
 export const register = asyncHandler(async (req, res) => {
-  const result = await registerUser(req.body);
+  const clientIp = getClientIp(req);
+  const result = await registerUser(req.body, clientIp);
 
   sendResponse({
     res,
@@ -35,7 +40,8 @@ export const register = asyncHandler(async (req, res) => {
 
 // User login
 export const login = asyncHandler(async (req, res) => {
-  const result = await loginUser(req.body);
+  const clientIp = getClientIp(req);
+  const result = await loginUser(req.body, clientIp);
 
   res.cookie("refreshToken", result.refreshToken, REFRESH_COOKIE_OPTIONS);
 
@@ -52,7 +58,8 @@ export const login = asyncHandler(async (req, res) => {
 
 // Admin login
 export const adminLoginController = asyncHandler(async (req, res) => {
-  const result = await adminLogin(req.body);
+  const clientIp = getClientIp(req);
+  const result = await adminLogin(req.body, clientIp); 
 
   res.cookie("refreshToken", result.refreshToken, REFRESH_COOKIE_OPTIONS);
 
@@ -84,7 +91,9 @@ export const refreshTokenController = asyncHandler(async (req, res) => {
 
 // Forgot password
 export const forgotPasswordController = asyncHandler(async (req, res) => {
-  await forgotPassword(req.body.email);
+  const clientIp = getClientIp(req);
+  await forgotPassword(req.body.email, req.body.recaptchaToken, clientIp); 
+
   sendResponse({
     res,
     statusCode: StatusCodes.OK,

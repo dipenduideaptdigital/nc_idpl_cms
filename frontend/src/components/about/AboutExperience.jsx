@@ -11,7 +11,7 @@ const AboutExperience = () => {
         <div className="flex flex-col lg:flex-row justify-between gap-12 lg:gap-16">
 
           {/* LEFT SECTION */}
-          <div className="w-full lg:w-[55%] flex flex-col">
+          <div className="w-full lg:w-[55%] flex flex-col items-center lg:items-start text-center lg:text-left">
 
             {/* Badge */}
             <div className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 w-max mb-8">
@@ -22,7 +22,7 @@ const AboutExperience = () => {
             </div>
 
             {/* Heading */}
-            <h2 className="text-[36px] md:text-[44px] lg:text-[48px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111827] whitespace-nowrap">
+            <h2 className="text-[36px] md:text-[44px] lg:text-[48px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111827] whitespace-normal lg:whitespace-nowrap">
               We Design <span className="text-[#228BFF]">Spaces ,</span>
               <br />
               <span className="text-[#228BFF]">That Deliver</span> Lasting
@@ -30,7 +30,8 @@ const AboutExperience = () => {
               Impact
             </h2>
 
-            <div className="flex flex-row items-stretch gap-6 lg:gap-10 mt-10 lg:mt-16">
+            {/* DESKTOP ROW (Visible only on lg screen) */}
+            <div className="hidden lg:flex flex-row items-stretch gap-6 lg:gap-10 mt-10 lg:mt-16">
               
               <div className="flex flex-col justify-start py-2 lg:py-4 gap-4">
                 
@@ -47,7 +48,6 @@ const AboutExperience = () => {
                 </div>
               </div>
 
-            
               <div className="w-[160px] sm:w-[220px] lg:w-[360px] h-[240px] sm:h-[300px] lg:h-[460px] rounded-[28px] overflow-hidden shrink-0 mt-auto">
                 <img
                   src={img1}
@@ -58,12 +58,47 @@ const AboutExperience = () => {
 
             </div>
 
+            {/* MOBILE ROW (Visible only on mobile/tablet) */}
+            <div className="lg:hidden flex flex-row items-center justify-between gap-4 sm:gap-6 mt-10 w-full">
+              {/* Experience counter */}
+              <div className="flex flex-col justify-center items-center py-2 gap-2 text-center w-1/3">
+                <div className="text-[64px] sm:text-[90px] font-black leading-[0.75] tracking-[-0.06em] text-[#111827] scale-y-125 origin-center">
+                  26
+                </div>
+                <div className="text-center mt-2">
+                  <h3 className="text-[11px] sm:text-[14px] font-bold leading-[1.1] text-[#111827]">
+                    Years Of
+                    <br />
+                    Experience
+                  </h3>
+                </div>
+              </div>
+
+              {/* Image 1 */}
+              <div className="w-1/3 aspect-[3/4] rounded-2xl overflow-hidden shadow-sm">
+                <img
+                  src={img1}
+                  alt="Interior"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Image 2 */}
+              <div className="w-1/3 aspect-[3/4] rounded-2xl overflow-hidden shadow-sm">
+                <img
+                  src={img2}
+                  alt="Office"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
           </div>
 
           {/* RIGHT SECTION */}
-          <div className="w-full lg:w-[45%] flex flex-col justify-start">
+          <div className="w-full lg:w-[45%] flex flex-col justify-start items-center lg:items-start text-center lg:text-left mt-8 lg:mt-0">
 
-            <div className="w-full max-w-[460px] ml-auto rounded-[28px] overflow-hidden">
+            <div className="hidden lg:block w-full max-w-[460px] ml-auto rounded-[28px] overflow-hidden">
               <img
                 src={img2}
                 alt="Office"
@@ -71,10 +106,10 @@ const AboutExperience = () => {
               />
             </div>
 
-            <div className="w-full max-w-[460px] ml-auto mt-6 lg:mt-8">
+            <div className="w-full max-w-[460px] lg:ml-auto mt-2 lg:mt-8 flex flex-col items-center lg:items-start">
               
               {/* Text */}
-              <p className="text-[#4B5563] leading-relaxed text-[16px] pr-2">
+              <p className="text-[#4B5563] leading-relaxed text-[16px] pr-2 text-center lg:text-left ">
                 subhAAkritee is an architecture and interior design firm creating thoughtful residential and commercial spaces since 2002. We combine 10 creativity, functionality, and meticulous attention to detail to deliver bespoke design solutions tailored to each client’s needs and aspirations. From concept to completion, our focus is on crafting elegant, practical, and enduring environments that enhance everyday living and leave a lasting impression.
               </p>
 
