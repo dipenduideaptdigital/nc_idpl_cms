@@ -35,7 +35,7 @@ const HeroSectionTwo = ({ data, onScrollDown }) => {
           </div>
 
           {/* Heading */}
-          <h1 className="text-5xl md:text-7xl lg:text-[80px] font-bold text-white tracking-tight leading-[1.08] mb-6 font-helvetica">
+          <h1 className="text-4xl md:text-6xl lg:text-[70px] font-bold text-white tracking-tight leading-[1.08] mb-6 font-helvetica">
             {renderTitle(data?.title || 'Find Your [Inspired]\n[Interior] Design')}
           </h1>
 

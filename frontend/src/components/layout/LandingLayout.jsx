@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import LandingNavbar from './LandingNavbar';
 import Footer from './Footer';
 import GetInTouch from '../landing/GetInTouch';
+import WhatsAppButton from '../shared/WhatsAppButton';
 
 const LandingLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,6 +28,9 @@ const LandingLayout = () => {
         <Outlet />
       </main>
       <Footer />
+
+      {/* WhatsApp Floating Button */}
+      <WhatsAppButton />
 
       {/* Modal Consultation Form Overlay */}
       {isModalOpen && (

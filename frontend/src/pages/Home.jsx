@@ -1,19 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { useLocation } from 'react-router-dom';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 import Hero from '../components/home/Hero';
-import AboutSection from '../components/home/AboutSection';
 import Services from '../components/home/Services';
-import OurServices from '../components/home/OurServices';
-import OurProjects from '../components/home/OurProjects';
-import HowWeWork from '../components/home/HowWeWork';
-import Panoramas from '../components/home/Panoramas';
-import Team from '../components/home/Team';
-import Testimonials from '../components/home/Testimonials';
-import VideoBanner from '../components/home/VideoBanner';
-import BlogSection from '../components/home/BlogSection';
-import Gallery from '../components/home/Gallery';
-import CtaSection from '../components/home/CtaSection';
+
+const AboutSection = lazy(() => import('../components/home/AboutSection'));
+const OurServices = lazy(() => import('../components/home/OurServices'));
+const OurProjects = lazy(() => import('../components/home/OurProjects'));
+const HowWeWork = lazy(() => import('../components/home/HowWeWork'));
+const Panoramas = lazy(() => import('../components/home/Panoramas'));
+const Team = lazy(() => import('../components/home/Team'));
+const Testimonials = lazy(() => import('../components/home/Testimonials'));
+const VideoBanner = lazy(() => import('../components/home/VideoBanner'));
+const BlogSection = lazy(() => import('../components/home/BlogSection'));
+const Gallery = lazy(() => import('../components/home/Gallery'));
+const CtaSection = lazy(() => import('../components/home/CtaSection'));
+
+const SectionFallback = () => (
+  <div className="w-full h-48 flex items-center justify-center">
+    <div className="w-8 h-8 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+  </div>
+);
 
 const Home = () => {
   useScrollAnimation();
@@ -45,33 +52,35 @@ const Home = () => {
       <Hero />
       <Services />
       
-      <div id="about">
-        <AboutSection />
-      </div>
-      
-      <div id="services">
-        <OurServices />
-      </div>
-      
-      <div id="process">
-        <HowWeWork />
-      </div>
-      
-      <div id="projects">
-        <OurProjects />
-      </div>
-      
-      <Testimonials />
-      <Panoramas />
-      <Team />
-      <VideoBanner />
-      
-      <div id="blog">
-        <BlogSection />
-      </div>
-      
-      <Gallery />
-      <CtaSection />
+      <Suspense fallback={<SectionFallback />}>
+        <div id="about">
+          <AboutSection />
+        </div>
+        
+        <div id="services">
+          <OurServices />
+        </div>
+        
+        <div id="process">
+          <HowWeWork />
+        </div>
+        
+        <div id="projects">
+          <OurProjects />
+        </div>
+        
+        <Testimonials />
+        <Panoramas />
+        <Team />
+        <VideoBanner />
+        
+        <div id="blog">
+          <BlogSection />
+        </div>
+        
+        <Gallery />
+        <CtaSection />
+      </Suspense>
     </>
   );
 };

@@ -228,7 +228,7 @@ const Hero = ({ data: externalData }) => {
                       </div>
                       
                       {/* Headlines */}
-                      <h1 className="text-3xl md:text-5xl lg:text-[56px] xl:text-[72px] 2xl:text-[90px] font-bold leading-tight lg:leading-[60px] xl:leading-[76px] 2xl:leading-[93px] mb-4 md:mb-6 drop-shadow-lg font-helvetica">
+                      <h1 className="text-3xl md:text-4xl lg:text-[48px] xl:text-[62px] 2xl:text-[76px] font-bold leading-tight lg:leading-[54px] xl:leading-[68px] 2xl:leading-[82px] mb-4 md:mb-6 drop-shadow-lg font-helvetica">
                         <span className="tracking-normal block whitespace-nowrap">{slide.data?.titleLine1 || slide.fallback.titleLine1}</span>
                         <span className="tracking-[0.1em] block whitespace-nowrap">{slide.data?.titleLine2 || slide.fallback.titleLine2}</span>
                       </h1>
@@ -292,7 +292,7 @@ const Hero = ({ data: externalData }) => {
                   </div>
 
                   {/* Heading */}
-                  <h1 className="text-4xl md:text-6xl lg:text-[72px] font-bold text-white tracking-tight leading-[1.1] mb-6 font-helvetica">
+                  <h1 className="text-3xl md:text-5xl lg:text-[60px] font-bold text-white tracking-tight leading-[1.1] mb-6 font-helvetica">
                     {renderTitle(slide.data?.title || slide.fallback.title)}
                   </h1>
 
