@@ -224,7 +224,7 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
 
   const setupUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/admin-setup?token=${rawToken}&email=${encodeURIComponent(normalizedEmail)}`;
   
-  sendEmail({
+  await sendEmail({
     to: normalizedEmail,
     subject: "Invitation to Subhaakritee Admin Portal",
     html: `

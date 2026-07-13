@@ -32,18 +32,18 @@ const Register = () => {
     setSuccess('');
     setLoading(true);
 
-    if (!executeRecaptcha) {
-      setError("Security verification is still loading. Please try again in a moment.");
-      setLoading(false);
-      return;
-    }
+    // if (!executeRecaptcha) {
+    //   setError("Security verification is still loading. Please try again in a moment.");
+    //   setLoading(false);
+    //   return;
+    // }
 
     try {
-      const recaptchaToken = await executeRecaptcha('register');
+      //const recaptchaToken = await executeRecaptcha('register');
 
       const payload = {
         ...formData,
-        recaptchaToken
+        //recaptchaToken
       };
 
       const res = await apiClient.post('/auth/register', payload);

@@ -49,9 +49,9 @@ const getUserPermissions = async (userId) => {
 
 const login = async ({ email, password, recaptchaToken, clientIp, allowedRoles = [] }) => {
   
-  if (recaptchaToken) {
-    await verifyRecaptchaToken(recaptchaToken, clientIp);
-  }
+  // if (recaptchaToken) {
+  //   await verifyRecaptchaToken(recaptchaToken, clientIp);
+  // }
 
   const normalizedEmail = normalizeEmail(email);
 
@@ -114,9 +114,9 @@ const login = async ({ email, password, recaptchaToken, clientIp, allowedRoles =
 };
 
 export const registerUser = async (payload, clientIp) => {
-  if (payload.recaptchaToken) {
-    await verifyRecaptchaToken(payload.recaptchaToken, clientIp);
-  }
+  // if (payload.recaptchaToken) {
+  //   await verifyRecaptchaToken(payload.recaptchaToken, clientIp);
+  // }
 
   const normalizedEmail = normalizeEmail(payload.email);
 
@@ -224,9 +224,9 @@ export const logoutAllDevices = async (userId) => {
 };
 
 export const forgotPassword = async (email, recaptchaToken, clientIp) => {
-  if (recaptchaToken) {
-    await verifyRecaptchaToken(recaptchaToken, clientIp);
-  }
+  // if (recaptchaToken) {
+  //   await verifyRecaptchaToken(recaptchaToken, clientIp);
+  // }
 
   const normalizedEmail = normalizeEmail(email);
   const user = await findUserByEmail(normalizedEmail, AUTH_BASIC_USER_INCLUDE);
