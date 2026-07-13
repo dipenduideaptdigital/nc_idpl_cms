@@ -35,19 +35,19 @@ const Login = () => {
     setSuccess('');
     setLoading(true);
 
-    // if (!executeRecaptcha) {
-    //   setError("Security verification is still loading. Please try again in a moment.");
-    //   setLoading(false);
-    //   return;
-    // }
+    if (!executeRecaptcha) {
+      setError("Security verification is still loading. Please try again in a moment.");
+      setLoading(false);
+      return;
+    }
 
      try {
-    //   const recaptchaToken = await executeRecaptcha('login');
+      const recaptchaToken = await executeRecaptcha('login');
 
       const endpoint = isAdminMode ? '/auth/admin-login' : '/auth/login';
       const payload = {
         ...formData,
-        //recaptchaToken
+        recaptchaToken
       };
 
       const res = await apiClient.post(endpoint, payload);
