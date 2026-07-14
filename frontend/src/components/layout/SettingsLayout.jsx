@@ -23,35 +23,32 @@ const SettingsLayout = () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-10 max-w-6xl mx-auto text-[#2B2A28]">
+    <div className="flex flex-col lg:flex-row gap-10 max-w-6xl mx-auto text-zinc-900 font-sans">
 
       {/* Settings Navigation Sidebar */}
       <div className="lg:w-60 flex-shrink-0">
-        <div className="sticky top-6 border-r border-[#DDD6C7] lg:pr-6">
-          <div className="border-b-4 border-double border-[#2B2A28] pb-3 mb-5">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#3F5C73] font-bold mb-1">Workspace</p>
-            <h2 className="font-serif text-xl font-bold text-[#2B2A28] flex items-center gap-2">
-              <Settings className="w-4.5 h-4.5 text-[#3F5C73]" />
+        <div className="sticky top-6 border-r border-zinc-200 lg:pr-6">
+          <div className="border-b border-zinc-200 pb-4 mb-6">
+            <p className="text-xs uppercase tracking-widest text-zinc-500 font-bold mb-1">Workspace</p>
+            <h2 className="text-xl font-bold text-zinc-900 flex items-center gap-2">
+              <Settings className="w-5 h-5 text-zinc-700" strokeWidth={2} />
               Settings
             </h2>
           </div>
 
-          <nav className="space-y-0.5">
+          <nav className="space-y-1">
             {visibleTabs.map((tab, idx) => (
               <NavLink
                 key={tab.name}
                 to={tab.path}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 transition-colors text-sm font-mono uppercase tracking-wide border-l-2 ${
+                  `flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-semibold group ${
                     isActive
-                      ? 'border-[#B5563A] text-[#2B2A28] bg-[#F3EFE4]/50'
-                      : 'border-transparent text-[#8A8378] hover:text-[#2B2A28] hover:border-[#DDD6C7]'
+                      ? 'bg-zinc-900 text-white shadow-sm'
+                      : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
                   }`
                 }
               >
-                <span className="text-[10px] text-[#B5563A] tabular-nums w-4 flex-shrink-0">
-                  {String(idx + 1).padStart(2, '0')}
-                </span>
                 <tab.icon className="w-4 h-4 flex-shrink-0" />
                 <span className="truncate">{tab.name}</span>
               </NavLink>

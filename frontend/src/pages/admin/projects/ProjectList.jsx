@@ -69,7 +69,7 @@ const ProjectList = () => {
           </thead>
           <tbody className="divide-y divide-zinc-100">
             {projects.map((project) => (
-              <tr key={project.id} className="hover:bg-zinc-50">
+              <tr key={project.id} className="hover:bg-zinc-50/50 transition-colors group">
                 <td className="px-6 py-4 font-medium">{project.title}</td>
                 <td className="px-6 py-4">{project.category}</td>
                 <td className="px-6 py-4">
@@ -77,20 +77,28 @@ const ProjectList = () => {
                     {project.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-right space-x-3">
-                  
-                  <Can permission="project.edit">
-                    <Link to={`/admin/projects/edit/${project.id}`} className="text-blue-500 hover:text-blue-700">
-                      <Edit3 className="w-4 h-4 inline" />
-                    </Link>
-                  </Can>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div className="flex items-center justify-end gap-1 opacity-100 transition-opacity">
+                    <Can permission="project.edit">
+                      <Link 
+                        to={`/admin/projects/edit/${project.id}`} 
+                        className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        title="Edit Project"
+                      >
+                        <Edit3 className="w-4 h-4" />
+                      </Link>
+                    </Can>
 
-                  <Can permission="project.delete">
-                    <button onClick={() => handleDelete(project.id)} className="text-red-500 hover:text-red-700">
-                      <Trash2 className="w-4 h-4 inline" />
-                    </button>
-                  </Can>
-
+                    <Can permission="project.delete">
+                      <button 
+                        onClick={() => handleDelete(project.id)} 
+                        className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Delete Project"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </Can>
+                  </div>
                 </td>
               </tr>
             ))}

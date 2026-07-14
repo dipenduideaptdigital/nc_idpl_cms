@@ -128,41 +128,40 @@ const RoleEditor = () => {
   if (loading) {
     return (
       <div className="h-72 flex flex-col justify-center items-center gap-3">
-        <div className="w-8 h-8 border-2 border-[#DDD6C7] border-t-[#3F5C73] rounded-full animate-spin"></div>
-        <p className="text-sm font-mono uppercase tracking-wider text-[#8A8378]">Loading access configuration…</p>
+        <div className="w-8 h-8 border-2 border-zinc-200 border-t-zinc-900 rounded-full animate-spin"></div>
+        <p className="text-sm font-semibold text-zinc-500">Loading access configuration…</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-6xl mx-auto pb-16 text-[#2B2A28]">
+    <form onSubmit={handleSubmit} className="max-w-6xl mx-auto pb-16 text-zinc-900 font-sans space-y-8 animate-in fade-in duration-500">
 
-      {/* Masthead */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b-4 border-double border-[#2B2A28] pb-4 mb-8">
-        <div className="flex items-start gap-3">
-          <Link to="/admin/settings/roles" className="p-2 -ml-2 mt-0.5 text-[#8A8378] hover:text-[#2B2A28] transition-colors flex-shrink-0">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
+        <div className="flex items-center gap-3">
+          <Link to="/admin/settings/roles" className="p-2 -ml-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors flex-shrink-0">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
-            <p className="text-[11px] uppercase tracking-[0.3em] text-[#3F5C73] font-bold mb-1.5 flex items-center gap-1.5">
-              <KeyRound className="w-3 h-3" />
-              {isEditMode ? 'Editing role' : 'New access role'}
+            <h1 className="text-2xl font-bold text-zinc-900">{isEditMode ? 'Edit Role' : 'Create Access Role'}</h1>
+            <p className="text-zinc-500 text-sm mt-1">
+              {isEditMode ? 'Modify granular permissions for this role.' : 'Create a new functional role bundle.'}
             </p>
-            <h1 className="text-3xl font-serif font-bold text-[#2B2A28]">{isEditMode ? 'Edit Role' : 'Create Access Role'}</h1>
           </div>
         </div>
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[#2B2A28] text-[#FAF7F0] font-mono text-sm uppercase tracking-wide hover:bg-[#3F5C73] transition-colors disabled:opacity-60 flex-shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20 flex-shrink-0 text-sm"
         >
-          {saving ? <div className="w-4 h-4 border-2 border-[#FAF7F0] border-t-transparent rounded-full animate-spin"></div> : <Save className="w-4 h-4" />}
+          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save Role
         </button>
       </div>
 
       {error && (
-        <div className="border border-[#B5563A]/30 bg-[#B5563A]/5 text-[#8a3a26] px-4 py-3 mb-6 flex items-center gap-2 font-mono text-sm">
+        <div className="border border-red-200 bg-red-50 text-red-700 px-4 py-3 rounded-xl flex items-center gap-2 text-sm font-medium">
           <Info className="w-4 h-4 flex-shrink-0" /> {error}
         </div>
       )}
@@ -171,77 +170,77 @@ const RoleEditor = () => {
 
         {/* Left Column: Role Details */}
         <div className="lg:col-span-4 space-y-6">
-          <div>
-            <div className="flex items-center justify-between border-b-2 border-[#2B2A28] pb-2 mb-5">
+          <div className="bg-white rounded-2xl shadow-sm border border-zinc-100 p-6 space-y-6">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#3F5C73]" />
-                <h2 className="font-serif text-lg font-bold tracking-tight">Basic Details</h2>
+                <ShieldCheck className="w-5 h-5 text-zinc-700" />
+                <h2 className="text-sm font-bold text-zinc-900">Basic Details</h2>
               </div>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-1.5">Role Name *</label>
+                <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Role Name *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Content Editor"
                   required
-                  className="w-full px-4 py-2.5 border border-[#DDD6C7] bg-transparent font-serif outline-none focus:border-[#3F5C73] transition-colors"
+                  className="block w-full px-4 py-2.5 border border-zinc-200 rounded-xl leading-5 bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors sm:text-sm font-medium"
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-1.5">Description</label>
+                <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Description</label>
                 <textarea
                   rows="4"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="What can this role do?"
-                  className="w-full px-4 py-2.5 border border-[#DDD6C7] bg-transparent font-serif outline-none focus:border-[#3F5C73] resize-none transition-colors"
+                  className="block w-full px-4 py-2.5 border border-zinc-200 rounded-xl leading-5 bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors sm:text-sm font-medium resize-none"
                 />
               </div>
             </div>
 
-            <div className="mt-5 border border-dashed border-[#3F5C73]/40 bg-[#3F5C73]/5 p-4 flex gap-3 text-sm text-[#2B2A28] font-serif">
-              <Info className="w-4.5 h-4.5 flex-shrink-0 mt-0.5 text-[#3F5C73]" />
+            <div className="border border-blue-100 bg-blue-50/50 p-4 rounded-xl flex gap-3 text-xs text-blue-700 leading-relaxed">
+              <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-600" />
               <p>Roles act as a bundle of permissions. Once created, assign this role to any user from the Team &amp; Users tab.</p>
             </div>
-          </div>
 
-          {/* Live coverage summary — signature element */}
-          <div className="border-2 border-[#2B2A28] p-5">
-            <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#8A8378] mb-1">Total clearance</p>
-            <p className="text-4xl font-serif font-bold tabular-nums text-[#2B2A28]">{formData.permissionIds.length}</p>
-            <p className="text-sm text-[#8A8378] mt-1 font-serif italic">permissions granted across all modules</p>
+            {/* Clearance Summary */}
+            <div className="border border-zinc-200 rounded-xl p-5 bg-zinc-50/50 flex flex-col items-center justify-center">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Total clearance</p>
+              <p className="text-4xl font-extrabold text-zinc-950">{formData.permissionIds.length}</p>
+              <p className="text-xs text-zinc-500 mt-1 text-center font-medium">permissions granted across all modules</p>
+            </div>
           </div>
         </div>
 
         {/* Right Column: Permission Matrix */}
-        <div className="lg:col-span-8">
-          <div className="flex items-center justify-between border-b-2 border-[#2B2A28] pb-2 mb-4">
-            <h2 className="font-serif text-lg font-bold tracking-tight">Permission Matrix</h2>
-            <span className="font-mono text-[11px] text-[#8A8378] tabular-nums">
+        <div className="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-zinc-100 p-6 space-y-6">
+          <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+            <h2 className="text-sm font-bold text-zinc-900">Permission Matrix</h2>
+            <span className="text-xs text-zinc-500 font-semibold">
               {formData.permissionIds.length} assigned
             </span>
           </div>
 
-          {/* Search + bulk expand controls — solves the "20 permissions = endless scroll" problem */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-5">
-            <div className="relative flex-1 border border-[#DDD6C7] focus-within:border-[#3F5C73] transition-colors">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A8378] w-4 h-4" />
+          {/* Search & Expansion Controls */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search permissions by name or slug…"
-                className="w-full pl-10 pr-9 py-2.5 outline-none text-sm font-serif bg-transparent placeholder:text-[#8A8378]/70"
+                className="block w-full pl-10 pr-10 py-2 border border-zinc-200 rounded-xl leading-5 bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors sm:text-sm"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8A8378] hover:text-[#2B2A28]"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-800"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -251,22 +250,22 @@ const RoleEditor = () => {
               <button
                 type="button"
                 onClick={expandAllModules}
-                className="px-3 py-2 border border-[#DDD6C7] font-mono text-[11px] uppercase tracking-wide text-[#8A8378] hover:border-[#2B2A28] hover:text-[#2B2A28] transition-colors"
+                className="px-3.5 py-2 border border-zinc-200 rounded-xl text-xs font-semibold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-colors bg-white"
               >
                 Expand all
               </button>
               <button
                 type="button"
                 onClick={collapseAllModules}
-                className="px-3 py-2 border border-[#DDD6C7] font-mono text-[11px] uppercase tracking-wide text-[#8A8378] hover:border-[#2B2A28] hover:text-[#2B2A28] transition-colors"
+                className="px-3.5 py-2 border border-zinc-200 rounded-xl text-xs font-semibold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-colors bg-white"
               >
                 Collapse all
               </button>
             </div>
           </div>
 
-          {/* Accordion list of modules — collapsed by default, so 20+ permissions per module never force a long scroll */}
-          <div className="border border-[#DDD6C7] divide-y divide-[#DDD6C7]">
+          {/* Module Accordions list */}
+          <div className="border border-zinc-200 rounded-xl divide-y divide-zinc-200 overflow-hidden">
             {filteredEntries.map(({ moduleName, modulePermissions, matches }) => {
               const modulePermIds = modulePermissions.map(p => p.id);
               const isAllSelected = modulePermIds.every(id => formData.permissionIds.includes(id));
@@ -274,31 +273,29 @@ const RoleEditor = () => {
               const isSomeSelected = !isAllSelected && selectedCount > 0;
               const coveragePct = modulePermIds.length ? Math.round((selectedCount / modulePermIds.length) * 100) : 0;
 
-              // While searching, a module with no matching permissions is hidden entirely;
-              // a module with matches auto-expands so results are visible without manual clicking.
               if (isSearching && matches.length === 0) return null;
               const isOpen = isSearching ? true : !!expandedModules[moduleName];
 
               return (
-                <div key={moduleName} className="bg-[#FAF7F0]">
+                <div key={moduleName} className="bg-white">
                   <button
                     type="button"
                     onClick={() => toggleModuleExpand(moduleName)}
-                    className="w-full px-4 py-3 flex items-center justify-between gap-4 hover:bg-[#F3EFE4]/60 transition-colors text-left"
+                    className="w-full px-4 py-4 flex items-center justify-between gap-4 hover:bg-zinc-50/60 transition-colors text-left"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <ChevronDown className={`w-4 h-4 text-[#8A8378] flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 text-zinc-400 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                       <div className="min-w-0">
-                        <h3 className="font-serif font-bold text-[15px] text-[#2B2A28] truncate">{moduleName}</h3>
-                        <p className="text-[11px] font-mono text-[#8A8378]">{selectedCount}/{modulePermIds.length} granted</p>
+                        <h3 className="font-bold text-sm text-zinc-900 truncate">{moduleName}</h3>
+                        <p className="text-xs text-zinc-500 font-medium">{selectedCount}/{modulePermIds.length} granted</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3 flex-shrink-0">
                       {/* coverage bar */}
-                      <div className="w-16 h-1 bg-[#DDD6C7] hidden sm:block">
+                      <div className="w-16 h-1.5 bg-zinc-150 rounded-full overflow-hidden hidden sm:block">
                         <div
-                          className={`h-full ${isAllSelected ? 'bg-[#3F5C73]' : 'bg-[#3F5C73]/40'}`}
+                          className={`h-full rounded-full ${isAllSelected ? 'bg-zinc-900' : 'bg-zinc-400'}`}
                           style={{ width: `${coveragePct}%` }}
                         />
                       </div>
@@ -307,12 +304,12 @@ const RoleEditor = () => {
                         tabIndex={0}
                         onClick={(e) => { e.stopPropagation(); handleToggleModule(moduleName, modulePermissions); }}
                         onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); handleToggleModule(moduleName, modulePermissions); } }}
-                        className={`text-[11px] font-mono uppercase tracking-wide px-2.5 py-1 border transition-colors cursor-pointer ${
+                        className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border rounded-lg transition-colors cursor-pointer ${
                           isAllSelected
-                            ? 'border-[#3F5C73] bg-[#3F5C73]/10 text-[#3F5C73]'
+                            ? 'border-purple-200 bg-purple-50 text-purple-700 hover:border-purple-300'
                             : isSomeSelected
-                            ? 'border-[#3F5C73]/40 text-[#3F5C73]'
-                            : 'border-[#DDD6C7] text-[#8A8378] hover:border-[#2B2A28] hover:text-[#2B2A28]'
+                            ? 'border-purple-200 bg-purple-50/50 text-purple-600'
+                            : 'border-zinc-200 text-zinc-500 hover:border-zinc-900 hover:text-zinc-950 bg-white'
                         }`}
                       >
                         {isAllSelected ? 'Deselect all' : 'Select all'}
@@ -321,19 +318,19 @@ const RoleEditor = () => {
                   </button>
 
                   {isOpen && (
-                    <div className="px-4 pb-4 pt-1 grid grid-cols-1 sm:grid-cols-2 gap-1">
+                    <div className="px-4 pb-4 pt-1 grid grid-cols-1 sm:grid-cols-2 gap-1 border-t border-zinc-100 bg-zinc-50/20">
                       {(isSearching ? matches : modulePermissions).map(perm => {
                         const isSelected = formData.permissionIds.includes(perm.id);
                         return (
                           <label
                             key={perm.id}
-                            className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors border border-transparent ${
-                              isSelected ? 'bg-white border-[#3F5C73]/30' : 'hover:bg-[#F3EFE4]/60'
+                            className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors border border-transparent rounded-xl ${
+                              isSelected ? 'bg-white border-zinc-200/60 shadow-sm' : 'hover:bg-zinc-50/80'
                             }`}
                           >
                             <div
-                              className={`w-[16px] h-[16px] flex items-center justify-center border transition-colors flex-shrink-0 ${
-                                isSelected ? 'bg-[#3F5C73] border-[#3F5C73] text-[#FAF7F0]' : 'bg-white border-[#DDD6C7]'
+                              className={`w-4 h-4 flex items-center justify-center border transition-colors flex-shrink-0 rounded ${
+                                isSelected ? 'bg-purple-600 border-purple-600 text-white' : 'bg-white border-zinc-300'
                               }`}
                             >
                               {isSelected && <Check className="w-3 h-3" strokeWidth={3} />}
@@ -345,10 +342,10 @@ const RoleEditor = () => {
                               onChange={() => handleTogglePermission(perm.id)}
                             />
                             <div className="flex flex-col min-w-0">
-                              <span className={`text-sm font-serif font-semibold truncate ${isSelected ? 'text-[#2B2A28]' : 'text-[#5b5852]'}`}>
+                              <span className={`text-sm font-semibold truncate ${isSelected ? 'text-zinc-900' : 'text-zinc-600'}`}>
                                 {perm.name}
                               </span>
-                              <span className="text-[10px] font-mono text-[#8A8378] truncate">{perm.slug}</span>
+                              <span className="text-[10px] font-mono text-zinc-400 truncate">{perm.slug}</span>
                             </div>
                           </label>
                         );
@@ -360,7 +357,7 @@ const RoleEditor = () => {
             })}
 
             {isSearching && filteredEntries.every(({ matches }) => matches.length === 0) && (
-              <div className="px-4 py-8 text-center font-serif italic text-[#8A8378]">
+              <div className="px-4 py-8 text-center italic text-zinc-500 text-sm">
                 No permissions match "{searchQuery}".
               </div>
             )}

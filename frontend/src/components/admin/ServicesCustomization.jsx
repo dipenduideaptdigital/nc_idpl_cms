@@ -1,5 +1,6 @@
 import React from 'react';
 import { List } from 'lucide-react';
+import TipTapEditor from './TipTapEditor';
 
 const ServicesCustomization = ({
   servicesData,
@@ -36,14 +37,13 @@ const ServicesCustomization = ({
               className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition-all"
             />
           </div>
+          
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-zinc-700 mb-2">Description</label>
-            <textarea 
-              name="description"
-              value={servicesData.description || ''}
-              onChange={onChange}
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition-all resize-none"
+            <TipTapEditor 
+              value={servicesData.description || ''} 
+              onChange={(html) => onChange({ target: { name: 'description', value: html } })} 
+              placeholder="Enter main description here..."
             />
           </div>
         </div>
@@ -66,13 +66,13 @@ const ServicesCustomization = ({
                     className="w-full px-3 py-2 rounded-lg bg-white border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 text-sm"
                   />
                 </div>
+                
                 <div>
                   <label className="block text-xs font-medium text-zinc-500 mb-1">Service Description</label>
-                  <textarea 
-                    value={service.description || ''}
-                    onChange={(e) => onServiceItemChange(index, 'description', e.target.value)}
-                    rows={3}
-                    className="w-full px-3 py-2 rounded-lg bg-white border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 text-sm resize-none"
+                  <TipTapEditor 
+                    value={service.description || ''} 
+                    onChange={(html) => onServiceItemChange(index, 'description', html)} 
+                    placeholder={`Enter description for service ${index + 1}...`}
                   />
                 </div>
               </div>

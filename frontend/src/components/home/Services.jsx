@@ -4,19 +4,19 @@ import apiClient from '../../api/client';
 const defaultServicesData = [
   {
     title: 'Architectural\nDesign',
-    description: 'A business house born out of passion for fish keeping and nature conservation'
+    description: '<p>A business house born out of passion for fish keeping and nature conservation</p>'
   },
   {
     title: 'Interior Design\n& Planning',
-    description: 'A business house born out of passion for fish keeping and nature conservation'
+    description: '<p>A business house born out of passion for fish keeping and nature conservation</p>'
   },
   {
     title: 'Consulting\nServices',
-    description: 'A business house born out of passion for fish keeping and nature conservation'
+    description: '<p>A business house born out of passion for fish keeping and nature conservation</p>'
   },
   {
     title: 'Project\nManagement',
-    description: 'A business house born out of passion for fish keeping and nature conservation'
+    description: '<p>A business house born out of passion for fish keeping and nature conservation</p>'
   }
 ];
 
@@ -45,7 +45,7 @@ const Services = ({ data: externalData }) => {
 
   const badgeText = content?.badgeText || "WHO WE ARE";
   const title = content?.title || "Experience [The Art Of Interior] Design";
-  const description = content?.description || "If you use this site regularly and would like consider donating a small sum to help pay for the hosting and bandwidth bill. There is no minimum donation, any sum is appreciated";
+  const description = content?.description || "<p>If you use this site regularly and would like consider donating a small sum to help pay for the hosting and bandwidth bill. There is no minimum donation, any sum is appreciated</p>";
   const servicesList = content?.services || defaultServicesData;
 
   return (
@@ -69,9 +69,10 @@ const Services = ({ data: externalData }) => {
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
               {renderTitle(title)}
             </h2>
-            <p className="text-gray-500 max-w-2xl font-light text-sm md:text-base leading-relaxed">
-              {description}
-            </p>
+            <div 
+              className="text-gray-500 max-w-2xl font-light text-sm md:text-base leading-relaxed prose prose-sm sm:prose-base max-w-none prose-p:my-2 prose-a:text-blue-500 hover:prose-a:text-blue-600"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           </div>
         </div>
 
@@ -90,9 +91,10 @@ const Services = ({ data: externalData }) => {
               
               <div className="w-full h-[1px] bg-gray-300 mb-2"></div>
               
-              <p className="text-gray-400 text-sm font-light leading-relaxed">
-                {service.description}
-              </p>
+              <div 
+                className="text-gray-400 text-sm font-light leading-relaxed prose prose-sm prose-p:my-1 prose-a:text-blue-500 hover:prose-a:text-blue-600"
+                dangerouslySetInnerHTML={{ __html: service.description }}
+              />
             </div>
           ))}
         </div>

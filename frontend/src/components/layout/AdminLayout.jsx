@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Outlet, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, 
@@ -15,6 +15,23 @@ const AdminLayout = () => {
   
   const roleSlug = user?.systemRole?.slug?.toUpperCase();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mainContentRef = useRef(null);
+
+  const handleWheel = (e) => {
+    const nav = e.currentTarget;
+    const isAtTop = nav.scrollTop === 0;
+    const isAtBottom = Math.abs(nav.scrollHeight - nav.scrollTop - nav.clientHeight) < 2;
+    const canScrollNav = nav.scrollHeight > nav.clientHeight;
+    
+    const scrollingUp = e.deltaY < 0;
+    const scrollingDown = e.deltaY > 0;
+    
+    if (!canScrollNav || (scrollingUp && isAtTop) || (scrollingDown && isAtBottom)) {
+      if (mainContentRef.current) {
+        mainContentRef.current.scrollTop += e.deltaY;
+      }
+    }
+  };
 
   if (!isAuthenticated || !user || (roleSlug !== 'SUPER_ADMIN' && roleSlug !== 'ADMIN')) {
     return <Navigate to="/login?mode=admin" replace />;
@@ -84,15 +101,24 @@ const AdminLayout = () => {
 
       {/* Sidebar */}
       <aside className={`fixed md:relative w-72 h-full bg-blue-900 text-white flex flex-col transition-transform duration-300 ease-in-out border-r border-blue-800/50 shadow-2xl z-30 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-        <div className="p-8 flex items-center justify-between border-b border-blue-800/50">
-          <div className="text-2xl font-bold tracking-widest uppercase flex flex-col items-center">
-            <span className="text-white">IDPL CMS</span>
-            <span className="text-[10px] text-blue-300 tracking-[0.3em] mt-1">Interior Decor</span>
+        <div className="p-3  mt-2 flex items-center justify-center border-b border-blue-800/50 relative">
+          <div className="text-2xl font-sans font-extrabold tracking-wider mt-1.5 uppercase text-white text-center">
+            IDPL CMS
           </div>
-          <button className="md:hidden text-white hover:bg-blue-800 p-2 rounded-lg" onClick={() => setIsMobileMenuOpen(false)}><X className="w-6 h-6" /></button>
+          <button className="absolute right-8 md:hidden text-white hover:bg-blue-800 p-2 rounded-lg" onClick={() => setIsMobileMenuOpen(false)}><X className="w-6 h-6" /></button>
         </div>
 
-        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto custom-scrollbar">
+        <nav 
+          onWheel={handleWheel}
+          className="flex-1 py-8 px-4 space-y-2 overflow-y-auto hide-scrollbar"
+        >
+          <NavLink 
+            to="/" 
+            className="flex items-center gap-4 px-4 py-3.5 rounded-xl border border-blue-800/40 bg-blue-950/40 text-white transition-all duration-300 group shadow-inner mb-4 hover:bg-blue-800 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-950/30"
+          >
+            <Globe className="w-5 h-5 text-white group-hover:rotate-12 group-hover:scale-110 transition-all duration-500" strokeWidth={1.5} />
+            <span className="font-semibold tracking-wide text-sm">Subhaakritee</span>
+          </NavLink>
           {visibleNavItems.map((item) => (
             <NavLink
               key={item.name}
@@ -125,11 +151,7 @@ const AdminLayout = () => {
           )}
         </nav>
 
-        <div className="p-6 border-t border-blue-800/50 space-y-2">
-          <NavLink to="/" className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-blue-100 hover:text-white hover:bg-blue-800 transition-all duration-300 group cursor-pointer">
-            <Globe className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-            <span className="font-medium text-sm">Back to Site</span>
-          </NavLink>
+        <div className="p-6 border-t border-blue-800/50">
           <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-blue-100 hover:text-white hover:bg-blue-800 transition-all duration-300 group cursor-pointer">
             <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" strokeWidth={1.5} />
             <span className="font-medium text-sm">Logout</span>
@@ -155,7 +177,7 @@ const AdminLayout = () => {
           </div>
         </header>
 
-        <div className="flex-1 overflow-auto p-4 sm:p-10 relative">
+        <div ref={mainContentRef} className="flex-1 overflow-auto p-4 sm:p-10 relative">
           <div className="max-w-6xl mx-auto">
             <Outlet />
           </div>

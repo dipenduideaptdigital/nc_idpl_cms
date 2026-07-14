@@ -62,16 +62,24 @@ const HomeCustomization = () => {
 
   // 1. Hero Section State
   const [heroData, setHeroData] = useState({
-    titleLine1: 'End-To-End',
-    titleLine2: 'Office Interiors',
-    subtitle: 'We specialize in transforming visions into reality.',
-    buttonText: 'BOOK A FREE CONSULTATION',
-    badgeText: 'Fast and Reliable',
-    glassCardNumber: '250+',
-    glassCardText1: 'My Design of art',
-    glassCardText2: 'There Is No One Who Loves Pain Itself',
-    backgroundImage: '',
-    frontImage: ''
+    slide1: {
+      titleLine1: 'End-To-End', titleLine2: 'Office Interiors',
+      subtitle: 'We specialize in transforming visions into reality.',
+      buttonText: 'BOOK A FREE CONSULTATION', badgeText: 'Fast and Reliable',
+      glassCardNumber: '250+', glassCardText1: 'My Design of art',
+      glassCardText2: 'There Is No One Who Loves Pain Itself',
+      backgroundImage: '', frontImage: ''
+    },
+    slide2: {
+      badgeText: 'FAST AND RELIABLE', title: 'Find Your [Inspired]\n[Interior] Design',
+      description: 'Transform your vision into reality with our innovative designs...',
+      watermarkText: 'Interior', backgroundImage: ''
+    },
+    slide3: {
+      titleLine1: 'End-To-End', titleLine2: 'Office Interiors',
+      subtitle: 'For Every Test & Budget', description: "Simply dummy text...",
+      buttonText: 'Book A Free Consultation', backgroundImage: ''
+    }
   });
 
   // 2. Services State
@@ -305,8 +313,6 @@ const HomeCustomization = () => {
         const content = heroRes.value.data.data.content;
         if (Object.keys(content).length > 0) {
           setHeroData(content);
-          if (content.backgroundImage) setPreviewBack(getAssetUrl(content.backgroundImage));
-          if (content.frontImage) setPreviewFront(getAssetUrl(content.frontImage));
         }
       }
 
@@ -429,9 +435,14 @@ const HomeCustomization = () => {
   };
 
   // Base Handlers
-  const handleHeroInputChange = (e) => {
-    const { name, value } = e.target;
-    setHeroData(prev => ({ ...prev, [name]: value }));
+  const handleHeroInputChange = (slideKey, field, value) => {
+    setHeroData(prev => ({
+      ...prev,
+      [slideKey]: {
+        ...prev[slideKey],
+        [field]: value
+      }
+    }));
   };
 
   const handleServicesInputChange = (e) => {
@@ -617,11 +628,12 @@ const HomeCustomization = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Show immediate preview
     const reader = new FileReader();
     reader.onload = (event) => {
-      if (type === 'background') setPreviewBack(event.target.result);
-      else if (type === 'front') setPreviewFront(event.target.result);
+      if (type === 'slide1_bg') setHeroData(p => ({ ...p, slide1: { ...p.slide1, backgroundImage: event.target.result } }));
+      else if (type === 'slide1_front') setHeroData(p => ({ ...p, slide1: { ...p.slide1, frontImage: event.target.result } }));
+      else if (type === 'slide2_bg') setHeroData(p => ({ ...p, slide2: { ...p.slide2, backgroundImage: event.target.result } }));
+      else if (type === 'slide3_bg') setHeroData(p => ({ ...p, slide3: { ...p.slide3, backgroundImage: event.target.result } }));
       else if (type === 'about') setPreviewAbout(event.target.result);
       else if (type === 'serviceMain') setPreviewOurServicesMain(event.target.result);
       else if (type === 'serviceBottom') setPreviewOurServicesBottom(event.target.result);
@@ -646,8 +658,10 @@ const HomeCustomization = () => {
       const { data } = res;
       if (data.success && data.data.url) {
         const uploadedUrl = data.data.url;
-        if (type === 'background') setHeroData(prev => ({ ...prev, backgroundImage: uploadedUrl }));
-        else if (type === 'front') setHeroData(prev => ({ ...prev, frontImage: uploadedUrl }));
+        if (type === 'slide1_bg') setHeroData(p => ({ ...p, slide1: { ...p.slide1, backgroundImage: uploadedUrl } }));
+        else if (type === 'slide1_front') setHeroData(p => ({ ...p, slide1: { ...p.slide1, frontImage: uploadedUrl } }));
+        else if (type === 'slide2_bg') setHeroData(p => ({ ...p, slide2: { ...p.slide2, backgroundImage: uploadedUrl } }));
+        else if (type === 'slide3_bg') setHeroData(p => ({ ...p, slide3: { ...p.slide3, backgroundImage: uploadedUrl } }));
         else if (type === 'about') setAboutData(prev => ({ ...prev, image: uploadedUrl }));
         else if (type === 'serviceMain') setOurServicesData(prev => ({ ...prev, image: uploadedUrl }));
         else if (type === 'serviceBottom') setOurServicesData(prev => ({ ...prev, bottomImage: uploadedUrl }));
@@ -664,8 +678,7 @@ const HomeCustomization = () => {
       setErrorMsg(`Upload Failed: ${errorDetail}`); 
       
       // Revert previews
-      if (type === 'background') setPreviewBack(heroData.backgroundImage ? getAssetUrl(heroData.backgroundImage) : '');
-      else if (type === 'front') setPreviewFront(heroData.frontImage ? getAssetUrl(heroData.frontImage) : '');
+      if (type === 'front') setPreviewFront(heroData.frontImage ? getAssetUrl(heroData.frontImage) : '');
       else if (type === 'about') setPreviewAbout(aboutData.image ? getAssetUrl(aboutData.image) : '');
       else if (type === 'serviceMain') setPreviewOurServicesMain(ourServicesData.image ? getAssetUrl(ourServicesData.image) : '');
       else if (type === 'serviceBottom') setPreviewOurServicesBottom(ourServicesData.bottomImage ? getAssetUrl(ourServicesData.bottomImage) : '');

@@ -3,46 +3,47 @@ import { SlidersHorizontal, Save } from 'lucide-react';
 
 const GeneralSettings = () => {
   return (
-    <div className="text-[#2B2A28]">
+    <div className="space-y-8 animate-in fade-in duration-500 text-zinc-900 font-sans">
 
-      {/* Masthead */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b-4 border-double border-[#2B2A28] pb-4 mb-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.3em] text-[#3F5C73] font-bold mb-1.5">Workspace Configuration</p>
-          <h1 className="text-3xl font-serif font-bold flex items-center gap-2.5 text-[#2B2A28]">
-            <SlidersHorizontal className="w-6 h-6 text-[#3F5C73]" />
+          <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
+            <SlidersHorizontal className="w-6 h-6 text-zinc-900" />
             General Settings
           </h1>
-          <p className="text-sm text-[#8A8378] mt-1 font-serif italic">Manage global website configurations.</p>
+          <p className="text-zinc-500 text-sm mt-1">
+            Manage global website configurations.
+          </p>
         </div>
 
-        <button className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[#2B2A28] text-[#FAF7F0] font-mono text-sm uppercase tracking-wide hover:bg-[#3F5C73] transition-colors flex-shrink-0">
-          <Save className="w-4 h-4" /> Save
+        <button className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20 flex-shrink-0">
+          <Save className="w-4 h-4" /> Save Settings
         </button>
       </div>
 
-      {/* Website Identity */}
-      <div className="border border-[#DDD6C7]">
-        <div className="px-6 py-4 border-b border-[#DDD6C7] bg-[#F3EFE4]/50 flex items-center justify-between">
-          <h2 className="font-mono text-[12px] uppercase tracking-wider text-[#2B2A28] font-bold">Website Identity</h2>
-          <span className="font-mono text-[10px] text-[#8A8378] tabular-nums">Section 01</span>
+      {/* Website Identity Card */}
+      <div className="bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-zinc-100 bg-zinc-50/50 flex items-center justify-between">
+          <h2 className="text-sm font-bold text-zinc-900">Website Identity</h2>
+          <span className="text-xs text-zinc-400 font-medium">Section 01</span>
         </div>
 
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-1.5">Website Name</label>
+            <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Website Name</label>
             <input
               type="text"
               defaultValue="Subhaakritee"
-              className="w-full px-4 py-2.5 border border-[#DDD6C7] bg-transparent font-serif outline-none focus:border-[#3F5C73] transition-colors"
+              className="block w-full px-4 py-2.5 border border-zinc-200 rounded-xl leading-5 bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors sm:text-sm font-medium"
             />
           </div>
           <div>
-            <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-1.5">Support Email</label>
+            <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Support Email</label>
             <input
               type="email"
               defaultValue="support@subhaakritee.com"
-              className="w-full px-4 py-2.5 border border-[#DDD6C7] bg-transparent font-serif outline-none focus:border-[#3F5C73] transition-colors"
+              className="block w-full px-4 py-2.5 border border-zinc-200 rounded-xl leading-5 bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors sm:text-sm font-medium"
             />
           </div>
         </div>
