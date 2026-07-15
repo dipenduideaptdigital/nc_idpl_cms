@@ -179,10 +179,10 @@ const OurServices = ({ data: externalData }) => {
 
   return (
     <section className="py-16 md:py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-6 md:px-8 max-w-7xl">
+      <div className="container mx-auto px-4 md:px-5 max-w-7xl">
 
         {/* Top Header Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_3.5fr] gap-8 md:gap-12 mb-12 md:mb-20 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_4.5fr] gap-8 md:gap-12 mb-12 md:mb-20 items-start">
           <div className="fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
@@ -205,8 +205,8 @@ const OurServices = ({ data: externalData }) => {
         </div>
 
         {/* Middle Section: Image & Services List */}
-        <div className="flex flex-col lg:grid lg:grid-cols-[1.55fr_1fr] gap-10 lg:gap-16 mb-24 md:mb-32 items-center">
-          <div className="relative rounded-[37px] overflow-hidden h-[450px] lg:h-[544px] lg:max-w-[798px] w-full fadeInLeft group">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1.35fr_1.15fr] gap-10 lg:gap-16 xl:gap-12 mb-24 md:mb-32 items-center">
+          <div className="relative rounded-[37px] overflow-hidden h-[450px] lg:h-[544px] lg:max-w-[900px] w-full fadeInLeft group">
             <img
               src={serviceImg}
               alt="Interior Design Service"
@@ -224,7 +224,7 @@ const OurServices = ({ data: externalData }) => {
             </div>
           </div>
 
-          <div className="fadeInRight w-full lg:max-w-[450px] lg:ml-auto">
+          <div className="fadeInRight w-full">
             <div className="flex flex-col">
               {servicesList.map((service, index) => {
                 const serviceId = service.id || `0${index + 1}`;
@@ -234,8 +234,8 @@ const OurServices = ({ data: externalData }) => {
                 return (
                   <div
                     key={index}
-                    className={`group flex items-center justify-between py-[16px] lg:py-[20px] cursor-pointer transition-colors border-t ${isActive ? 'border-t-[2px] border-[#3B82F6]' : 'border-t border-gray-300'
-                      } ${isLast ? 'border-b border-b-gray-300' : ''}`}
+                    className={`group flex items-center justify-between py-[10px] lg:py-[15px] cursor-pointer transition-colors border-t ${isActive ? 'border-t-[2px] border-[#3B82F6]' : 'border-t border-gray-500'
+                      } ${isLast ? 'border-b border-b-gray-600' : ''}`}
                     onMouseEnter={() => setActiveService(serviceId)}
                   >
                     <div className="flex items-center space-x-6 md:space-x-8 transform group-hover:translate-x-2 transition-transform duration-300">
