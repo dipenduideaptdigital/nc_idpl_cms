@@ -1,0 +1,588 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  SCHEDULED
+}
+
+enum ContactStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+  SPAM
+  ARCHIVED
+}
+
+model User {
+  id                   String               @id @default(cuid())
+  name                 String
+  email                String               @unique
+  password             String
+  avatar               String?
+  systemRoleId         String
+  systemRole           SystemRole           @relation(fields: [systemRoleId], references: [id])
+  status               UserStatus           @default(PENDING)
+  isEmailVerified      Boolean              @default(false)
+  lastLoginAt          DateTime?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+
+  refreshTokens        RefreshToken[]
+  passwordResetTokens  PasswordResetToken[]
+  adminInvitationsSent AdminInvitation[]
+  functionalRoles      UserFunctionalRole[]
+  media                Media[]              
+
+  pagesAuthored        Page[]               @relation("PageAuthor")
+  pagesUpdated         Page[]               @relation("PageUpdatedBy")
+  pageRevisions        PageRevision[]
+  previewTokens        PagePreviewToken[]   
+
+  blogsAuthored        Blog[]               @relation("BlogAuthor")
+  blogRevisions        BlogRevision[]
+  blogPreviewTokens    BlogPreviewToken[]
+
+  submissionLogs       ContactSubmissionLog[]
+  internalNotes        ContactInternalNote[]
+  leadsAssigned        ContactSubmission[]  @relation("LeadAssignment")
+
+  @@map("users")
+}
+
+model SystemRole {
+  id               String            @id @default(cuid())
+  name             String            @unique
+  slug             String            @unique
+  description      String?
+  users            User[]
+  adminInvitations AdminInvitation[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@map("system_roles")
+}
+
+model FunctionalRole {
+  id          String                     @id @default(cuid())
+  name        String                     @unique
+  slug        String                     @unique
+  description String?
+  users       UserFunctionalRole[]
+  permissions FunctionalRolePermission[]
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+
+  @@map("functional_roles")
+}
+
+model Permission {
+  id              String                     @id @default(cuid())
+  name            String                     @unique
+  slug            String                     @unique
+  module          String
+  description     String?
+  functionalRoles FunctionalRolePermission[]
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+
+  @@map("permissions")
+}
+
+model FunctionalRolePermission {
+  functionalRoleId String
+  permissionId     String
+  functionalRole   FunctionalRole @relation(fields: [functionalRoleId], references: [id], onDelete: Cascade)
+  permission       Permission     @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt        DateTime       @default(now())
+
+  @@id([functionalRoleId, permissionId])
+  @@map("functional_role_permissions")
+}
+
+model UserFunctionalRole {
+  userId           String
+  functionalRoleId String
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  functionalRole   FunctionalRole @relation(fields: [functionalRoleId], references: [id], onDelete: Cascade)
+  assignedAt       DateTime       @default(now())
+
+  @@id([userId, functionalRoleId])
+  @@map("user_functional_roles")
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @db.Text
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([revokedAt])
+  @@map("refresh_tokens")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([expiresAt])
+  @@index([usedAt])
+  @@index([userId, createdAt])
+  @@map("password_reset_tokens")
+}
+
+model AdminInvitation {
+  id           String     @id @default(cuid())
+  email        String
+  tokenHash    String     @unique
+  systemRoleId String
+  systemRole   SystemRole @relation(fields: [systemRoleId], references: [id])
+  invitedById  String
+  invitedBy    User       @relation(fields: [invitedById], references: [id])
+  expiresAt    DateTime
+  acceptedAt   DateTime?
+  createdAt    DateTime   @default(now())
+
+  @@index([email])
+  @@index([expiresAt])
+  @@map("admin_invitations")
+}
+
+model Setting {
+  id        String            @id @default(cuid())
+  key       String            @unique
+  value     Json
+  revisions SettingRevision[] 
+  updatedAt DateTime          @updatedAt
+
+  @@map("settings")
+}
+
+model SettingRevision {
+  id        String   @id @default(cuid())
+  settingId String
+  setting   Setting  @relation(fields: [settingId], references: [id], onDelete: Cascade)
+  value     Json     
+  actorId   String?  
+  createdAt DateTime @default(now())
+
+  @@index([settingId])
+  @@map("setting_revisions")
+}
+
+model Media {
+  id              String    @id @default(cuid())
+  filename        String    @unique
+  originalName    String
+  mimeType        String    
+  size            Int       
+  url             String    
+  thumbnailUrl    String?   
+  
+  uploadedById    String
+  uploadedBy      User      @relation(fields: [uploadedById], references: [id])
+  
+  featuredInPages Page[]    
+  featuredInBlogs Blog[]    
+  featuredInProjects Project[] @relation("ProjectFeaturedImage")
+
+  ogImageForPages Page[]    @relation("PageOgImage")
+  ogImageForBlogs Blog[]    @relation("BlogOgImage")
+  
+  createdAt       DateTime  @default(now())
+  deletedAt       DateTime? 
+
+  @@index([uploadedById])
+  @@index([deletedAt])
+  @@map("media")
+}
+
+model Page {
+  id              String             @id @default(cuid())
+  title           String
+  slug            String            
+  fullPath        String             @unique 
+  
+  parentId        String?
+  parent          Page?              @relation("PageHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children        Page[]             @relation("PageHierarchy")
+  menuOrder       Int                @default(0)
+  showInMenu      Boolean            @default(true)
+
+  excerpt         String?            @db.Text
+  content         Json              
+  status          PageStatus         @default(DRAFT)
+  template        String             @default("default") 
+  
+  metaTitle       String?
+  metaDescription String?            @db.Text
+  metaKeywords    String?            @db.Text
+  
+  featuredImageId String?
+  featuredImage   Media?             @relation(fields: [featuredImageId], references: [id], onDelete: SetNull)
+
+  // Advanced SEO Engine Fields
+  includeInSitemap Boolean           @default(true)
+  noIndex          Boolean           @default(false)
+  noFollow         Boolean           @default(false)
+  canonicalUrl     String?           @db.Text
+  ogTitle          String?
+  ogDescription    String?           @db.Text
+  ogImageId        String?
+  ogImage          Media?            @relation("PageOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
+  
+  publishedAt     DateTime?   
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  deletedAt       DateTime?   
+
+  authorId        String
+  author          User               @relation("PageAuthor", fields: [authorId], references: [id])
+  updatedById     String?
+  updatedBy       User?              @relation("PageUpdatedBy", fields: [updatedById], references: [id])
+
+  revisions       PageRevision[]
+  previewTokens   PagePreviewToken[] 
+  pathHistories   PagePathHistory[]
+
+  @@unique([parentId, slug, deletedAt]) 
+  @@index([fullPath]) 
+  @@index([parentId]) 
+  @@index([status])
+  @@index([publishedAt])
+  @@index([deletedAt])
+  @@index([status, publishedAt])
+  @@index([includeInSitemap])
+  @@map("pages")
+}
+
+model PageRevision {
+  id        String   @id @default(cuid())
+  pageId    String
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  snapshot  Json     
+  
+  actorId   String?  
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull) 
+  
+  createdAt DateTime @default(now())
+
+  @@index([pageId])
+  @@map("page_revisions")
+}
+
+model PagePreviewToken {
+  id             String   @id @default(cuid())
+  tokenHash      String   @unique
+
+  pageId         String   @unique 
+  page           Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  createdById    String
+  createdBy      User     @relation(fields: [createdById], references: [id])
+  
+  expiresAt      DateTime
+  usedCount      Int      @default(0)
+  lastAccessedAt DateTime?
+  createdAt      DateTime @default(now())
+
+  @@index([expiresAt])
+  @@map("page_preview_tokens")
+}
+
+model PagePathHistory {
+  id          String   @id @default(cuid())
+  pageId      String
+  oldFullPath String   @unique // The dead URL
+  createdAt   DateTime @default(now())
+  
+  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId])
+  @@map("page_path_histories")
+}
+
+model Blog {
+  id              String             @id @default(cuid())
+  title           String
+  slug            String             @unique
+  excerpt         String?            @db.Text
+  content         Json              
+  status          BlogStatus         @default(DRAFT)
+  
+  isFeatured      Boolean            @default(false)
+  viewCount       Int                @default(0)
+  readingTime     Int                @default(1) 
+  
+  metaTitle       String?
+  metaDescription String?            @db.Text
+  metaKeywords    String?            @db.Text
+  
+  featuredImageId String?
+  featuredImage   Media?             @relation(fields: [featuredImageId], references: [id], onDelete: SetNull)
+
+  includeInSitemap Boolean           @default(true)
+  noIndex          Boolean           @default(false)
+  noFollow         Boolean           @default(false)
+  canonicalUrl     String?           @db.Text
+  ogTitle          String?
+  ogDescription    String?           @db.Text
+  ogImageId        String?
+  ogImage          Media?            @relation("BlogOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
+  
+  authorId        String
+  author          User               @relation("BlogAuthor", fields: [authorId], references: [id])
+  
+  publishedAt     DateTime?         
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  deletedAt       DateTime?         
+
+  categories      BlogCategory[]     @relation("BlogToCategory")
+  tags            BlogTag[]          @relation("BlogToTag")
+  revisions       BlogRevision[]
+  previewTokens   BlogPreviewToken[]
+  viewLogs        BlogViewLog[]
+  slugHistories   BlogSlugHistory[]
+
+  @@index([status])
+  @@index([slug])
+  @@index([publishedAt])
+  @@index([isFeatured])
+  @@index([deletedAt])
+  @@index([includeInSitemap])
+  @@map("blogs")
+}
+
+model BlogCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blogs     Blog[]   @relation("BlogToCategory")
+
+  @@index([slug])
+  @@map("blog_categories")
+}
+
+model BlogTag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blogs     Blog[]   @relation("BlogToTag")
+
+  @@index([slug])
+  @@map("blog_tags")
+}
+
+model BlogRevision {
+  id        String   @id @default(cuid())
+  blogId    String
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  snapshot  Json     
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+
+  @@index([blogId])
+  @@map("blog_revisions")
+}
+
+model BlogPreviewToken {
+  id             String   @id @default(cuid())
+  tokenHash      String   @unique
+  blogId         String   @unique
+  blog           Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  createdById    String
+  createdBy      User     @relation(fields: [createdById], references: [id])
+  expiresAt      DateTime
+  usedCount      Int      @default(0)
+  lastAccessedAt DateTime?
+  createdAt      DateTime @default(now())
+
+  @@index([expiresAt])
+  @@map("blog_preview_tokens")
+}
+
+model BlogViewLog {
+  id          String   @id @default(cuid())
+  blogId      String
+  blog        Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  fingerprint String   @db.VarChar(64)
+  createdAt   DateTime @default(now())
+
+  @@index([blogId, fingerprint, createdAt])
+  @@map("blog_view_logs")
+}
+
+model BlogSlugHistory {
+  id          String   @id @default(cuid())
+  blogId      String
+  oldSlug     String   @unique // The dead URL slug
+  createdAt   DateTime @default(now())
+
+  blog        Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+
+  @@index([blogId])
+  @@map("blog_slug_histories")
+}
+
+model ContactForm {
+  id             String              @id @default(cuid())
+  name           String
+  slug           String              @unique
+  successMessage String?             @default("Thank you! Your submission has been successfully processed.")
+  redirectUrl    String?             
+  notifyEmails   Json?               
+  isActive       Boolean             @default(true)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  submissions    ContactSubmission[]
+
+  @@index([isActive])
+  @@map("contact_forms")
+}
+
+model ContactSubmission {
+  id             String               @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  subject        String?
+  message        String?              @db.Text 
+  messageHash    String?              @db.VarChar(64) 
+  
+  status         ContactStatus        @default(NEW)
+  sourcePage     String?              
+  isViewed       Boolean              @default(false)   
+
+  formId         String
+  form           ContactForm          @relation(fields: [formId], references: [id], onDelete: Restrict) 
+
+  assignedToId   String?
+  assignedTo     User?                @relation("LeadAssignment", fields: [assignedToId], references: [id], onDelete: SetNull)
+  resolvedAt     DateTime?            
+  spamScore      Int                  @default(0)
+
+  ipAddress      String?
+  userAgent      String?
+  fingerprint    String?              @db.VarChar(64) 
+
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  deletedAt      DateTime?            
+
+  auditLogs      ContactSubmissionLog[]
+  internalNotes  ContactInternalNote[]
+
+  @@index([formId]) 
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+  @@index([fingerprint])
+  @@index([messageHash]) 
+  @@index([deletedAt])
+  @@index([isViewed])
+  @@index([assignedToId])
+  @@index([status, createdAt]) 
+  @@map("contact_submissions")
+}
+
+model ContactSubmissionLog {
+  id             String            @id @default(cuid())
+  submissionId   String
+  submission     ContactSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  fromStatus     ContactStatus
+  toStatus       ContactStatus
+  
+  actorId        String?           
+  actor          User?             @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  
+  note           String?           @db.Text
+  createdAt      DateTime          @default(now())
+
+  @@index([submissionId])
+  @@map("contact_submission_logs")
+}
+
+model ContactInternalNote {
+  id             String            @id @default(cuid())
+  submissionId   String
+  submission     ContactSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  authorId       String
+  author         User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  note           String            @db.Text
+  createdAt      DateTime          @default(now())
+
+  @@index([submissionId])
+  @@map("contact_internal_notes")
+}
+
+model Project {
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  category        String
+  year            String?
+  location        String?
+  description     String?    @db.Text
+  details         String?    @db.Text
+  client          String?
+  area            String?
+  
+  bulletPoints    Json?      
+  spaces          Json?
+
+  featuredImageId String?
+  featuredImage   Media?     @relation("ProjectFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
+
+  metaTitle       String?
+  metaDescription String?    @db.Text
+  
+  status          PageStatus @default(PUBLISHED)
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  @@index([category])
+  @@index([status])
+  @@map("projects")
+}
