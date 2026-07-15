@@ -20,7 +20,7 @@ const AboutAwards = () => {
         
         <div className="flex flex-col items-center lg:grid lg:grid-cols-[1fr_2.5fr] gap-6 lg:gap-12 mb-12 lg:mb-20 items-start w-full">
           
-          {/* Left: Badge */}
+          {/*Badge */}
           <div className="flex justify-center lg:justify-start w-full">
             <div className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-4 py-1.5 w-max bg-white">
               <span className="w-1.5 h-1.5 rounded-full bg-[#f97316]"></span>
