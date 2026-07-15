@@ -17,7 +17,6 @@ const ProjectDetail = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // Fetch Project By Slug
     const fetchProject = async () => {
       try {
         const res = await projectsApi.getPublicProjectBySlug(slug);
