@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, Upload } from 'lucide-react';
+import TipTapEditor from './TipTapEditor';
 
 const AboutCustomization = ({
   aboutData,
@@ -57,12 +58,10 @@ const AboutCustomization = ({
 
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-2">Description</label>
-            <textarea 
-              name="description"
-              value={aboutData.description || ''}
-              onChange={onChange}
-              rows={4}
-              className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition-all resize-none"
+            <TipTapEditor 
+              value={aboutData.description || ''} 
+              onChange={(html) => onChange({ target: { name: 'description', value: html } })} 
+              placeholder="Enter about description here..."
             />
           </div>
 

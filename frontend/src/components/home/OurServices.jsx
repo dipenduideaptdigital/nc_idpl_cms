@@ -148,7 +148,7 @@ const OurServices = ({ data: externalData }) => {
 
   const badgeText = content?.badgeText || "OUR SERVICES";
   const title = content?.title || "Explore Our [Comprehensive Interior Design] Services";
-  const description = content?.description || "We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.";
+  const description = content?.description || "<p>We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.</p>";
   const servicesList = content?.services || defaultServicesList;
   const statsData = content?.stats || defaultStatsData;
 
@@ -196,9 +196,11 @@ const OurServices = ({ data: externalData }) => {
             <h2 className="text-[40px] md:text-[50px] lg:text-[70px] font-bold tracking-[-0.04em] text-gray-900 mb-6 leading-[1.1] lg:leading-[73px] capitalize font-['Helvetica']">
               {renderTitle(title)}
             </h2>
-            <p className="text-gray-500 max-w-3xl font-light text-sm md:text-base leading-relaxed">
-              {description}
-            </p>
+            
+            <div 
+              className="text-gray-500 max-w-3xl font-light text-sm md:text-base leading-relaxed prose prose-sm sm:prose-base max-w-none prose-p:m-0 prose-a:text-blue-500 hover:prose-a:text-blue-600 [&_strong]:text-gray-900 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           </div>
         </div>
 

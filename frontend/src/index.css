@@ -114,6 +114,80 @@ body.puck-mode .fadeInRight {
   animation: none !important;
 }
 
+/* TipTap Editor & Prose Custom Styles  */
+
+.ProseMirror {
+  outline: none !important;
+}
+
+/* Ensure empty paragraphs have height */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af; /* zinc-400 */
+  pointer-events: none;
+  height: 0;
+}
+
+/* Force text alignment to work inside Tailwind Prose */
+.prose .text-left { text-align: left !important; }
+.prose .text-center { text-align: center !important; }
+.prose .text-right { text-align: right !important; }
+.prose .text-justify { text-align: justify !important; }
+
+/* TipTap Table Styles */
+.prose table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.prose table td,
+.prose table th {
+  min-width: 1em;
+  border: 1px solid #e5e7eb; /* zinc-200 */
+  padding: 6px 12px;
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.prose table th {
+  background-color: #f9fafb; /* zinc-50 */
+  font-weight: 600;
+  text-align: left;
+}
+
+.prose table .selectedCell:after {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(59, 130, 246, 0.1); /* primary blue light */
+  pointer-events: none;
+}
+
+.prose table .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: #3b82f6;
+  pointer-events: none;
+}
+
+/* Highlight Color styling */
+.prose mark {
+  background-color: #fef08a; /* yellow-200 default */
+  color: inherit;
+  border-radius: 2px;
+  padding: 0.1em 0.2em;
+}
+
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-8px); }

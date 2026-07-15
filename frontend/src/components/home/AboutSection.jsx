@@ -57,7 +57,7 @@ const AboutSection = ({ data: externalData }) => {
   // Safe defaults if content is missing or loading
   const badgeText = content?.badgeText || "STARTED IN 1991";
   const title = content?.title || "Where Spaces Inspire, And [Design Comes Alive]";
-  const description = content?.description || "Whether it's your home, office, or a commercial project, we are always dedicated to bringing your vision to life. Our numbers speak better than words:";
+  const description = content?.description || "<p>Whether it's your home, office, or a commercial project, we are always dedicated to bringing your vision to life. Our numbers speak better than words:</p>";
   const buttonText = content?.buttonText || "More About Us";
   const highlights = content?.highlights || [
     "Latest Technologies",
@@ -112,13 +112,11 @@ const AboutSection = ({ data: externalData }) => {
               ))}
             </div>
 
-            {/* Paragraph Text */}
-            <p
-              className="text-[#FFFFFF] mb-10 max-w-md"
+            <div
+              className="text-[#FFFFFF] mb-10 max-w-md [&_p]:mb-2 last:[&_p]:mb-0 [&_a]:text-blue-400 hover:[&_a]:text-blue-300 [&_strong]:text-white [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
               style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontSize: '20px', lineHeight: '25px', fontWeight: 400 }}
-            >
-              {description}
-            </p>
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
 
             {/* CTA Button */}
             <button
