@@ -1,11 +1,11 @@
 import cron from "node-cron";
 import { prisma } from "../config/db.js";
 import { logger } from "../config/logger.js";
-import { deleteMediaFile } from "../shared/services/storage.service.js";
+import { deleteFromCloudinary } from "../shared/services/cloudinary.service.js";
 
 const extractMediaReferences = (obj, activeIds, activeUrls) => {
   if (!obj) return;
-
+  
   if (typeof obj === "string") {
     if (obj.startsWith("/uploads/") || obj.startsWith("http")) {
       activeUrls.add(obj);
@@ -15,8 +15,7 @@ const extractMediaReferences = (obj, activeIds, activeUrls) => {
       if (typeof value === "string") {
         if (key.toLowerCase().endsWith("id")) {
           activeIds.add(value);
-        } 
-        else if (value.startsWith("/uploads/") || value.startsWith("http")) {
+        } else if (value.startsWith("/uploads/") || value.startsWith("http")) {
           activeUrls.add(value);
         }
       } else if (typeof value === "object") {
@@ -24,7 +23,6 @@ const extractMediaReferences = (obj, activeIds, activeUrls) => {
       }
     }
   } else if (Array.isArray(obj)) {
-    // Traverse arrays
     obj.forEach((item) => extractMediaReferences(item, activeIds, activeUrls));
   }
 };
@@ -33,14 +31,14 @@ const scanActiveMedia = async () => {
   const activeIds = new Set();
   const activeUrls = new Set();
 
-  const users = await prisma.user.findMany({ 
-    select: { avatar: true }, 
-    where: { avatar: { not: null } } 
+  const users = await prisma.user.findMany({
+    select: { avatar: true },
+    where: { avatar: { not: null } }
   });
   users.forEach((u) => activeUrls.add(u.avatar));
 
-  const settings = await prisma.setting.findMany({ 
-    select: { value: true } 
+  const settings = await prisma.setting.findMany({
+    select: { value: true }
   });
   settings.forEach((s) => extractMediaReferences(s.value, activeIds, activeUrls));
 
@@ -49,12 +47,10 @@ const scanActiveMedia = async () => {
 
 export const runOrphanMediaCleanup = async () => {
   logger.info("Starting Two-Phase Media Cleanup Job...");
-
   try {
     const { activeIds, activeUrls } = await scanActiveMedia();
     
     const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-
     const activeMedia = await prisma.media.findMany({
       where: { 
         createdAt: { lt: twentyFourHoursAgo },
@@ -82,15 +78,17 @@ export const runOrphanMediaCleanup = async () => {
     
     for (const media of softDeletedMedia) {
       try {
-        await deleteMediaFile(media.url); 
-        
+        await deleteFromCloudinary(media.filename); 
+        const thumbPublicId = media.filename.replace("main/", "thumbs/").replace(".webp", "-thumb.webp");
+        await deleteFromCloudinary(thumbPublicId);
+
         await prisma.media.delete({
           where: { id: media.id }
         });
         
         hardDeletedCount++;
       } catch (error) {
-        logger.error(`Phase 2: Failed to hard-delete media ${media.id}, keeping soft-deleted.`, error);
+        logger.error(`Phase 2: Failed to hard-delete media ${media.id} from Cloudinary, keeping soft-deleted.`, error);
       }
     }
 
@@ -99,7 +97,6 @@ export const runOrphanMediaCleanup = async () => {
     } else {
       logger.info("Media Cleanup Complete: No orphaned files required processing today.");
     }
-
   } catch (error) {
     logger.error("Error during Media Cleanup Job", error);
   }

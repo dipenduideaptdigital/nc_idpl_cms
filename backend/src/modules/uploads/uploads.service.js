@@ -2,7 +2,7 @@ import { prisma } from "../../config/db.js";
 import { AppError } from "../../shared/errors/AppError.js";
 import { StatusCodes } from "http-status-codes";
 import { logger } from "../../config/logger.js";
-import { saveBufferToStorage, deleteMediaFile } from "../../shared/services/storage.service.js";
+import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../shared/services/cloudinary.service.js";
 import { processImageBuffer } from "../../shared/utils/imageProcessor.js";
 
 export const saveUploadedFile = async (file, userId) => {
@@ -12,30 +12,30 @@ export const saveUploadedFile = async (file, userId) => {
 
   const processed = await processImageBuffer(file.buffer, file.originalname);
 
-  const mainUrl = `/uploads/${processed.filename}`;
-  const thumbUrl = `/uploads/thumbs/${processed.thumbFilename}`;
-
-  await saveBufferToStorage(processed.mainBuffer, mainUrl);
-  await saveBufferToStorage(processed.thumbBuffer, thumbUrl);
+  let mainUpload;
+  let thumbUpload;
 
   try {
+    mainUpload = await uploadBufferToCloudinary(processed.mainBuffer, "main");
+    thumbUpload = await uploadBufferToCloudinary(processed.thumbBuffer, "thumbs");
+
     const media = await prisma.media.create({
       data: {
-        filename: processed.filename,
+        filename: mainUpload.public_id,
         originalName: file.originalname,
         mimeType: processed.mimeType,
         size: processed.finalSize,
-        url: mainUrl,
-        thumbnailUrl: thumbUrl,
+        url: mainUpload.secure_url,
+        thumbnailUrl: thumbUpload.secure_url,
         uploadedById: userId,
       },
     });
 
     return media;
   } catch (error) {
-    await deleteMediaFile(mainUrl);
-    await deleteMediaFile(thumbUrl);
-    throw new AppError("Failed to save file metadata", StatusCodes.INTERNAL_SERVER_ERROR);
+    if (mainUpload?.public_id) await deleteFromCloudinary(mainUpload.public_id);
+    if (thumbUpload?.public_id) await deleteFromCloudinary(thumbUpload.public_id);
+    throw new AppError("Failed to save file metadata to Cloudinary or Database", StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 

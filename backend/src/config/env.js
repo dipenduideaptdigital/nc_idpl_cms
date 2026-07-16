@@ -25,4 +25,7 @@ export const env = cleanEnv(process.env, {
   FROM_NAME: str(),
 
   RECAPTCHA_SECRET_KEY: str({ default: "" }), 
+  CLOUDINARY_CLOUD_NAME: str(),
+  CLOUDINARY_API_KEY: str(),
+  CLOUDINARY_API_SECRET: str(),
 });
