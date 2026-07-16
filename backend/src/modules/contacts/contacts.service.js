@@ -36,9 +36,9 @@ export const executeContactSubmissionLifecycle = async (payload, clientIp, reque
     );
   }
 
-  if (payload.recaptchaToken) {
-    await verifyRecaptchaToken(payload.recaptchaToken, clientIp);
-  }
+  // if (payload.recaptchaToken) {
+  //   await verifyRecaptchaToken(payload.recaptchaToken, clientIp);
+  // }
 
   const cleanPayloadMappingRecord = {
     name: xss(payload.name.trim()),
