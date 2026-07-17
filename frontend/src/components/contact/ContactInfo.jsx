@@ -57,12 +57,12 @@ const ContactInfo = () => {
         {/* Header Section (Unchanged) */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2.5fr] gap-8 lg:gap-12 items-start mb-16 lg:mb-24">
           <div className="fadeInLeft shrink-0">
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 lg:ml-20 rounded-full border border-gray-300">
               <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
               <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">GET IN TOUCH</span>
             </div>
           </div>
-          <div className="flex flex-col items-start text-left opal-move-up w-full">
+          <div className="flex flex-col items-start text-left opal-move-up w-full lg:ml-20">
             <h2 className="text-4xl md:text-5xl lg:text-[54px] xl:text-[56px] font-bold text-gray-950 leading-[1.12] tracking-tight font-helvetica w-full">
               <span className="block md:inline whitespace-nowrap">Have a Project In <span className="text-[#3B82F6]">Mind? Let's</span></span>
               <br className="hidden md:block" />
@@ -94,7 +94,7 @@ const ContactInfo = () => {
         {/* Image and Form Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch pb-20 md:pb-28">
           
-          <div className="w-full h-[400px] lg:h-full min-h-[450px] lg:min-h-[500px] rounded-[2rem] overflow-hidden fadeInLeft">
+          <div className="w-full h-[400px] lg:h-full min-h-[450px] lg:min-h-[500px] rounded-[2.5rem] overflow-hidden fadeInLeft">
             <img src={workspaceImg} alt="Our Workspace" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
           </div>
 
@@ -117,50 +117,53 @@ const ContactInfo = () => {
 
               {/* Name Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-                <div className="flex flex-col">
-                  <label className="text-xs font-semibold text-gray-700 mb-2">First name</label>
+                <div className="flex flex-col text-left">
+                  <label className="text-sm font-medium text-gray-700 mb-2">First name</label>
                   <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} placeholder="First name" required disabled={status.loading}
-                    className="w-full bg-white text-gray-900 px-5 py-3.5 rounded-full border border-gray-300 outline-none placeholder:text-gray-300 focus:border-[#3B82F6] transition-colors text-sm disabled:opacity-50" />
+                    className="w-full bg-white text-gray-900 px-5 py-3.5 rounded-xl border border-gray-300 outline-none placeholder:text-gray-400 placeholder:font-light focus:border-[#3B82F6] transition-colors text-sm disabled:opacity-50" />
                 </div>
-                <div className="flex flex-col">
-                  <label className="text-xs font-semibold text-gray-700 mb-2">Last name</label>
+                <div className="flex flex-col text-left">
+                  <label className="text-sm font-medium text-gray-700 mb-2">Last name</label>
                   <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Last name" required disabled={status.loading}
-                    className="w-full bg-white text-gray-900 px-5 py-3.5 rounded-full border border-gray-300 outline-none placeholder:text-gray-300 focus:border-[#3B82F6] transition-colors text-sm disabled:opacity-50" />
+                    className="w-full bg-white text-gray-900 px-5 py-3.5 rounded-xl border border-gray-300 outline-none placeholder:text-gray-400 placeholder:font-light focus:border-[#3B82F6] transition-colors text-sm disabled:opacity-50" />
                 </div>
               </div>
 
               {/* Email */}
-              <div className="flex flex-col">
-                <label className="text-xs font-semibold text-gray-700 mb-2">Email</label>
+              <div className="flex flex-col text-left">
+                <label className="text-sm font-medium text-gray-700 mb-2">Email</label>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="you@gmail.com" required disabled={status.loading}
-                  className="w-full bg-white text-gray-900 px-5 py-3.5 rounded-full border border-gray-300 outline-none placeholder:text-gray-300 focus:border-[#3B82F6] transition-colors text-sm disabled:opacity-50" />
+                  className="w-full bg-white text-gray-900 px-5 py-3.5 rounded-xl border border-gray-300 outline-none placeholder:text-gray-400 placeholder:font-light focus:border-[#3B82F6] transition-colors text-sm disabled:opacity-50" />
               </div>
 
               {/* Contact No */}
-              <div className="flex flex-col">
-                <label className="text-xs font-semibold text-gray-700 mb-2">Contact No.</label>
-                <div className="relative">
-                  <input type="tel" name="contactNo" value={formData.contactNo} onChange={handleChange} placeholder="Phone Number" required disabled={status.loading}
-                    className="w-full bg-white text-gray-900 px-5 py-3.5 rounded-full border border-gray-300 outline-none placeholder:text-gray-300 focus:border-[#3B82F6] transition-colors text-sm appearance-none disabled:opacity-50" />
+              <div className="flex flex-col text-left">
+                <label className="text-sm font-medium text-gray-700 mb-2">Contact No.</label>
+                <div className="relative flex items-center">
+                  <input type="tel" name="contactNo" value={formData.contactNo} onChange={handleChange} placeholder="No." required disabled={status.loading}
+                    className="w-full bg-white text-gray-900 px-5 py-3.5 rounded-xl border border-gray-300 outline-none placeholder:text-gray-400 placeholder:font-light focus:border-[#3B82F6] transition-colors text-sm appearance-none disabled:opacity-50 pr-12" />
+                  <div className="absolute right-5 pointer-events-none text-gray-500 flex items-center">
+                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                  </div>
                 </div>
               </div>
 
               {/* Message */}
-              <div className="flex flex-col">
-                <label className="text-xs font-semibold text-gray-700 mb-2">Message</label>
+              <div className="flex flex-col text-left">
+                <label className="text-sm font-medium text-gray-700 mb-2">Message</label>
                 <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Write your message..." required rows="5" disabled={status.loading}
-                  className="w-full bg-white text-gray-900 px-5 py-4 rounded-2xl border border-gray-300 outline-none placeholder:text-gray-300 focus:border-[#3B82F6] transition-colors text-sm resize-y min-h-[120px] disabled:opacity-50"
+                  className="w-full bg-white text-gray-900 px-5 py-4 rounded-xl border border-gray-300 outline-none placeholder:text-gray-400 placeholder:font-light focus:border-[#3B82F6] transition-colors text-sm resize-y min-h-[120px] disabled:opacity-50"
                 ></textarea>
               </div>
 
               {/* Submit Button */}
               <div className="pt-2">
-                <button type="submit" disabled={status.loading} className="group inline-flex items-center justify-between w-fit border border-gray-300 hover:border-gray-400 bg-white rounded-full transition-colors duration-300 pl-6 pr-1.5 py-1.5 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed">
-                  <span className="text-[13px] md:text-sm font-bold text-gray-800 pr-10">
+                <button type="submit" disabled={status.loading} className="group inline-flex items-center justify-between w-fit border border-gray-300 hover:border-gray-400 bg-white rounded-full transition-all duration-300 pl-8 pr-2 py-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+                  <span className="text-sm font-bold text-gray-800 pr-10">
                     {status.loading ? 'Sending...' : 'Send Message'}
                   </span>
-                  <div className="w-8 h-8 rounded-full bg-[#3B82F6] flex items-center justify-center text-white transition-transform group-hover:scale-105 shrink-0">
-                    {status.loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ChevronRight className="w-4 h-4" />}
+                  <div className="w-9 h-9 rounded-full bg-[#3B82F6] flex items-center justify-center text-white transition-transform group-hover:scale-105 shrink-0">
+                    {status.loading ? <Loader2 className="w-4.5 h-4.5 animate-spin" /> : <ChevronRight className="w-5 h-5" />}
                   </div>
                 </button>
               </div>

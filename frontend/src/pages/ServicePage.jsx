@@ -17,7 +17,7 @@ const ServicePage = () => {
   useEffect(() => {
     const fetchServicePage = async () => {
       try {
-        const queryTarget = slug || 'services'; 
+        const queryTarget = slug ? `services/${slug}` : 'services'; 
         
         const response = await pagesApi.getPublicPageBySlug(queryTarget); 
         const data = response.data || response;

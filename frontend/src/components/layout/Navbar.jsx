@@ -6,6 +6,7 @@ import logo from '../../assets/logos/logo2.svg';
 
 const Navbar = () => {
   const [pages, setPages] = useState([]);
+  const [servicePages, setServicePages] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -13,6 +14,7 @@ const Navbar = () => {
     const fetchPages = async () => {
       try {
         const response = await pagesApi.getPublicPages();
+        const allPages = response.data || [];
         
         const excludeSlugs = [
           'services', 'service', 
@@ -23,16 +25,17 @@ const Navbar = () => {
           'home', 'homepage'
         ];
         
-        const filteredPages = (response.data || []).filter(page => {
+        const fetchedServicePages = allPages.filter(page => {
+          return page.fullPath?.startsWith('/services/') && page.showInMenu !== false;
+        });
+        setServicePages(fetchedServicePages);
+
+        const filteredPages = allPages.filter(page => {
           const currentSlug = (page.slug || '').toLowerCase().trim();
           
-          if (excludeSlugs.includes(currentSlug)) {
-            return false;
-          }
-
-          if (page.showInMenu === false) {
-            return false;
-          }
+          if (excludeSlugs.includes(currentSlug)) return false;
+          if (page.fullPath?.startsWith('/services/')) return false; 
+          if (page.showInMenu === false) return false;
 
           return true;
         });
@@ -84,12 +87,35 @@ const Navbar = () => {
         >
           About
         </Link>
-        <Link 
-          to="/services" 
-          className="flex items-center hover:text-gray-300 transition-colors"
-        >
-          Services
-        </Link>
+        
+        <div className="relative group">
+          <Link 
+            to="/services" 
+            className="flex items-center hover:text-gray-300 transition-colors py-2"
+          >
+            Services <ChevronDown className="w-4 h-4 ml-1 opacity-70" />
+          </Link>
+          
+          <div className="absolute left-0 mt-2 w-56 rounded-xl bg-white shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-gray-100 overflow-hidden text-gray-800 font-normal">
+            {servicePages.length > 0 ? (
+              <ul className="py-2">
+                {servicePages.map((page) => (
+                  <li key={page.id}>
+                    <Link
+                      to={page.fullPath ? (page.fullPath.startsWith('/') ? page.fullPath : `/${page.fullPath}`) : `/${page.slug}`}
+                      className="block px-4 py-2 text-sm hover:bg-gray-50 hover:text-primary transition-colors"
+                    >
+                      {page.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="px-4 py-3 text-sm text-gray-500 italic">No specific services added yet</div>
+            )}
+          </div>
+        </div>
+
         <Link 
           to="/projects" 
           className="flex items-center hover:text-gray-300 transition-colors"
@@ -98,7 +124,7 @@ const Navbar = () => {
         </Link>
         
         {/* Dynamic Pages Dropdown */}
-        <div className="relative group">
+        {/* <div className="relative group">
           <button className="flex items-center hover:text-gray-300 transition-colors py-2">
             Pages <ChevronDown className="w-4 h-4 ml-1 opacity-70" />
           </button>
@@ -121,7 +147,7 @@ const Navbar = () => {
               <div className="px-4 py-3 text-sm text-gray-500 italic">No pages found</div>
             )}
           </div>
-        </div>
+        </div> */}
 
         <Link 
           to="/blog" 

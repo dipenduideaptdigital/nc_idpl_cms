@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, 
-  Globe, Inbox, Menu, X, BookOpen, Tag, Layers, Briefcase, Wrench
+  Globe, Inbox, Menu, X, BookOpen, Tag, Layers, Briefcase, Wrench, ChevronDown
 } from 'lucide-react'; 
 import { useAuth } from '../../context/AuthContext'; 
 import { usePermission } from '../../hooks/usePermission'; 
@@ -16,6 +16,17 @@ const AdminLayout = () => {
   const roleSlug = user?.systemRole?.slug?.toUpperCase();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mainContentRef = useRef(null);
+
+  const [openMenus, setOpenMenus] = useState({
+    'Blogs': location.pathname.includes('/admin/blogs')
+  });
+
+  const toggleMenu = (menuName) => {
+    setOpenMenus(prev => ({
+      ...prev,
+      [menuName]: !prev[menuName]
+    }));
+  };
 
   const handleWheel = (e) => {
     const nav = e.currentTarget;
@@ -50,8 +61,15 @@ const AdminLayout = () => {
     { name: 'Home page', icon: ImageIcon, path: '/admin/home-customization', permission: 'page.edit' },
     { name: 'Pages', icon: Layers, path: '/admin/site-pages', permission: 'page.view' },
     { name: 'Service Pages', icon: Wrench, path: '/admin/services', permission: 'page.view' },
-    { name: 'Blog Posts', icon: BookOpen, path: '/admin/blogs', permission: 'blog.view' },
-    { name: 'Categories & Tags', icon: Tag, path: '/admin/blogs/taxonomies', permission: 'blog.view' },
+    { 
+      name: 'Blogs', 
+      icon: BookOpen, 
+      permission: 'blog.view',
+      children: [
+        { name: 'All Posts', path: '/admin/blogs', permission: 'blog.view' },
+        { name: 'Categories & Tags', path: '/admin/blogs/taxonomies', permission: 'blog.view' },
+      ]
+    },
     { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms', permission: 'contact.view' },
     { name: 'Contact Inbox', icon: Inbox, path: '/admin/contacts/inbox', permission: 'contact.view' },
     { name: 'Projects', icon: Briefcase, path: '/admin/projects', permission: 'project.view' },
@@ -61,6 +79,14 @@ const AdminLayout = () => {
     if (item.superAdminOnly && roleSlug !== 'SUPER_ADMIN') return false;
     if (!item.permission && !item.superAdminOnly) return true;
     return hasPermission(item.permission);
+  }).map(item => {
+    if (item.children) {
+      return {
+        ...item,
+        children: item.children.filter(child => !child.permission || hasPermission(child.permission))
+      };
+    }
+    return item;
   });
 
   const currentPath = location.pathname;
@@ -70,7 +96,10 @@ const AdminLayout = () => {
     currentPath === '/admin/' || 
     (currentPath === '/admin/dashboard' && roleSlug !== 'SUPER_ADMIN')
   ) {
-    const firstAssignedPath = visibleNavItems.length > 0 ? visibleNavItems[0].path : null;
+    let firstAssignedPath = null;
+    if (visibleNavItems.length > 0) {
+      firstAssignedPath = visibleNavItems[0].path || (visibleNavItems[0].children ? visibleNavItems[0].children[0].path : null);
+    }
     
     if (!firstAssignedPath && canViewSettings) {
       return <Navigate to="/admin/settings" replace />;
@@ -95,14 +124,13 @@ const AdminLayout = () => {
 
   return (
     <div className="flex h-screen bg-[#f8f9fa] text-zinc-900 overflow-hidden font-sans relative">
-      {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />
       )}
 
       {/* Sidebar */}
       <aside className={`fixed md:relative w-72 h-full bg-blue-900 text-white flex flex-col transition-transform duration-300 ease-in-out border-r border-blue-800/50 shadow-2xl z-30 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-        <div className="p-3  mt-2 flex items-center justify-center border-b border-blue-800/50 relative">
+        <div className="p-3 mt-2 flex items-center justify-center border-b border-blue-800/50 relative">
           <div className="text-2xl font-sans font-extrabold tracking-wider mt-1.5 uppercase text-white text-center">
             IDPL CMS
           </div>
@@ -120,21 +148,74 @@ const AdminLayout = () => {
             <Globe className="w-5 h-5 text-white group-hover:rotate-12 group-hover:scale-110 transition-all duration-500" strokeWidth={1.5} />
             <span className="font-semibold tracking-wide text-sm">Subhaakritee</span>
           </NavLink>
-          {visibleNavItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={({ isActive }) =>
-                `flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group ${
-                  isActive ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50 border border-blue-500/50' : 'text-blue-100 hover:bg-blue-800 hover:text-white'
-                }`
-              }
-            >
-              <item.icon className="w-5 h-5 transition-transform group-hover:scale-110" strokeWidth={1.5} />
-              <span className="font-medium tracking-wide text-sm">{item.name}</span>
-            </NavLink>
-          ))}
+          
+          {visibleNavItems.map((item) => {
+            if (item.children && item.children.length > 0) {
+              const isOpen = openMenus[item.name];
+              const isChildActive = item.children.some(child => location.pathname === child.path);
+
+              return (
+                <div key={item.name} className="flex flex-col mb-2 space-y-1">
+                  <button
+                    onClick={() => toggleMenu(item.name)}
+                    className={`flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-300 group w-full ${
+                      isChildActive && !isOpen
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50 border border-blue-500/50'
+                        : isOpen
+                        ? 'text-white bg-blue-800/30'
+                        : 'text-blue-100 hover:bg-blue-800 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <item.icon className={`w-5 h-5 transition-transform ${isOpen ? 'scale-110 text-white' : 'group-hover:scale-110'}`} strokeWidth={1.5} />
+                      <span className="font-medium tracking-wide text-sm">{item.name}</span>
+                    </div>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isOpen ? 'rotate-180 text-white' : 'text-blue-300'}`} />
+                  </button>
+                  
+                  {/* Dropdown*/}
+                  <div className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-40 opacity-100 mt-1' : 'max-h-0 opacity-0'}`}>
+                    <div className="pl-5 pr-2 py-1 space-y-1 border-l-2 border-blue-800/50 ml-6">
+                      {item.children.map(child => (
+                        <NavLink
+                          key={child.name}
+                          to={child.path}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          end
+                          className={({ isActive }) =>
+                            `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${
+                              isActive 
+                                ? 'bg-blue-500/20 text-white font-semibold' 
+                                : 'text-blue-200/70 hover:text-white hover:bg-blue-800/40'
+                            }`
+                          }
+                        >
+                          <span className="text-sm tracking-wide">{child.name}</span>
+                        </NavLink>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // Standard NavLink
+            return (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group ${
+                    isActive ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50 border border-blue-500/50' : 'text-blue-100 hover:bg-blue-800 hover:text-white'
+                  }`
+                }
+              >
+                <item.icon className="w-5 h-5 transition-transform group-hover:scale-110" strokeWidth={1.5} />
+                <span className="font-medium tracking-wide text-sm">{item.name}</span>
+              </NavLink>
+            );
+          })}
 
           {canViewSettings && (
             <NavLink

@@ -24,19 +24,19 @@ const ProjectShowcase = ({ currentProjectSlug }) => {
   if (relatedProjects.length === 0) return null;
 
   return (
-    <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-[1400px] py-16 md:py-24 font-sans bg-white">
+    <div className="container mx-auto px-4 md:px-5 max-w-7xl py-16 md:py-24 bg-white">
       {/* Heading Section */}
-      <div className="flex flex-col md:flex-row md:items-start mb-16 gap-6 md:gap-16 lg:gap-24">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_4.5fr] gap-8 md:gap-12 mb-21 items-start">
         <div className="shrink-0 mt-2">
-          <div className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-full border border-zinc-200 bg-white shadow-sm">
+          <div className="inline-flex items-center space-x-2 px-4 py-2.5 ml-15  rounded-full border border-zinc-200 bg-white shadow-sm">
             <span className="w-2 h-2 rounded-full bg-[#F97316] shadow-[0_0_6px_rgba(249,115,22,0.6)]"></span>
-            <span className="text-[10px] uppercase tracking-widest font-extrabold text-zinc-500 font-['Outfit']">
+            <span className="text-[10px] uppercase tracking-widest font-extrabold text-zinc-500 font-['Helvetica']">
               GET IN TOUCH
             </span>
           </div>
         </div>
-        <div className="max-w-2xl text-left">
-          <h2 className="text-4xl md:text-5xl lg:text-[56px] font-bold font-['Outfit'] leading-[1.1] tracking-tight text-zinc-950">
+        <div className="max-w-3xl text-left ml-20">
+          <h2 className="text-[40px] md:text-[50px] lg:text-[70px] font-bold tracking-[-0.04em] text-gray-900 leading-[1.1] capitalize font-['Helvetica']">
             Explore <span className="text-[#3B82F6]">Our Project</span>
             <br />
             <span className="text-[#3B82F6]">Showcase</span>
@@ -60,10 +60,10 @@ const ProjectShowcase = ({ currentProjectSlug }) => {
                 loading="lazy"
               />
             </div>
-            <h3 className="text-2xl font-bold font-['Outfit'] text-zinc-950 mb-2 mt-6 group-hover:text-[#3B82F6] transition-colors leading-tight">
+            <h3 className="text-2xl font-bold font-['Helvetica'] text-gray-900 mb-2 mt-6 group-hover:text-[#3B82F6] transition-colors leading-tight">
               {project.title}
             </h3>
-            <p className="text-zinc-500 text-sm md:text-base leading-relaxed line-clamp-2">
+            <p className="text-gray-500 font-['Helvetica'] text-sm md:text-base leading-relaxed line-clamp-2">
               {project.description || 'Improving spaces with expert craftsmanship.'}
             </p>
           </Link>

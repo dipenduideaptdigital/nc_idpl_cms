@@ -117,12 +117,13 @@ export const createPageSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(150, "Title cannot exceed 150 characters"),
   
   slug: z.string().trim().toLowerCase()
-    .regex(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and dashes")
+    .regex(/^[a-z0-9-\/]+$/, "Slug can only contain lowercase letters, numbers, dashes, and slashes")
     .max(150, "Slug cannot exceed 150 characters")
     .refine((slug) => !RESERVED_SLUGS.includes(slug), {
       message: "This slug is reserved by the system and cannot be used.",
     })
-    .optional(), 
+    .optional()
+    .nullable(),
     
   excerpt: z.string().trim().max(1000, "Excerpt cannot exceed 1000 characters").optional().nullable(),
   content: pageContentSchema,

@@ -44,7 +44,7 @@ const AnimatedCounter = ({ text }) => {
     if (!isVisible || targetNum === 0) return;
 
     let start = 0;
-    const duration = 2000; 
+    const duration = 2000;
     const increment = targetNum / (duration / 16);
 
     const timer = setInterval(() => {
@@ -132,9 +132,9 @@ const OurServices = ({ data: externalData }) => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const delta = currentScrollY - lastScrollY;
-      
-      currentX -= delta * 0.35; 
-      
+
+      currentX -= delta * 0.35;
+
       if (currentX > 150) currentX = 150;
       if (currentX < -150) currentX = -150;
 
@@ -196,8 +196,8 @@ const OurServices = ({ data: externalData }) => {
             <h2 className="text-[40px] md:text-[50px] lg:text-[70px] font-bold tracking-[-0.04em] text-gray-900 mb-6 leading-[1.1] lg:leading-[73px] capitalize font-['Helvetica']">
               {renderTitle(title)}
             </h2>
-            
-            <div 
+
+            <div
               className="text-gray-500 max-w-3xl font-light text-sm md:text-base leading-relaxed prose prose-sm sm:prose-base max-w-none prose-p:m-0 prose-a:text-blue-500 hover:prose-a:text-blue-600 [&_strong]:text-gray-900 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
               dangerouslySetInnerHTML={{ __html: description }}
             />
@@ -235,25 +235,25 @@ const OurServices = ({ data: externalData }) => {
                   <div
                     key={index}
                     className={`group flex flex-col justify-between p-3 sm:p-4 rounded-[1.25rem] border cursor-pointer transition-all duration-300
-                      lg:flex-row lg:items-center lg:py-[20px] lg:px-0 lg:border-none lg:border-t lg:bg-transparent lg:rounded-none lg:hover:bg-transparent lg:hover:shadow-none
+                      lg:flex-row lg:items-center lg:py-[20px] lg:px-0 lg:border-0 mr-12 lg:border-t lg:border-gray-300 lg:bg-transparent lg:rounded-none lg:hover:bg-transparent lg:hover:shadow-none
                       ${index >= 4 ? 'hidden lg:flex' : 'flex'}
-                      ${isActive 
-                        ? 'border-[#3B82F6] bg-blue-50/30 lg:border-t-[2px] lg:border-[#3B82F6]' 
-                        : 'border-gray-200 bg-gray-50/50 hover:bg-white hover:shadow-md lg:border-t lg:border-gray-300'
-                      } 
+                      ${isActive
+                        ? 'border-[#3B82F6] bg-blue-50/30'
+                        : 'border-gray-200 bg-gray-50/50 hover:bg-white hover:shadow-md'
+                      }
                       ${isLast ? 'lg:border-b lg:border-b-gray-300' : ''}`}
                     onMouseEnter={() => setActiveService(serviceId)}
                   >
-                    <div className="flex flex-col lg:flex-row lg:items-center space-y-1.5 lg:space-y-0 lg:space-x-6 md:space-x-8 transform lg:group-hover:translate-x-2 transition-transform duration-300 w-full">
-                      <span className="text-xs lg:text-lg font-medium text-gray-400 lg:text-gray-900 w-6">
+                    <div className="flex flex-col lg:flex-row lg:items-center space-y-1 lg:space-y-0 lg:space-x-4 md:space-x-5 transform lg:group-hover:translate-x-2 transition-transform duration-300 w-full">
+                      <span className="text-xs lg:text-2xl font-medium text-gray-400 lg:text-gray-700 w-6 ">
                         {serviceId}
                       </span>
-                      <span className="text-xs sm:text-sm md:text-base lg:text-[25px] font-bold text-gray-900 leading-snug lg:leading-[25px] tracking-normal capitalize font-['Helvetica']">
+                      <span className="text-xs sm:text-sm md:text-base ml-4 lg:text-[23px] font-bold text-gray-800 leading-snug lg:leading-[20px] tracking-normal capitalize font-['Helvetica']">
                         {service.title}
                       </span>
                     </div>
 
-                    <div className="mt-3 lg:mt-0 flex justify-end w-full lg:w-auto shrink-0">
+                    <div className="mt-3 lg:mt-0 flex justify-end w-full lg:w-auto shrink-0 mr-15">
                       {isActive ? (
                         <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-[#3B82F6] flex items-center justify-center text-white shrink-0">
                           <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
@@ -272,20 +272,20 @@ const OurServices = ({ data: externalData }) => {
         </div>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-20 text-center items-start">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 mb-16 text-center items-start">
           {statsData.map((stat, index) => (
             <div key={index} className="flex flex-col items-center opal-move-up">
-              <h3 className="text-[36px] md:text-[44px] font-bold text-[#3B82F6] mb-1 md:mb-2">
+              <h3 className="text-[32px] md:text-[40px] font-bold text-[#3B82F6] font-helvetica leading-none mb-1">
                 <AnimatedCounter text={stat.value} />
               </h3>
-              
-              <div className="w-full max-w-[140px] h-[2px] bg-gray-500 mb-2 md:mb-3"></div>
-              
-              <h4 className="text-base md:text-lg font-bold text-gray-900 mb-2 tracking-wide uppercase">
+
+              <div className="w-full max-w-[120px] h-[1px] bg-gray-300 mb-1.5"></div>
+
+              <h4 className="text-sm md:text-sm font-bold text-gray-900 mb-1 tracking-wider uppercase leading-tight">
                 {stat.title}
               </h4>
-              
-              <p className="text-[11px] md:text-xs text-gray-700 font-normal leading-relaxed max-w-[170px]">
+
+              <p className="text-[11px] md:text-xs text-gray-500 font-normal leading-relaxed max-w-[170px]">
                 {stat.description}
               </p>
             </div>
@@ -297,10 +297,10 @@ const OurServices = ({ data: externalData }) => {
           <img
             src={countingImg}
             alt="3D Floor Plan Rendering"
-            className="w-full max-w-[1100px] object-cover scale-100" 
-            style={{ 
-              transform: `translateX(${houseTranslateX}px) scale(1)`, 
-              transition: 'transform 0.1s ease-out' 
+            className="w-full max-w-[1100px] object-cover scale-100"
+            style={{
+              transform: `translateX(${houseTranslateX}px) scale(1)`,
+              transition: 'transform 0.1s ease-out'
             }}
             onError={(e) => {
               if (e.currentTarget.src !== defaultCountingImg) {

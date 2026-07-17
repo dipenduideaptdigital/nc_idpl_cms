@@ -25,8 +25,9 @@ const PageEditor = () => {
   const location = useLocation();
   const isEditMode = !!id;
 
+  const isSitePagesMode = location.pathname.includes('/admin/site-pages');
   const isServicesMode = location.pathname.includes('/admin/services');
-  const backPath = isServicesMode ? '/admin/services' : (location.pathname.includes('/admin/site-pages') ? '/admin/site-pages' : '/admin/pages');
+  const backPath = isServicesMode ? '/admin/services' : (isSitePagesMode ? '/admin/site-pages' : '/admin/pages');
 
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
