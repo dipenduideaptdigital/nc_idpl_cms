@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { pagesApi } from '../api/pages';
 import ServiceBanner from '../components/service/ServiceBanner';
 import ServiceDetails from '../components/service/ServiceDetails';
@@ -8,13 +9,17 @@ import PageRenderer from '../components/shared/PageRenderer';
 
 const ServicePage = () => {
   useScrollAnimation();
+  const { slug } = useParams();
+  
   const [pageData, setPageData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchServicePage = async () => {
       try {
-        const response = await pagesApi.getPublicPageBySlug('services'); 
+        const queryTarget = slug || 'services'; 
+        
+        const response = await pagesApi.getPublicPageBySlug(queryTarget); 
         const data = response.data || response;
         
         if (data) {
@@ -30,7 +35,7 @@ const ServicePage = () => {
 
     fetchServicePage();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  }, [slug]);
 
   if (loading) {
     return (

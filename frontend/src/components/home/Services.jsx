@@ -77,14 +77,14 @@ const Services = ({ data: externalData }) => {
         </div>
 
         {/* Bottom Section: Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {servicesList.map((service, index) => (
             <div 
               key={index} 
-              className="group border border-gray-200 rounded-[2rem] p-8 hover:shadow-2xl hover:border-primary/30 hover:-translate-y-2 transform transition-all duration-500 bg-white opal-move-up flex flex-col justify-between"
+              className="group border border-gray-200 rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 md:p-8 hover:shadow-2xl hover:border-primary/30 hover:-translate-y-2 transform transition-all duration-500 bg-white opal-move-up flex flex-col justify-between"
             >
-              <div className="flex items-center justify-center h-24 w-full mb-2">
-                <h3 className="text-xl md:text-2xl font-bold text-gray-900 text-center whitespace-pre-line leading-tight group-hover:text-primary transition-colors">
+              <div className="flex items-center justify-center h-16 sm:h-20 md:h-24 w-full mb-2">
+                <h3 className="text-sm sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900 text-center whitespace-pre-line leading-tight group-hover:text-primary transition-colors">
                   {service.title}
                 </h3>
               </div>
@@ -92,7 +92,7 @@ const Services = ({ data: externalData }) => {
               <div className="w-full h-[1px] bg-gray-300 mb-2"></div>
               
               <div 
-                className="text-gray-400 text-sm font-light leading-relaxed prose prose-sm prose-p:my-1 prose-a:text-blue-500 hover:prose-a:text-blue-600"
+                className="text-gray-400 text-[11px] sm:text-xs md:text-sm font-light leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-a:text-blue-500 hover:prose-a:text-blue-600"
                 dangerouslySetInnerHTML={{ __html: service.description }}
               />
             </div>

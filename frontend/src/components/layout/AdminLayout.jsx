@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Outlet, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, 
-  Globe, Inbox, Menu, X, BookOpen, Tag, Layers, Briefcase,
+  Globe, Inbox, Menu, X, BookOpen, Tag, Layers, Briefcase, Wrench
 } from 'lucide-react'; 
 import { useAuth } from '../../context/AuthContext'; 
 import { usePermission } from '../../hooks/usePermission'; 
@@ -49,6 +49,7 @@ const AdminLayout = () => {
     { name: 'Landing pages', icon: FileText, path: '/admin/pages', permission: 'page.view' },
     { name: 'Home page', icon: ImageIcon, path: '/admin/home-customization', permission: 'page.edit' },
     { name: 'Pages', icon: Layers, path: '/admin/site-pages', permission: 'page.view' },
+    { name: 'Service Pages', icon: Wrench, path: '/admin/services', permission: 'page.view' },
     { name: 'Blog Posts', icon: BookOpen, path: '/admin/blogs', permission: 'blog.view' },
     { name: 'Categories & Tags', icon: Tag, path: '/admin/blogs/taxonomies', permission: 'blog.view' },
     { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms', permission: 'contact.view' },

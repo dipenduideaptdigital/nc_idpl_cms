@@ -9,7 +9,8 @@ import {
   Trash2, 
   Search,
   ExternalLink,
-  AlertCircle
+  AlertCircle,
+  Wrench,
 } from 'lucide-react';
 
 const PageList = () => {
@@ -23,8 +24,11 @@ const PageList = () => {
   const location = useLocation();
 
   const isSitePagesMode = location.pathname.includes('/admin/site-pages');
+  const isServicesMode = location.pathname.includes('/admin/services');
 
-  const basePath = isSitePagesMode ? '/admin/site-pages' : '/admin/pages';
+  let basePath = '/admin/pages';
+  if (isSitePagesMode) basePath = '/admin/site-pages';
+  if (isServicesMode) basePath = '/admin/services';
 
   useEffect(() => {
     fetchPages();
@@ -83,7 +87,6 @@ const PageList = () => {
   ];
 
   const coreSiteSlugs = [
-    'services', 'service', 
     'about', 'about-us', 
     'projects', 'project', 'our-projects',
     'contact', 'contact-us', 
@@ -91,17 +94,23 @@ const PageList = () => {
     'home', 'homepage'
   ];
 
-  // Filter based on the current mode
   const relevantPages = pages.filter(page => {
     const currentSlug = (page.slug || '').toLowerCase().trim();
-    if (isSitePagesMode) {
-      return coreSiteSlugs.includes(currentSlug);
+    const fullPath = (page.fullPath || '').toLowerCase().trim();
+    
+    // Check if the page is a service page
+    const isServicePage = currentSlug === 'services' || currentSlug === 'service' || fullPath.startsWith('/services') || page.template === 'service-page';
+
+    if (isServicesMode) {
+      return isServicePage;
+    } else if (isSitePagesMode) {
+      return coreSiteSlugs.includes(currentSlug) && !isServicePage;
     } else {
-      return !coreSiteSlugs.includes(currentSlug);
+      return !coreSiteSlugs.includes(currentSlug) && !isServicePage;
     }
   });
 
-  const allPages = isSitePagesMode ? relevantPages : [...staticPages, ...relevantPages];
+  const allPages = (isSitePagesMode || isServicesMode) ? relevantPages : [...staticPages, ...relevantPages];
 
   const filteredPages = allPages.filter(page => 
     page.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -138,12 +147,14 @@ const PageList = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
-            <FileText className="w-6 h-6 text-zinc-900" />
-            {isSitePagesMode ? 'Site Pages' : 'Landing Pages'}
+            {isServicesMode ? <Wrench className="w-6 h-6 text-zinc-900" /> : <FileText className="w-6 h-6 text-zinc-900" />}
+            {isServicesMode ? 'Service Pages' : (isSitePagesMode ? 'Site Pages' : 'Landing Pages')}
           </h1>
           <p className="text-zinc-500 text-sm mt-1">
-            {isSitePagesMode 
-              ? 'Manage main website pages like Services, About Us, etc.' 
+            {isServicesMode 
+              ? 'Manage all your service offerings and detailed service pages.'
+              : isSitePagesMode 
+              ? 'Manage main website pages like About Us, Contact, etc.' 
               : 'Manage your marketing and landing pages.'}
           </p>
         </div>

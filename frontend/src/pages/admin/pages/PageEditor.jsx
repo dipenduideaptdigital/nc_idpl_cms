@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link, useLocation } from 'react-router-dom';
 import { pagesApi } from '../../../api/pages';
 import {
   Save,
@@ -22,7 +22,11 @@ import Can from '../../../components/shared/Can';
 const PageEditor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const isEditMode = !!id;
+
+  const isServicesMode = location.pathname.includes('/admin/services');
+  const backPath = isServicesMode ? '/admin/services' : (location.pathname.includes('/admin/site-pages') ? '/admin/site-pages' : '/admin/pages');
 
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
@@ -67,6 +71,7 @@ const PageEditor = () => {
     slug: '',
     excerpt: '',
     status: 'DRAFT',
+    template: isServicesMode && !isEditMode ? 'service-page' : 'default', 
     content: { blocks: [] },
     metaTitle: '', metaDescription: '', metaKeywords: '',
     includeInSitemap: true, noIndex: false, noFollow: false,
@@ -82,20 +87,50 @@ const PageEditor = () => {
 
     if (isEditMode) {
       fetchPage();
+    } else if (isServicesMode && !isEditMode) {
+      setFormData(prev => ({
+        ...prev,
+        content: {
+          blocks: [
+            { id: Date.now().toString() + "1", type: 'serviceBanner', data: { title: 'New Service', subTitle: 'Services', backgroundImage: '' } },
+            { id: Date.now().toString() + "2", type: 'serviceDetails', data: { 
+                aboutTitle: "About The Service",
+                aboutDescription: "Service details go here...",
+                typesTitle: "Types Of Commercial Spaces",
+                typesDescription: "In design, we bring characteristics...",
+                elementsTitle: "Key Elements Of Interior Design",
+                elementsDescription: "Several key elements are essential...",
+                footerDescription: "Commercial interior design is a dynamic...",
+                features: [{ title: "Space Optimization", description: "Through The Best Smart Space Optimisation." }],
+                leftBullets: [{ text: "We provide high quality design services." }],
+                rightBullets: [{ text: "Flexible with any structure of the building" }],
+                faqs: [{ question: "What Interior Design Services Do You Offer?" }],
+                sidebarImage: "", mainImage: "", midImage1: "", midImage2: ""
+            } },
+            { id: Date.now().toString() + "3", type: 'ctaSection', data: { badgeText: "GET IN TOUCH", title: "Have A Project In [Mind? Let's]\n[Make] It Happen", buttonText: "BOOK A FREE CONSULTATION" } }
+          ]
+        }
+      }));
     }
-  }, [id]);
+  }, [id, isServicesMode, isEditMode]);
 
   const fetchPage = async () => {
     try {
       setLoading(true);
       const data = await pagesApi.getPageById(id);
 
-      // Merge with default form data to ensure all fields exist
+      // Extract raw slug if the page path is like /services/residential
+      let displaySlug = data.data.slug || '';
+      if (isServicesMode && data.data.fullPath?.startsWith('/services/')) {
+        displaySlug = data.data.fullPath.replace('/services/', '');
+      }
+
       setFormData({
         title: data.data.title || '',
-        slug: data.data.slug || '',
+        slug: displaySlug, // 👉 Use the cleaned up slug
         excerpt: data.data.excerpt || '',
         status: data.data.status || 'DRAFT',
+        template: data.data.template || 'default',
         content: data.data.content || { blocks: [] },
         metaTitle: data.data.metaTitle || '',
         metaDescription: data.data.metaDescription || '',
@@ -259,15 +294,11 @@ const PageEditor = () => {
           elementsTitle: "Key Elements Of Interior Design",
           elementsDescription: "Several key elements are essential...",
           footerDescription: "Commercial interior design is a dynamic...",
-          sidebarServices: [{ name: 'Renovation And Remodelling', path: '/services/commercial', active: true }],
           features: [{ title: "Space Optimization", description: "Through The Best Smart Space Optimisation." }],
           leftBullets: [{ text: "We provide high quality design services." }],
           rightBullets: [{ text: "Flexible with any structure of the building" }],
           faqs: [{ question: "What Interior Design Services Do You Offer?" }],
-          sidebarImage: "",
-          mainImage: "",
-          midImage1: "",
-          midImage2: ""
+          sidebarImage: "", mainImage: "", midImage1: "", midImage2: ""
         }; 
         break;
         
@@ -297,8 +328,8 @@ const PageEditor = () => {
           supportPhone: '+91 9831-637-409',
           supportEmail: 'Subhaakritee@Hotmail.Com',
           workspaceImage: '',
-          mapIframeUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.2865910793613!2d88.4287856!3d22.5683416!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0275003b137ecb%3A0x633513a0c56d7870!2sSector%20V%2C%20Bidhannagar%2C%20Kolkata!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin',
-          formId: 'cmqzjpzfz0000t00s7pd31okk'
+          mapIframeUrl: '',
+          formId: ''
         };
         break;
         
@@ -307,7 +338,7 @@ const PageEditor = () => {
     }
 
     const newBlock = {
-      id: Date.now().toString(), // local temporary ID
+      id: Date.now().toString(),
       type: type,
       data: defaultData
     };
@@ -354,6 +385,17 @@ const PageEditor = () => {
     e.preventDefault();
 
     const payload = { ...formData };
+    
+    if (isServicesMode) {
+      if (payload.slug && !payload.slug.startsWith('services/')) {
+        // We prepend 'services/' so the backend builds fullPath as '/services/slug'
+        payload.slug = `services/${payload.slug}`;
+      } else if (!payload.slug && payload.title) {
+         payload.slug = `services/${payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+      }
+      payload.template = 'service-page';
+    }
+
     if (payload.content && payload.content.blocks) {
       payload.content.blocks = payload.content.blocks.map(({ id, ...block }) => block);
     }
@@ -371,7 +413,7 @@ const PageEditor = () => {
         await pagesApi.createPage(payload);
       }
 
-      navigate('/admin/pages');
+      navigate(backPath);
     } catch (err) {
       console.error('Failed to save page:', err);
       setError(err.response?.data?.message || 'Failed to save page. Please check your inputs.');
@@ -417,6 +459,16 @@ const PageEditor = () => {
 
       // Auto-Save to backend
       const payload = { ...formData, content: updatedContent };
+
+      if (isServicesMode) {
+        if (payload.slug && !payload.slug.startsWith('services/')) {
+          payload.slug = `services/${payload.slug}`;
+        } else if (!payload.slug && payload.title) {
+           payload.slug = `services/${payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+        }
+        payload.template = 'service-page';
+      }
+
       if (payload.content && payload.content.blocks) {
         payload.content.blocks = payload.content.blocks.map(({ id, ...block }) => block);
       }
@@ -431,7 +483,7 @@ const PageEditor = () => {
           await pagesApi.updatePage(id, payload);
         } else {
           const res = await pagesApi.createPage(payload);
-          navigate(`/admin/pages/edit/${res.data.id}`);
+          navigate(`${backPath}/edit/${res.data.id}`);
         }
       } catch (err) {
         console.error('Failed to save page:', err);
@@ -468,14 +520,14 @@ const PageEditor = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
         <div className="flex items-center gap-4">
           <Link
-            to="/admin/pages"
+            to={backPath}
             className="p-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-full transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-zinc-900">
-              {isEditMode ? 'Edit Page' : 'Create New Page'}
+              {isEditMode ? 'Edit Page' : (isServicesMode ? 'Create New Service' : 'Create New Page')}
             </h1>
             <p className="text-zinc-500 text-sm mt-1">
               {isEditMode ? `Editing: ${formData.title}` : 'Draft a new page for your website.'}
@@ -556,7 +608,7 @@ const PageEditor = () => {
                 </label>
                 <div className="flex rounded-xl shadow-sm">
                   <span className="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-zinc-200 bg-zinc-100 text-zinc-500 sm:text-sm font-mono">
-                    /
+                    {isServicesMode ? '/services/' : '/'}
                   </span>
                   <input
                     type="text"

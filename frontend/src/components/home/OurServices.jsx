@@ -204,7 +204,7 @@ const OurServices = ({ data: externalData }) => {
           </div>
         </div>
 
-        {/* Middle Section: Image & Services List */}
+        {/* Middle Section: Image & Services List (Frontend Dev's Layout) */}
         <div className="flex flex-col lg:grid lg:grid-cols-[1.35fr_1.15fr] gap-10 lg:gap-16 xl:gap-12 mb-24 md:mb-32 items-center">
           <div className="relative rounded-[37px] overflow-hidden h-[450px] lg:h-[544px] lg:max-w-[900px] w-full fadeInLeft group">
             <img
@@ -225,7 +225,7 @@ const OurServices = ({ data: externalData }) => {
           </div>
 
           <div className="fadeInRight w-full">
-            <div className="flex flex-col">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:flex lg:flex-col lg:gap-0">
               {servicesList.map((service, index) => {
                 const serviceId = service.id || `0${index + 1}`;
                 const isActive = activeService === serviceId;
@@ -234,29 +234,37 @@ const OurServices = ({ data: externalData }) => {
                 return (
                   <div
                     key={index}
-                    className={`group flex items-center justify-between py-[10px] lg:py-[15px] cursor-pointer transition-colors border-t ${isActive ? 'border-t-[2px] border-[#3B82F6]' : 'border-t border-gray-500'
-                      } ${isLast ? 'border-b border-b-gray-600' : ''}`}
+                    className={`group flex flex-col justify-between p-3 sm:p-4 rounded-[1.25rem] border cursor-pointer transition-all duration-300
+                      lg:flex-row lg:items-center lg:py-[20px] lg:px-0 lg:border-none lg:border-t lg:bg-transparent lg:rounded-none lg:hover:bg-transparent lg:hover:shadow-none
+                      ${index >= 4 ? 'hidden lg:flex' : 'flex'}
+                      ${isActive 
+                        ? 'border-[#3B82F6] bg-blue-50/30 lg:border-t-[2px] lg:border-[#3B82F6]' 
+                        : 'border-gray-200 bg-gray-50/50 hover:bg-white hover:shadow-md lg:border-t lg:border-gray-300'
+                      } 
+                      ${isLast ? 'lg:border-b lg:border-b-gray-300' : ''}`}
                     onMouseEnter={() => setActiveService(serviceId)}
                   >
-                    <div className="flex items-center space-x-6 md:space-x-8 transform group-hover:translate-x-2 transition-transform duration-300">
-                    <span className="text-lg font-medium text-gray-900 w-6">
-                      {serviceId}
-                    </span>
-                    <span className="text-[25px] font-bold text-gray-900 leading-[25px] tracking-normal align-middle capitalize font-['Helvetica']">
-                      {service.title}
-                    </span>
-                  </div>
+                    <div className="flex flex-col lg:flex-row lg:items-center space-y-1.5 lg:space-y-0 lg:space-x-6 md:space-x-8 transform lg:group-hover:translate-x-2 transition-transform duration-300 w-full">
+                      <span className="text-xs lg:text-lg font-medium text-gray-400 lg:text-gray-900 w-6">
+                        {serviceId}
+                      </span>
+                      <span className="text-xs sm:text-sm md:text-base lg:text-[25px] font-bold text-gray-900 leading-snug lg:leading-[25px] tracking-normal capitalize font-['Helvetica']">
+                        {service.title}
+                      </span>
+                    </div>
 
-                  {isActive ? (
-                    <div className="w-10 h-10 rounded-full bg-[#3B82F6] flex items-center justify-center text-white shrink-0">
-                      <ArrowRight className="w-5 h-5" />
+                    <div className="mt-3 lg:mt-0 flex justify-end w-full lg:w-auto shrink-0">
+                      {isActive ? (
+                        <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-[#3B82F6] flex items-center justify-center text-white shrink-0">
+                          <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
+                        </div>
+                      ) : (
+                        <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-gray-900 bg-white border border-gray-200 group-hover:bg-gray-100 lg:bg-transparent lg:border-none transition-colors shrink-0">
+                          <ArrowUpRight className="w-4 h-4 lg:w-6 lg:h-6" />
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-gray-900 group-hover:bg-gray-100 transition-colors shrink-0">
-                      <ArrowUpRight className="w-6 h-6" />
-                    </div>
-                  )}
-                </div>
+                  </div>
                 );
               })}
             </div>

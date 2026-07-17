@@ -1,39 +1,23 @@
 import { z } from "zod";
 
+const singleHeroSlideSchema = z.object({
+  titleLine1: z.string().max(100).optional(),
+  titleLine2: z.string().max(100).optional(),
+  subtitle: z.string().max(500).optional(),
+  buttonText: z.string().max(50).optional(),
+  badgeText: z.string().max(50).optional(),
+  glassCardNumber: z.string().max(20).optional(),
+  glassCardText1: z.string().max(100).optional(),
+  glassCardText2: z.string().max(100).optional(),
+  backgroundImage: z.string().optional(),
+  frontImage: z.string().optional(),
+}).optional();
+
 export const heroSchema = z.object({
   content: z.object({
-    // Slide 1: (Glass Card Design)
-    slide1: z.object({
-      titleLine1: z.string().max(100).optional(),
-      titleLine2: z.string().max(100).optional(),
-      subtitle: z.string().max(500).optional(),
-      buttonText: z.string().max(50).optional(),
-      badgeText: z.string().max(50).optional(),
-      glassCardNumber: z.string().max(20).optional(),
-      glassCardText1: z.string().max(100).optional(),
-      glassCardText2: z.string().max(100).optional(),
-      backgroundImage: z.string().optional(),
-      frontImage: z.string().optional(),
-    }).optional(),
-
-    // Slide 2:(Watermark & Circle Button Design)
-    slide2: z.object({
-      badgeText: z.string().max(50).optional(),
-      title: z.string().max(150).optional(),
-      description: z.string().max(500).optional(),
-      watermarkText: z.string().max(50).optional(),
-      backgroundImage: z.string().optional(),
-    }).optional(),
-
-    // Slide 3:  (Orange Button Design)
-    slide3: z.object({
-      titleLine1: z.string().max(100).optional(),
-      titleLine2: z.string().max(100).optional(),
-      subtitle: z.string().max(150).optional(),
-      description: z.string().max(500).optional(),
-      buttonText: z.string().max(50).optional(),
-      backgroundImage: z.string().optional(),
-    }).optional()
+    slide1: singleHeroSlideSchema,
+    slide2: singleHeroSlideSchema,
+    slide3: singleHeroSlideSchema,
   }),
 });
 

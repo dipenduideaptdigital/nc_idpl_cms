@@ -75,6 +75,10 @@ function App() {
               <Route path="site-pages" element={<PageList />} />
               <Route path="site-pages/create" element={<PageEditor />} />
               <Route path="site-pages/edit/:id" element={<PageEditor />} />
+              <Route path="services" element={<PageList />} />
+              <Route path="services/create" element={<PageEditor />} />
+              <Route path="services/edit/:id" element={<PageEditor />} />
+              
               <Route path="projects" element={<ProjectList />} />
               <Route path="projects/create" element={<ProjectEditor />} />
               <Route path="projects/edit/:id" element={<ProjectEditor />} />
@@ -113,6 +117,7 @@ function App() {
               <Route path="/projects/:slug" element={<ProjectDetail />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/services" element={<ServicePage />} />
+              <Route path="/services/:slug" element={<ServicePage />} />
               
               {/* Dynamic Pages Catch-All */}
               <Route path="/*" element={<DynamicPage />} />

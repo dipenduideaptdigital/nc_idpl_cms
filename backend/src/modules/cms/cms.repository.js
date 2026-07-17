@@ -29,5 +29,9 @@ export const upsertSetting = async (key, value, actorUserId = null) => {
     });
 
     return updatedSetting;
+  }, 
+  {
+    maxWait: 5000, 
+    timeout: 20000 
   });
 };
