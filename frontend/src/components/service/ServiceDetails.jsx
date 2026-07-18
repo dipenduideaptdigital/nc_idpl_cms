@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 import { pagesApi } from '../../api/pages';
 import service1 from '../../assets/service/Service1.png'; 
 import service2 from '../../assets/service/Service2.png'; 
@@ -24,7 +25,21 @@ const FAQS = [
 const ServiceDetails = () => {
   const [openFaq, setOpenFaq] = useState(0);
   const [dynamicServices, setDynamicServices] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchDynamicServices = async () => {
@@ -50,7 +65,70 @@ const ServiceDetails = () => {
           
           {/* Left Sidebar */}
           <div className="w-full lg:w-[32%] flex flex-col md:flex-row lg:flex-col gap-6 md:gap-6 lg:space-y-10 lg:gap-0 shrink-0">
-            <div className="w-full md:w-1/2 lg:w-full bg-white rounded-[24px] pt-8 pb-8 sm:pt-10 sm:pb-10 lg:pt-15 lg:pb-15 shadow-sm border border-gray-100/50">
+            {/* Mobile-only Dropdown */}
+            <div className="sm:hidden -mx-5 px-5 relative mb-4" ref={dropdownRef}>
+              <h3 className="flex items-center gap-2 text-[15px] font-bold text-gray-900 mb-3">
+                <span className="w-1.5 h-4 rounded-full bg-[#3B82F6]"></span>
+                Other Services
+              </h3>
+              
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="w-full flex items-center justify-between bg-white border border-gray-200 rounded-2xl px-5 py-3.5 shadow-sm text-left focus:outline-none transition-all duration-200 hover:border-[#3B82F6]"
+              >
+                <span className="text-[15px] font-bold text-gray-900 capitalize">
+                  {dynamicServices.find(s => location.pathname === s.fullPath)?.title || "Select Service"}
+                </span>
+                <ChevronDown
+                  className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-[#3B82F6]' : ''}`}
+                />
+              </button>
+
+              {isDropdownOpen && (
+                <div className="absolute left-5 right-5 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden z-50">
+                  <div className="max-h-[300px] overflow-y-auto py-1">
+                    {dynamicServices.length > 0 ? (
+                      dynamicServices.map((service) => {
+                        const isActive = location.pathname === service.fullPath;
+                        return (
+                          <Link
+                            key={service.id}
+                            to={service.fullPath}
+                            onClick={() => setIsDropdownOpen(false)}
+                            className={`block px-5 py-3.5 text-[14.5px] font-semibold transition-colors border-b border-gray-50 last:border-b-0 ${
+                              isActive
+                                ? 'bg-blue-50/70 text-[#3B82F6]'
+                                : 'text-gray-700 hover:bg-gray-50 hover:text-[#3B82F6]'
+                            }`}
+                          >
+                            {service.title}
+                          </Link>
+                        );
+                      })
+                    ) : (
+                      <p className="text-sm text-gray-400 text-center py-4 italic">Loading services...</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile-only Need Design Help Image */}
+            <div className="sm:hidden relative w-full h-[190px] rounded-2xl overflow-hidden mb-6">
+              <img
+                src={service2}
+                alt="Need Design Help"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+              <span className="absolute bottom-3 left-4 right-4 text-white text-[14px] font-semibold">
+                Need Design Help?
+              </span>
+            </div>
+
+            {/* Desktop-only card list */}
+            <div className="hidden sm:block w-full md:w-1/2 lg:w-full bg-white rounded-[24px] pt-8 pb-8 sm:pt-10 sm:pb-10 lg:pt-15 lg:pb-15 shadow-sm border border-gray-100/50">
                 <h3 className="text-2xl sm:text-3xl lg:text-[32px] font-bold text-gray-900 mb-6 sm:mb-8 text-center px-4">
                     Other Services
                 </h3>
@@ -83,7 +161,8 @@ const ServiceDetails = () => {
                 </div>
             </div>
 
-            <div className="relative w-full md:w-1/2 lg:w-full h-[260px] sm:h-[320px] md:h-auto lg:h-[450px] xl:h-[600px] rounded-[24px] overflow-hidden group">
+            {/* Desktop-only Need Design Help Image */}
+            <div className="hidden sm:block relative w-full md:w-1/2 lg:w-full h-[260px] sm:h-[320px] md:h-auto lg:h-[450px] xl:h-[600px] rounded-[24px] overflow-hidden group">
               <img src={service2} alt="Need Design Help" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
           </div>
@@ -95,7 +174,7 @@ const ServiceDetails = () => {
             </div>
 
             <div className="pr-0 lg:pr-8">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-2 tracking-tight leading-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-5 tracking-tight leading-tight">
                 About The Service
               </h1>
               <p className="text-gray-600 text-[15px] sm:text-[16px] leading-6 sm:leading-7 mb-8 sm:mb-10">
@@ -104,15 +183,15 @@ const ServiceDetails = () => {
                 A growing demand for adaptable layouts that can accommodate changing needs. This might include modular movable partitions. Sustainability is alsokey trend in commercial interior design.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 sm:gap-y-8 gap-x-4 sm:gap-x-10 mb-10 sm:mb-14">
+              <div className="grid grid-cols-2 gap-y-6 gap-x-4 sm:gap-y-8 sm:gap-x-10 mb-10 sm:mb-14">
                 {FEATURES.map((item, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#198CF4] flex items-center justify-center shrink-0">
-                      <img src={disruptiveInnovation} alt={item.title} className="w-7 h-7 sm:w-8 sm:h-8 object-contain"/>
+                  <div key={index} className="flex items-center gap-2.5 sm:gap-4">
+                    <div className="w-11 h-11 sm:w-16 sm:h-16 rounded-full bg-[#198CF4] flex items-center justify-center shrink-0">
+                      <img src={disruptiveInnovation} alt={item.title} className="w-5.5 h-5.5 sm:w-8 sm:h-8 object-contain"/>
                     </div>
                     <div className="flex flex-col justify-center min-w-0">
-                      <h3 className="text-[18px] sm:text-[20px] font-bold text-[#222] leading-tight">{item.title}</h3>
-                      <p className="text-[13px] font-semibold leading-[20px] text-[#444] max-w-none sm:max-w-[230px]">{item.description}</p>
+                      <h3 className="text-[15px] sm:text-[20px] font-bold text-[#222] leading-tight mb-0.5 sm:mb-0">{item.title}</h3>
+                      <p className="text-[11.5px] sm:text-[13px] font-semibold leading-[16px] sm:leading-[20px] text-[#444] max-w-none sm:max-w-[230px]">{item.description}</p>
                     </div>
                   </div>
                 ))}

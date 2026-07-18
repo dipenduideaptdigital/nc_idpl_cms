@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Phone, Search } from 'lucide-react';
+import { ChevronDown, Phone, Search, Menu, X } from 'lucide-react';
 import { pagesApi } from '../../api/pages';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logos/logo2.svg'; 
@@ -7,8 +7,26 @@ import logo from '../../assets/logos/logo2.svg';
 const Navbar = () => {
   const [pages, setPages] = useState([]);
   const [servicePages, setServicePages] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isServicesMobileOpen, setIsServicesMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    setIsOpen(false);
+    setIsServicesMobileOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchPages = async () => {
@@ -186,6 +204,133 @@ const Navbar = () => {
         <button className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all">
           <Search className="w-4 h-4" />
         </button>
+      </div>
+
+      {/* Mobile Menu Button */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)} 
+        className="lg:hidden text-white bg-black/25 hover:bg-black/35 p-2.5 rounded-full backdrop-blur-md transition-all focus:outline-none z-50 cursor-pointer border border-white/10"
+      >
+        {isOpen ? <X className="w-5.5 h-5.5" /> : <Menu className="w-5.5 h-5.5" />}
+      </button>
+
+      {/* Mobile Drawer Overlay */}
+      {isOpen && (
+        <div 
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden animate-fade-in"
+        />
+      )}
+
+      {/* Mobile Sidebar Drawer */}
+      <div 
+        className={`fixed top-0 right-0 h-full w-[280px] sm:w-[320px] bg-zinc-950/75 backdrop-blur-xl border-l border-white/10 shadow-2xl z-50 p-6 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:hidden ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col">
+          {/* Header of Drawer */}
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+            <span className="font-bold text-lg text-white">Menu</span>
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="text-white hover:text-gray-300 p-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer focus:outline-none"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="flex flex-col space-y-4">
+            <Link 
+              to="/" 
+              onClick={() => setIsOpen(false)} 
+              className="text-[17px] font-semibold text-white/90 hover:text-white hover:translate-x-1 transition-all py-1 animate-in fade-in slide-in-from-right-3 duration-200"
+            >
+              Home
+            </Link>
+            <Link 
+              to="/about" 
+              onClick={() => setIsOpen(false)} 
+              className="text-[17px] font-semibold text-white/90 hover:text-white hover:translate-x-1 transition-all py-1 animate-in fade-in slide-in-from-right-3 duration-250"
+            >
+              About
+            </Link>
+
+            {/* Collapsible Services */}
+            <div className="flex flex-col">
+              <button 
+                onClick={() => setIsServicesMobileOpen(!isServicesMobileOpen)}
+                className="flex items-center justify-between text-[17px] font-semibold text-white/90 hover:text-white py-1 focus:outline-none w-full text-left animate-in fade-in slide-in-from-right-3 duration-300"
+              >
+                <span>Services</span>
+                <ChevronDown className={`w-4 h-4 ml-1 opacity-70 transition-transform duration-200 ${isServicesMobileOpen ? 'rotate-180 text-blue-400' : ''}`} />
+              </button>
+              
+              {isServicesMobileOpen && (
+                <div className="flex flex-col space-y-3 mt-2 pl-4 py-2 border-l border-white/5 bg-white/5 rounded-lg animate-in fade-in slide-in-from-top-1 duration-150">
+                  <Link 
+                    to="/services" 
+                    onClick={() => setIsOpen(false)} 
+                    className="text-sm font-medium text-gray-300 hover:text-white"
+                  >
+                    All Services
+                  </Link>
+                  {servicePages.length > 0 ? (
+                    servicePages.map((page) => (
+                      <Link
+                        key={page.id}
+                        to={page.fullPath ? (page.fullPath.startsWith('/') ? page.fullPath : `/${page.fullPath}`) : `/${page.slug}`}
+                        onClick={() => setIsOpen(false)}
+                        className="text-sm font-medium text-gray-300 hover:text-white capitalize"
+                      >
+                        {page.title}
+                      </Link>
+                    ))
+                  ) : (
+                    <span className="text-xs text-gray-500 italic">No services available</span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <Link 
+              to="/projects" 
+              onClick={() => setIsOpen(false)} 
+              className="text-[17px] font-semibold text-white/90 hover:text-white hover:translate-x-1 transition-all py-1 animate-in fade-in slide-in-from-right-3 duration-350"
+            >
+              Projects
+            </Link>
+            <Link 
+              to="/blog" 
+              onClick={() => setIsOpen(false)} 
+              className="text-[17px] font-semibold text-white/90 hover:text-white hover:translate-x-1 transition-all py-1 animate-in fade-in slide-in-from-right-3 duration-400"
+            >
+              Blog
+            </Link>
+            <Link 
+              to="/contact" 
+              onClick={() => setIsOpen(false)} 
+              className="text-[17px] font-semibold text-white/90 hover:text-white hover:translate-x-1 transition-all py-1 animate-in fade-in slide-in-from-right-3 duration-450"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </div>
+
+        {/* Bottom CTA Button */}
+        <div className="pt-6 border-t border-white/5">
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              setIsOpen(false);
+              window.dispatchEvent(new Event('open-consultation-modal'));
+            }}
+            className="w-full bg-primary hover:bg-blue-600 text-white py-3 rounded-xl text-[15px] font-semibold transition-all shadow-lg hover:shadow-blue-500/20 cursor-pointer text-center"
+          >
+            Get A Quote!
+          </button>
+        </div>
       </div>
     </nav>
   );

@@ -22,11 +22,11 @@ const AboutExperience = () => {
             </div>
 
             {/* Heading */}
-            <h2 className="text-[36px] md:text-[44px] lg:text-[48px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111827] whitespace-normal lg:whitespace-nowrap">
-              We Design <span className="text-[#228BFF]">Spaces ,</span>
-              <br />
+            <h2 className="text-[26px] xs:text-[30px] sm:text-[36px] md:text-[42px] lg:text-[48px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111827] whitespace-normal lg:whitespace-nowrap">
+              We Design <span className="text-[#228BFF]">Spaces,</span>
+              <span className="lg:hidden"> </span><br className="hidden lg:inline" />
               <span className="text-[#228BFF]">That Deliver</span> Lasting
-              <br />
+              <span className="lg:hidden"> </span><br className="hidden lg:inline" />
               Impact
             </h2>
 

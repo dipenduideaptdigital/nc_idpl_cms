@@ -17,13 +17,29 @@ const AboutExperienceBlock = ({
         return (
           <span key={index} className="text-[#228BFF]">
             {part.slice(1, -1).split(/\\n|\n/).map((line, lIdx, arr) => (
-              <React.Fragment key={lIdx}>{line}{lIdx < arr.length - 1 && <br />}</React.Fragment>
+              <React.Fragment key={lIdx}>
+                {line}
+                {lIdx < arr.length - 1 && (
+                  <>
+                    <span className="lg:hidden"> </span>
+                    <br className="hidden lg:inline" />
+                  </>
+                )}
+              </React.Fragment>
             ))}
           </span>
         );
       }
       return part.split(/\\n|\n/).map((line, lIdx, arr) => (
-        <React.Fragment key={lIdx}>{line}{lIdx < arr.length - 1 && <br />}</React.Fragment>
+        <React.Fragment key={lIdx}>
+          {line}
+          {lIdx < arr.length - 1 && (
+            <>
+              <span className="lg:hidden"> </span>
+              <br className="hidden lg:inline" />
+            </>
+          )}
+        </React.Fragment>
       ));
     });
   };
@@ -42,7 +58,7 @@ const AboutExperienceBlock = ({
               </span>
             </div>
 
-            <h2 className="text-[36px] md:text-[44px] lg:text-[48px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111827] whitespace-normal lg:whitespace-nowrap">
+            <h2 className="text-[26px] xs:text-[30px] sm:text-[36px] md:text-[42px] lg:text-[48px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111827] whitespace-normal lg:whitespace-nowrap">
               {renderTitle(title || 'We Shape [Interior Designs,]\n[Crafting Timeless] And Inspiring\nSpaces')}
             </h2>
 
@@ -112,8 +128,8 @@ const AboutExperienceBlock = ({
               />
             </div>
 
-            <div className="w-full max-w-[460px] lg:ml-auto mt-2 lg:mt-8 flex flex-col items-center lg:items-start">
-              <p className="text-[#4B5563] leading-relaxed text-[16px] pr-2 text-center lg:text-left whitespace-pre-line">
+            <div className="w-full max-w-[460px] lg:ml-auto  lg:mt-5 flex flex-col items-center lg:items-start">
+              <p className="text-[#4B5563] leading-relaxed text-[16px] pr-2 text-center lg:text-left whitespace-normal md:whitespace-pre-line">
                 {paragraph || 'We believe that every space has the power to inspire, and that great design brings that integration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.'}
               </p>
               

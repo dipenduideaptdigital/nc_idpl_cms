@@ -16,6 +16,18 @@ const AdminLayout = () => {
   const roleSlug = user?.systemRole?.slug?.toUpperCase();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mainContentRef = useRef(null);
+  const profileDropdownRef = useRef(null);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const [openMenus, setOpenMenus] = useState({
     'Blogs': location.pathname.includes('/admin/blogs')
@@ -232,15 +244,8 @@ const AdminLayout = () => {
             </NavLink>
           )}
         </nav>
-
-        <div className="p-6 border-t border-blue-800/50">
-          <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-blue-100 hover:text-white hover:bg-blue-800 transition-all duration-300 group cursor-pointer">
-            <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" strokeWidth={1.5} />
-            <span className="font-medium text-sm">Logout</span>
-          </button>
-        </div>
       </aside>
- 
+
       {/* Main Content */}
       <main className="flex-1 flex flex-col relative overflow-hidden bg-[#f4f4f5] w-full">
         <header className="h-20 bg-white/80 backdrop-blur-md border-b border-zinc-200 flex items-center justify-between px-4 sm:px-10 z-10 shadow-sm">
@@ -249,12 +254,43 @@ const AdminLayout = () => {
             <h2 className="text-lg sm:text-xl font-semibold text-zinc-800 tracking-tight">Admin Portal</h2>
           </div>
           <div className="flex items-center gap-4">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-semibold text-zinc-800">{user?.name || 'Staff'}</p>
-              <p className="text-xs text-zinc-500 uppercase">{user?.systemRole?.name || 'Admin'}</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shadow-md uppercase shrink-0">
-              {user?.name ? user.name.charAt(0) : 'S'}
+            <div className="relative" ref={profileDropdownRef}>
+              <button 
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                className="flex items-center gap-3 p-1.5 rounded-xl hover:bg-zinc-100 active:bg-zinc-200/70 transition-all duration-200 cursor-pointer focus:outline-none select-none border border-transparent hover:border-zinc-200/50"
+              >
+                <div className="text-right hidden sm:block">
+                  <p className="text-sm font-semibold text-zinc-800 leading-tight">{user?.name || 'Staff'}</p>
+                  <p className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider mt-0.5">{user?.systemRole?.name || 'Admin'}</p>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shadow-md uppercase shrink-0 hover:scale-105 transition-transform duration-200">
+                  {user?.name ? user.name.charAt(0) : 'S'}
+                </div>
+                <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Dropdown Menu */}
+              {isProfileDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-zinc-200/80 rounded-xl shadow-xl py-1.5 z-50 transform origin-top-right transition-all duration-200 divide-y divide-zinc-100">
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-zinc-500">Signed in as</p>
+                    <p className="text-sm font-semibold text-zinc-800 truncate">{user?.name || 'Staff'}</p>
+                    <p className="text-[10px] font-medium text-blue-600 uppercase tracking-wider mt-0.5">{user?.systemRole?.name || 'Admin'}</p>
+                  </div>
+                  <div className="py-1">
+                    <button
+                      onClick={() => {
+                        setIsProfileDropdownOpen(false);
+                        handleLogout();
+                      }}
+                      className="flex items-center gap-3 w-full px-4 py-2.5 text-red-600 hover:bg-red-50/70 transition-all duration-200 font-semibold text-sm text-left cursor-pointer"
+                    >
+                      <LogOut className="w-4 h-4 text-red-500" strokeWidth={2} />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </header>

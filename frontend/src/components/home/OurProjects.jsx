@@ -15,6 +15,30 @@ const defaultProjectsData = [
   { id: 5, category: 'COMMERCIAL', title: 'Retail Experience', description: 'Improving homes with expert craftsmanship for years', image: project5 }
 ];
 
+const smoothScrollTo = (element, target, duration) => {
+  const start = element.scrollLeft;
+  const change = target - start;
+  const startTime = performance.now();
+
+  const animate = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Cubic ease-in-out easing
+    const ease = progress < 0.5 
+      ? 4 * progress * progress * progress 
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    element.scrollLeft = start + change * ease;
+
+    if (elapsed < duration) {
+      requestAnimationFrame(animate);
+    }
+  };
+
+  requestAnimationFrame(animate);
+};
+
 const OurProjects = ({ data: externalData }) => {
   const carouselRef = useRef(null);
   const [content, setContent] = useState(externalData || null);
@@ -97,8 +121,17 @@ const OurProjects = ({ data: externalData }) => {
     if (isDragging) return;
 
     const autoScrollInterval = setInterval(() => {
-      if (carouselRef.current && window.innerWidth < 1024) {
-        carouselRef.current.scrollBy({ left: 350, behavior: 'smooth' });
+      if (carouselRef.current) {
+        const carousel = carouselRef.current;
+        const innerContainer = carousel.firstElementChild;
+        const firstCard = innerContainer ? innerContainer.firstElementChild : null;
+        if (firstCard) {
+          const cardWidth = firstCard.getBoundingClientRect().width;
+          const gap = window.innerWidth >= 768 ? 40 : 24;
+          smoothScrollTo(carousel, carousel.scrollLeft + cardWidth + gap, 1000);
+        } else {
+          smoothScrollTo(carousel, carousel.scrollLeft + 350, 1000);
+        }
       }
     }, 3000);
 
