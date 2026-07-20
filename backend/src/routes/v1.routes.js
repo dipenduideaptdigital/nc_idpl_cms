@@ -18,6 +18,7 @@ import seoRoutes from "../modules/seo/seo.routes.js";
 import roleRoutes from "../modules/roles/roles.routes.js";
 import projectAdminRoutes from "../modules/projects/projects.admin.routes.js";
 import projectPublicRoutes from "../modules/projects/projects.public.routes.js";
+import dashboardRoutes from "../modules/dashboard/dashboard.routes.js";
 
 const router = Router();
 
@@ -39,6 +40,7 @@ router.use("/", seoRoutes);
 router.use("/admin/roles", roleRoutes);
 router.use("/admin/projects", projectAdminRoutes);
 router.use("/projects", projectPublicRoutes);
+router.use("/admin/dashboard", dashboardRoutes);
 
 router.get("/health", (req, res) => {
   res.status(200).json({
