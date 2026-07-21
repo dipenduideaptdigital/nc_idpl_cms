@@ -12,12 +12,12 @@ import {
   FileText,
   PenTool
 } from 'lucide-react';
-// import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const ContactFormBlock = ({ data }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  // const { executeRecaptcha } = useGoogleReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   // Extract data from the Page Builder
   const { formId, formTitle, submitButtonText, redirectPath } = data || {};
@@ -30,7 +30,7 @@ const ContactFormBlock = ({ data }) => {
     message: ''
   });
 
-  const [status, setStatus] = useState('idle'); // idle, loading, success, error
+  const [status, setStatus] = useState('idle');
   const [feedbackMsg, setFeedbackMsg] = useState('');
 
   const handleInputChange = (e) => {
@@ -47,24 +47,24 @@ const ContactFormBlock = ({ data }) => {
       return;
     }
 
-    // if (!executeRecaptcha) {
-    //   setStatus('error');
-    //   setFeedbackMsg('Security verification is still loading. Please try again in a moment.');
-    //   return;
-    // }
+    if (!executeRecaptcha) {
+      setStatus('error');
+      setFeedbackMsg('Security verification is still loading. Please try again in a moment.');
+      return;
+    }
 
     setStatus('loading');
     setFeedbackMsg('');
 
     try {
-      //  const recaptchaToken = await executeRecaptcha('contact_form_block');
+      const recaptchaToken = await executeRecaptcha('contact_form_block');
       
       // Assemble payload matching backend requirements
       const payload = {
         ...formData,
         formId: formId,
         sourcePage: location.pathname, 
-        // recaptchaToken
+        recaptchaToken
       };
 
       const response = await contactsApi.submitContactForm(payload);

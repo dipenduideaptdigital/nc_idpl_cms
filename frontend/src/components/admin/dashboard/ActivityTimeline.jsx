@@ -13,7 +13,6 @@ const getTimeAgo = (dateString) => {
   return `${Math.floor(diffInSeconds / 86400)} days ago`;
 };
 
-// UI Mapper based on Audit Type
 const getActivityUI = (type) => {
   switch (type) {
     case 'LEAD':
@@ -35,7 +34,7 @@ const ActivityTimeline = ({ activities = [] }) => {
         <h2 className="text-lg font-bold text-zinc-900">System Activity Stream</h2>
       </div>
       
-      <div className="relative pl-3 space-y-6 flex-1 overflow-y-auto pr-2">
+      <div className="relative pl-3 space-y-6 flex-1 max-h-[380px] overflow-y-auto pr-2">
         <div className="absolute left-[19px] top-2 bottom-2 w-px bg-zinc-200"></div>
         
         {activities.length > 0 ? (

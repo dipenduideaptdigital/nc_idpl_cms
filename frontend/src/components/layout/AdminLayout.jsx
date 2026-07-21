@@ -30,9 +30,9 @@ const AdminLayout = () => {
   }, []);
 
   const [openMenus, setOpenMenus] = useState({
-    'Blogs': location.pathname.includes('/admin/blogs')
+    'Blogs': location.pathname.includes('/admin/blogs'),
+    'Contacts': location.pathname.includes('/admin/contact')
   });
-
   const toggleMenu = (menuName) => {
     setOpenMenus(prev => ({
       ...prev,
@@ -82,8 +82,15 @@ const AdminLayout = () => {
         { name: 'Categories & Tags', path: '/admin/blogs/taxonomies', permission: 'blog.view' },
       ]
     },
-    { name: 'Contact Forms', icon: Inbox, path: '/admin/contact-forms', permission: 'contact.view' },
-    { name: 'Contact Inbox', icon: Inbox, path: '/admin/contacts/inbox', permission: 'contact.view' },
+    { 
+      name: 'Contacts', 
+      icon: Inbox, 
+      permission: 'contact.view',
+      children: [
+        { name: 'Inbox', path: '/admin/contacts/inbox', permission: 'contact.view' },
+        { name: 'Forms', path: '/admin/contact-forms', permission: 'contact.view' }, 
+      ]
+    },
     { name: 'Projects', icon: Briefcase, path: '/admin/projects', permission: 'project.view' },
   ];
 

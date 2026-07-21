@@ -21,5 +21,10 @@ export const dashboardApi = {
       responseType: 'blob' 
     });
     return response.data;
+  },
+
+  getLiveVisitors: async () => {
+    const response = await apiClient.get('/admin/dashboard/live-visitors');
+    return response.data;
   }
 };

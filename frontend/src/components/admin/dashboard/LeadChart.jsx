@@ -28,7 +28,7 @@ const LeadChart = () => {
 
     const width = 400;
     const height = 100;
-    const maxCount = Math.max(...data.map(d => d.count), 1); // Prevent division by zero
+    const maxCount = Math.max(...data.map(d => d.count), 1);
     
     // Create standard line points
     const points = data.map((d, i) => {
@@ -37,7 +37,6 @@ const LeadChart = () => {
       return `${x},${y}`;
     });
 
-    // Generate smooth bezier curve path
     const linePath = `M${points.join(' L')}`; // For a sharp line graph. Use bezier for curves if needed.
     const fillPath = `${linePath} L${width},${height} L0,${height} Z`;
 

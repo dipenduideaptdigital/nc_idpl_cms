@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-// import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import apiClient from '../../api/client';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 
@@ -16,7 +16,7 @@ const ContactInfoBlock = ({
   mapIframeUrl,
   formId
 }) => {
-  // const { executeRecaptcha } = useGoogleReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -38,15 +38,15 @@ const ContactInfoBlock = ({
       return;
     }
 
-    // if (!executeRecaptcha) {
-    //   setStatus({ loading: false, success: false, error: 'Security verification is loading. Please try again in a moment.' });
-    //   return;
-    // }
+    if (!executeRecaptcha) {
+      setStatus({ loading: false, success: false, error: 'Security verification is loading. Please try again in a moment.' });
+      return;
+    }
 
     setStatus({ loading: true, success: false, error: null });
 
     try {
-      // const recaptchaToken = await executeRecaptcha('contact_info');
+      const recaptchaToken = await executeRecaptcha('contact_info');
 
       const fullName = `${formData.firstName} ${formData.lastName}`.trim();
       const payload = {
@@ -55,7 +55,7 @@ const ContactInfoBlock = ({
         phone: formData.contactNo,
         message: formData.message,
         formId: formId,
-        // recaptchaToken 
+        recaptchaToken 
       };
 
       await apiClient.post('/contacts/submit', payload);

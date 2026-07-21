@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 // APIs
 import { dashboardApi } from '../../api/dashboard';
 import { contactsApi } from '../../api/contacts';
+import Can from '../../components/shared/Can';
 
 // Components
 import WelcomeHeader from '../../components/admin/dashboard/WelcomeHeader';
@@ -13,6 +14,7 @@ import LeadChart from '../../components/admin/dashboard/LeadChart';
 import RecentInquiries from '../../components/admin/dashboard/RecentInquiries';
 import ActivityTimeline from '../../components/admin/dashboard/ActivityTimeline';
 import QuickActions from '../../components/admin/dashboard/QuickActions';
+import LiveIndiaMap from '../../components/admin/dashboard/LiveIndiaMap';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -73,21 +75,28 @@ const Dashboard = () => {
     <div className="space-y-6 animate-in fade-in duration-700 font-sans pb-10">
       <WelcomeHeader user={user} currentDate={currentDate} />
       
-      {/* Top Counters */}
       <StatCards statsData={dashboardData.metrics} />
       
+      <Can permission="contact.view">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 flex flex-col h-full">
+            <LeadChart />
+          </div>
+          <div className="flex flex-col h-full">
+            <RecentInquiries leads={dashboardData.recentLeads} />
+          </div>
+        </div>
+      </Can>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 flex flex-col h-full">
-          <LeadChart />
+          <LiveIndiaMap />
         </div>
-        <div className="flex flex-col h-full">
-          <RecentInquiries leads={dashboardData.recentLeads} />
+        
+        <div className="flex flex-col gap-6 h-full">
+          <QuickActions />
+          <ActivityTimeline activities={dashboardData.activities} />
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ActivityTimeline activities={dashboardData.activities} />
-        <QuickActions />
       </div>
     </div>
   );
