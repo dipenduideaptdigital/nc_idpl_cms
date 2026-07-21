@@ -20,5 +20,6 @@ router.get(
 
 router.get("/activity", controller.getDashboardActivityController);
 router.get("/export-leads", controller.exportLeadsController);
+router.get("/live-visitors", controller.getLiveVisitorsController);
 
 export default router;

@@ -4,14 +4,20 @@ import { sendResponse } from "../../shared/utils/apiResponse.js";
 import * as dashboardService from "./dashboard.service.js";
 
 export const getDashboardStatsController = asyncHandler(async (req, res) => {
-  const metrics = await dashboardService.getDashboardMetrics();
+  const data = await dashboardService.getDashboardMetrics();
   
-  sendResponse({
-    res,
-    statusCode: StatusCodes.OK,
-    message: "Administrative telemetry tracking metrics successfully fetched.",
-    data: metrics
-  });
+  const responseData = {
+    unreadInquiries: data.unreadInquiries,
+    newInquiriesToday: data.newInquiriesToday,
+    stats: {
+      inquiries: { value: data.inquiries.count, trend: data.inquiries.growth },
+      projects: { value: data.projects.count, trend: data.projects.growth },
+      pages: { value: data.pages.count, trend: data.pages.growth },
+      blogs: { value: data.blogs.count, trend: data.blogs.growth },
+    }
+  };
+  
+  sendResponse({ res, statusCode: StatusCodes.OK, data: responseData });
 });
 
 export const getDashboardChartController = asyncHandler(async (req, res) => {
@@ -43,4 +49,15 @@ export const exportLeadsController = asyncHandler(async (req, res) => {
   res.setHeader("Content-Disposition", 'attachment; filename="leads_export.csv"');
   
   res.status(StatusCodes.OK).send(csvData);
+});
+
+export const getLiveVisitorsController = asyncHandler(async (req, res) => {
+  const visitors = await dashboardService.getRealTimeIndianVisitors();
+  
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Live telemetry retrieved.",
+    data: visitors
+  });
 });

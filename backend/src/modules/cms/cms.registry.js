@@ -12,7 +12,8 @@ import {
   blogSectionSchema,
   gallerySchema,
   ctaSchema,
-  generalSettingsSchema
+  generalSettingsSchema,
+  footerSchema
 } from "./cms.validation.js";
 
 // Maps frontend section keys to backend validation schemas
@@ -30,5 +31,6 @@ export const CMS_REGISTRY = {
   "homepage_blog_section": blogSectionSchema,
   "homepage_gallery": gallerySchema,
   "homepage_cta": ctaSchema,
-  "homepage_general": generalSettingsSchema // Required for frontend LandingContainer routing decision
+  "homepage_general": generalSettingsSchema,
+  "homepage_footer": footerSchema
 };

@@ -1,31 +1,54 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../shared/errors/AppError.js";
 import { prisma } from "../../config/db.js";
+import { env } from "../../config/env.js";
+import axios from "axios";
 
-// Parallel Execution for Speed
-export const getDashboardMetrics = async () => {
-  const todayStartBoundary = new Date();
-  todayStartBoundary.setHours(0, 0, 0, 0);
+const calculateGrowth = async (model, whereCondition = {}) => {
+  const now = new Date();
+  const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const prevMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const prevMonthEnd = currentMonthStart;
 
-  // Firing all count queries simultaneously
-  const [unreadInquiries, todayInquiries, publishedProjects, publishedPages, publishedBlogs] = await Promise.all([
-    prisma.contactSubmission.count({ where: { isViewed: false, deletedAt: null } }),
-    prisma.contactSubmission.count({ where: { createdAt: { gte: todayStartBoundary }, deletedAt: null } }),
-    prisma.project.count({ where: { status: "PUBLISHED" } }),
-    prisma.page.count({ where: { status: "PUBLISHED", deletedAt: null } }),
-    prisma.blog.count({ where: { status: "PUBLISHED", deletedAt: null } })
+  const [totalCount, currentCount, prevCount] = await Promise.all([
+    prisma[model].count({ where: whereCondition }), 
+    prisma[model].count({ where: { ...whereCondition, createdAt: { gte: currentMonthStart } } }),
+    prisma[model].count({ where: { ...whereCondition, createdAt: { gte: prevMonthStart, lt: prevMonthEnd } } })
   ]);
 
-  return {
-    unreadInquiries,
-    newInquiriesToday: todayInquiries,
-    publishedProjects,
-    publishedPages,
-    publishedBlogs
+  let growth = 0;
+  if (prevCount === 0) {
+    growth = currentCount > 0 ? 100 : 0; 
+  } else {
+    growth = ((currentCount - prevCount) / prevCount) * 100;
+  }
+  
+  return { 
+    count: totalCount,
+    growth: Math.round(growth) 
   };
 };
 
-// Lead Generation Chart Data (Raw SQL)
+export const getDashboardMetrics = async () => {
+  const [inquiries, projects, pages, blogs] = await Promise.all([
+    calculateGrowth('contactSubmission', { deletedAt: null }),
+    calculateGrowth('project', { status: 'PUBLISHED' }),
+    calculateGrowth('page', { status: 'PUBLISHED', deletedAt: null }),
+    calculateGrowth('blog', { status: 'PUBLISHED', deletedAt: null })
+  ]);
+
+  return {
+    unreadInquiries: await prisma.contactSubmission.count({ where: { isViewed: false, deletedAt: null } }),
+    newInquiriesToday: await prisma.contactSubmission.count({ 
+      where: { createdAt: { gte: new Date(new Date().setHours(0,0,0,0)) }, deletedAt: null } 
+    }),
+    inquiries,
+    projects,
+    pages,
+    blogs
+  };
+};
+
 export const getLeadChartTimeline = async (range) => {
   let daysToSubtract = 30;
   if (range === "7D") daysToSubtract = 7;
@@ -45,7 +68,6 @@ export const getLeadChartTimeline = async (range) => {
     ORDER BY DATE(createdAt) ASC
   `;
 
-  // Format date to ISO string for frontend charting libraries
   return rawChartData.map(row => ({
     date: row.date.toISOString().split('T')[0],
     count: Number(row.count)
@@ -55,7 +77,6 @@ export const getLeadChartTimeline = async (range) => {
 export const getSystemGlobalActivity = async () => {
   const limit = 10;
 
-  // Fetch recent activities from different structural tables simultaneously
   const [leadLogs, blogRevisions, pageRevisions] = await Promise.all([
     prisma.contactSubmissionLog.findMany({
       take: limit,
@@ -120,7 +141,6 @@ export const getSystemGlobalActivity = async () => {
     .slice(0, limit);
 };
 
-
 export const exportLeadsToCSV = async () => {
   const leads = await prisma.contactSubmission.findMany({
     where: { deletedAt: null },
@@ -129,25 +149,33 @@ export const exportLeadsToCSV = async () => {
       name: true,
       email: true,
       phone: true,
+      subject: true,
+      message: true,
+      sourcePage: true,
       status: true,
+      spamScore: true,
       createdAt: true,
       ipAddress: true
     }
   });
 
-  const headers = ["Name", "Email", "Phone", "Status", "Date Submitted", "IP Address"];
+  const headers = [
+    "Name", "Email", "Phone", "Subject", "Message", 
+    "Source Page", "Status", "Spam Score", "Date Submitted", "IP Address"
+  ];
 
-  // Map database rows to CSV format
-  const rows = leads.map(lead => {
-    return [
-      lead.name,
-      lead.email,
-      lead.phone || "N/A",
-      lead.status,
-      lead.createdAt.toISOString().split("T")[0], // Format date to YYYY-MM-DD
-      lead.ipAddress || "N/A"
-    ];
-  });
+  const rows = leads.map(lead => [
+    lead.name,
+    lead.email,
+    lead.phone || "N/A",
+    lead.subject || "N/A",
+    lead.message || "N/A",
+    lead.sourcePage || "N/A",
+    lead.status,
+    lead.spamScore,
+    lead.createdAt.toISOString().split("T")[0],
+    lead.ipAddress || "N/A"
+  ]);
 
   const csvContent = [
     headers.join(","),
@@ -155,4 +183,38 @@ export const exportLeadsToCSV = async () => {
   ].join("\n");
 
   return csvContent;
+};
+
+export const getRealTimeIndianVisitors = async () => {
+  if (!env.MATOMO_URL || !env.MATOMO_SITE_ID || !env.MATOMO_TOKEN) {
+    return [];
+  }
+
+  try {
+    const matomoApiUrl = `${env.MATOMO_URL}?module=API&method=Live.getLastVisitsDetails&idSite=${env.MATOMO_SITE_ID}&period=range&date=last30&format=JSON&token_auth=${env.MATOMO_TOKEN}`;
+    
+    const response = await axios.get(matomoApiUrl);
+    const visits = response.data;
+
+    if (!Array.isArray(visits)) return [];
+
+    const indianVisitors = visits
+      .filter(visit => visit.countryCode === 'in')
+      .map(visit => {
+        const lat = visit.location_lat ? parseFloat(visit.location_lat) : 22 + (Math.random() * 2 - 1);
+        const lng = visit.location_long ? parseFloat(visit.location_long) : 80 + (Math.random() * 2 - 1);
+
+        return {
+          name: visit.city || 'India',
+          coordinates: [lng, lat],
+          device: visit.deviceType,
+          time: visit.serverTimePretty
+        };
+      });
+
+    return indianVisitors;
+  } catch (error) {
+    console.error("Matomo Live Tracking Error:", error.message);
+    return [];
+  }
 };

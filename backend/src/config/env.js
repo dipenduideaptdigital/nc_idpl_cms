@@ -28,4 +28,8 @@ export const env = cleanEnv(process.env, {
   CLOUDINARY_CLOUD_NAME: str(),
   CLOUDINARY_API_KEY: str(),
   CLOUDINARY_API_SECRET: str(),
+  
+  MATOMO_URL: str({ default: "" }),
+  MATOMO_SITE_ID: str({ default: "" }),
+  MATOMO_TOKEN: str({ default: "" }),
 });
