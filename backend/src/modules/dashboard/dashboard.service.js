@@ -187,19 +187,28 @@ export const exportLeadsToCSV = async () => {
 
 export const getRealTimeIndianVisitors = async () => {
   if (!env.MATOMO_URL || !env.MATOMO_SITE_ID || !env.MATOMO_TOKEN) {
+    console.log("Matomo ENV variables are missing in .env file.");
     return [];
   }
 
   try {
-    const matomoApiUrl = `${env.MATOMO_URL}?module=API&method=Live.getLastVisitsDetails&idSite=${env.MATOMO_SITE_ID}&period=range&date=last30&format=JSON&token_auth=${env.MATOMO_TOKEN}`;
+    const matomoApiUrl = `${env.MATOMO_URL}/index.php?module=API&method=Live.getLastVisitsDetails&idSite=${env.MATOMO_SITE_ID}&format=JSON&token_auth=${env.MATOMO_TOKEN}&filter_limit=20`;
     
     const response = await axios.get(matomoApiUrl);
     const visits = response.data;
 
-    if (!Array.isArray(visits)) return [];
+    if (visits.result === 'error') {
+      console.error("Matomo API Error Message:", visits.message);
+      return [];
+    }
+
+    if (!Array.isArray(visits)) {
+      console.log("Matomo returned unexpected format:", visits);
+      return [];
+    }
 
     const indianVisitors = visits
-      .filter(visit => visit.countryCode === 'in')
+      .filter(visit => visit.countryCode?.toUpperCase() === "IN")
       .map(visit => {
         const lat = visit.location_lat ? parseFloat(visit.location_lat) : 22 + (Math.random() * 2 - 1);
         const lng = visit.location_long ? parseFloat(visit.location_long) : 80 + (Math.random() * 2 - 1);
@@ -214,7 +223,7 @@ export const getRealTimeIndianVisitors = async () => {
 
     return indianVisitors;
   } catch (error) {
-    console.error("Matomo Live Tracking Error:", error.message);
-    return [];
+    console.error("Matomo Live Tracking Axios Error:", error.message);
+    return []; 
   }
 };
