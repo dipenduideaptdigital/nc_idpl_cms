@@ -31,6 +31,7 @@ const AdminLayout = () => {
 
   const [openMenus, setOpenMenus] = useState({
     'Blogs': location.pathname.includes('/admin/blogs'),
+    'Home page': location.pathname.includes('/admin/home-customization'),
     'Contacts': location.pathname.includes('/admin/contact')
   });
   const toggleMenu = (menuName) => {
@@ -70,7 +71,15 @@ const AdminLayout = () => {
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard', superAdminOnly: true },
     { name: 'Landing pages', icon: FileText, path: '/admin/pages', permission: 'page.view' },
-    { name: 'Home page', icon: ImageIcon, path: '/admin/home-customization', permission: 'page.edit' },
+    { 
+      name: 'Home page', 
+      icon: ImageIcon, 
+      permission: 'page.edit',
+      children: [
+        { name: 'Home Customization', path: '/admin/home-customization', permission: 'page.edit' },
+        { name: 'Footer Settings', path: '/admin/home-customization?tab=footer', permission: 'page.edit' },
+      ]
+    },
     { name: 'Pages', icon: Layers, path: '/admin/site-pages', permission: 'page.view' },
     { name: 'Service Pages', icon: Wrench, path: '/admin/services', permission: 'page.view' },
     { 
@@ -107,6 +116,14 @@ const AdminLayout = () => {
     }
     return item;
   });
+
+  const isPathActive = (path) => {
+    const currentFull = location.pathname + location.search;
+    if (path.includes('?')) {
+      return currentFull === path;
+    }
+    return location.pathname === path && !location.search.includes('tab=');
+  };
 
   const currentPath = location.pathname;
 
@@ -171,7 +188,7 @@ const AdminLayout = () => {
           {visibleNavItems.map((item) => {
             if (item.children && item.children.length > 0) {
               const isOpen = openMenus[item.name];
-              const isChildActive = item.children.some(child => location.pathname === child.path);
+              const isChildActive = item.children.some(child => isPathActive(child.path));
 
               return (
                 <div key={item.name} className="flex flex-col mb-2 space-y-1">
@@ -201,9 +218,9 @@ const AdminLayout = () => {
                           to={child.path}
                           onClick={() => setIsMobileMenuOpen(false)}
                           end
-                          className={({ isActive }) =>
+                          className={() =>
                             `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${
-                              isActive 
+                              isPathActive(child.path) 
                                 ? 'bg-blue-500/20 text-white font-semibold' 
                                 : 'text-blue-200/70 hover:text-white hover:bg-blue-800/40'
                             }`

@@ -58,6 +58,7 @@ export const ourServicesSchema = z.object({
       z.object({
         id: z.union([z.string(), z.number()]).optional(),
         title: z.string().max(100).optional(),
+        link: z.string().max(255).optional(),
       })
     ).optional(),
     stats: z.array(
@@ -125,12 +126,13 @@ export const teamSchema = z.object({
     badgeText: z.string().max(50).optional(),
     title: z.string().max(150).optional(),
     description: z.string().max(1000).optional(),
-    image: z.string().optional(),
+    
     members: z.array(
       z.object({
         id: z.union([z.string(), z.number()]).optional(),
         name: z.string().max(100).optional(),
         role: z.string().max(100).optional(),
+        image: z.string().optional(),
       })
     ).optional(),
   }),

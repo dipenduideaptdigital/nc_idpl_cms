@@ -188,23 +188,23 @@ const UsersList = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto text-[#2B2A28]">
+    <div className="max-w-6xl mx-auto text-zinc-900 font-sans">
 
       {/* Masthead */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b-4 border-double border-[#2B2A28] pb-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 mb-8 animate-in fade-in duration-500">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.3em] text-[#3F5C73] font-bold mb-1.5">Personnel Register</p>
-          <h1 className="text-3xl font-serif font-bold flex items-center gap-2.5 text-[#2B2A28]">
-            <Users className="w-6 h-6 text-[#3F5C73]" />
+          <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">Personnel Register</p>
+          <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
+            <Users className="w-6 h-6 text-zinc-900" />
             Team &amp; Users
           </h1>
-          <p className="text-sm text-[#8A8378] mt-1 font-serif italic">Manage staff accounts, invites, and system access.</p>
+          <p className="text-zinc-500 text-sm mt-1">Manage staff accounts, invites, and system access.</p>
         </div>
 
         <Can permission="user.create">
           <button
             onClick={() => setIsInviteModalOpen(true)}
-            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#2B2A28] text-[#FAF7F0] font-mono text-sm uppercase tracking-wide hover:bg-[#3F5C73] transition-colors flex-shrink-0"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20 flex-shrink-0 cursor-pointer"
           >
             <UserPlus className="w-4 h-4" /> Invite Staff
           </button>
@@ -212,15 +212,19 @@ const UsersList = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="border border-[#DDD6C7]">
+      <div className="bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-hidden">
 
         {/* TABS NAVIGATION */}
-        <div className="flex border-b border-[#DDD6C7] px-2 gap-1 bg-[#F3EFE4]/50 overflow-x-auto">
+        <div className="flex border-b border-zinc-100 px-6 gap-6 bg-zinc-50/50 overflow-x-auto">
           {TABS.map(tab => (
             <button 
               key={tab.id}
               onClick={() => { setActiveTab(tab.id); setCurrentPage(1); }}
-              className={`px-4 py-3 text-[12px] font-mono uppercase tracking-wider border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id ? 'border-[#B5563A] text-[#2B2A28] bg-[#FAF7F0]' : 'border-transparent text-[#8A8378] hover:text-[#2B2A28]'}`}
+              className={`py-3.5 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all whitespace-nowrap cursor-pointer ${
+                activeTab === tab.id 
+                  ? 'border-zinc-950 text-zinc-950 font-bold' 
+                  : 'border-transparent text-zinc-400 hover:text-zinc-600'
+              }`}
             >
               {tab.label}
             </button>
@@ -228,56 +232,68 @@ const UsersList = () => {
         </div>
 
         {/* Search Toolbar */}
-        <div className="p-4 flex items-center justify-between border-b border-dotted border-[#DDD6C7]">
-          <div className="relative w-full max-w-sm border border-[#DDD6C7] focus-within:border-[#3F5C73] transition-colors">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A8378] w-4 h-4" />
+        <div className="p-6 flex items-center justify-between border-b border-zinc-100">
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
             <input
               type="text"
               placeholder="Search by name or email…"
               value={searchTerm}
               onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-              className="w-full pl-10 pr-4 py-2.5 outline-none text-sm font-serif bg-transparent placeholder:text-[#8A8378]/70"
+              className="block w-full pl-10 pr-4 py-2.5 border border-zinc-200 rounded-xl leading-5 bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-950/10 focus:border-zinc-950 transition-colors text-sm font-medium text-zinc-800"
             />
           </div>
         </div>
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left">
-            <thead className="bg-[#F3EFE4]/60 border-b border-[#DDD6C7]">
+          <table className="min-w-full text-left border-collapse">
+            <thead className="bg-zinc-50/70 border-b border-zinc-100">
               <tr>
-                <th className="px-6 py-3 font-mono text-[#8A8378] text-[11px] uppercase tracking-wider">Entry</th>
-                {activeTab !== 'pending' && <th className="px-6 py-3 font-mono text-[#8A8378] text-[11px] uppercase tracking-wider">Roles</th>}
-                <th className="px-6 py-3 font-mono text-[#8A8378] text-[11px] uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 font-mono text-[#8A8378] text-[11px] uppercase tracking-wider text-right">Actions</th>
+                <th className="px-6 py-3.5 text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider">User</th>
+                {activeTab !== 'pending' && <th className="px-6 py-3.5 text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider">Roles</th>}
+                <th className="px-6 py-3.5 text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3.5 text-right text-xs font-semibold text-zinc-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-dotted divide-[#DDD6C7]">
+            <tbody className="divide-y divide-zinc-100 bg-white">
               {loading ? (
-                <tr><td colSpan="4" className="text-center py-12"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#8A8378]" /></td></tr>
+                <tr>
+                  <td colSpan="4" className="text-center py-12">
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto text-zinc-400" />
+                  </td>
+                </tr>
               ) : users.length === 0 ? (
-                <tr><td colSpan="4" className="text-center py-12 text-[#8A8378] font-serif italic">No users found in this category.</td></tr>
+                <tr>
+                  <td colSpan="4" className="text-center py-12 text-zinc-400 font-medium italic text-sm">
+                    No users found in this category.
+                  </td>
+                </tr>
               ) : (
                 users.map((u, idx) => {
                   const isSelf = u.id === currentUser.id;
                   const isSuperAdmin = u.systemRole.slug === 'SUPER_ADMIN';
 
                   return (
-                    <tr key={u.id} className="hover:bg-[#F3EFE4]/40 transition-colors group">
+                    <tr key={u.id} className="hover:bg-zinc-50/50 transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <span className="font-mono text-[10px] text-[#B5563A] tabular-nums w-8 flex-shrink-0">
+                          <span className="font-mono text-xs text-zinc-400 tabular-nums w-8 flex-shrink-0">
                             {String((currentPage - 1) * 10 + idx + 1).padStart(3, '0')}
                           </span>
-                          <div className={`w-9 h-9 rounded-full flex items-center justify-center font-mono font-bold text-xs flex-shrink-0 border-2 ${u.status === 'SUSPENDED' ? 'border-[#B5563A] text-[#B5563A]' : 'border-[#3F5C73] text-[#3F5C73]'} bg-[#FAF7F0]`}>
+                          <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 bg-zinc-100 text-zinc-700">
                             {u.name.charAt(0).toUpperCase()}
                           </div>
                           <div className="min-w-0">
-                            <div className="font-serif font-bold text-[15px] text-[#2B2A28] flex items-center gap-2">
+                            <div className="font-semibold text-[15px] text-zinc-900 flex items-center gap-2">
                               {u.name}
-                              {isSelf && <span className="bg-[#3F5C73] text-[#FAF7F0] text-[9px] px-1.5 py-0.5 font-mono uppercase tracking-wide">You</span>}
+                              {isSelf && (
+                                <span className="bg-zinc-800 text-white text-[9px] px-2 py-0.5 rounded font-semibold uppercase tracking-wider">
+                                  You
+                                </span>
+                              )}
                             </div>
-                            <div className="text-xs text-[#8A8378] mt-0.5 font-mono truncate">{u.email}</div>
+                            <div className="text-xs text-zinc-500 mt-0.5 font-medium truncate">{u.email}</div>
                           </div>
                         </div>
                       </td>
@@ -285,12 +301,16 @@ const UsersList = () => {
                       {activeTab !== 'pending' && (
                         <td className="px-6 py-4">
                           <div className="flex flex-col gap-1.5 items-start">
-                            <span className={`px-2 py-0.5 text-[10px] font-mono font-bold tracking-wider border ${isSuperAdmin ? 'border-[#7A4F8C] text-[#7A4F8C] bg-[#7A4F8C]/5' : 'border-[#DDD6C7] text-[#8A8378] bg-transparent'}`}>
+                            <span className={`px-2.5 py-0.5 text-[10px] font-bold rounded-full tracking-wider border ${
+                              isSuperAdmin 
+                                ? 'border-purple-200 text-purple-700 bg-purple-50' 
+                                : 'border-zinc-200 text-zinc-700 bg-zinc-50'
+                            }`}>
                               {u.systemRole.name.toUpperCase()}
                             </span>
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1 mt-1">
                               {u.functionalRoles?.map(fr => (
-                                <span key={fr.functionalRole.slug} className="text-[10px] font-mono text-[#5B6B4F] border border-dashed border-[#5B6B4F]/40 px-1.5 py-0.5">
+                                <span key={fr.functionalRole.slug} className="text-[10px] font-semibold text-zinc-500 bg-zinc-100/80 px-2 py-0.5 rounded">
                                   {fr.functionalRole.name}
                                 </span>
                               ))}
@@ -300,9 +320,21 @@ const UsersList = () => {
                       )}
 
                       <td className="px-6 py-4">
-                        {u.status === 'ACTIVE' && <span className="text-[11px] font-mono font-bold uppercase tracking-wide text-[#5B6B4F] border border-[#5B6B4F]/40 px-2.5 py-1 flex items-center gap-1.5 w-max"><CheckCircle className="w-3.5 h-3.5" /> Active</span>}
-                        {u.status === 'PENDING' && <span className="text-[11px] font-mono font-bold uppercase tracking-wide text-[#A67C2E] border border-[#A67C2E]/40 px-2.5 py-1 flex items-center gap-1.5 w-max"><Clock className="w-3.5 h-3.5" /> Pending</span>}
-                        {u.status === 'SUSPENDED' && <span className="text-[11px] font-mono font-bold uppercase tracking-wide text-[#B5563A] border border-[#B5563A]/40 px-2.5 py-1 flex items-center gap-1.5 w-max"><PowerOff className="w-3.5 h-3.5" /> Suspended</span>}
+                        {u.status === 'ACTIVE' && (
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100/80">
+                            <CheckCircle className="w-3.5 h-3.5" /> Active
+                          </span>
+                        )}
+                        {u.status === 'PENDING' && (
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100/80">
+                            <Clock className="w-3.5 h-3.5" /> Pending
+                          </span>
+                        )}
+                        {u.status === 'SUSPENDED' && (
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-700 border border-red-100/80">
+                            <PowerOff className="w-3.5 h-3.5" /> Suspended
+                          </span>
+                        )}
                       </td>
 
                       <td className="px-6 py-4 text-right">
@@ -311,7 +343,7 @@ const UsersList = () => {
                           {/* Cancel Invite Button (Only for Pending) */}
                           {activeTab === 'pending' && (
                             <Can permission="user.delete">
-                              <button onClick={() => handleCancelInvite(u.email)} className="p-2 text-[#B5563A] hover:bg-[#B5563A]/10 transition-colors" title="Cancel Invite">
+                              <button onClick={() => handleCancelInvite(u.email)} className="p-2 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg transition-colors cursor-pointer" title="Cancel Invite">
                                 <Trash2 className="w-4 h-4" />
                               </button>
                             </Can>
@@ -320,7 +352,7 @@ const UsersList = () => {
                           {/* View Profile / Settings (For Active/Suspended) */}
                           {activeTab !== 'pending' && (
                             <Can permission="user.view">
-                              <button onClick={() => handleOpenDetails(u.id)} className="p-2 text-[#3F5C73] hover:bg-[#3F5C73]/10 transition-colors" title="View Profile">
+                              <button onClick={() => handleOpenDetails(u.id)} className="p-2 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 rounded-lg transition-colors cursor-pointer" title="View Profile">
                                 <Eye className="w-4 h-4" />
                               </button>
                             </Can>
@@ -329,7 +361,7 @@ const UsersList = () => {
                           {/* Edit Roles (Manage Access) */}
                           {!isSelf && (!isSuperAdmin || currentUser.systemRole === 'SUPER_ADMIN') && activeTab !== 'pending' && (
                             <Can permission="user.edit">
-                              <button onClick={() => openEditRolesModal(u)} className="p-2 text-[#7A4F8C] hover:bg-[#7A4F8C]/10 transition-colors" title="Manage Access">
+                              <button onClick={() => openEditRolesModal(u)} className="p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-colors cursor-pointer" title="Manage Access">
                                 <Shield className="w-4 h-4" />
                               </button>
                             </Can>
@@ -348,71 +380,91 @@ const UsersList = () => {
 
       {/* Quick Pagination */}
       {meta?.totalPages > 1 && (
-        <div className="pt-6 flex justify-center items-center gap-4 font-mono text-sm">
-          <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1 border border-[#DDD6C7] uppercase text-[11px] tracking-wide hover:border-[#2B2A28] disabled:opacity-40 disabled:hover:border-[#DDD6C7] transition-colors">Prev</button>
-          <span className="text-[#8A8378] tabular-nums">{String(currentPage).padStart(2, '0')} / {String(meta.totalPages).padStart(2, '0')}</span>
-          <button onClick={() => setCurrentPage(p => Math.min(meta.totalPages, p + 1))} disabled={currentPage === meta.totalPages} className="px-3 py-1 border border-[#DDD6C7] uppercase text-[11px] tracking-wide hover:border-[#2B2A28] disabled:opacity-40 disabled:hover:border-[#DDD6C7] transition-colors">Next</button>
+        <div className="pt-6 flex justify-center items-center gap-4 text-sm font-sans">
+          <button 
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+            disabled={currentPage === 1} 
+            className="inline-flex items-center justify-center px-4 py-2 border border-zinc-200 hover:bg-zinc-50 text-zinc-700 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer disabled:cursor-not-allowed"
+          >
+            Prev
+          </button>
+          <span className="text-zinc-500 font-semibold tabular-nums">
+            {String(currentPage).padStart(2, '0')} / {String(meta.totalPages).padStart(2, '0')}
+          </span>
+          <button 
+            onClick={() => setCurrentPage(p => Math.min(meta.totalPages, p + 1))} 
+            disabled={currentPage === meta.totalPages} 
+            className="inline-flex items-center justify-center px-4 py-2 border border-zinc-200 hover:bg-zinc-50 text-zinc-700 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
         </div>
       )}
 
       {/*DETAILS MODAL*/}
       {detailsModalUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2B2A28]/60 backdrop-blur-sm p-4">
-          <div className="bg-[#FAF7F0] border border-[#DDD6C7] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl border border-zinc-100 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl font-sans">
             
             {detailsModalUser.isLoading ? (
-              <div className="p-12 flex justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#3F5C73]" /></div>
+              <div className="p-12 flex justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-zinc-600" />
+              </div>
             ) : (
               <>
-                <div className="p-6 border-b-4 border-double border-[#2B2A28] flex justify-between items-start">
+                <div className="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/50">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full border-2 border-[#3F5C73] bg-[#FAF7F0] text-[#3F5C73] flex items-center justify-center text-2xl font-mono font-bold flex-shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-zinc-100 text-zinc-700 flex items-center justify-center text-2xl font-bold flex-shrink-0">
                       {detailsModalUser.name?.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <h2 className="text-xl font-serif font-bold text-[#2B2A28]">{detailsModalUser.name}</h2>
-                      <p className="text-sm text-[#8A8378] font-mono">{detailsModalUser.email}</p>
+                      <h2 className="text-xl font-bold text-zinc-900">{detailsModalUser.name}</h2>
+                      <p className="text-sm text-zinc-500 font-medium">{detailsModalUser.email}</p>
                       <div className="mt-2 flex gap-2">
-                        <span className="px-2 py-0.5 border border-[#3F5C73]/40 text-[#3F5C73] text-[10px] font-mono font-bold uppercase tracking-wide">{detailsModalUser.systemRole?.name}</span>
+                        <span className="px-2.5 py-0.5 border border-zinc-200 text-zinc-700 bg-zinc-50 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                          {detailsModalUser.systemRole?.name}
+                        </span>
                         {detailsModalUser.status === 'ACTIVE' ? (
-                          <span className="px-2 py-0.5 border border-[#5B6B4F]/40 text-[#5B6B4F] text-[10px] font-mono font-bold uppercase tracking-wide">Active</span>
+                          <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full text-[10px] font-bold uppercase tracking-wider">Active</span>
                         ) : (
-                          <span className="px-2 py-0.5 border border-[#B5563A]/40 text-[#B5563A] text-[10px] font-mono font-bold uppercase tracking-wide">Suspended</span>
+                          <span className="px-2.5 py-0.5 bg-red-50 text-red-700 border border-red-100 rounded-full text-[10px] font-bold uppercase tracking-wider">Suspended</span>
                         )}
                       </div>
                     </div>
                   </div>
-                  <button onClick={() => setDetailsModalUser(null)} className="p-2 text-[#8A8378] hover:text-[#2B2A28] transition-colors flex-shrink-0"><X className="w-5 h-5" /></button>
+                  <button onClick={() => setDetailsModalUser(null)} className="p-2 text-zinc-400 hover:text-zinc-600 transition-colors flex-shrink-0 cursor-pointer"><X className="w-5 h-5" /></button>
                 </div>
 
                 <div className="p-6 space-y-8">
                   <div>
-                    <h3 className="text-[12px] font-mono font-bold uppercase tracking-wider text-[#2B2A28] mb-3 flex items-center gap-2 border-b border-dotted border-[#DDD6C7] pb-2"><Key className="w-4 h-4 text-[#8A8378]" /> Granted Permissions</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-3 flex items-center gap-2 border-b border-zinc-100 pb-2">
+                      <Key className="w-4 h-4 text-zinc-400" /> Granted Permissions
+                    </h3>
                     {detailsModalUser.permissionsList?.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {detailsModalUser.permissionsList.map(perm => (
-                          <span key={perm} className="px-2.5 py-1 border border-dashed border-[#DDD6C7] text-[#5B6B4F] text-xs font-mono font-medium">
+                          <span key={perm} className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 text-zinc-600 text-xs font-semibold rounded-lg">
                             {perm}
                           </span>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-[#8A8378] font-serif italic">No specific functional permissions granted.</p>
+                      <p className="text-sm text-zinc-400 font-medium italic">No specific functional permissions granted.</p>
                     )}
                   </div>
 
                   <div>
-                    <h3 className="text-[12px] font-mono font-bold uppercase tracking-wider text-[#2B2A28] mb-3 flex items-center gap-2 border-b border-dotted border-[#DDD6C7] pb-2">
-                      <Activity className="w-4 h-4 text-[#8A8378]" /> Recent Activity
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-3 flex items-center gap-2 border-b border-zinc-100 pb-2">
+                      <Activity className="w-4 h-4 text-zinc-400" /> Recent Activity
                     </h3>
                     {detailsModalUser.recentActivity?.length > 0 ? (
                       <div className="space-y-4 pt-1">
                         {detailsModalUser.recentActivity.map((activity, idx) => (
-                          <div key={activity.id || idx} className="flex flex-col gap-1 border-l-2 border-[#3F5C73]/40 pl-3 py-0.5">
-                            <span className="text-[14px] text-[#2B2A28] font-serif font-medium">
-                              Updated blog: <span className="italic text-[#3F5C73]">{activity.blog?.title}</span>
+                          <div key={activity.id || idx} className="flex flex-col gap-1 border-l-2 border-zinc-300 pl-3 py-0.5">
+                            <span className="text-sm text-zinc-800 font-medium">
+                              Updated blog: <span className="font-semibold text-zinc-900">{activity.blog?.title}</span>
                             </span>
-                            <span className="text-[10px] font-mono text-[#8A8378] tracking-wide">
+                            <span className="text-[10px] text-zinc-400 font-semibold tracking-wide">
                               {new Date(activity.createdAt).toLocaleString(undefined, { 
                                 year: 'numeric', month: 'short', day: 'numeric', 
                                 hour: '2-digit', minute: '2-digit' 
@@ -422,20 +474,32 @@ const UsersList = () => {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-[#8A8378] font-serif italic">No recent system activity logged for this user.</p>
+                      <p className="text-sm text-zinc-400 font-medium italic">No recent system activity logged for this user.</p>
                     )}
                   </div>
 
                   {currentUser.id !== detailsModalUser.id && (
                     <div>
-                      <h3 className="text-[12px] font-mono font-bold uppercase tracking-wider text-[#B5563A] mb-3 flex items-center gap-2 border-b border-dotted border-[#B5563A]/30 pb-2"><Shield className="w-4 h-4" /> Security Controls</h3>
-                      <div className="flex gap-3 flex-wrap">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-red-500 mb-3 flex items-center gap-2 border-b border-red-100 pb-2">
+                        <Shield className="w-4 h-4" /> Security Controls
+                      </h3>
+                      <div className="flex gap-3 flex-wrap pt-1">
                         <Can permission="user.suspend">
-                          <button onClick={() => handleToggleStatus(detailsModalUser.id, detailsModalUser.status)} className={`px-4 py-2 text-sm font-mono uppercase tracking-wide border transition-colors ${detailsModalUser.status === 'ACTIVE' ? 'border-[#A67C2E] text-[#A67C2E] hover:bg-[#A67C2E]/10' : 'border-[#5B6B4F] text-[#5B6B4F] hover:bg-[#5B6B4F]/10'}`}>
+                          <button 
+                            onClick={() => handleToggleStatus(detailsModalUser.id, detailsModalUser.status)} 
+                            className={`px-4 py-2 text-xs font-bold uppercase tracking-wider border rounded-xl transition-colors cursor-pointer ${
+                              detailsModalUser.status === 'ACTIVE' 
+                                ? 'border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100/50' 
+                                : 'border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100/50'
+                            }`}
+                          >
                             {detailsModalUser.status === 'ACTIVE' ? 'Suspend Account' : 'Re-activate Account'}
                           </button>
                           
-                          <button onClick={() => handleRevokeSessions(detailsModalUser.id)} className="px-4 py-2 border border-[#B5563A] text-[#B5563A] hover:bg-[#B5563A]/10 text-sm font-mono uppercase tracking-wide transition-colors">
+                          <button 
+                            onClick={() => handleRevokeSessions(detailsModalUser.id)} 
+                            className="px-4 py-2 border border-red-200 text-red-700 bg-red-50 hover:bg-red-100/50 text-xs font-bold uppercase tracking-wider rounded-xl transition-colors cursor-pointer"
+                          >
                             Force Logout (All Devices)
                           </button>
                         </Can>
@@ -451,25 +515,43 @@ const UsersList = () => {
 
       {/*INVITE MODAL*/}
       {isInviteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2B2A28]/60 backdrop-blur-sm p-4">
-          <div className="bg-[#FAF7F0] border border-[#DDD6C7] w-full max-w-lg shadow-2xl overflow-hidden">
-             <div className="flex justify-between items-center p-6 border-b-4 border-double border-[#2B2A28]">
-               <h2 className="text-xl font-serif font-bold flex items-center gap-2 text-[#2B2A28]"><UserPlus className="w-5 h-5 text-[#3F5C73]" /> Invite Staff</h2>
-               <button onClick={() => setIsInviteModalOpen(false)} className="text-[#8A8378] hover:text-[#2B2A28]"><X className="w-5 h-5" /></button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl border border-zinc-100 w-full max-w-lg shadow-2xl overflow-hidden font-sans">
+             <div className="flex justify-between items-center p-6 border-b border-zinc-100 bg-zinc-50/50">
+                <h2 className="text-lg font-bold flex items-center gap-2 text-zinc-900">
+                  <UserPlus className="w-5 h-5 text-zinc-600" /> Invite Staff
+                </h2>
+                <button onClick={() => setIsInviteModalOpen(false)} className="text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"><X className="w-5 h-5" /></button>
              </div>
              <form onSubmit={handleInviteSubmit} className="p-6 space-y-5">
                <div>
-                 <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-1.5">Full Name</label>
-                 <input required type="text" value={inviteData.name} onChange={e => setInviteData(p => ({ ...p, name: e.target.value }))} className="w-full border border-[#DDD6C7] px-4 py-2.5 font-serif bg-transparent outline-none focus:border-[#3F5C73] transition-colors" />
+                 <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Full Name</label>
+                 <input 
+                   required 
+                   type="text" 
+                   value={inviteData.name} 
+                   onChange={e => setInviteData(p => ({ ...p, name: e.target.value }))} 
+                   className="block w-full px-4 py-2.5 border border-zinc-200 rounded-xl bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-950/10 focus:border-zinc-950 transition-colors text-sm font-medium text-zinc-800" 
+                 />
                </div>
                <div>
-                 <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-1.5">Email</label>
-                 <input required type="email" value={inviteData.email} onChange={e => setInviteData(p => ({ ...p, email: e.target.value }))} className="w-full border border-[#DDD6C7] px-4 py-2.5 font-serif bg-transparent outline-none focus:border-[#3F5C73] transition-colors" />
+                 <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Email Address</label>
+                 <input 
+                   required 
+                   type="email" 
+                   value={inviteData.email} 
+                   onChange={e => setInviteData(p => ({ ...p, email: e.target.value }))} 
+                   className="block w-full px-4 py-2.5 border border-zinc-200 rounded-xl bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-950/10 focus:border-zinc-950 transition-colors text-sm font-medium text-zinc-800" 
+                 />
                </div>
                
                <div>
-                 <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-1.5">System Role</label>
-                 <select value={inviteData.systemRoleSlug} onChange={e => setInviteData(p => ({ ...p, systemRoleSlug: e.target.value }))} className="w-full border border-[#DDD6C7] px-4 py-2.5 bg-[#F3EFE4]/40 font-serif font-medium outline-none focus:border-[#3F5C73] transition-colors">
+                 <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">System Role</label>
+                 <select 
+                   value={inviteData.systemRoleSlug} 
+                   onChange={e => setInviteData(p => ({ ...p, systemRoleSlug: e.target.value }))} 
+                   className="block w-full px-4 py-2.5 border border-zinc-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-zinc-950/10 focus:border-zinc-950 transition-colors text-sm font-semibold text-zinc-800"
+                 >
                    <option value="ADMIN">ADMIN (Standard)</option>
                    <option value="SUPER_ADMIN">SUPER ADMIN (Full Access)</option>
                  </select>
@@ -477,21 +559,38 @@ const UsersList = () => {
 
                {inviteData.systemRoleSlug !== 'SUPER_ADMIN' && (
                  <div>
-                   <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-2">Functional Roles (Access Bundles)</label>
-                   <div className="flex flex-wrap gap-2 p-3 bg-[#F3EFE4]/40 border border-[#DDD6C7] max-h-40 overflow-y-auto">
+                   <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Functional Roles (Access Bundles)</label>
+                   <div className="flex flex-wrap gap-2 p-3 bg-zinc-50/50 border border-zinc-200 rounded-xl max-h-40 overflow-y-auto">
                      {functionalRoles.map(role => (
-                       <label key={role.id} className={`flex items-center gap-2 px-3 py-1.5 border cursor-pointer transition-colors ${inviteData.functionalRoleIds.includes(role.id) ? 'bg-[#3F5C73]/10 border-[#3F5C73]/40 text-[#3F5C73]' : 'bg-[#FAF7F0] border-[#DDD6C7] hover:bg-[#F3EFE4]'}`}>
+                       <label 
+                         key={role.id} 
+                         className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg cursor-pointer transition-colors ${
+                           inviteData.functionalRoleIds.includes(role.id) 
+                             ? 'bg-zinc-900 border-zinc-900 text-white shadow-sm' 
+                             : 'bg-white border-zinc-200 hover:bg-zinc-50 text-zinc-700'
+                         }`}
+                       >
                          <input type="checkbox" className="hidden" checked={inviteData.functionalRoleIds.includes(role.id)} onChange={() => toggleFunctionalRoleArray(inviteData, setInviteData, role.id)} />
-                         <span className="text-sm font-medium font-serif">{role.name}</span>
+                         <span className="text-xs font-semibold">{role.name}</span>
                        </label>
                      ))}
                    </div>
                  </div>
                )}
 
-               <div className="flex justify-end gap-3 pt-4 border-t border-dotted border-[#DDD6C7]">
-                 <button type="button" onClick={() => setIsInviteModalOpen(false)} className="px-5 py-2 text-sm font-mono uppercase tracking-wide text-[#8A8378] hover:text-[#2B2A28] transition-colors">Cancel</button>
-                 <button type="submit" disabled={inviting} className="px-5 py-2 text-sm font-mono uppercase tracking-wide text-[#FAF7F0] bg-[#2B2A28] hover:bg-[#3F5C73] transition-colors flex items-center gap-2">
+               <div className="flex justify-end gap-3 pt-6 border-t border-zinc-100">
+                 <button 
+                   type="button" 
+                   onClick={() => setIsInviteModalOpen(false)} 
+                   className="px-5 py-2.5 text-sm font-semibold text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 rounded-xl transition-colors"
+                 >
+                   Cancel
+                 </button>
+                 <button 
+                   type="submit" 
+                   disabled={inviting} 
+                   className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                 >
                    {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />} Send Invite
                  </button>
                </div>
@@ -502,24 +601,32 @@ const UsersList = () => {
 
       {/*EDIT ROLES MODAL*/}
       {editingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2B2A28]/60 backdrop-blur-sm p-4">
-          <div className="bg-[#FAF7F0] border border-[#DDD6C7] w-full max-w-lg shadow-2xl overflow-hidden">
-            <div className="flex justify-between items-center p-6 border-b-4 border-double border-[#2B2A28]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl border border-zinc-100 w-full max-w-lg shadow-2xl overflow-hidden font-sans">
+            <div className="flex justify-between items-center p-6 border-b border-zinc-100 bg-zinc-50/50">
               <div>
-                <h2 className="text-xl font-serif font-bold flex items-center gap-2 text-[#2B2A28]"><Shield className="w-5 h-5 text-[#7A4F8C]" /> Manage Access</h2>
-                <p className="text-sm text-[#8A8378] mt-1 font-serif italic">Modifying roles for <strong className="font-bold not-italic">{editingUser.name}</strong></p>
+                <h2 className="text-lg font-bold flex items-center gap-2 text-zinc-900">
+                  <Shield className="w-5 h-5 text-blue-600" /> Manage Access
+                </h2>
+                <p className="text-sm text-zinc-500 mt-1 font-medium">
+                  Modifying roles for <span className="font-semibold text-zinc-900">{editingUser.name}</span>
+                </p>
               </div>
-              <button onClick={() => setEditingUser(null)} className="text-[#8A8378] hover:text-[#2B2A28]"><X className="w-5 h-5" /></button>
+              <button onClick={() => setEditingUser(null)} className="text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"><X className="w-5 h-5" /></button>
             </div>
             
             <form onSubmit={handleUpdateUserRoles} className="p-6 space-y-5">
-              <div className="border border-[#A67C2E]/40 bg-[#A67C2E]/5 p-3 flex gap-2 text-[#8a6420] text-sm font-serif">
-                <AlertTriangle className="w-5 h-5 shrink-0" /> The user's active sessions will be terminated automatically to apply these changes securely.
+              <div className="border border-amber-200 bg-amber-50/65 rounded-xl p-3 flex gap-2 text-amber-800 text-sm font-medium">
+                <AlertTriangle className="w-5 h-5 shrink-0 text-amber-600" /> The user's active sessions will be terminated automatically to apply these changes securely.
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-1.5">System Role</label>
-                <select value={editRoleData.systemRoleSlug} onChange={e => setEditRoleData(p => ({ ...p, systemRoleSlug: e.target.value }))} className="w-full border border-[#DDD6C7] px-4 py-2.5 bg-[#F3EFE4]/40 font-serif font-medium outline-none focus:border-[#7A4F8C] transition-colors">
+                <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">System Role</label>
+                <select 
+                  value={editRoleData.systemRoleSlug} 
+                  onChange={e => setEditRoleData(p => ({ ...p, systemRoleSlug: e.target.value }))} 
+                  className="block w-full px-4 py-2.5 border border-zinc-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-zinc-950/10 focus:border-zinc-950 transition-colors text-sm font-semibold text-zinc-800"
+                >
                   <option value="ADMIN">ADMIN (Standard)</option>
                   <option value="SUPER_ADMIN">SUPER ADMIN (Full Access)</option>
                 </select>
@@ -527,21 +634,38 @@ const UsersList = () => {
 
               {editRoleData.systemRoleSlug !== 'SUPER_ADMIN' && (
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wide text-[#8A8378] mb-2">Functional Roles (Access Bundles)</label>
-                  <div className="flex flex-wrap gap-2 p-3 bg-[#F3EFE4]/40 border border-[#DDD6C7] max-h-48 overflow-y-auto">
+                  <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Functional Roles (Access Bundles)</label>
+                  <div className="flex flex-wrap gap-2 p-3 bg-zinc-50/50 border border-zinc-200 rounded-xl max-h-48 overflow-y-auto">
                     {functionalRoles.map(role => (
-                      <label key={role.id} className={`flex items-center gap-2 px-3 py-1.5 border cursor-pointer transition-colors ${editRoleData.functionalRoleIds.includes(role.id) ? 'bg-[#7A4F8C]/10 border-[#7A4F8C]/40 text-[#7A4F8C]' : 'bg-[#FAF7F0] border-[#DDD6C7] hover:bg-[#F3EFE4]'}`}>
+                      <label 
+                        key={role.id} 
+                        className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg cursor-pointer transition-colors ${
+                          editRoleData.functionalRoleIds.includes(role.id) 
+                            ? 'bg-blue-600 border-blue-600 text-white shadow-sm' 
+                            : 'bg-white border-zinc-200 hover:bg-zinc-50 text-zinc-700'
+                        }`}
+                      >
                         <input type="checkbox" className="hidden" checked={editRoleData.functionalRoleIds.includes(role.id)} onChange={() => toggleFunctionalRoleArray(editRoleData, setEditRoleData, role.id)} />
-                        <span className="text-sm font-medium font-serif">{role.name}</span>
+                        <span className="text-xs font-semibold">{role.name}</span>
                       </label>
                     ))}
                   </div>
                 </div>
               )}
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-dotted border-[#DDD6C7]">
-                <button type="button" onClick={() => setEditingUser(null)} className="px-5 py-2 text-sm font-mono uppercase tracking-wide text-[#8A8378] hover:text-[#2B2A28] transition-colors">Cancel</button>
-                <button type="submit" disabled={updatingRoles} className="px-5 py-2 text-sm font-mono uppercase tracking-wide text-[#FAF7F0] bg-[#7A4F8C] hover:bg-[#634072] transition-colors flex items-center gap-2">
+              <div className="flex justify-end gap-3 pt-6 border-t border-zinc-100">
+                <button 
+                  type="button" 
+                  onClick={() => setEditingUser(null)} 
+                  className="px-5 py-2.5 text-sm font-semibold text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 rounded-xl transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={updatingRoles} 
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-sm focus:ring-2 focus:ring-blue-600/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
                   {updatingRoles ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />} Apply Security Changes
                 </button>
               </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaCog } from 'react-icons/fa';
 import defaultView from '../../assets/homepage/panoramas.png';
 import apiClient from '../../api/client';
@@ -6,6 +6,9 @@ import apiClient from '../../api/client';
 const Panoramas = ({ data: externalData }) => {
   const [content, setContent] = useState(externalData || null);
   const [panoramaImg, setPanoramaImg] = useState(defaultView);
+  
+  const [scale, setScale] = useState(1);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -47,6 +50,34 @@ const Panoramas = ({ data: externalData }) => {
       isMounted = false;
     };
   }, [externalData]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      
+      const zoomSensitivity = 0.05;
+      
+      setScale((prevScale) => {
+        let newScale = prevScale;
+        if (e.deltaY < 0) {
+          newScale = prevScale + zoomSensitivity;
+        } else {
+          newScale = prevScale - zoomSensitivity;
+        }
+        
+        return Math.min(Math.max(newScale, 1), 3);
+      });
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
 
   const badgeText = content?.badgeText || "360-DEGREE PANORAMAS";
   const title = content?.title || "Create An Even [Greater \\n Experience]";
@@ -95,11 +126,19 @@ const Panoramas = ({ data: externalData }) => {
           </h2>
         </div>
 
-        <div className="relative w-full max-w-7xl h-[400px] md:h-[600px] lg:h-[700px] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden opal-move-up">
+        <div 
+          ref={containerRef}
+          className="relative w-full max-w-7xl h-[300px] md:h-[500px] lg:h-[600px] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden opal-move-up group"
+        >
           <img 
             src={panoramaImg}
             alt="360 Panoramic View"
             className="w-full h-full object-cover object-center"
+            style={{ 
+              transform: `scale(${scale})`, 
+              transition: 'transform 0.1s ease-out',
+              willChange: 'transform'
+            }}
             onError={(e) => {
               if (e.currentTarget.src !== defaultView) {
                 e.currentTarget.src = defaultView;
@@ -107,7 +146,7 @@ const Panoramas = ({ data: externalData }) => {
             }}
           />
           
-          <div className="absolute bottom-6 right-6 md:bottom-10 md:right-10 cursor-pointer hover:rotate-90 transition-transform duration-500">
+          <div className="absolute bottom-6 right-6 md:bottom-10 md:right-10 cursor-pointer hover:rotate-90 transition-transform duration-500 z-10">
             <FaCog className="w-10 h-10 md:w-12 md:h-12 text-white drop-shadow-md" />
           </div>
         </div>

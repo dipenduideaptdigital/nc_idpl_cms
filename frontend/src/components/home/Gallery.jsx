@@ -76,9 +76,11 @@ const Gallery = () => {
     const handleVerticalScroll = () => {
       const currentScrollY = window.scrollY;
       const scrollDelta = currentScrollY - lastScrollY;
+      const speedFactor = 0.2; 
+      const horizontalMove = scrollDelta * speedFactor;
 
       if (row1Ref.current && half1Ref.current) {
-        row1Ref.current.scrollLeft += scrollDelta;
+        row1Ref.current.scrollLeft += horizontalMove;
         
         // Loop bound checking
         if (row1Ref.current.scrollLeft >= half1Ref.current.clientWidth) {
@@ -90,7 +92,7 @@ const Gallery = () => {
 
       // 2nd Row (Bottom) 
       if (row2Ref.current && half2Ref.current) {
-        row2Ref.current.scrollLeft -= scrollDelta;
+        row2Ref.current.scrollLeft -= horizontalMove;
         
         // Loop bound checking
         if (row2Ref.current.scrollLeft >= half2Ref.current.clientWidth) {

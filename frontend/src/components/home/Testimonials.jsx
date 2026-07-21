@@ -61,6 +61,9 @@ const Testimonials = ({ data: externalData }) => {
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  const [logoIndex, setLogoIndex] = useState(0);
+  const [logoTransition, setLogoTransition] = useState(true);
+
   useEffect(() => {
     if (externalData) {
       setTestimonialsList([{
@@ -86,7 +89,6 @@ const Testimonials = ({ data: externalData }) => {
       let office = null;
       let architecture = null;
 
-      // 1. Fetch Residential (Homepage Testimonials)
       try {
         const res = await apiClient.get('/cms/section/homepage_testimonials');
         if (res.data?.success && res.data?.data?.content) {
@@ -96,27 +98,21 @@ const Testimonials = ({ data: externalData }) => {
         console.error('Failed to fetch residential testimonials:', err);
       }
 
-      // 2. Fetch Office testimonials
       try {
         const res = await apiClient.get('/pages/office');
         if (res.data?.success && res.data?.data?.content?.blocks) {
           const block = res.data.data.content.blocks.find(b => b.type === 'testimonialsTwo' || b.type === 'testimonials');
-          if (block) {
-            office = block.data;
-          }
+          if (block) office = block.data;
         }
       } catch (err) {
         console.error('Failed to fetch office testimonials:', err);
       }
 
-      // 3. Fetch Architecture testimonials
       try {
         const res = await apiClient.get('/pages/architecture');
         if (res.data?.success && res.data?.data?.content?.blocks) {
           const block = res.data.data.content.blocks.find(b => b.type === 'testimonialsTwo' || b.type === 'testimonials');
-          if (block) {
-            architecture = block.data;
-          }
+          if (block) architecture = block.data;
         }
       } catch (err) {
         console.error('Failed to fetch architecture testimonials:', err);
@@ -186,16 +182,36 @@ const Testimonials = ({ data: externalData }) => {
     fetchAllTestimonials();
   }, [externalData]);
 
-  // Set up 5s interval timer for rotation
   useEffect(() => {
     if (testimonialsList.length <= 1 || isPaused) return;
-
     const interval = setInterval(() => {
       setActiveIdx((prev) => (prev + 1) % testimonialsList.length);
     }, 5000);
-
     return () => clearInterval(interval);
   }, [testimonialsList, isPaused]);
+
+  useEffect(() => {
+    const logoInterval = setInterval(() => {
+      setLogoIndex(prev => prev + 1);
+    }, 2000);
+    return () => clearInterval(logoInterval);
+  }, []);
+
+  const handleLogoTransitionEnd = () => {
+    if (logoIndex >= 5) {
+      setLogoTransition(false);
+      setLogoIndex(0);
+    }
+  };
+
+  useEffect(() => {
+    if (!logoTransition) {
+      const frameId = requestAnimationFrame(() => {
+        setLogoTransition(true);
+      });
+      return () => cancelAnimationFrame(frameId);
+    }
+  }, [logoTransition]);
 
   const activeSlide = testimonialsList[activeIdx] || defaultTestimonials[0];
 
@@ -209,9 +225,10 @@ const Testimonials = ({ data: externalData }) => {
   const authorName = activeSlide.authorName;
   const authorRole = activeSlide.authorRole;
   const bottomText = activeSlide.bottomText || "Our Website [75000+] VIP Customer";
-  
+
   const rawLogos = (Array.isArray(activeSlide.logos) && activeSlide.logos.length > 0) ? activeSlide.logos : defaultLogos;
   const activeLogos = [...rawLogos, '', '', '', '', ''].slice(0, 5); 
+  const trackLogos = [...activeLogos, ...activeLogos];
 
   const renderTitle = (titleText) => {
     if (!titleText) return null;
@@ -246,6 +263,7 @@ const Testimonials = ({ data: externalData }) => {
     >
       <div className="container mx-auto px-6 md:px-8 max-w-[1400px]">
         
+        {/* Header Area */}
         <div className="flex flex-col lg:flex-row gap-8 md:gap-12 mb-16 items-start">
           <div className="w-full lg:w-1/3 fadeInLeft">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
@@ -312,7 +330,6 @@ const Testimonials = ({ data: externalData }) => {
               &ldquo;{mainQuote}&rdquo;
             </p>
 
-            {/* Author and Navigation Dots side-by-side or stacked */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div className="flex items-center space-x-4">
                 <img 
@@ -349,9 +366,9 @@ const Testimonials = ({ data: externalData }) => {
           </div>
         </div>
 
-        {/* Bottom Section */}
+        {/* Bottom Section - Logos Auto Slider */}
         <div className="pt-8 opal-move-up">
-          <div className="flex items-center justify-center mb-16">
+          <div className="flex items-center justify-center mb-10">
             <div className="h-px bg-gray-200 flex-grow max-w-[200px] lg:max-w-[400px]"></div>
             <h3 className="px-6 text-xl md:text-2xl font-bold text-gray-900 whitespace-nowrap">
               {renderTitle(bottomText)}
@@ -359,29 +376,38 @@ const Testimonials = ({ data: externalData }) => {
             <div className="h-px bg-gray-200 flex-grow max-w-[200px] lg:max-w-[400px]"></div>
           </div>
 
-          <div className="flex flex-wrap justify-between items-center w-full gap-6 mt-4 px-4 md:px-8">
-        
-            {activeLogos.map((logo, index) => {
-              const isUrl = logo && (logo.startsWith('/') || logo.startsWith('http'));
-              const logoUrl = isUrl ? resolveAssetUrl(logo) : defaultLogo;
-              
-              return (
-                <img 
-                  key={index} 
-                  src={logoUrl}
-                  alt={`Client Partner Logo ${index + 1}`}
-                  className="h-10 md:h-14 lg:h-16 w-auto object-contain opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0"
-                  onError={(e) => {
-                    if (!e.currentTarget.src.includes('logo2.svg')) {
-                      e.currentTarget.src = defaultLogo;
-                    }
-                  }}
-                />
-              );
-            })}
+          <div className="w-full overflow-hidden px-4 md:px-8 pb-4">
+            <div 
+              className="flex w-full"
+              style={{
+                transform: `translateX(-${logoIndex * 20}%)`,
+                transition: logoTransition ? 'transform 0.5s ease-in-out' : 'none'
+              }}
+              onTransitionEnd={handleLogoTransitionEnd}
+            >
+              {trackLogos.map((logo, index) => {
+                const isUrl = logo && (logo.startsWith('/') || logo.startsWith('http'));
+                const logoUrl = isUrl ? resolveAssetUrl(logo) : defaultLogo;
+                
+                return (
+                  <div key={index} className="w-[20%] shrink-0 flex justify-center items-center px-2 md:px-4">
+                    <img 
+                      src={logoUrl}
+                      alt={`Client Partner Logo`}
+                      className="h-10 md:h-14 lg:h-16 w-auto object-contain opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0"
+                      onError={(e) => {
+                        if (!e.currentTarget.src.includes('logo2.svg')) {
+                          e.currentTarget.src = defaultLogo;
+                        }
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
   );

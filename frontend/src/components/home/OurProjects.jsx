@@ -230,7 +230,7 @@ const OurProjects = ({ data: externalData }) => {
         </div>
       </div>
       {/* Carousel Section */}
-      <div className="container mx-auto max-w-7xl px-6 md:px-8 overflow-hidden">
+      <div className="container mx-auto w-full max-w-full px-6 md:px-0 md:max-w-[1050px] lg:max-w-[1172px] overflow-hidden">
         <div
           className={`flex w-full overflow-x-auto hide-scrollbar opal-move-up select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
           ref={carouselRef}
@@ -296,7 +296,7 @@ const OurProjects = ({ data: externalData }) => {
           </h2>
         </div>
 
-        <div className="container mx-auto px-8 md:px-14 relative z-12">
+        <div className="container mx-auto px-8 md:px-14 relative z-12 mt-3 md:mt-7">
           <img
             src={interiorImg}
             alt="Interior Panoramic"

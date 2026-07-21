@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowUpRight, ArrowDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import apiClient from '../../api/client'; 
 import defaultHeroback from '../../assets/homepage/banner_back.png';
@@ -76,16 +76,6 @@ const Hero = ({ data: externalData }) => {
     }, 5000);
     return () => clearInterval(interval);
   }, [isLoading, isPaused]);
-
-  const handlePrev = (e) => {
-    e.stopPropagation();
-    setActiveSlide((prev) => (prev === 0 ? 2 : prev - 1));
-  };
-
-  const handleNext = (e) => {
-    e.stopPropagation();
-    setActiveSlide((prev) => (prev === 2 ? 0 : prev + 1));
-  };
 
   const handleScrollDown = () => {
     const nextSection = document.getElementById('services-section');
@@ -170,7 +160,7 @@ const Hero = ({ data: externalData }) => {
                     
                     <h1 className="text-3xl md:text-4xl lg:text-[48px] xl:text-[62px] 2xl:text-[76px] font-bold leading-tight lg:leading-[54px] xl:leading-[68px] 2xl:leading-[82px] mb-4 md:mb-6 drop-shadow-lg font-helvetica">
                       <span className="tracking-normal block whitespace-nowrap">{slide.data?.titleLine1 || slide.fallback.titleLine1}</span>
-                      <span className="tracking-[0.1em] block whitespace-nowrap">{slide.data?.titleLine2 || slide.fallback.titleLine2}</span>
+                      <span className="tracking-normal block whitespace-nowrap">{slide.data?.titleLine2 || slide.fallback.titleLine2}</span>
                     </h1>
                     
                     {/* TipTap Editor HTML Rendering */}
@@ -188,7 +178,7 @@ const Hero = ({ data: externalData }) => {
                   </div>
 
                   <div className="flex flex-row items-end justify-center lg:justify-end gap-6 shrink-0 w-full lg:w-auto mt-10 lg:mt-10 pb-1">
-                    <div className="w-[160px] h-[220px] md:w-[215px] md:h-[270px] bg-[#3a3532]/40 glass-dark rounded-[24px] p-6 shadow-2xl z-20 flex flex-col justify-between shrink-0">
+                    <div className="w-[200px] h-[200px] md:w-[240px] md:h-[240px] bg-[#3a3532]/40 glass-dark rounded-[24px] p-6 shadow-2xl z-20 flex flex-col justify-between shrink-0">
                       <div>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">{slide.data?.glassCardNumber || slide.fallback.glassCardNumber}</h2>
                         <p className="text-xs text-gray-200 font-normal leading-relaxed">{slide.data?.glassCardText1 || slide.fallback.glassCardText1}</p>
@@ -196,7 +186,7 @@ const Hero = ({ data: externalData }) => {
                       <p className="text-sm text-white font-medium">{slide.data?.glassCardText2 || slide.fallback.glassCardText2}</p>
                     </div>
 
-                    <div className="w-[160px] h-[220px] md:w-[215px] md:h-[270px] rounded-[24px] overflow-hidden shadow-2xl z-10 border-2 border-white/10 shrink-0">
+                    <div className="w-[200px] h-[200px] md:w-[240px] md:h-[240px] rounded-[24px] overflow-hidden shadow-2xl z-10 border-2 border-white/10 shrink-0">
                       <img 
                         src={frontImage} 
                         alt="Hero Foreground" 
@@ -215,39 +205,15 @@ const Hero = ({ data: externalData }) => {
         );
       })}
 
-      {/* Manual Navigation */}
-      <button onClick={handlePrev} className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/20 hover:bg-black/45 border border-white/10 flex items-center justify-center text-white transition-all backdrop-blur-sm opacity-0 group-hover:opacity-100 cursor-pointer scale-90 hover:scale-100">
-        <ArrowLeft className="w-5 h-5" />
-      </button>
-
-      <button onClick={handleNext} className="absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/20 hover:bg-black/45 border border-white/10 flex items-center justify-center text-white transition-all backdrop-blur-sm opacity-0 group-hover:opacity-100 cursor-pointer scale-90 hover:scale-100">
-        <ArrowRight className="w-5 h-5" />
-      </button>
-
-      {/* Indicator Dots */}
-      <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-30 flex space-x-3 bg-black/10 backdrop-blur-md px-4 py-1 mt-2 rounded-full border border-white/10">
-        {slides.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={(e) => { e.stopPropagation(); setActiveSlide(idx); }}
-            className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-              activeSlide === idx ? 'w-8 bg-secondary' : 'w-2.5 bg-white/40 hover:bg-white/60'
-            }`}
-          />
-        ))}
+      {/* Scroll Down Arrow Indicator (Visible on all slides & moved slightly upwards) */}
+      <div className="absolute bottom-40 left-1/2 -translate-x-1/2 z-20">
+        <button 
+          onClick={handleScrollDown}
+          className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer animate-bounce"
+        >
+          <ArrowDown className="w-6 h-6 text-primary" />
+        </button>
       </div>
-
-      {/* Scroll Down Arrow Indicator (Only Slide 1) */}
-      {activeSlide === 0 && (
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 mt-5">
-          <button 
-            onClick={handleScrollDown}
-            className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer animate-bounce"
-          >
-            <ArrowDown className="w-6 h-6 text-primary" />
-          </button>
-        </div>
-      )}
     </div>
   );
 };

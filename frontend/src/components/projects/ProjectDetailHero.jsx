@@ -52,12 +52,21 @@ const ProjectDetailHero = ({ project }) => {
         </h1>
 
         {/* Breadcrumb Navigation */}
-        <div className="flex items-center justify-center gap-3 text-xs md:text-sm font-semibold tracking-widest uppercase opacity-85">
-          <Link to="/" className="hover:text-[#3B82F6] transition-colors">Home</Link>
-          <span className="text-[#3B82F6] opacity-70">&gt;</span>
-          <Link to="/projects" className="hover:text-[#3B82F6] transition-colors">Projects</Link>
-          <span className="text-[#3B82F6] opacity-70">&gt;</span>
-          <span className="text-zinc-300 font-normal">{project.title}</span>
+        <div 
+          className="flex items-center justify-center gap-3 text-white opacity-95 text-center"
+          style={{
+            fontFamily: 'Outfit, sans-serif',
+            fontWeight: 400,
+            fontSize: '20px',
+            lineHeight: '25px',
+            letterSpacing: '0%'
+          }}
+        >
+          <Link to="/" className="hover:opacity-80 transition-opacity">Home</Link>
+          <span className="opacity-70">&gt;</span>
+          <Link to="/projects" className="hover:opacity-80 transition-opacity">Projects</Link>
+          <span className="opacity-70">&gt;</span>
+          <span>{project.title}</span>
         </div>
       </div>
     </div>

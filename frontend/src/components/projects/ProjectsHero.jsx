@@ -1,8 +1,8 @@
 import React from 'react';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 
-const ProjectsHero = ({ title = 'Our Projects', backgroundImage }) => {
-  const bgImageUrl = resolveAssetUrl(backgroundImage, '/default-hero.jpg');
+const ProjectsHero = ({ title = 'Our Projects', backgroundImage, heroImg }) => {
+  const bgImageUrl = resolveAssetUrl(backgroundImage || heroImg, '/default-hero.jpg');
 
   return (
     <div 
@@ -26,10 +26,19 @@ const ProjectsHero = ({ title = 'Our Projects', backgroundImage }) => {
         <h1 className="text-5xl md:text-7xl font-bold font-['Outfit'] mb-6 tracking-tight drop-shadow-xl">
           {title}
         </h1>
-        <div className="flex items-center justify-center gap-3 text-xs md:text-sm font-semibold tracking-widest uppercase opacity-85">
-          <a href="/" className="hover:text-[#3B82F6] transition-colors">Home</a>
-          <span className="text-[#3B82F6] opacity-70">&gt;</span>
-          <span className="text-zinc-300">Projects</span>
+        <div 
+          className="flex items-center justify-center gap-3 text-white opacity-95 text-center"
+          style={{
+            fontFamily: 'Outfit, sans-serif',
+            fontWeight: 400,
+            fontSize: '20px',
+            lineHeight: '25px',
+            letterSpacing: '0%'
+          }}
+        >
+          <a href="/" className="hover:opacity-80 transition-opacity">Home</a>
+          <span className="opacity-70">&gt;</span>
+          <span>Projects</span>
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import apiClient from '../../api/client';
-import team from '../../assets/homepage/team.png';
+import teamFallback from '../../assets/homepage/team.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const defaultTeamMembers = [
   { id: '01', name: 'Mark Jackson', role: 'Co-Founder & CEO' },
@@ -14,25 +15,11 @@ const defaultTeamMembers = [
 const Team = ({ data: externalData }) => {
   const [activeMember, setActiveMember] = useState('01');
   const [content, setContent] = useState(externalData || null);
-  const [teamImg, setTeamImg] = useState(team); 
 
   useEffect(() => {
     let isMounted = true;
-
-    const processContent = (fetchedContent) => {
-      if (isMounted) setContent(fetchedContent);
-      const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
-      if (fetchedContent.image) {
-        const imgUrl = fetchedContent.image.startsWith('http') ? fetchedContent.image : `${serverUrl}${fetchedContent.image}`;
-        const img = new Image();
-        img.src = imgUrl;
-        img.onload = () => { if (isMounted) setTeamImg(imgUrl); };
-        img.onerror = () => { if (isMounted) setTeamImg(team); }; 
-      } 
-    };
-
     if (externalData) {
-      processContent(externalData);
+      setContent(externalData);
       return () => { isMounted = false; };
     }
 
@@ -40,19 +27,15 @@ const Team = ({ data: externalData }) => {
       try {
         const res = await apiClient.get('/cms/section/homepage_team');
         const { data } = res;
-        if (data.success && data.data?.content) {
-          processContent(data.data.content);
+        if (data.success && data.data?.content && isMounted) {
+          setContent(data.data.content);
         }
       } catch (error) {
         console.error('Failed to fetch team content:', error);
       }
     };
-
     fetchTeamData();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [externalData]);
 
   const badgeText = content?.badgeText || "AMAZING DESIGN TEAM";
@@ -85,84 +68,115 @@ const Team = ({ data: externalData }) => {
     });
   };
 
+  const currentMemberData = teamMembers.find(m => (m.id || m.name) === activeMember) || teamMembers[0];
+  const displayImage = currentMemberData?.image ? resolveAssetUrl(currentMemberData.image) : teamFallback;
+
   return (
-    <section className="py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-6 md:px-8 max-w-[1400px]"> 
-        
-        <div className="flex flex-col md:flex-row justify-between items-start mb-20 gap-8 md:gap-12">
-          <div className="md:w-5/12 fadeInLeft">
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
-              <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
-              <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
-                {badgeText}
-              </span>
+    <>
+      {/* 🚀 CSS Animation Block Refined for Slower, Smoother Frame Movement */}
+      <style>
+        {`
+          @keyframes smoothFrameSlideBlur {
+            0% {
+              transform: translateX(-50px);
+              filter: blur(8px);
+              opacity: 0.2;
+            }
+            100% {
+              transform: translateX(0);
+              filter: blur(0px);
+              opacity: 1;
+            }
+          }
+          .animate-frame-slide-blur {
+            /* Changed to 0.8s ease-out for a smooth and calm entry */
+            animation: smoothFrameSlideBlur 0.8s ease-out forwards;
+          }
+        `}
+      </style>
+
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="container mx-auto px-6 md:px-8 max-w-[1400px]"> 
+          
+          <div className="flex flex-col md:flex-row justify-between items-start mb-20 gap-8 md:gap-12">
+            <div className="md:w-5/12 fadeInLeft">
+              <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-300">
+                <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
+                <span className="text-[10px] text-gray-600 uppercase tracking-widest font-medium">
+                  {badgeText}
+                </span>
+              </div>
+            </div>
+            
+            <div className="md:w-7/12 flex flex-col items-start fadeInRight">
+              <h2 className="text-5xl md:text-6xl lg:text-[64px] font-bold tracking-tight text-gray-900 mb-6 leading-[1.05]">
+                {renderTitle(title)}
+              </h2>
+              <p className="text-gray-500 font-normal text-base md:text-lg leading-relaxed max-w-2xl">
+                {description}
+              </p>
             </div>
           </div>
-          
-          <div className="md:w-7/12 flex flex-col items-start fadeInRight">
-            <h2 className="text-5xl md:text-6xl lg:text-[64px] font-bold tracking-tight text-gray-900 mb-6 leading-[1.05]">
-              {renderTitle(title)}
-            </h2>
-            <p className="text-gray-500 font-normal text-base md:text-lg leading-relaxed max-w-2xl">
-              {description}
-            </p>
-          </div>
-        </div>
 
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
-          <div className="w-full lg:w-5/12 h-[400px] md:h-[500px] lg:h-[600px] rounded-[2.5rem] overflow-hidden shadow-sm fadeInLeft group shrink-0">
-             <img src={teamImg} alt="Interior Design Team" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-          </div>
+          <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+            
+            {/* 🚀 Dynamic Image Container - Animation and Key moved here! */}
+            <div 
+              key={displayImage} // Forces the entire frame to re-render and trigger animation
+              className="w-full lg:w-5/12 h-[400px] md:h-[500px] lg:h-[600px] rounded-[2.5rem] overflow-hidden shadow-sm shrink-0 relative bg-gray-100 animate-frame-slide-blur"
+            >
+               <img 
+                 src={displayImage} 
+                 alt={currentMemberData.name} 
+                 className="w-full h-full object-cover" 
+               />
+            </div>
 
-          <div className="w-full lg:w-7/12 flex flex-col border-t-2 border-black fadeInRight relative">
-            {teamMembers.map((member, index) => {
-              const memberId = member.id || `0${index + 1}`;
-              const isActive = activeMember === memberId;
-              
-              return (
-                <div 
-                  key={index}
-                  className={`group flex items-center justify-between py-4 md:py-6 border-b-2 cursor-pointer transition-colors duration-300 ${
-                    isActive
-                      ? 'border-[#3B82F6] z-10' 
-                      : 'border-black hover:bg-gray-50/50'
-                  }`}
-                  onMouseEnter={() => setActiveMember(memberId)}
-                >
-                  <div className="flex items-center gap-6 sm:gap-16 w-full">
-                    {/* Serial Number */}
-                    <span className="text-base font-medium text-gray-900 w-8">
-                      {memberId}
-                    </span>
-                    {/* Name */}
-                    <span className="text-xl sm:text-2xl font-bold text-gray-900 flex-1">
-                      {member.name}
-                    </span>
-                    {/* Role */}
-                    <span className="text-sm text-gray-500 font-normal hidden sm:block w-48 text-left">
-                      {member.role}
-                    </span>
+            <div className="w-full lg:w-7/12 flex flex-col border-t-2 border-black fadeInRight relative">
+              {teamMembers.map((member, index) => {
+                const memberId = member.id || `0${index + 1}`;
+                const isActive = activeMember === memberId;
+                
+                return (
+                  <div 
+                    key={index}
+                    className={`group flex items-center justify-between py-4 md:py-6 border-b-2 cursor-pointer transition-colors duration-300 ${
+                      isActive
+                        ? 'border-[#3B82F6] z-10' 
+                        : 'border-black hover:bg-gray-50/50'
+                    }`}
+                    onMouseEnter={() => setActiveMember(memberId)}
+                  >
+                    <div className="flex items-center gap-6 sm:gap-16 w-full">
+                      <span className="text-base font-medium text-gray-900 w-8">
+                        {memberId}
+                      </span>
+                      <span className={`text-xl sm:text-2xl font-bold flex-1 transition-colors duration-300 ${isActive ? 'text-[#3B82F6]' : 'text-gray-900'}`}>
+                        {member.name}
+                      </span>
+                      <span className="text-sm text-gray-500 font-normal hidden sm:block w-48 text-left">
+                        {member.role}
+                      </span>
+                    </div>
+                    
+                    {isActive ? (
+                      <div className="w-12 h-12 rounded-full bg-[#3B82F6] flex items-center justify-center text-white shrink-0">
+                        <ArrowRight strokeWidth={2.5} className="w-7 h-7" /> 
+                      </div>
+                    ) : (
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-gray-900 shrink-0">
+                        <ArrowUpRight strokeWidth={2} className="w-8 h-8" />
+                      </div>
+                    )}
                   </div>
-                  
-                  {/* Arrow Indicator */}
-                  {isActive ? (
-                    <div className="w-12 h-12 rounded-full bg-[#3B82F6] flex items-center justify-center text-white shrink-0">
-                      <ArrowRight strokeWidth={2.5} className="w-7 h-7" /> 
-                    </div>
-                  ) : (
-                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-gray-900 shrink-0">
-                      <ArrowUpRight strokeWidth={2} className="w-8 h-8" />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+            
           </div>
-          
         </div>
-
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

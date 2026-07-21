@@ -75,7 +75,9 @@ const OurServices = ({ data: externalData }) => {
   const [content, setContent] = useState(externalData || null);
   const [serviceImg, setServiceImg] = useState(defaultServiceImg);
   const [countingImg, setCountingImg] = useState(defaultCountingImg);
-  const [houseTranslateX, setHouseTranslateX] = useState(0);
+  const [houseTranslateX, setHouseTranslateX] = useState(150);
+  
+  const imageContainerRef = useRef(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -126,23 +128,27 @@ const OurServices = ({ data: externalData }) => {
   }, [externalData]);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let currentX = 0;
-
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const delta = currentScrollY - lastScrollY;
+      if (!imageContainerRef.current) return;
 
-      currentX -= delta * 0.35;
+      const rect = imageContainerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
 
-      if (currentX > 150) currentX = 150;
-      if (currentX < -150) currentX = -150;
+      if (rect.top <= windowHeight && rect.bottom >= 0) {
+        const totalDistance = windowHeight + rect.height;
+        const currentScrolled = windowHeight - rect.top;
+        let progress = currentScrolled / totalDistance;
 
-      setHouseTranslateX(currentX);
-      lastScrollY = currentScrollY;
+        progress = Math.max(0, Math.min(1, progress));
+        const targetX = 150 - (progress * 300);
+
+        setHouseTranslateX(targetX);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -204,7 +210,7 @@ const OurServices = ({ data: externalData }) => {
           </div>
         </div>
 
-        {/* Middle Section: Image & Services List (Frontend Dev's Layout) */}
+        {/* Middle Section: Image & Services List */}
         <div className="flex flex-col lg:grid lg:grid-cols-[1.35fr_1.15fr] gap-10 lg:gap-16 xl:gap-12 mb-24 md:mb-32 items-center">
           <div className="relative rounded-[37px] overflow-hidden h-[450px] lg:h-[544px] lg:max-w-[900px] w-full fadeInLeft group">
             <img
@@ -292,8 +298,7 @@ const OurServices = ({ data: externalData }) => {
           ))}
         </div>
 
-        {/* Bottom Section*/}
-        <div className="w-full flex justify-center opal-move-up mt-10">
+        <div ref={imageContainerRef} className="w-full flex justify-center opal-move-up mt-10">
           <img
             src={countingImg}
             alt="3D Floor Plan Rendering"

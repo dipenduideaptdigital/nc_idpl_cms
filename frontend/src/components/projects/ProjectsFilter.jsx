@@ -13,11 +13,20 @@ const ProjectsFilter = ({
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-8 py-3.5 text-sm font-medium tracking-wide transition-colors duration-300 shrink-0 rounded-none cursor-pointer ${
+            className={`px-8 py-4 transition-colors duration-300 shrink-0 rounded-none cursor-pointer flex items-center justify-center ${
               isActive 
                 ? 'bg-black text-white' 
                 : 'bg-[#F7F7F7] hover:bg-[#EEEEEE] text-black'
             }`}
+            style={{
+              fontFamily: 'Outfit, sans-serif',
+              fontWeight: 500,
+              fontSize: '20px',
+              lineHeight: '100%',
+              letterSpacing: '0%',
+              textAlign: 'center',
+              verticalAlign: 'middle'
+            }}
           >
             {cat}
           </button>

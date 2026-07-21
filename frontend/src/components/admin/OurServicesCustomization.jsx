@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Upload } from 'lucide-react';
+import { List, Upload, Plus, Trash2 } from 'lucide-react';
 import TipTapEditor from './TipTapEditor';
 
 const OurServicesCustomization = ({
@@ -7,6 +7,8 @@ const OurServicesCustomization = ({
   onChange,
   onServiceItemChange,
   onStatItemChange,
+  onAddService,
+  onDeleteService,
   previewMain,
   previewBottom,
   mainImageRef,
@@ -121,26 +123,69 @@ const OurServicesCustomization = ({
           </div>
         </div>
 
-        {/* Services Titles (6 Items) */}
+        {/* Services Titles */}
         <div className="pt-6 border-t border-zinc-100">
-          <h3 className="text-sm font-bold tracking-widest text-zinc-400 uppercase mb-6">Service Offerings List (6 Items)</h3>
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-sm font-bold tracking-widest text-zinc-400 uppercase">
+              Service Offerings List ({(ourServicesData.services || []).length} Items)
+            </h3>
+            <button
+              type="button"
+              onClick={onAddService}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-zinc-900 text-white rounded-xl text-xs font-semibold hover:bg-zinc-800 transition-colors shadow-sm cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5" /> Add Service
+            </button>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {(ourServicesData.services || []).map((service, index) => (
-              <div key={index} className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl flex items-center gap-4">
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-950 text-white text-xs font-bold shrink-0">
-                  {service.id || `0${index + 1}`}
-                </span>
-                <div className="flex-1">
-                  <input 
-                    type="text" 
-                    value={service.title || ''}
-                    onChange={(e) => onServiceItemChange(index, 'title', e.target.value)}
-                    placeholder="Service title"
-                    className="w-full px-3 py-2 rounded-lg bg-white border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 text-sm"
-                  />
+              <div key={index} className="p-5 bg-zinc-50 border border-zinc-200 rounded-2xl flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-950 text-white text-xs font-bold shrink-0">
+                      {service.id || `0${index + 1}`}
+                    </span>
+                    <span className="text-sm font-bold text-zinc-800">Service Offering {service.id || `0${index + 1}`}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onDeleteService(index)}
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
+                    title="Delete Service"
+                  >
+                    <Trash2 className="w-4.5 h-4.5" />
+                  </button>
+                </div>
+                <div className="space-y-3 pl-11">
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-500 mb-1">Service Title</label>
+                    <input 
+                      type="text" 
+                      value={service.title || ''}
+                      onChange={(e) => onServiceItemChange(index, 'title', e.target.value)}
+                      placeholder="Service title"
+                      className="w-full px-3 py-2.5 rounded-lg bg-white border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-500 mb-1">Service Link / URL path</label>
+                    <input 
+                      type="text" 
+                      value={service.link || ''}
+                      onChange={(e) => onServiceItemChange(index, 'link', e.target.value)}
+                      placeholder="e.g., /services/residential-interior-design"
+                      className="w-full px-3 py-2.5 rounded-lg bg-white border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 text-sm font-mono"
+                    />
+                  </div>
                 </div>
               </div>
             ))}
+            {(ourServicesData.services || []).length === 0 && (
+              <p className="col-span-2 text-zinc-400 text-sm italic text-center py-8 bg-zinc-50 rounded-2xl border border-zinc-200 border-dashed">
+                No services added yet. Click "Add Service" to create one.
+              </p>
+            )}
           </div>
         </div>
 

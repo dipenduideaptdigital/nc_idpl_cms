@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Save, Image as ImageIcon, Loader2, CheckCircle, List, User, Settings, FileText, Send, ChevronDown } from 'lucide-react';
 import HeroCustomization from '../../components/admin/HeroCustomization';
 import ServicesCustomization from '../../components/admin/ServicesCustomization';
@@ -13,6 +14,7 @@ import VideoBannerCustomization from '../../components/admin/VideoBannerCustomiz
 import BlogSectionCustomization from '../../components/admin/BlogSectionCustomization';
 import GalleryCustomization from '../../components/admin/GalleryCustomization';
 import CtaCustomization from '../../components/admin/CtaCustomization';
+import FooterCustomization from '../../components/admin/FooterCustomization';
 import apiClient from '../../api/client'; 
 
 const getAssetUrl = (path) => {
@@ -41,9 +43,19 @@ const TABS = [
 ];
 
 const HomeCustomization = () => {
-  const [activeTab, setActiveTab] = useState('hero');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabParam || 'hero');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (tabParam && (TABS.some(t => t.key === tabParam) || tabParam === 'footer')) {
+      setActiveTab(tabParam);
+    } else if (!tabParam) {
+      setActiveTab('hero');
+    }
+  }, [tabParam]);
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -116,12 +128,12 @@ const HomeCustomization = () => {
     title: 'Explore Our [Comprehensive Interior Design] Services',
     description: 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.',
     services: [
-      { id: '01', title: 'Residential Interior Design' },
-      { id: '02', title: 'Outdoor & Landscape Design' },
-      { id: '03', title: 'Interior Design Consultation' },
-      { id: '04', title: 'Commercial Interior Design' },
-      { id: '05', title: 'Renovation And Remodeling' },
-      { id: '06', title: 'Interior 2D/3D Layouts' }
+      { id: '01', title: 'Residential Interior Design', link: '/services/residential-interior-design' },
+      { id: '02', title: 'Outdoor & Landscape Design', link: '/services/outdoor-and-landscape-design' },
+      { id: '03', title: 'Interior Design Consultation', link: '/services/interior-design-consultation' },
+      { id: '04', title: 'Commercial Interior Design', link: '/services/commercial-interior-design' },
+      { id: '05', title: 'Renovation And Remodeling', link: '/services/renovation-and-remodeling' },
+      { id: '06', title: 'Interior 2D/3D Layouts', link: '/services/interior-2d-3d-layouts' }
     ],
     stats: [
       { value: '26+', title: 'YEARS EXPERIENCE', description: 'Improving homes with expert craftsmanship for years' },
@@ -235,6 +247,39 @@ const HomeCustomization = () => {
     buttonText: 'BOOK A FREE CONSULTATION'
   });
 
+  // 14. Footer State
+  const [footerData, setFooterData] = useState({
+    description: "We transform your vision into beautifully crafted spaces.",
+    address: "Office: AG 40 , Sector II, Salt Lake City,\nKolkata: 700091",
+    phone: "+91 9831-637-409",
+    phone2: "",
+    email: "Subhaakritee@Hotmail.Com",
+    email2: "",
+    instagram: "#",
+    twitter: "#",
+    facebook: "#",
+    linkedin: "#",
+    copyrightText: "Copyright Subhaakritee - All Rights Reserved.",
+    linksTitle1: "Support",
+    linksTitle2: "Company",
+    links1: [
+      { label: "Our Project", url: "/projects" },
+      { label: "Partners", url: "/partners" },
+      { label: "Partners Program", url: "/partners-program" },
+      { label: "Affiliate Program", url: "/affiliate-program" },
+      { label: "Terms & Conditions", url: "/terms" },
+      { label: "Support Center", url: "/support" }
+    ],
+    links2: [
+      { label: "About Us", url: "/about" },
+      { label: "Services", url: "/services" },
+      { label: "Careers", url: "/careers" },
+      { label: "Our Team", url: "/team" },
+      { label: "Blog", url: "/blog" },
+      { label: "Contact Us", url: "/contact" }
+    ]
+  });
+
   // Previews
   const [previewBack, setPreviewBack] = useState('');
   const [previewFront, setPreviewFront] = useState('');
@@ -291,7 +336,9 @@ const HomeCustomization = () => {
         videoBannerRes,
         blogSectionRes,
         galleryRes,
-        ctaRes
+        ctaRes,
+        footerRes,
+        pagesRes
       ] = await Promise.allSettled([
         apiClient.get('/cms/section/homepage_hero'),
         apiClient.get('/cms/section/homepage_services'),
@@ -305,8 +352,36 @@ const HomeCustomization = () => {
         apiClient.get('/cms/section/homepage_video_banner'),
         apiClient.get('/cms/section/homepage_blog_section'),
         apiClient.get('/cms/section/homepage_gallery'),
-        apiClient.get('/cms/section/homepage_cta')
+        apiClient.get('/cms/section/homepage_cta'),
+        apiClient.get('/cms/section/homepage_footer'),
+        apiClient.get('/admin/pages')
       ]);
+
+      // Extract service pages for default services list
+      let dbServicePages = [];
+      if (pagesRes.status === 'fulfilled' && pagesRes.value.data?.data) {
+        const pagesList = pagesRes.value.data.data || [];
+        dbServicePages = pagesList
+          .filter(page => {
+            const currentSlug = (page.slug || '').toLowerCase().trim();
+            const fullPath = (page.fullPath || '').toLowerCase().trim();
+            return (
+              currentSlug === 'services' || 
+              currentSlug === 'service' || 
+              fullPath.startsWith('/services') || 
+              page.template === 'service-page'
+            );
+          })
+          .map((page, index) => {
+            const nextId = index + 1;
+            const formattedId = nextId < 10 ? `0${nextId}` : `${nextId}`;
+            return {
+              id: formattedId,
+              title: page.title,
+              link: page.fullPath
+            };
+          });
+      }
 
       // 1. Hero
       if (heroRes.status === 'fulfilled' && heroRes.value.data?.data?.content) {
@@ -335,10 +410,26 @@ const HomeCustomization = () => {
       if (ourServicesRes.status === 'fulfilled' && ourServicesRes.value.data?.data?.content) {
         const content = ourServicesRes.value.data.data.content;
         if (Object.keys(content).length > 0) {
-          setOurServicesData(content);
+          const finalServices = (content.services && content.services.length > 0)
+            ? content.services
+            : dbServicePages;
+          setOurServicesData({
+            ...content,
+            services: finalServices
+          });
           if (content.image) setPreviewOurServicesMain(getAssetUrl(content.image));
           if (content.bottomImage) setPreviewOurServicesBottom(getAssetUrl(content.bottomImage));
+        } else {
+          setOurServicesData(prev => ({
+            ...prev,
+            services: dbServicePages
+          }));
         }
+      } else {
+        setOurServicesData(prev => ({
+          ...prev,
+          services: dbServicePages
+        }));
       }
 
       // 5. How We Work
@@ -426,6 +517,12 @@ const HomeCustomization = () => {
         const content = ctaRes.value.data.data.content;
         if (Object.keys(content).length > 0) setCtaData(content);
       }
+
+      // 14. Footer
+      if (footerRes.status === 'fulfilled' && footerRes.value.data?.data?.content) {
+        const content = footerRes.value.data.data.content;
+        if (Object.keys(content).length > 0) setFooterData(content);
+      }
     } catch (error) {
       console.error('Failed to fetch homepage data:', error);
       setErrorMsg('Failed to load initial data. Please refresh.');
@@ -490,6 +587,28 @@ const HomeCustomization = () => {
       const updatedStats = [...prev.stats];
       updatedStats[index] = { ...updatedStats[index], [field]: value };
       return { ...prev, stats: updatedStats };
+    });
+  };
+
+  const handleOurServicesAddService = () => {
+    setOurServicesData(prev => {
+      const updatedServices = [...(prev.services || [])];
+      const nextId = updatedServices.length + 1;
+      const formattedId = nextId < 10 ? `0${nextId}` : `${nextId}`;
+      updatedServices.push({ id: formattedId, title: 'New Service', link: '' });
+      return { ...prev, services: updatedServices };
+    });
+  };
+
+  const handleOurServicesDeleteService = (index) => {
+    setOurServicesData(prev => {
+      const updatedServices = (prev.services || []).filter((_, i) => i !== index);
+      const reindexedServices = updatedServices.map((service, idx) => {
+        const nextId = idx + 1;
+        const formattedId = nextId < 10 ? `0${nextId}` : `${nextId}`;
+        return { ...service, id: formattedId };
+      });
+      return { ...prev, services: reindexedServices };
     });
   };
 
@@ -831,6 +950,64 @@ const HomeCustomization = () => {
     }
   };
 
+  const handleTeamMemberImageUpload = async (e, index) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      setErrorMsg('');
+      const res = await apiClient.post('/uploads/image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const { data } = res;
+      if (data.success && data.data.url) {
+        const uploadedUrl = data.data.url;
+        setTeamData(prev => {
+          const updated = [...prev.members];
+          updated[index] = { ...updated[index], image: uploadedUrl };
+          return { ...prev, members: updated };
+        });
+      }
+    } catch (error) {
+      console.error(`Failed to upload team member ${index} image:`, error);
+      setErrorMsg('Upload Failed: File must be an image (Max 5MB)');
+    } finally {
+      e.target.value = '';
+    }
+  };
+
+  
+  const handleFooterInputChange = (e) => {
+    const { name, value } = e.target;
+    setFooterData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFooterLinkChange = (columnKey, index, field, value) => {
+    setFooterData(prev => {
+      const updatedLinks = [...prev[columnKey]];
+      updatedLinks[index] = { ...updatedLinks[index], [field]: value };
+      return { ...prev, [columnKey]: updatedLinks };
+    });
+  };
+
+  const handleFooterAddLink = (columnKey) => {
+    setFooterData(prev => {
+      const updatedLinks = [...(prev[columnKey] || [])];
+      updatedLinks.push({ label: 'New Link', url: '#' });
+      return { ...prev, [columnKey]: updatedLinks };
+    });
+  };
+
+  const handleFooterDeleteLink = (columnKey, index) => {
+    setFooterData(prev => {
+      const updatedLinks = prev[columnKey].filter((_, i) => i !== index);
+      return { ...prev, [columnKey]: updatedLinks };
+    });
+  };
+
   const handleSave = async () => {
     try {
       setSaving(true);
@@ -852,6 +1029,7 @@ const HomeCustomization = () => {
       else if (activeTab === 'blog_section') payload = { content: blogSectionData };
       else if (activeTab === 'gallery') payload = { content: galleryData };
       else if (activeTab === 'cta') payload = { content: ctaData };
+      else if (activeTab === 'footer') payload = { content: footerData };
 
       const res = await apiClient.put(url, payload);
       
@@ -879,8 +1057,14 @@ const HomeCustomization = () => {
     <div className="space-y-8 pb-10 animation-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">Home Page Customization</h1>
-          <p className="text-zinc-500 mt-1 text-sm sm:text-base">Manage the content and images for your main landing page.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">
+            {activeTab === 'footer' ? 'Footer Settings Customization' : 'Home Page Customization'}
+          </h1>
+          <p className="text-zinc-500 mt-1 text-sm sm:text-base">
+            {activeTab === 'footer'
+              ? 'Manage the navigation links, contact info, and copyright settings for the website footer.'
+              : 'Manage the content and images for your main landing page.'}
+          </p>
         </div>
         
         <button 
@@ -907,53 +1091,56 @@ const HomeCustomization = () => {
       )}
 
       {/* Component Selector Dropdown */}
-      <div className="relative mb-6 z-40" ref={dropdownRef}>
-        <label className="block text-sm font-medium text-zinc-700 mb-2">Select Component to Edit</label>
-        <button
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="w-full sm:max-w-md flex items-center justify-between bg-white border border-zinc-200 px-4 py-3 rounded-xl shadow-sm hover:border-zinc-300 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-900/10"
-        >
-          <div className="flex items-center gap-3">
-            <div className="bg-zinc-100 p-2 rounded-lg">
-              {(() => {
-                const ActiveIcon = TABS.find(t => t.key === activeTab)?.icon || ImageIcon;
-                return <ActiveIcon className="w-5 h-5 text-zinc-700" />;
-              })()}
+      {activeTab !== 'footer' && (
+        <div className="relative mb-6 z-40" ref={dropdownRef}>
+          <label className="block text-sm font-medium text-zinc-700 mb-2">Select Component to Edit</label>
+          <button
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="w-full sm:max-w-md flex items-center justify-between bg-white border border-zinc-200 px-4 py-3 rounded-xl shadow-sm hover:border-zinc-300 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-900/10"
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-zinc-100 p-2 rounded-lg">
+                {(() => {
+                  const ActiveIcon = TABS.find(t => t.key === activeTab)?.icon || ImageIcon;
+                  return <ActiveIcon className="w-5 h-5 text-zinc-700" />;
+                })()}
+              </div>
+              <span className="font-semibold text-zinc-900">
+                {TABS.find(t => t.key === activeTab)?.label || 'Select Component'}
+              </span>
             </div>
-            <span className="font-semibold text-zinc-900">
-              {TABS.find(t => t.key === activeTab)?.label || 'Select Component'}
-            </span>
-          </div>
-          <ChevronDown className={`w-5 h-5 text-zinc-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
-        </button>
+            <ChevronDown className={`w-5 h-5 text-zinc-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+          </button>
 
-        {dropdownOpen && (
-          <div className="absolute left-0 mt-2 w-full sm:max-w-md bg-white border border-zinc-200 rounded-xl shadow-xl max-h-80 overflow-y-auto animate-in fade-in slide-in-from-top-2">
-            <div className="p-2 grid gap-1">
-              {TABS.map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => {
-                    setActiveTab(tab.key);
-                    setDropdownOpen(false);
-                  }}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all w-full text-left group ${
-                    activeTab === tab.key 
-                      ? 'bg-zinc-900 text-white shadow-md' 
-                      : 'hover:bg-zinc-100 text-zinc-700'
-                  }`}
-                >
-                  <tab.icon className={`w-4 h-4 ${activeTab === tab.key ? 'text-zinc-300' : 'text-zinc-500 group-hover:text-zinc-700'}`} />
-                  <span className="font-medium text-sm">{tab.label}</span>
-                  {activeTab === tab.key && (
-                    <CheckCircle className="w-4 h-4 text-green-400 ml-auto" />
-                  )}
-                </button>
-              ))}
+          {dropdownOpen && (
+            <div className="absolute left-0 mt-2 w-full sm:max-w-md bg-white border border-zinc-200 rounded-xl shadow-xl max-h-80 overflow-y-auto animate-in fade-in slide-in-from-top-2">
+              <div className="p-2 grid gap-1">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => {
+                      setActiveTab(tab.key);
+                      setSearchParams(tab.key === 'hero' ? {} : { tab: tab.key });
+                      setDropdownOpen(false);
+                    }}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all w-full text-left group ${
+                      activeTab === tab.key 
+                        ? 'bg-zinc-900 text-white shadow-md' 
+                        : 'hover:bg-zinc-100 text-zinc-700'
+                    }`}
+                  >
+                    <tab.icon className={`w-4 h-4 ${activeTab === tab.key ? 'text-zinc-300' : 'text-zinc-500 group-hover:text-zinc-700'}`} />
+                    <span className="font-medium text-sm">{tab.label}</span>
+                    {activeTab === tab.key && (
+                      <CheckCircle className="w-4 h-4 text-green-400 ml-auto" />
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       {/* Tab Contents */}
       {activeTab === 'hero' && (
@@ -993,6 +1180,8 @@ const HomeCustomization = () => {
           onChange={handleOurServicesInputChange}
           onServiceItemChange={handleOurServicesItemChange}
           onStatItemChange={handleOurServicesStatChange}
+          onAddService={handleOurServicesAddService}
+          onDeleteService={handleOurServicesDeleteService}
           previewMain={previewOurServicesMain}
           previewBottom={previewOurServicesBottom}
           mainImageRef={ourServicesMainRef}
@@ -1038,9 +1227,7 @@ const HomeCustomization = () => {
           teamData={teamData}
           onChange={handleTeamInputChange}
           onMemberChange={handleTeamMemberChange}
-          previewImage={previewTeamImage}
-          imageRef={teamImageRef}
-          onImageUpload={handleImageUpload}
+          onMemberImageUpload={handleTeamMemberImageUpload}
         />
       )}
 
@@ -1094,6 +1281,16 @@ const HomeCustomization = () => {
         <CtaCustomization
           ctaData={ctaData}
           onChange={handleCtaInputChange}
+        />
+      )}
+
+      {activeTab === 'footer' && (
+        <FooterCustomization
+          footerData={footerData}
+          onChange={handleFooterInputChange}
+          onLinkChange={handleFooterLinkChange}
+          onAddLink={handleFooterAddLink}
+          onDeleteLink={handleFooterDeleteLink}
         />
       )}
     </div>

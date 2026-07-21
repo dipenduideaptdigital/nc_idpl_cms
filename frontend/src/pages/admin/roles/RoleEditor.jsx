@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { rolesApi } from '../../../api/roles';
-import { Save, ArrowLeft, ShieldCheck, Check, Info, KeyRound, Search, ChevronDown, X } from 'lucide-react';
+import { Save, ArrowLeft, ShieldCheck, Check, Info, KeyRound, Search, ChevronDown,Loader2, X } from 'lucide-react';
 
 const RoleEditor = () => {
   const { id } = useParams();
