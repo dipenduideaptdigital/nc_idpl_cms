@@ -71,7 +71,7 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
 
   const handleConfirmSelection = () => {
     if (selectedMedia) {
-      onSelect(selectedMedia.url); 
+      onSelect(selectedMedia.url, selectedMedia.id); 
       onClose();
     }
   };

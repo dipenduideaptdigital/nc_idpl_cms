@@ -134,45 +134,48 @@ const Testimonials = ({ data: externalData }) => {
           badgeText: residential?.badgeText || defaultTestimonials[0].badgeText,
           title: residential?.title || defaultTestimonials[0].title,
           description: residential?.description || defaultTestimonials[0].description,
-          ratingValue: residential?.ratingValue || defaultTestimonials[0].ratingValue,
-          reviewCount: residential?.reviewCount || defaultTestimonials[0].reviewCount,
-          conceptText: residential?.conceptText || defaultTestimonials[0].conceptText,
-          mainQuote: residential?.mainQuote || defaultTestimonials[0].mainQuote,
-          authorName: residential?.authorName || defaultTestimonials[0].authorName,
-          authorRole: residential?.authorRole || defaultTestimonials[0].authorRole,
-          image: resolveUrl(residential?.image, defaultTestimonials[0].image),
-          authorImage: resolveUrl(residential?.authorImage, defaultTestimonials[0].authorImage),
-          logos: residential?.logos || defaultTestimonials[0].logos
+          ratingValue: residential?.items?.[0]?.ratingValue || residential?.ratingValue || defaultTestimonials[0].ratingValue,
+          reviewCount: residential?.items?.[0]?.reviewCount || residential?.reviewCount || defaultTestimonials[0].reviewCount,
+          conceptText: residential?.items?.[0]?.conceptText || residential?.conceptText || defaultTestimonials[0].conceptText,
+          mainQuote: residential?.items?.[0]?.mainQuote || residential?.mainQuote || defaultTestimonials[0].mainQuote,
+          authorName: residential?.items?.[0]?.authorName || residential?.authorName || defaultTestimonials[0].authorName,
+          authorRole: residential?.items?.[0]?.authorRole || residential?.authorRole || defaultTestimonials[0].authorRole,
+          image: resolveUrl(residential?.items?.[0]?.image || residential?.image, defaultTestimonials[0].image),
+          authorImage: resolveUrl(residential?.items?.[0]?.authorImage || residential?.authorImage, defaultTestimonials[0].authorImage),
+          logos: residential?.logos || defaultTestimonials[0].logos,
+          bottomText: residential?.bottomText || defaultTestimonials[0].bottomText
         },
         {
           type: 'office',
-          badgeText: office?.badgeText || defaultTestimonials[1].badgeText,
-          title: office?.title || defaultTestimonials[1].title,
-          description: office?.description || defaultTestimonials[1].description,
-          ratingValue: office?.ratingValue || defaultTestimonials[1].ratingValue,
-          reviewCount: office?.reviewCount || defaultTestimonials[1].reviewCount,
-          conceptText: office?.conceptText || defaultTestimonials[1].conceptText,
-          mainQuote: office?.mainQuote || defaultTestimonials[1].mainQuote,
-          authorName: office?.authorName || defaultTestimonials[1].authorName,
-          authorRole: office?.authorRole || defaultTestimonials[1].authorRole,
-          image: resolveUrl(office?.image, defaultTestimonials[1].image),
-          authorImage: resolveUrl(office?.authorImage, defaultTestimonials[1].authorImage),
-          logos: office?.logos || defaultTestimonials[1].logos
+          badgeText: residential?.badgeText || office?.badgeText || defaultTestimonials[1].badgeText,
+          title: residential?.title || office?.title || defaultTestimonials[1].title,
+          description: residential?.description || office?.description || defaultTestimonials[1].description,
+          ratingValue: residential?.items?.[1]?.ratingValue || office?.ratingValue || defaultTestimonials[1].ratingValue,
+          reviewCount: residential?.items?.[1]?.reviewCount || office?.reviewCount || defaultTestimonials[1].reviewCount,
+          conceptText: residential?.items?.[1]?.conceptText || office?.conceptText || defaultTestimonials[1].conceptText,
+          mainQuote: residential?.items?.[1]?.mainQuote || office?.mainQuote || defaultTestimonials[1].mainQuote,
+          authorName: residential?.items?.[1]?.authorName || office?.authorName || defaultTestimonials[1].authorName,
+          authorRole: residential?.items?.[1]?.authorRole || office?.authorRole || defaultTestimonials[1].authorRole,
+          image: resolveUrl(residential?.items?.[1]?.image || office?.image, defaultTestimonials[1].image),
+          authorImage: resolveUrl(residential?.items?.[1]?.authorImage || office?.authorImage, defaultTestimonials[1].authorImage),
+          logos: residential?.logos || office?.logos || defaultTestimonials[1].logos,
+          bottomText: residential?.bottomText || office?.bottomText || defaultTestimonials[1].bottomText
         },
         {
           type: 'architecture',
-          badgeText: architecture?.badgeText || defaultTestimonials[2].badgeText,
-          title: architecture?.title || defaultTestimonials[2].title,
-          description: architecture?.description || defaultTestimonials[2].description,
-          ratingValue: architecture?.ratingValue || defaultTestimonials[2].ratingValue,
-          reviewCount: architecture?.reviewCount || defaultTestimonials[2].reviewCount,
-          conceptText: architecture?.conceptText || defaultTestimonials[2].conceptText,
-          mainQuote: architecture?.mainQuote || defaultTestimonials[2].mainQuote,
-          authorName: architecture?.authorName || defaultTestimonials[2].authorName,
-          authorRole: architecture?.authorRole || defaultTestimonials[2].authorRole,
-          image: resolveUrl(architecture?.image, defaultTestimonials[2].image),
-          authorImage: resolveUrl(architecture?.authorImage, defaultTestimonials[2].authorImage),
-          logos: architecture?.logos || defaultTestimonials[2].logos
+          badgeText: residential?.badgeText || architecture?.badgeText || defaultTestimonials[2].badgeText,
+          title: residential?.title || architecture?.title || defaultTestimonials[2].title,
+          description: residential?.description || architecture?.description || defaultTestimonials[2].description,
+          ratingValue: residential?.items?.[2]?.ratingValue || architecture?.ratingValue || defaultTestimonials[2].ratingValue,
+          reviewCount: residential?.items?.[2]?.reviewCount || architecture?.reviewCount || defaultTestimonials[2].reviewCount,
+          conceptText: residential?.items?.[2]?.conceptText || architecture?.conceptText || defaultTestimonials[2].conceptText,
+          mainQuote: residential?.items?.[2]?.mainQuote || architecture?.mainQuote || defaultTestimonials[2].mainQuote,
+          authorName: residential?.items?.[2]?.authorName || architecture?.authorName || defaultTestimonials[2].authorName,
+          authorRole: residential?.items?.[2]?.authorRole || architecture?.authorRole || defaultTestimonials[2].authorRole,
+          image: resolveUrl(residential?.items?.[2]?.image || architecture?.image, defaultTestimonials[2].image),
+          authorImage: resolveUrl(residential?.items?.[2]?.authorImage || architecture?.authorImage, defaultTestimonials[2].authorImage),
+          logos: residential?.logos || architecture?.logos || defaultTestimonials[2].logos,
+          bottomText: residential?.bottomText || architecture?.bottomText || defaultTestimonials[2].bottomText
         }
       ];
 
@@ -284,85 +287,91 @@ const Testimonials = ({ data: externalData }) => {
           </div>
         </div>
 
-        {/* Testimonials Body with React Key Transition */}
-        <div 
-          key={activeIdx} 
-          className="flex flex-col lg:flex-row gap-12 lg:gap-16 mb-24 items-center animate-in fade-in duration-700 ease-in-out"
-        >
-          
-          <div className="w-full lg:w-[55%] h-[350px] md:h-[450px] rounded-[2.5rem] overflow-hidden fadeInLeft group shrink-0">
-            <img 
-              src={activeSlide.image} 
-              alt="Office Interior" 
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              onError={(e) => {
-                if (e.currentTarget.src !== team) {
-                  e.currentTarget.src = team;
-                }
-              }}
-            />
-          </div>
-
-          <div className="w-full lg:w-[45%] flex flex-col fadeInRight">
+        {/* Testimonials Body */}
+        <div className="w-full mb-24 min-h-[500px] lg:min-h-[450px] flex items-center">
+          <div 
+            className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-stretch"
+          >
             
-            <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-8">
-              <div className="text-6xl font-bold text-gray-900 tracking-tighter">{ratingValue}</div>
+            <div className="w-full lg:w-[55%] h-[350px] md:h-[450px] rounded-[2.5rem] overflow-hidden fadeInLeft group shrink-0">
+              <img 
+                key={activeSlide.image}
+                src={activeSlide.image} 
+                alt="Office Interior" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 animate-in fade-in duration-500"
+                onError={(e) => {
+                  if (e.currentTarget.src !== team) {
+                    e.currentTarget.src = team;
+                  }
+                }}
+              />
+            </div>
+
+            <div className="w-full lg:w-[45%] flex flex-col justify-between h-auto lg:h-[450px] min-h-[350px] md:min-h-[400px] fadeInRight">
               
-              <div className="flex flex-col items-start sm:items-start gap-1">
-                <div className="bg-[#3B82F6] text-white flex space-x-1 px-3 py-1 rounded-full shadow-md">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-white text-white" />
-                  ))}
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-6">
+                  <div className="text-6xl font-bold text-gray-900 tracking-tighter shrink-0">{ratingValue}</div>
+                  
+                  <div className="flex flex-col items-start sm:items-start gap-1 shrink-0">
+                    <div className="bg-[#3B82F6] text-white flex space-x-1 px-3 py-1 rounded-full shadow-md">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-white text-white" />
+                      ))}
+                    </div>
+                    <span className="text-xs font-bold text-gray-900 pl-1">{reviewCount}</span>
+                  </div>
+                  
+                  <div className="sm:pl-6 sm:border-l border-gray-200">
+                    <p key={activeIdx} className="text-[11px] md:text-xs text-gray-700 font-bold leading-relaxed max-w-[280px] line-clamp-3 animate-in fade-in duration-500">
+                      {conceptText}
+                    </p>
+                  </div>
                 </div>
-                <span className="text-xs font-bold text-gray-900 pl-1">{reviewCount}</span>
+                
+                <div className="w-full h-[1px] bg-gray-200 mb-6"></div>
               </div>
-              
-              <div className="sm:pl-6 sm:border-l border-gray-200">
-                <p className="text-[11px] md:text-xs text-gray-700 font-bold leading-relaxed max-w-[280px]">
-                  {conceptText}
+
+              <div className="my-auto py-2 flex-1 min-h-[140px] max-h-[300px] overflow-y-auto hide-scrollbar">
+                <p key={activeIdx} className="text-gray-600 text-base md:text-lg lg:text-[19px] font-normal leading-[1.65] max-w-[470px] animate-in fade-in duration-500">
+                  &ldquo;{mainQuote}&rdquo;
                 </p>
               </div>
-            </div>
-            
-            <div className="w-full h-[1px] bg-gray-200 mb-8"></div>
 
-            <p className="text-gray-600 text-lg md:text-[20px] font-normal leading-[1.7] mb-10 max-w-[470px]">
-              &ldquo;{mainQuote}&rdquo;
-            </p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-4">
+                <div key={activeIdx} className="flex items-center space-x-4 shrink-0 animate-in fade-in duration-500">
+                  <img 
+                    src={activeSlide.authorImage} 
+                    alt={authorName} 
+                    className="w-12 h-12 rounded-full object-cover shadow-sm shrink-0"
+                    onError={(e) => {
+                      if (e.currentTarget.src !== defaultAuthorImg) {
+                        e.currentTarget.src = defaultAuthorImg;
+                      }
+                    }}
+                  />
+                  <div className="flex flex-col text-left">
+                    <span className="text-sm font-bold text-gray-900">{authorName}</span>
+                    <span className="text-[10px] text-gray-400">{authorRole}</span>
+                  </div>
+                </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-              <div className="flex items-center space-x-4">
-                <img 
-                  src={activeSlide.authorImage} 
-                  alt={authorName} 
-                  className="w-12 h-12 rounded-full object-cover shadow-sm"
-                  onError={(e) => {
-                    if (e.currentTarget.src !== defaultAuthorImg) {
-                      e.currentTarget.src = defaultAuthorImg;
-                    }
-                  }}
-                />
-                <div className="flex flex-col text-left">
-                  <span className="text-sm font-bold text-gray-900">{authorName}</span>
-                  <span className="text-[10px] text-gray-400">{authorRole}</span>
+                {/* Slider Dots */}
+                <div className="flex space-x-2 bg-gray-100 hover:bg-gray-200/80 px-4 py-2 rounded-full transition-colors w-fit shrink-0">
+                  {testimonialsList.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveIdx(idx)}
+                      className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                        activeIdx === idx ? 'w-6 bg-[#3B82F6]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                      }`}
+                      aria-label={`Go to testimonial ${idx + 1}`}
+                    />
+                  ))}
                 </div>
               </div>
 
-              {/* Slider Dots */}
-              <div className="flex space-x-2 bg-gray-100 hover:bg-gray-200/80 px-4 py-2 rounded-full transition-colors w-fit">
-                {testimonialsList.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveIdx(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                      activeIdx === idx ? 'w-6 bg-[#3B82F6]' : 'w-2 bg-gray-300 hover:bg-gray-400'
-                    }`}
-                    aria-label={`Go to testimonial ${idx + 1}`}
-                  />
-                ))}
-              </div>
             </div>
-
           </div>
         </div>
 

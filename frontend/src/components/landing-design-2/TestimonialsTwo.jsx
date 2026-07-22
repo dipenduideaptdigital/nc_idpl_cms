@@ -71,21 +71,23 @@ const TestimonialsTwo = ({ data }) => {
           </div>
 
           {/* Right Column: Divider Line, Quote and Author Details */}
-          <div className="flex flex-col items-start text-left lg:pl-4">
+          <div className="flex flex-col items-start text-left lg:pl-4 justify-between min-h-[300px] md:min-h-[380px]">
             {/* Horizontal Divider Line */}
-            <div className="w-full h-[1px] bg-gray-200 mb-10"></div>
+            <div className="w-full h-[1px] bg-gray-200 mb-6"></div>
 
             {/* Testimonial Quote */}
-            <blockquote className="text-[#4B4B4B] text-lg md:text-[26px] font-normal leading-relaxed md:leading-[36px] tracking-[0em] mb-10 max-w-2xl font-helvetica">
-              “{quote}”
-            </blockquote>
+            <div className="my-auto py-2 flex-1 min-h-[120px] max-h-[300px] overflow-y-auto hide-scrollbar">
+              <blockquote className="text-[#4B4B4B] text-lg md:text-[22px] lg:text-[24px] font-normal leading-relaxed md:leading-[34px] tracking-[0em] max-w-2xl font-helvetica">
+                &ldquo;{quote}&rdquo;
+              </blockquote>
+            </div>
 
             {/* Author Profile block */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 pt-4">
               <img 
                 src={resolvedAuthorImg} 
                 alt={authorName} 
-                className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover shadow-[0_4px_10px_rgba(0,0,0,0.05)] border border-white"
+                className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover shadow-[0_4px_10px_rgba(0,0,0,0.05)] border border-white shrink-0"
                 onError={(e) => {
                   e.currentTarget.src = defaultAuthorImg;
                 }}

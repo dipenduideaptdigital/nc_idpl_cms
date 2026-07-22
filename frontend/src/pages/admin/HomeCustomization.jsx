@@ -210,9 +210,41 @@ const HomeCustomization = () => {
     mainQuote: '"I absolutely love my the new modern living room! The clean lines, a neutral tones, and minimalist interior create such a calming & stylish atmosphere. Highly recommend their modern interior design services!"',
     authorImage: '',
     authorName: 'Morgan Dufresne',
-    authorRole: 'Company owner',
+    authorRole: 'Homeowner',
     bottomText: 'Our Website [75000+] VIP Customer',
-    logos: ['', '', '', '', '']
+    logos: ['', '', '', '', ''],
+    items: [
+      {
+        ratingValue: '4.80',
+        reviewCount: '2,688 Reviews',
+        conceptText: "From Concept To Reality, The Team Turned My Vision Into A Stunning, Livable Space. I Couldn't Be Happier With This!",
+        mainQuote: 'I absolutely love my new modern living room! The clean lines, neutral tones, and minimalist interior create such a calming & stylish atmosphere. Highly recommend their modern interior design services!',
+        authorName: 'Morgan Dufresne',
+        authorRole: 'Homeowner',
+        image: '',
+        authorImage: ''
+      },
+      {
+        ratingValue: '4.90',
+        reviewCount: '1,420 Reviews',
+        conceptText: 'Design. Build. Deliver. Everything our office needed—handled end to end.',
+        mainQuote: 'It is a pleasure to work with subhAAkritee. Together we created our office interior decoration. The interior designing, planning and decoration is just GREAT! All members are cooperative.',
+        authorName: 'Tanmoy',
+        authorRole: 'Company owner',
+        image: '',
+        authorImage: ''
+      },
+      {
+        ratingValue: '4.95',
+        reviewCount: '850 Reviews',
+        conceptText: 'From dream homes to dynamic business spaces, they create architecture that reflects your vision.',
+        mainQuote: 'They delivered outstanding architectural planning. The space layout and structural designs are perfect. Exceeded our expectations at every level of the project.',
+        authorName: 'Rajesh Kumar',
+        authorRole: 'Property Developer',
+        image: '',
+        authorImage: ''
+      }
+    ]
   });
 
   // 10. Video Banner State
@@ -290,8 +322,8 @@ const HomeCustomization = () => {
   const [previewOurProjectsList, setPreviewOurProjectsList] = useState(['', '', '', '', '']);
   const [previewPanoramasView, setPreviewPanoramasView] = useState('');
   const [previewTeamImage, setPreviewTeamImage] = useState('');
-  const [previewTestimonialsMain, setPreviewTestimonialsMain] = useState('');
-  const [previewTestimonialsAuthor, setPreviewTestimonialsAuthor] = useState('');
+  const [previewTestimonialsMain, setPreviewTestimonialsMain] = useState(['', '', '']);
+  const [previewTestimonialsAuthor, setPreviewTestimonialsAuthor] = useState(['', '', '']);
   const [previewTestimonialsLogos, setPreviewTestimonialsLogos] = useState(['', '', '', '', '']);
   const [previewVideoBannerCover, setPreviewVideoBannerCover] = useState('');
   const [previewBlogPosts, setPreviewBlogPosts] = useState(['', '', '']);
@@ -472,9 +504,52 @@ const HomeCustomization = () => {
       if (testimonialsRes.status === 'fulfilled' && testimonialsRes.value.data?.data?.content) {
         const content = testimonialsRes.value.data.data.content;
         if (Object.keys(content).length > 0) {
-          setTestimonialsData(content);
-          if (content.image) setPreviewTestimonialsMain(getAssetUrl(content.image));
-          if (content.authorImage) setPreviewTestimonialsAuthor(getAssetUrl(content.authorImage));
+          const items = (Array.isArray(content.items) && content.items.length >= 3)
+            ? content.items
+            : [
+                {
+                  ratingValue: content.ratingValue || '4.80',
+                  reviewCount: content.reviewCount || '2,688 Reviews',
+                  conceptText: content.conceptText || "From Concept To Reality, The Team Turned My Vision Into A Stunning, Livable Space.",
+                  mainQuote: content.mainQuote || 'I absolutely love my new modern living room!',
+                  authorName: content.authorName || 'Morgan Dufresne',
+                  authorRole: content.authorRole || 'Homeowner',
+                  image: content.image || '',
+                  authorImage: content.authorImage || ''
+                },
+                {
+                  ratingValue: '4.90',
+                  reviewCount: '1,420 Reviews',
+                  conceptText: 'Design. Build. Deliver. Everything our office needed—handled end to end.',
+                  mainQuote: 'It is a pleasure to work with subhAAkritee. Together we created our office interior decoration. The interior designing, planning and decoration is just GREAT! All members are cooperative.',
+                  authorName: 'Tanmoy',
+                  authorRole: 'Company owner',
+                  image: '',
+                  authorImage: ''
+                },
+                {
+                  ratingValue: '4.95',
+                  reviewCount: '850 Reviews',
+                  conceptText: 'From dream homes to dynamic business spaces, they create architecture that reflects your vision.',
+                  mainQuote: 'They delivered outstanding architectural planning. The space layout and structural designs are perfect. Exceeded our expectations at every level of the project.',
+                  authorName: 'Rajesh Kumar',
+                  authorRole: 'Property Developer',
+                  image: '',
+                  authorImage: ''
+                }
+              ];
+
+          setTestimonialsData({ ...content, items });
+          setPreviewTestimonialsMain([
+            items[0]?.image ? getAssetUrl(items[0].image) : (content.image ? getAssetUrl(content.image) : ''),
+            items[1]?.image ? getAssetUrl(items[1].image) : '',
+            items[2]?.image ? getAssetUrl(items[2].image) : ''
+          ]);
+          setPreviewTestimonialsAuthor([
+            items[0]?.authorImage ? getAssetUrl(items[0].authorImage) : (content.authorImage ? getAssetUrl(content.authorImage) : ''),
+            items[1]?.authorImage ? getAssetUrl(items[1].authorImage) : '',
+            items[2]?.authorImage ? getAssetUrl(items[2].authorImage) : ''
+          ]);
           if (content.logos) {
             setPreviewTestimonialsLogos(content.logos.map(img => img ? getAssetUrl(img) : ''));
           }
@@ -666,6 +741,61 @@ const HomeCustomization = () => {
     setTestimonialsData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleTestimonialsItemChange = (tabIndex, fieldName, value) => {
+    setTestimonialsData(prev => {
+      const items = Array.isArray(prev.items) && prev.items.length >= 3
+        ? [...prev.items]
+        : [
+            {
+              ratingValue: prev.ratingValue || '4.80',
+              reviewCount: prev.reviewCount || '2,688 Reviews',
+              conceptText: prev.conceptText || "From Concept To Reality, The Team Turned My Vision Into A Stunning, Livable Space.",
+              mainQuote: prev.mainQuote || 'I absolutely love my new modern living room!',
+              authorName: prev.authorName || 'Morgan Dufresne',
+              authorRole: prev.authorRole || 'Homeowner',
+              image: prev.image || '',
+              authorImage: prev.authorImage || ''
+            },
+            {
+              ratingValue: '4.90',
+              reviewCount: '1,420 Reviews',
+              conceptText: 'Design. Build. Deliver. Everything our office needed—handled end to end.',
+              mainQuote: 'It is a pleasure to work with subhAAkritee. Together we created our office interior decoration.',
+              authorName: 'Tanmoy',
+              authorRole: 'Company owner',
+              image: '',
+              authorImage: ''
+            },
+            {
+              ratingValue: '4.95',
+              reviewCount: '850 Reviews',
+              conceptText: 'From dream homes to dynamic business spaces, they create architecture that reflects your vision.',
+              mainQuote: 'They delivered outstanding architectural planning. The space layout and structural designs are perfect.',
+              authorName: 'Rajesh Kumar',
+              authorRole: 'Property Developer',
+              image: '',
+              authorImage: ''
+            }
+          ];
+
+      items[tabIndex] = {
+        ...items[tabIndex],
+        [fieldName]: value
+      };
+
+      const updated = {
+        ...prev,
+        items
+      };
+
+      if (tabIndex === 0) {
+        updated[fieldName] = value;
+      }
+
+      return updated;
+    });
+  };
+
   const handleTestimonialsLogoUpload = async (e, index) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -742,8 +872,7 @@ const HomeCustomization = () => {
     const { name, value } = e.target;
     setCtaData(prev => ({ ...prev, [name]: value }));
   };
-
-  const handleImageUpload = async (e, type) => {
+  const handleImageUpload = async (e, type, tabIdx = 0) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -759,8 +888,20 @@ const HomeCustomization = () => {
       else if (type === 'projectsBottom') setPreviewOurProjectsBottom(event.target.result);
       else if (type === 'panoramaView') setPreviewPanoramasView(event.target.result);
       else if (type === 'team') setPreviewTeamImage(event.target.result);
-      else if (type === 'testimonialsMain') setPreviewTestimonialsMain(event.target.result);
-      else if (type === 'testimonialsAuthor') setPreviewTestimonialsAuthor(event.target.result);
+      else if (type === 'testimonialsMain') {
+        setPreviewTestimonialsMain(prev => {
+          const list = Array.isArray(prev) ? [...prev] : ['', '', ''];
+          list[tabIdx] = event.target.result;
+          return list;
+        });
+      }
+      else if (type === 'testimonialsAuthor') {
+        setPreviewTestimonialsAuthor(prev => {
+          const list = Array.isArray(prev) ? [...prev] : ['', '', ''];
+          list[tabIdx] = event.target.result;
+          return list;
+        });
+      }
       else if (type === 'videoBanner') setPreviewVideoBannerCover(event.target.result);
     };
     reader.readAsDataURL(file);
@@ -787,26 +928,18 @@ const HomeCustomization = () => {
         else if (type === 'projectsBottom') setOurProjectsData(prev => ({ ...prev, bottomImage: uploadedUrl }));
         else if (type === 'panoramaView') setPanoramasData(prev => ({ ...prev, image: uploadedUrl }));
         else if (type === 'team') setTeamData(prev => ({ ...prev, image: uploadedUrl }));
-        else if (type === 'testimonialsMain') setTestimonialsData(prev => ({ ...prev, image: uploadedUrl }));
-        else if (type === 'testimonialsAuthor') setTestimonialsData(prev => ({ ...prev, authorImage: uploadedUrl }));
+        else if (type === 'testimonialsMain') {
+          handleTestimonialsItemChange(tabIdx, 'image', uploadedUrl);
+        }
+        else if (type === 'testimonialsAuthor') {
+          handleTestimonialsItemChange(tabIdx, 'authorImage', uploadedUrl);
+        }
         else if (type === 'videoBanner') setVideoBannerData(prev => ({ ...prev, image: uploadedUrl }));
       }
     } catch (error) {
       console.error(`Failed to upload ${type} image:`, error);
       const errorDetail = error.response?.data?.message || 'File must be an image (Max 5MB)';
       setErrorMsg(`Upload Failed: ${errorDetail}`); 
-      
-      // Revert previews
-      if (type === 'front') setPreviewFront(heroData.frontImage ? getAssetUrl(heroData.frontImage) : '');
-      else if (type === 'about') setPreviewAbout(aboutData.image ? getAssetUrl(aboutData.image) : '');
-      else if (type === 'serviceMain') setPreviewOurServicesMain(ourServicesData.image ? getAssetUrl(ourServicesData.image) : '');
-      else if (type === 'serviceBottom') setPreviewOurServicesBottom(ourServicesData.bottomImage ? getAssetUrl(ourServicesData.bottomImage) : '');
-      else if (type === 'projectsBottom') setPreviewOurProjectsBottom(ourProjectsData.bottomImage ? getAssetUrl(ourProjectsData.bottomImage) : '');
-      else if (type === 'panoramaView') setPreviewPanoramasView(panoramasData.image ? getAssetUrl(panoramasData.image) : '');
-      else if (type === 'team') setPreviewTeamImage(teamData.image ? getAssetUrl(teamData.image) : '');
-      else if (type === 'testimonialsMain') setPreviewTestimonialsMain(testimonialsData.image ? getAssetUrl(testimonialsData.image) : '');
-      else if (type === 'testimonialsAuthor') setPreviewTestimonialsAuthor(testimonialsData.authorImage ? getAssetUrl(testimonialsData.authorImage) : '');
-      else if (type === 'videoBanner') setPreviewVideoBannerCover(videoBannerData.image ? getAssetUrl(videoBannerData.image) : '');
     } finally {
       e.target.value = ''; 
     }
@@ -1235,6 +1368,7 @@ const HomeCustomization = () => {
         <TestimonialsCustomization
           testimonialsData={testimonialsData}
           onChange={handleTestimonialsInputChange}
+          onItemChange={handleTestimonialsItemChange}
           previewMain={previewTestimonialsMain}
           previewAuthor={previewTestimonialsAuthor}
           mainImageRef={testimonialsMainRef}

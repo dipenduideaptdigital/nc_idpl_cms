@@ -7,6 +7,7 @@ import { Save, ArrowLeft, Layout, Type, Plus, Trash2, Settings, ChevronDown, Upl
 import DynamicBlockEditor from '../../../components/admin/DynamicBlockEditor';
 import Can from '../../../components/shared/Can';
 import PreviewManager from '../../../components/admin/PreviewManager';
+import MediaPickerModal from '../../../components/admin/MediaPickerModal';
 
 const BlogEditor = () => {
   const { id } = useParams();
@@ -19,6 +20,7 @@ const BlogEditor = () => {
   const [tags, setTags] = useState([]);
   const [showBlockMenu, setShowBlockMenu] = useState(false);
   const [coverPreview, setCoverPreview] = useState(null);
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
 
   const BLOG_BLOCKS = [
     { type: 'richText', label: 'Rich Text Paragraph' },
@@ -80,22 +82,6 @@ const BlogEditor = () => {
     }
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const data = new FormData();
-    data.append('image', file);
-    try {
-      const res = await apiClient.post('/uploads/image', data, { headers: { 'Content-Type': 'multipart/form-data' } });
-      if (res.data.success) {
-        setFormData(prev => ({ ...prev, featuredImageId: res.data.data.id }));
-        setCoverPreview(resolveAssetUrl(res.data.data.url));
-      }
-    } catch (err) { 
-      alert('Image upload failed.'); 
-    }
-  };
 
   const addBlock = (type) => {
     const newBlock = { id: Date.now().toString(), type, data: {} };
@@ -231,9 +217,11 @@ const BlogEditor = () => {
           
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
             <h2 className="text-lg font-bold border-b pb-2 mb-4 flex items-center gap-2"><Upload className="w-5 h-5 text-zinc-400"/> Cover Image</h2>
-            <div className="w-full h-40 bg-zinc-50 rounded-xl flex items-center justify-center overflow-hidden relative cursor-pointer border-2 border-dashed border-zinc-200 hover:border-[#3B82F6] hover:bg-blue-50/50 transition-colors" onClick={() => document.getElementById('coverUpload').click()}>
-              {coverPreview ? <img src={coverPreview} className="w-full h-full object-cover"/> : <span className="text-zinc-400 font-bold flex flex-col items-center"><Upload className="w-6 h-6 mb-2"/> Upload Cover</span>}
-              <input id="coverUpload" type="file" className="hidden" accept="image/*" onChange={handleImageUpload}/>
+            <div 
+              className="w-full h-40 bg-zinc-50 rounded-xl flex items-center justify-center overflow-hidden relative cursor-pointer border-2 border-dashed border-zinc-200 hover:border-[#3B82F6] hover:bg-blue-50/50 transition-colors" 
+              onClick={() => setIsMediaModalOpen(true)}
+            >
+              {coverPreview ? <img src={coverPreview} className="w-full h-full object-cover"/> : <span className="text-zinc-400 font-bold flex flex-col items-center"><Upload className="w-6 h-6 mb-2"/> Select Cover</span>}
             </div>
           </div>
 
@@ -338,6 +326,14 @@ const BlogEditor = () => {
           )}
         </div>
       </div>
+      <MediaPickerModal 
+        isOpen={isMediaModalOpen} 
+        onClose={() => setIsMediaModalOpen(false)} 
+        onSelect={(url, id) => {
+          setCoverPreview(resolveAssetUrl(url));
+          setFormData(prev => ({ ...prev, featuredImageId: id }));
+        }} 
+      />
     </form>
   );
 };

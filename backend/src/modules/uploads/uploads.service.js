@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { prisma } from "../../config/db.js";
 import { AppError } from "../../shared/errors/AppError.js";
 import { StatusCodes } from "http-status-codes";
@@ -10,8 +11,27 @@ export const saveUploadedFile = async (file, userId) => {
     throw new AppError("No file buffer provided", StatusCodes.BAD_REQUEST);
   }
 
-  const processed = await processImageBuffer(file.buffer, file.originalname);
+  const fileHash = crypto.createHash("sha256").update(file.buffer).digest("hex");
 
+  // Check if exactly the same file already exists in the database
+  const existingMedia = await prisma.media.findUnique({
+    where: { fileHash }
+  });
+
+  // If duplicate found, return it immediately
+  if (existingMedia) {
+    if (existingMedia.deletedAt) {
+      await prisma.media.update({
+        where: { id: existingMedia.id },
+        data: { deletedAt: null }
+      });
+    }
+    return existingMedia;
+  }
+
+  // If new image, proceed to process and upload
+  const processed = await processImageBuffer(file.buffer, file.originalname);
+  
   let mainUpload;
   let thumbUpload;
 
@@ -21,6 +41,7 @@ export const saveUploadedFile = async (file, userId) => {
 
     const media = await prisma.media.create({
       data: {
+        fileHash,
         filename: mainUpload.public_id,
         originalName: file.originalname,
         mimeType: processed.mimeType,
@@ -101,20 +122,51 @@ export const getMediaById = async (id) => {
 };
 
 export const deleteMediaItem = async (id) => {
-  const media = await getMediaById(id);
+  const media = await prisma.media.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: {
+          featuredInPages: true,
+          featuredInBlogs: true,
+          featuredInProjects: true,
+          ogImageForPages: true,
+          ogImageForBlogs: true,
+        }
+      }
+    }
+  });
+
+  if (!media) {
+    throw new AppError("Media not found.", StatusCodes.NOT_FOUND);
+  }
+
+  const usageCount = 
+    media._count.featuredInPages + 
+    media._count.featuredInBlogs + 
+    media._count.featuredInProjects + 
+    media._count.ogImageForPages + 
+    media._count.ogImageForBlogs;
+
+  if (usageCount > 0) {
+    throw new AppError(
+      `Cannot delete: This image is currently being used in ${usageCount} place(s) (Pages/Blogs/Projects). Please remove it from there first.`, 
+      StatusCodes.CONFLICT
+    );
+  }
 
   try {
     if (media.filename) {
       await deleteFromCloudinary(media.filename);
+    
       const thumbPublicId = media.filename.replace("main/", "thumbs/").replace(".webp", "-thumb.webp");
       await deleteFromCloudinary(thumbPublicId);
     }
   } catch (error) {
-    logger.error(`Failed to delete media ${id} from Cloudinary. Proceeding to delete from DB.`, error);
+    logger.error(`Cloudinary deletion failed for ${id}. Proceeding to DB deletion.`, error);
   }
 
-  // Hard delete from database
   await prisma.media.delete({ where: { id } });
-  
-  return { message: "Media deleted successfully" };
+
+  return { message: "Media deleted successfully." };
 };
