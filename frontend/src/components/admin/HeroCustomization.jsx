@@ -1,6 +1,7 @@
-import React, { useRef, useState } from 'react';
-import { Image as ImageIcon, Upload } from 'lucide-react';
+import React, { useState } from 'react';
+import { Image as ImageIcon } from 'lucide-react';
 import TipTapEditor from './TipTapEditor';
+import ImageField from './ImageField';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
@@ -13,21 +14,11 @@ const getAssetUrl = (path) => {
 
 const HeroCustomization = ({
   heroData,
-  onChange,
-  onImageUpload
+  onChange
 }) => {
   const [activeSlideTab, setActiveSlideTab] = useState('slide1');
 
-  // Refs for all 3 slides (Back and Front images)
-  const s1BgRef = useRef(null);
-  const s1FrontRef = useRef(null);
-  const s2BgRef = useRef(null);
-  const s2FrontRef = useRef(null);
-  const s3BgRef = useRef(null);
-  const s3FrontRef = useRef(null);
-
-  // Helper to render the exact same form for all 3 slides
-  const renderSlideForm = (slideKey, slideData, bgRef, frontRef) => (
+  const renderSlideForm = (slideKey, slideData) => (
     <>
       <div className="space-y-6">
         <h3 className="text-sm font-bold tracking-widest text-zinc-400 uppercase mb-4">Slide Content</h3>
@@ -84,32 +75,26 @@ const HeroCustomization = ({
       <div className="space-y-8">
         <h3 className="text-sm font-bold tracking-widest text-zinc-400 uppercase mb-4">Media Assets</h3>
         
-        {/* Background Image */}
+        {/* Background Image using the new ImageField */}
         <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6 relative">
           <div className="flex justify-between items-start mb-4">
             <div><h4 className="font-semibold text-zinc-800">Background Image</h4></div>
-            <button type="button" onClick={() => bgRef.current?.click()} className="flex items-center gap-2 text-sm border border-zinc-200 px-3 py-1.5 rounded-lg bg-white hover:border-zinc-900">
-              <Upload className="w-4 h-4" /> Upload
-            </button>
-            <input type="file" ref={bgRef} onChange={(e) => onImageUpload(e, `${slideKey}_bg`)} className="hidden" accept="image/*" />
           </div>
-          {slideData.backgroundImage ? (
-            <img src={getAssetUrl(slideData.backgroundImage)} alt="Preview" className="w-full h-32 rounded-xl object-cover border border-zinc-200" />
-          ) : <div className="w-full h-32 rounded-xl border-2 border-dashed border-zinc-300 flex items-center justify-center"><span className="text-zinc-400 text-sm">No image</span></div>}
+          <ImageField 
+            value={slideData.backgroundImage} 
+            onChange={(url) => onChange(slideKey, 'backgroundImage', url)} 
+          />
         </div>
 
-        {/* Front Image */}
+        {/* Front Image using the new ImageField */}
         <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6 relative">
           <div className="flex justify-between items-start mb-4">
             <div><h4 className="font-semibold text-zinc-800">Front Image</h4></div>
-            <button type="button" onClick={() => frontRef.current?.click()} className="flex items-center gap-2 text-sm border border-zinc-200 px-3 py-1.5 rounded-lg bg-white hover:border-zinc-900">
-              <Upload className="w-4 h-4" /> Upload
-            </button>
-            <input type="file" ref={frontRef} onChange={(e) => onImageUpload(e, `${slideKey}_front`)} className="hidden" accept="image/*" />
           </div>
-          {slideData.frontImage ? (
-            <img src={getAssetUrl(slideData.frontImage)} alt="Preview" className="w-32 h-32 mx-auto rounded-xl object-cover border border-zinc-200" />
-          ) : <div className="w-32 h-32 mx-auto rounded-xl border-2 border-dashed border-zinc-300 flex items-center justify-center"><span className="text-zinc-400 text-sm">No image</span></div>}
+          <ImageField 
+            value={slideData.frontImage} 
+            onChange={(url) => onChange(slideKey, 'frontImage', url)} 
+          />
         </div>
       </div>
     </>
@@ -151,9 +136,9 @@ const HeroCustomization = ({
       </div>
 
       <div className="p-8 grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {activeSlideTab === 'slide1' && renderSlideForm('slide1', heroData?.slide1 || {}, s1BgRef, s1FrontRef)}
-        {activeSlideTab === 'slide2' && renderSlideForm('slide2', heroData?.slide2 || {}, s2BgRef, s2FrontRef)}
-        {activeSlideTab === 'slide3' && renderSlideForm('slide3', heroData?.slide3 || {}, s3BgRef, s3FrontRef)}
+        {activeSlideTab === 'slide1' && renderSlideForm('slide1', heroData?.slide1 || {})}
+        {activeSlideTab === 'slide2' && renderSlideForm('slide2', heroData?.slide2 || {})}
+        {activeSlideTab === 'slide3' && renderSlideForm('slide3', heroData?.slide3 || {})}
       </div>
     </div>
   );

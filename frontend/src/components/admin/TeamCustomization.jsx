@@ -1,13 +1,15 @@
-import React from 'react';
-import { User, Upload } from 'lucide-react';
+import React, { useState } from 'react';
+import { User, Image as ImageIcon } from 'lucide-react';
 import { resolveAssetUrl } from '../../utils/assetResolver';
+import MediaPickerModal from './MediaPickerModal';
 
 const TeamCustomization = ({
   teamData,
   onChange,
-  onMemberChange,
-  onMemberImageUpload
+  onMemberChange
 }) => {
+  const [activeMediaIndex, setActiveMediaIndex] = useState(null);
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
       <div className="px-8 py-6 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50/50">
@@ -87,7 +89,6 @@ const TeamCustomization = ({
                   </div>
                 </div>
 
-                {/* Member Specific Image Upload */}
                 <div className="pt-3 border-t border-zinc-200/60 mt-3">
                    <label className="block text-xs font-medium text-zinc-500 mb-2">Member Photo</label>
                    <div className="flex items-center gap-4">
@@ -98,20 +99,15 @@ const TeamCustomization = ({
                           <User className="w-6 h-6 text-zinc-300" />
                         </div>
                      )}
+                     
                      <button 
                        type="button" 
-                       onClick={() => document.getElementById(`member_img_${index}`).click()} 
-                       className="text-xs bg-white border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-zinc-900 hover:text-zinc-900 transition-colors shadow-sm font-medium flex items-center gap-2"
+                       onClick={() => setActiveMediaIndex(index)} 
+                       className="text-xs bg-white border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors shadow-sm font-medium flex items-center gap-2"
                      >
-                       <Upload className="w-3 h-3"/> Upload Photo
+                       <ImageIcon className="w-4 h-4"/> Browse Media
                      </button>
-                     <input 
-                       id={`member_img_${index}`} 
-                       type="file" 
-                       className="hidden" 
-                       accept="image/*" 
-                       onChange={(e) => onMemberImageUpload(e, index)} 
-                     />
+                     
                    </div>
                 </div>
 
@@ -120,6 +116,15 @@ const TeamCustomization = ({
           </div>
         </div>
       </div>
+
+      {/* Media Picker Modal */}
+      <MediaPickerModal 
+        isOpen={activeMediaIndex !== null}
+        onClose={() => setActiveMediaIndex(null)}
+        onSelect={(url) => {
+          onMemberChange(activeMediaIndex, 'image', url);
+        }}
+      />
     </div>
   );
 };

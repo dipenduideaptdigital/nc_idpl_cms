@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { User, Upload, MessageSquare } from 'lucide-react';
+import { User, MessageSquare, FolderOpen, X } from 'lucide-react';
+import MediaPickerModal from './MediaPickerModal';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const TestimonialsCustomization = ({
   testimonialsData,
@@ -7,14 +9,11 @@ const TestimonialsCustomization = ({
   onItemChange,
   previewMain,
   previewAuthor,
-  mainImageRef,
-  authorImageRef,
-  onImageUpload,
-  onLogoUpload,
   previewLogos,
-  logoRefs
 }) => {
   const [activeTab, setActiveTab] = useState(0);
+  
+  const [mediaModal, setMediaModal] = useState({ isOpen: false, targetField: null, index: null });
 
   const defaultItems = [
     {
@@ -64,16 +63,40 @@ const TestimonialsCustomization = ({
     }
   };
 
-  const getPreviewImage = (type) => {
+  const handleMediaSelect = (url) => {
+    if (mediaModal.targetField === 'main') {
+      if (onItemChange) onItemChange(activeTab, 'image', url);
+      else onChange({ target: { name: 'image', value: url } });
+    } else if (mediaModal.targetField === 'author') {
+      if (onItemChange) onItemChange(activeTab, 'authorImage', url);
+      else onChange({ target: { name: 'authorImage', value: url } });
+    } else if (mediaModal.targetField === 'logo') {
+      const newLogos = [...(testimonialsData.logos || ['', '', '', '', ''])];
+      newLogos[mediaModal.index] = url;
+      onChange({ target: { name: 'logos', value: newLogos } });
+    }
+  };
+
+  const handleRemoveMedia = (targetField, index = null) => {
+    if (targetField === 'main') {
+      if (onItemChange) onItemChange(activeTab, 'image', '');
+      else onChange({ target: { name: 'image', value: '' } });
+    } else if (targetField === 'author') {
+      if (onItemChange) onItemChange(activeTab, 'authorImage', '');
+      else onChange({ target: { name: 'authorImage', value: '' } });
+    } else if (targetField === 'logo') {
+      const newLogos = [...(testimonialsData.logos || ['', '', '', '', ''])];
+      newLogos[index] = '';
+      onChange({ target: { name: 'logos', value: newLogos } });
+    }
+  };
+
+  const getDisplayImage = (type) => {
     if (type === 'main') {
-      if (Array.isArray(previewMain) && previewMain[activeTab]) return previewMain[activeTab];
-      if (activeTab === 0 && typeof previewMain === 'string' && previewMain) return previewMain;
-      return currentItem.image ? currentItem.image : '';
+      return currentItem.image || (Array.isArray(previewMain) ? previewMain[activeTab] : previewMain) || '';
     }
     if (type === 'author') {
-      if (Array.isArray(previewAuthor) && previewAuthor[activeTab]) return previewAuthor[activeTab];
-      if (activeTab === 0 && typeof previewAuthor === 'string' && previewAuthor) return previewAuthor;
-      return currentItem.authorImage ? currentItem.authorImage : '';
+      return currentItem.authorImage || (Array.isArray(previewAuthor) ? previewAuthor[activeTab] : previewAuthor) || '';
     }
     return '';
   };
@@ -150,8 +173,9 @@ const TestimonialsCustomization = ({
           {/* Active Testimonial Item Form */}
           <div className="bg-zinc-50/60 border border-zinc-200/80 rounded-2xl p-6 md:p-8 space-y-8">
             
-            {/* Media Uploads */}
+            {/* Media Uploads from Library */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Testimonial Showcase Image */}
               <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -160,30 +184,33 @@ const TestimonialsCustomization = ({
                   </div>
                   <button 
                     type="button"
-                    onClick={() => mainImageRef.current?.click()}
-                    className="flex items-center gap-2 text-sm bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-zinc-900 hover:text-zinc-900 transition-colors shadow-sm cursor-pointer"
+                    onClick={() => setMediaModal({ isOpen: true, targetField: 'main', index: null })}
+                    className="flex items-center gap-2 text-sm bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors shadow-sm cursor-pointer"
                   >
-                    <Upload className="w-4 h-4" /> Upload
+                    <FolderOpen className="w-4 h-4" /> Browse
                   </button>
-                  <input 
-                    type="file" 
-                    ref={mainImageRef} 
-                    onChange={(e) => onImageUpload(e, 'testimonialsMain', activeTab)}
-                    className="hidden" 
-                    accept="image/*"
-                  />
                 </div>
-                {getPreviewImage('main') ? (
-                  <div className="w-full h-40 rounded-xl overflow-hidden shadow-inner border border-zinc-200">
-                    <img src={getPreviewImage('main')} alt={`Testimonial ${activeTab + 1} Preview`} className="w-full h-full object-cover" />
+                {getDisplayImage('main') ? (
+                  <div className="w-full h-40 rounded-xl overflow-hidden shadow-inner border border-zinc-200 relative group">
+                    <img src={resolveAssetUrl(getDisplayImage('main'))} alt={`Testimonial ${activeTab + 1} Preview`} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                       <button onClick={() => handleRemoveMedia('main')} type="button" className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-transform hover:scale-110 shadow-lg cursor-pointer">
+                          <X className="w-4 h-4" />
+                       </button>
+                    </div>
                   </div>
                 ) : (
-                  <div className="w-full h-40 rounded-xl border-2 border-dashed border-zinc-300 flex items-center justify-center bg-zinc-50">
-                    <span className="text-zinc-400 text-sm">No image uploaded</span>
+                  <div 
+                    onClick={() => setMediaModal({ isOpen: true, targetField: 'main', index: null })}
+                    className="w-full h-40 rounded-xl border-2 border-dashed border-zinc-300 flex flex-col items-center justify-center bg-zinc-50 hover:bg-blue-50/50 hover:border-blue-500 transition-colors cursor-pointer group"
+                  >
+                    <FolderOpen className="w-6 h-6 text-zinc-400 group-hover:text-blue-500 mb-2" />
+                    <span className="text-zinc-500 text-sm group-hover:text-blue-600 font-medium">Select Image</span>
                   </div>
                 )}
               </div>
 
+              {/* Author Profile Image */}
               <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -192,26 +219,27 @@ const TestimonialsCustomization = ({
                   </div>
                   <button 
                     type="button"
-                    onClick={() => authorImageRef.current?.click()}
-                    className="flex items-center gap-2 text-sm bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-zinc-900 hover:text-zinc-900 transition-colors shadow-sm cursor-pointer"
+                    onClick={() => setMediaModal({ isOpen: true, targetField: 'author', index: null })}
+                    className="flex items-center gap-2 text-sm bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors shadow-sm cursor-pointer"
                   >
-                    <Upload className="w-4 h-4" /> Upload
+                    <FolderOpen className="w-4 h-4" /> Browse
                   </button>
-                  <input 
-                    type="file" 
-                    ref={authorImageRef} 
-                    onChange={(e) => onImageUpload(e, 'testimonialsAuthor', activeTab)}
-                    className="hidden" 
-                    accept="image/*"
-                  />
                 </div>
-                {getPreviewImage('author') ? (
-                  <div className="w-20 h-20 rounded-full overflow-hidden shadow-inner border border-zinc-200 mx-auto">
-                    <img src={getPreviewImage('author')} alt="Author Avatar Preview" className="w-full h-full object-cover" />
+                {getDisplayImage('author') ? (
+                  <div className="w-20 h-20 rounded-full overflow-hidden shadow-inner border border-zinc-200 mx-auto relative group">
+                    <img src={resolveAssetUrl(getDisplayImage('author'))} alt="Author Avatar Preview" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
+                       <button onClick={() => handleRemoveMedia('author')} type="button" className="p-1.5 bg-red-600 text-white rounded-full hover:bg-red-700 transition-transform hover:scale-110 shadow-lg cursor-pointer">
+                          <X className="w-3 h-3" />
+                       </button>
+                    </div>
                   </div>
                 ) : (
-                  <div className="w-20 h-20 rounded-full border-2 border-dashed border-zinc-300 flex items-center justify-center bg-zinc-50 mx-auto">
-                    <span className="text-zinc-400 text-xs">No avatar</span>
+                  <div 
+                    onClick={() => setMediaModal({ isOpen: true, targetField: 'author', index: null })}
+                    className="w-20 h-20 rounded-full border-2 border-dashed border-zinc-300 flex flex-col items-center justify-center bg-zinc-50 hover:bg-blue-50/50 hover:border-blue-500 transition-colors cursor-pointer group mx-auto"
+                  >
+                    <FolderOpen className="w-4 h-4 text-zinc-400 group-hover:text-blue-500" />
                   </div>
                 )}
               </div>
@@ -305,35 +333,50 @@ const TestimonialsCustomization = ({
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {(testimonialsData.logos || []).map((logo, index) => (
-              <div key={index} className="flex flex-col items-center">
-                <label className="block text-xs font-medium text-zinc-500 mb-2">Client Logo {index + 1}</label>
-                <div 
-                  onClick={() => logoRefs.current[index]?.click()}
-                  className="w-full h-24 bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl flex items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 transition-colors overflow-hidden relative"
-                >
-                  {previewLogos && previewLogos[index] ? (
-                    <img src={previewLogos[index]} alt={`Logo ${index + 1}`} className="w-full h-full object-contain p-3" />
-                  ) : (
-                    <div className="flex flex-col items-center text-zinc-400">
-                      <Upload className="w-5 h-5 mb-1" />
-                      <span className="text-[10px] font-medium">Upload</span>
-                    </div>
-                  )}
+            {Array.from({ length: 5 }).map((_, index) => {
+              const logoUrl = (testimonialsData.logos && testimonialsData.logos[index]) || (previewLogos && previewLogos[index]) || '';
+              return (
+                <div key={index} className="flex flex-col items-center">
+                  <label className="block text-xs font-medium text-zinc-500 mb-2">Client Logo {index + 1}</label>
+                  <div 
+                    onClick={() => setMediaModal({ isOpen: true, targetField: 'logo', index })}
+                    className="w-full h-24 bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl flex items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 transition-colors overflow-hidden relative group"
+                  >
+                    {logoUrl ? (
+                      <>
+                        <img src={resolveAssetUrl(logoUrl)} alt={`Logo ${index + 1}`} className="h-full w-full object-contain p-3 opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
+                          <button 
+                            type="button" 
+                            onClick={(e) => { e.stopPropagation(); handleRemoveMedia('logo', index); }}
+                            className="p-1.5 bg-red-600 text-white rounded-full hover:bg-red-700 transition-transform hover:scale-110 shadow-lg cursor-pointer"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center text-zinc-400 group-hover:text-blue-500">
+                        <FolderOpen className="w-5 h-5 mb-1" />
+                        <span className="text-[10px] font-medium">Browse</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <input 
-                  type="file"
-                  ref={el => logoRefs.current[index] = el}
-                  onChange={(e) => onLogoUpload(e, index)}
-                  className="hidden"
-                  accept="image/*"
-                />
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
       </div>
+
+      {/* Shared Media Picker Modal */}
+      <MediaPickerModal 
+        isOpen={mediaModal.isOpen} 
+        onClose={() => setMediaModal({ isOpen: false, targetField: null, index: null })} 
+        onSelect={handleMediaSelect} 
+      />
+
     </div>
   );
 };

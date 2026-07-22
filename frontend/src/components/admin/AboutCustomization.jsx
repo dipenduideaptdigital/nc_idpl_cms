@@ -1,14 +1,12 @@
 import React from 'react';
-import { User, Upload } from 'lucide-react';
+import { User } from 'lucide-react';
 import TipTapEditor from './TipTapEditor';
+import ImageField from './ImageField';
 
 const AboutCustomization = ({
   aboutData,
   onChange,
   onHighlightChange,
-  previewAbout,
-  aboutImageRef,
-  onImageUpload
 }) => {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
@@ -92,30 +90,13 @@ const AboutCustomization = ({
                 <h4 className="font-semibold text-zinc-800">About Feature Image</h4>
                 <p className="text-xs text-zinc-500">Main portrait image</p>
               </div>
-              <button 
-                type="button"
-                onClick={() => aboutImageRef.current?.click()}
-                className="flex items-center gap-2 text-sm bg-white border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-zinc-900 hover:text-zinc-900 transition-colors shadow-sm cursor-pointer"
-              >
-                <Upload className="w-4 h-4" /> Upload
-              </button>
-              <input 
-                type="file" 
-                ref={aboutImageRef} 
-                onChange={(e) => onImageUpload(e, 'about')}
-                className="hidden" 
-                accept="image/*"
-              />
             </div>
-            {previewAbout ? (
-              <div className="w-full h-80 rounded-xl overflow-hidden shadow-inner border border-zinc-200">
-                <img src={previewAbout} alt="About Feature Preview" className="w-full h-full object-cover" />
-              </div>
-            ) : (
-              <div className="w-full h-80 rounded-xl border-2 border-dashed border-zinc-300 flex items-center justify-center bg-zinc-100">
-                <span className="text-zinc-400 text-sm">No image uploaded</span>
-              </div>
-            )}
+            
+            <ImageField 
+              value={aboutData.image || ''} 
+              onChange={(url) => onChange({ target: { name: 'image', value: url } })} 
+            />
+
           </div>
         </div>
       </div>

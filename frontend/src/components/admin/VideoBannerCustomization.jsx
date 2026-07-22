@@ -1,13 +1,16 @@
 import React from 'react';
-import { Image as ImageIcon, Upload } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
+import ImageField from './ImageField';
 
 const VideoBannerCustomization = ({
   videoBannerData,
-  onChange,
-  previewImage,
-  imageRef,
-  onImageUpload
+  onChange
 }) => {
+  
+  const handleImageSelect = (url) => {
+    onChange({ target: { name: 'image', value: url } });
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
       <div className="px-8 py-6 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50/50">
@@ -59,35 +62,16 @@ const VideoBannerCustomization = ({
           <h3 className="text-sm font-bold tracking-widest text-zinc-400 uppercase mb-4">Cover Asset</h3>
           
           <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h4 className="font-semibold text-zinc-800">Thumbnail Cover Image</h4>
-                <p className="text-xs text-zinc-500">Video background thumbnail image</p>
-              </div>
-              <button 
-                type="button"
-                onClick={() => imageRef.current?.click()}
-                className="flex items-center gap-2 text-sm bg-white border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-zinc-900 hover:text-zinc-900 transition-colors shadow-sm cursor-pointer"
-              >
-                <Upload className="w-4 h-4" /> Upload
-              </button>
-              <input 
-                type="file" 
-                ref={imageRef} 
-                onChange={(e) => onImageUpload(e, 'videoBanner')}
-                className="hidden" 
-                accept="image/*"
-              />
+            <div className="mb-6">
+              <h4 className="font-semibold text-zinc-800">Thumbnail Cover Image</h4>
+              <p className="text-xs text-zinc-500">Video background thumbnail image</p>
             </div>
-            {previewImage ? (
-              <div className="w-full h-48 rounded-xl overflow-hidden shadow-inner border border-zinc-200">
-                <img src={previewImage} alt="Video Thumbnail Preview" className="w-full h-full object-cover" />
-              </div>
-            ) : (
-              <div className="w-full h-48 rounded-xl border-2 border-dashed border-zinc-300 flex items-center justify-center bg-zinc-100">
-                <span className="text-zinc-400 text-sm">No image uploaded</span>
-              </div>
-            )}
+            
+            <ImageField 
+              value={videoBannerData.image || ''} 
+              onChange={handleImageSelect} 
+            />
+            
           </div>
         </div>
       </div>

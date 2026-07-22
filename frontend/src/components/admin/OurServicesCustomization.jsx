@@ -1,6 +1,7 @@
 import React from 'react';
-import { List, Upload, Plus, Trash2 } from 'lucide-react';
+import { List, Plus, Trash2 } from 'lucide-react';
 import TipTapEditor from './TipTapEditor';
+import ImageField from './ImageField';
 
 const OurServicesCustomization = ({
   ourServicesData,
@@ -8,12 +9,7 @@ const OurServicesCustomization = ({
   onServiceItemChange,
   onStatItemChange,
   onAddService,
-  onDeleteService,
-  previewMain,
-  previewBottom,
-  mainImageRef,
-  bottomImageRef,
-  onImageUpload
+  onDeleteService
 }) => {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
@@ -56,71 +52,34 @@ const OurServicesCustomization = ({
           </div>
         </div>
 
-        {/* Media Assets */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-zinc-100">
+          
+          {/* Main Section Image */}
           <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h4 className="font-semibold text-zinc-800">Main Section Image</h4>
-                <p className="text-xs text-zinc-500">Service preview backdrop image</p>
-              </div>
-              <button 
-                type="button"
-                onClick={() => mainImageRef.current?.click()}
-                className="flex items-center gap-2 text-sm bg-white border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-zinc-900 hover:text-zinc-900 transition-colors shadow-sm cursor-pointer"
-              >
-                <Upload className="w-4 h-4" /> Upload
-              </button>
-              <input 
-                type="file" 
-                ref={mainImageRef} 
-                onChange={(e) => onImageUpload(e, 'serviceMain')}
-                className="hidden" 
-                accept="image/*"
-              />
+            <div className="mb-4">
+              <h4 className="font-semibold text-zinc-800">Main Section Image</h4>
+              <p className="text-xs text-zinc-500">Service preview backdrop image</p>
             </div>
-            {previewMain ? (
-              <div className="w-full h-40 rounded-xl overflow-hidden shadow-inner border border-zinc-200">
-                <img src={previewMain} alt="Service Main Preview" className="w-full h-full object-cover" />
-              </div>
-            ) : (
-              <div className="w-full h-40 rounded-xl border-2 border-dashed border-zinc-300 flex items-center justify-center bg-zinc-100">
-                <span className="text-zinc-400 text-sm">No image uploaded</span>
-              </div>
-            )}
+            
+            <ImageField 
+              value={ourServicesData.image || ''} 
+              onChange={(url) => onChange({ target: { name: 'image', value: url } })} 
+            />
           </div>
 
+          {/* Bottom Blueprint Image */}
           <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h4 className="font-semibold text-zinc-800">Bottom Blueprint Image</h4>
-                <p className="text-xs text-zinc-500">Architectural 3D floor plan image</p>
-              </div>
-              <button 
-                type="button"
-                onClick={() => bottomImageRef.current?.click()}
-                className="flex items-center gap-2 text-sm bg-white border border-zinc-200 px-3 py-1.5 rounded-lg hover:border-zinc-900 hover:text-zinc-900 transition-colors shadow-sm cursor-pointer"
-              >
-                <Upload className="w-4 h-4" /> Upload
-              </button>
-              <input 
-                type="file" 
-                ref={bottomImageRef} 
-                onChange={(e) => onImageUpload(e, 'serviceBottom')}
-                className="hidden" 
-                accept="image/*"
-              />
+            <div className="mb-4">
+              <h4 className="font-semibold text-zinc-800">Bottom Blueprint Image</h4>
+              <p className="text-xs text-zinc-500">Architectural 3D floor plan image</p>
             </div>
-            {previewBottom ? (
-              <div className="w-full h-40 rounded-xl overflow-hidden shadow-inner border border-zinc-200">
-                <img src={previewBottom} alt="Service Bottom Preview" className="w-full h-full object-cover" />
-              </div>
-            ) : (
-              <div className="w-full h-40 rounded-xl border-2 border-dashed border-zinc-300 flex items-center justify-center bg-zinc-100">
-                <span className="text-zinc-400 text-sm">No image uploaded</span>
-              </div>
-            )}
+
+            <ImageField 
+              value={ourServicesData.bottomImage || ''} 
+              onChange={(url) => onChange({ target: { name: 'bottomImage', value: url } })} 
+            />
           </div>
+
         </div>
 
         {/* Services Titles */}
@@ -195,7 +154,7 @@ const OurServicesCustomization = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {(ourServicesData.stats || []).map((stat, index) => (
               <div key={index} className="p-6 bg-zinc-50 border border-zinc-200 rounded-2xl space-y-4">
-                <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-600 text-xs font-semibold">
                   Stat {index + 1}
                 </span>
                 <div className="grid grid-cols-2 gap-4">
