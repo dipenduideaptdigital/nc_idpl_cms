@@ -13,8 +13,8 @@ const ProjectEditor = () => {
   const [formData, setFormData] = useState({
     title: '', category: 'Residential', year: '', location: '', client: '', area: '', 
     description: '', details: '', status: 'PUBLISHED', featuredImageId: '',
-    bulletPoints: [''], // Array of strings
-    spaces: [{ size: '', label: '' }] // Array of objects
+    bulletPoints: [''], 
+    spaces: [{ size: '', label: '' }] 
   });
   const [saving, setSaving] = useState(false);
 
@@ -35,7 +35,6 @@ const ProjectEditor = () => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Handlers for dynamic arrays
   const handleBulletChange = (index, value) => {
     const newBullets = [...formData.bulletPoints];
     newBullets[index] = value;
@@ -126,7 +125,6 @@ const ProjectEditor = () => {
             <div><label className="text-sm font-medium">Full Details (Project Page)</label><textarea name="details" rows="4" value={formData.details} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl"></textarea></div>
           </div>
 
-          {/* Dynamic Arrays Section */}
           <div className="bg-white p-6 rounded-2xl shadow-sm space-y-6">
             <div>
               <div className="flex justify-between items-center border-b pb-2 mb-4">
@@ -155,7 +153,6 @@ const ProjectEditor = () => {
               ))}
             </div>
           </div>
-
         </div>
 
         <div className="space-y-6">

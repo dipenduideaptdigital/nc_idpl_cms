@@ -5,21 +5,23 @@ import { prisma } from "../../config/db.js";
 
 const resolveImageId = async (imageUrlOrId) => {
   if (!imageUrlOrId || imageUrlOrId.trim() === "") return null;
-
-  if (!imageUrlOrId.includes("/")) return imageUrlOrId;
+  if (!imageUrlOrId.includes("/")) return imageUrlOrId; 
 
   try {
-    let searchUrl = imageUrlOrId;
-    if (searchUrl.startsWith("http")) {
-      const urlObj = new URL(searchUrl);
-      searchUrl = urlObj.pathname;
-    }
-
-    const media = await prisma.media.findFirst({
-      where: { url: searchUrl }
+    let media = await prisma.media.findFirst({
+      where: { url: imageUrlOrId }
     });
+    if (media) return media.id;
 
-    return media ? media.id : null;
+    if (imageUrlOrId.startsWith("http")) {
+      const urlObj = new URL(imageUrlOrId);
+      media = await prisma.media.findFirst({
+        where: { url: urlObj.pathname }
+      });
+      if (media) return media.id;
+    }
+    
+    return null;
   } catch (error) {
     return null;
   }

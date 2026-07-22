@@ -45,6 +45,7 @@ const GeneralSettings = lazy(() => import('./pages/admin/settings/GeneralSetting
 const RolesList = lazy(() => import('./pages/admin/roles/RolesList'));
 const RoleEditor = lazy(() => import('./pages/admin/roles/RoleEditor'));
 const UsersList = lazy(() => import('./pages/admin/users/UsersList'));
+const MediaLibrary = lazy(() => import('./pages/admin/media/MediaLibrary'));
 
 const GlobalSuspenseFallback = () => (
   <div className="min-h-[80vh] w-full flex items-center justify-center bg-[#fafafa]">
@@ -90,6 +91,7 @@ function App() {
               <Route path="blogs/create" element={<BlogEditor />} />
               <Route path="blogs/edit/:id" element={<BlogEditor />} />
               <Route path="blogs/taxonomies" element={<TaxonomyManager />} />
+              <Route path="media" element={<MediaLibrary />} />
               
               <Route path="settings" element={<SettingsLayout />}>
                 <Route path="general" element={<GeneralSettings />} />

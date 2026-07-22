@@ -55,3 +55,66 @@ export const saveMultipleFiles = async (files, userId) => {
   }
   return savedMedia;
 };
+
+export const getMediaList = async (query) => {
+  const { page = 1, limit = 20, search } = query;
+  const skip = (page - 1) * limit;
+
+  const where = { deletedAt: null };
+
+  if (search) {
+    where.originalName = { contains: search, mode: "insensitive" };
+  }
+
+  const [media, total] = await Promise.all([
+    prisma.media.findMany({
+      where,
+      skip,
+      take: Number(limit),
+      orderBy: { createdAt: "desc" },
+      include: {
+        uploadedBy: { select: { name: true, email: true } }
+      }
+    }),
+    prisma.media.count({ where })
+  ]);
+
+  return {
+    media,
+    meta: {
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: Math.ceil(total / Number(limit))
+    }
+  };
+};
+
+export const getMediaById = async (id) => {
+  const media = await prisma.media.findUnique({
+    where: { id, deletedAt: null },
+    include: { uploadedBy: { select: { name: true, email: true } } }
+  });
+
+  if (!media) throw new AppError("Media not found", StatusCodes.NOT_FOUND);
+  return media;
+};
+
+export const deleteMediaItem = async (id) => {
+  const media = await getMediaById(id);
+
+  try {
+    if (media.filename) {
+      await deleteFromCloudinary(media.filename);
+      const thumbPublicId = media.filename.replace("main/", "thumbs/").replace(".webp", "-thumb.webp");
+      await deleteFromCloudinary(thumbPublicId);
+    }
+  } catch (error) {
+    logger.error(`Failed to delete media ${id} from Cloudinary. Proceeding to delete from DB.`, error);
+  }
+
+  // Hard delete from database
+  await prisma.media.delete({ where: { id } });
+  
+  return { message: "Media deleted successfully" };
+};

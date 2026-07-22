@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Calendar, MapPin, Layers } from 'lucide-react';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const ProjectDetailModal = ({ project, onClose }) => {
   if (!project) return null;
@@ -8,20 +9,16 @@ const ProjectDetailModal = ({ project, onClose }) => {
     <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         
-        {/* Dark glassmorphism background */}
         <div 
           className="fixed inset-0 bg-zinc-900/65 backdrop-blur-sm transition-opacity" 
           aria-hidden="true"
           onClick={onClose}
         ></div>
 
-        {/* Trick browser to center modal */}
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-        {/* Modal Box */}
         <div className="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full border border-zinc-100">
           
-          {/* Close Button */}
           <button 
             onClick={onClose}
             className="absolute right-6 top-6 z-20 p-2.5 bg-zinc-950/80 hover:bg-[#3B82F6] text-white rounded-full transition-colors backdrop-blur-md shadow-lg"
@@ -31,10 +28,9 @@ const ProjectDetailModal = ({ project, onClose }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-12">
             
-            {/* Left side: Project Image */}
             <div className="md:col-span-7 relative aspect-[4/3] md:aspect-auto md:h-[550px] bg-zinc-100">
               <img 
-                src={project.image} 
+                src={resolveAssetUrl(project.featuredImage?.url || project.featuredImageId, '/default-project.png')} 
                 alt={project.title} 
                 className="w-full h-full object-cover"
               />
@@ -45,10 +41,8 @@ const ProjectDetailModal = ({ project, onClose }) => {
               </div>
             </div>
 
-            {/* Right side: Project Details */}
             <div className="md:col-span-5 p-8 flex flex-col justify-between h-[550px] overflow-y-auto">
               <div>
-                {/* Metadata Header */}
                 <div className="flex items-center gap-4 text-zinc-400 text-[10px] tracking-widest uppercase font-semibold mb-4">
                   <span className="flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-[#3B82F6]" /> {project.location}
@@ -67,7 +61,6 @@ const ProjectDetailModal = ({ project, onClose }) => {
                 </p>
               </div>
 
-              {/* Specific Key-Value parameters */}
               <div className="border-t border-zinc-100 pt-6 space-y-4">
                 <div className="flex justify-between items-center text-xs">
                   <span className="flex items-center gap-2 text-zinc-400 font-bold uppercase tracking-widest">
@@ -82,11 +75,9 @@ const ProjectDetailModal = ({ project, onClose }) => {
                   <span className="text-zinc-900 font-semibold">{project.area || 'N/A'}</span>
                 </div>
               </div>
-
             </div>
 
           </div>
-
         </div>
       </div>
     </div>

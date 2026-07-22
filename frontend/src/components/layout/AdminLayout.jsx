@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, 
-  Globe, Inbox, Menu, X, BookOpen, Tag, Layers, Briefcase, Wrench, ChevronDown
-} from 'lucide-react'; 
+  Globe, Inbox, Menu, X, BookOpen, Tag, Layers, Briefcase, Wrench, ChevronDown, FolderOpen
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext'; 
 import { usePermission } from '../../hooks/usePermission'; 
 
@@ -70,6 +70,7 @@ const AdminLayout = () => {
 
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard', superAdminOnly: true },
+    { name: 'Media Library', icon: FolderOpen, path: '/admin/media', permission: 'media.view' },
     { name: 'Landing pages', icon: FileText, path: '/admin/pages', permission: 'page.view' },
     { 
       name: 'Home page', 

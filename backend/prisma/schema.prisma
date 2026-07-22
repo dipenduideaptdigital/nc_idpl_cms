@@ -203,6 +203,7 @@ model SettingRevision {
 
 model Media {
   id              String    @id @default(cuid())
+  fileHash        String?   @unique @db.VarChar(64)
   filename        String    @unique
   originalName    String
   mimeType        String    
