@@ -122,51 +122,20 @@ export const getMediaById = async (id) => {
 };
 
 export const deleteMediaItem = async (id) => {
-  const media = await prisma.media.findUnique({
-    where: { id },
-    include: {
-      _count: {
-        select: {
-          featuredInPages: true,
-          featuredInBlogs: true,
-          featuredInProjects: true,
-          ogImageForPages: true,
-          ogImageForBlogs: true,
-        }
-      }
-    }
-  });
-
-  if (!media) {
-    throw new AppError("Media not found.", StatusCodes.NOT_FOUND);
-  }
-
-  const usageCount = 
-    media._count.featuredInPages + 
-    media._count.featuredInBlogs + 
-    media._count.featuredInProjects + 
-    media._count.ogImageForPages + 
-    media._count.ogImageForBlogs;
-
-  if (usageCount > 0) {
-    throw new AppError(
-      `Cannot delete: This image is currently being used in ${usageCount} place(s) (Pages/Blogs/Projects). Please remove it from there first.`, 
-      StatusCodes.CONFLICT
-    );
-  }
+  const media = await getMediaById(id);
 
   try {
     if (media.filename) {
       await deleteFromCloudinary(media.filename);
-    
       const thumbPublicId = media.filename.replace("main/", "thumbs/").replace(".webp", "-thumb.webp");
       await deleteFromCloudinary(thumbPublicId);
     }
   } catch (error) {
-    logger.error(`Cloudinary deletion failed for ${id}. Proceeding to DB deletion.`, error);
+    logger.error(`Failed to delete media ${id} from Cloudinary. Proceeding to delete from DB.`, error);
   }
 
+  // Hard delete from database
   await prisma.media.delete({ where: { id } });
-
-  return { message: "Media deleted successfully." };
+  
+  return { message: "Media deleted successfully" };
 };
