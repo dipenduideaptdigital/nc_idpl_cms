@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import apiClient from '../../api/client';
 
 import hww1 from '../../assets/homepage/hww1.png';
@@ -40,9 +40,36 @@ const marginClasses = [
   'lg:mt-48'
 ];
 
+const useInViewTrigger = (options = {}) => {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '0px 0px -80px 0px',
+        ...options,
+      }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, inView];
+};
+
 const HowWeWork = ({ data: externalData }) => {
   const [content, setContent] = useState(externalData || null);
   const [stepsList, setStepsList] = useState(defaultStepsData);
+  const [cardsRef, cardsInView] = useInViewTrigger();
 
   useEffect(() => {
     let isMounted = true;
@@ -149,7 +176,10 @@ const HowWeWork = ({ data: externalData }) => {
         </div>
 
         {/* Staggered Cards Section */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-24 items-start">
+        <div 
+          ref={cardsRef}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-24 items-start"
+        >
           {stepsList.map((step, index) => {
             const stepId = step.id || `0${index + 1}`;
             const marginTopClass = marginClasses[index % marginClasses.length];
@@ -157,7 +187,12 @@ const HowWeWork = ({ data: externalData }) => {
             return (
               <div 
                 key={index} 
-                className={`bg-[#E3E9F5] rounded-[1.25rem] sm:rounded-[2rem] p-3.5 sm:p-5 relative overflow-hidden flex flex-col ${marginTopClass || ''} opal-move-up`}
+                className={`bg-[#E3E9F5] rounded-[1.25rem] sm:rounded-[2rem] p-3.5 sm:p-5 relative overflow-hidden flex flex-col ${marginTopClass || ''} transition-all duration-700 ease-out ${
+                  cardsInView 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-20'
+                }`}
+                style={{ transitionDelay: cardsInView ? `${index * 120}ms` : '0ms' }}
               >
                 {/* Rectangular Image */}
                 <div className="w-full aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden mb-3 sm:mb-6 shrink-0 bg-white">
