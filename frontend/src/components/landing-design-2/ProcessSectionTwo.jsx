@@ -58,9 +58,13 @@ const ProcessSectionTwo = ({ data }) => {
             <h2 className="text-4xl md:text-5xl lg:text-[48px] font-bold text-gray-900 leading-[1.15] tracking-tight mb-6 font-helvetica">
               {renderTitle(data?.title || 'Description [Architecture]\n[Process] For Exceptional Results.')}
             </h2>
-            <p className="text-gray-500 text-sm md:text-base font-normal leading-relaxed max-w-2xl">
-              {data?.description || 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.'}
-            </p>
+            
+            <div 
+              className="text-gray-500 text-sm md:text-base font-normal leading-relaxed max-w-2xl prose prose-sm prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
+              dangerouslySetInnerHTML={{ 
+                __html: data?.description || '<p>We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.</p>' 
+              }}
+            />
           </div>
         </div>
 
@@ -96,7 +100,6 @@ const ProcessSectionTwo = ({ data }) => {
                   {step.title}
                 </h3>
                 
-                {/* Description */}
                 <p className="text-gray-500 text-[10px] sm:text-xs md:text-[14px] leading-relaxed font-normal">
                   {step.desc}
                 </p>

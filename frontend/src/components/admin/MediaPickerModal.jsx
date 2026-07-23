@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { X, Search, Loader2, Upload, CheckCircle } from 'lucide-react';
+import { X, Search, Loader2, Upload, CheckCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 import { mediaApi } from '../../api/media';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 
@@ -16,14 +16,11 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
     try {
       setLoading(true);
       const res = await mediaApi.getAllMedia({ search: searchQuery, page: currentPage, limit: 24 });
-      if (currentPage === 1) {
-        setMediaList(res.data || []);
-      } else {
-        setMediaList(prev => [...prev, ...(res.data || [])]);
-      }
+      setMediaList(res.data || []);
       setMeta(res.meta);
     } catch (error) {
       console.error("Failed to fetch media:", error);
+      setMediaList([]);
     } finally {
       setLoading(false);
     }
@@ -45,27 +42,27 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
     const formData = new FormData();
     if (files.length === 1) {
       formData.append('image', files[0]);
-      try {
-        setUploading(true);
-        const res = await mediaApi.uploadImage(formData);
-        fetchMedia(searchTerm, 1);
-        setSelectedMedia(res.data);
-      } catch (err) {
-        alert(err.response?.data?.message || 'Upload failed');
-      } finally {
-        setUploading(false);
-      }
     } else {
       Array.from(files).forEach(file => formData.append('images', file));
-      try {
-        setUploading(true);
+    }
+
+    try {
+      setUploading(true);
+      let res;
+      if (files.length === 1) {
+        res = await mediaApi.uploadImage(formData);
+      } else {
         await mediaApi.uploadMultipleImages(formData);
-        fetchMedia(searchTerm, 1);
-      } catch (err) {
-        alert('Bulk upload failed');
-      } finally {
-        setUploading(false);
       }
+      setPage(1);
+      fetchMedia(searchTerm, 1);
+      if (files.length === 1 && res?.data) {
+        setSelectedMedia(res.data);
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Upload failed');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -84,7 +81,15 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
         
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-zinc-200 flex items-center justify-between bg-zinc-50 shrink-0">
-          <h2 className="text-xl font-bold text-zinc-800">Select Media</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-bold text-zinc-800">Select Media</h2>
+            {/* Total File Count */}
+            {meta && (
+              <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-bold border border-blue-200">
+                {meta.total} Files
+              </span>
+            )}
+          </div>
           <button onClick={onClose} className="p-2 text-zinc-500 hover:bg-zinc-200 rounded-full transition-colors">
             <X className="w-5 h-5" />
           </button>
@@ -111,7 +116,7 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
 
         {/* Media Grid */}
         <div className="flex-1 overflow-y-auto p-6 bg-zinc-50/50">
-          {loading && page === 1 ? (
+          {loading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="w-8 h-8 animate-spin text-zinc-400" />
             </div>
@@ -120,54 +125,67 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
               <p>No images found.</p>
             </div>
           ) : (
-            <>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
-                {mediaList.map((media) => (
-                  <div 
-                    key={media.id} 
-                    onClick={() => setSelectedMedia(media)}
-                    className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${
-                      selectedMedia?.id === media.id ? 'border-blue-600 shadow-md scale-[0.98]' : 'border-transparent hover:border-zinc-300 hover:shadow-sm'
-                    }`}
-                  >
-                    <img 
-                      src={resolveAssetUrl(media.thumbnailUrl || media.url)} 
-                      alt={media.originalName} 
-                      className="w-full h-full object-cover bg-white"
-                      loading="lazy"
-                    />
-                    {selectedMedia?.id === media.id && (
-                      <div className="absolute inset-0 bg-blue-600/20 flex items-center justify-center">
-                        <CheckCircle className="w-8 h-8 text-white drop-shadow-md" />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              
-              {/* Pagination / Load More */}
-              {meta?.page < meta?.totalPages && (
-                <div className="mt-8 flex justify-center">
-                  <button 
-                    onClick={() => {
-                      setPage(p => p + 1);
-                      fetchMedia(searchTerm, page + 1);
-                    }}
-                    className="px-6 py-2 bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 font-medium rounded-full transition-colors text-sm shadow-sm"
-                  >
-                    {loading ? 'Loading...' : 'Load More'}
-                  </button>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+              {mediaList.map((media) => (
+                <div 
+                  key={media.id} 
+                  onClick={() => setSelectedMedia(media)}
+                  className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${
+                    selectedMedia?.id === media.id ? 'border-blue-600 shadow-md scale-[0.98]' : 'border-transparent hover:border-zinc-300 hover:shadow-sm'
+                  }`}
+                >
+                  <img 
+                    src={resolveAssetUrl(media.thumbnailUrl || media.url)} 
+                    alt={media.originalName} 
+                    className="w-full h-full object-cover bg-white"
+                    loading="lazy"
+                  />
+                  {selectedMedia?.id === media.id && (
+                    <div className="absolute inset-0 bg-blue-600/20 flex items-center justify-center">
+                      <CheckCircle className="w-8 h-8 text-white drop-shadow-md" />
+                    </div>
+                  )}
                 </div>
-              )}
-            </>
+              ))}
+            </div>
           )}
         </div>
 
-        {/* Modal Footer */}
+        {/* Modal Footer (with Pagination inside) */}
         <div className="px-6 py-4 border-t border-zinc-200 bg-white flex items-center justify-between shrink-0">
-          <div className="text-sm text-zinc-500">
-            {selectedMedia ? `Selected: ${selectedMedia.originalName}` : 'No image selected'}
+          {/* Pagination Controls */}
+          <div className="flex items-center gap-3">
+            {meta?.totalPages > 1 && (
+              <>
+                <button 
+                  onClick={() => {
+                    const prevPage = Math.max(1, page - 1);
+                    setPage(prevPage);
+                    fetchMedia(searchTerm, prevPage);
+                  }}
+                  disabled={page === 1 || loading}
+                  className="p-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-600 rounded-md transition-colors disabled:opacity-50"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <span className="text-xs font-semibold text-zinc-500">
+                  {page} / {meta.totalPages}
+                </span>
+                <button 
+                  onClick={() => {
+                    const nextPage = Math.min(meta.totalPages, page + 1);
+                    setPage(nextPage);
+                    fetchMedia(searchTerm, nextPage);
+                  }}
+                  disabled={page === meta.totalPages || loading}
+                  className="p-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-600 rounded-md transition-colors disabled:opacity-50"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </>
+            )}
           </div>
+          
           <div className="flex gap-3">
             <button onClick={onClose} className="px-5 py-2.5 text-sm font-semibold text-zinc-600 hover:bg-zinc-100 rounded-xl transition-colors">
               Cancel

@@ -13,7 +13,9 @@ import VideoBannerCustomization from './VideoBannerCustomization';
 import BlogSectionCustomization from './BlogSectionCustomization';
 import GalleryCustomization from './GalleryCustomization';
 import CtaCustomization from './CtaCustomization';
-import { Type, Trash, Plus } from 'lucide-react';
+import { Type, Trash, Plus, ChevronDown, ChevronUp, Edit2 } from 'lucide-react';
+import TipTapEditor from './TipTapEditor';
+import ImageField from './ImageField';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
@@ -24,6 +26,47 @@ const getAssetUrl = (path) => {
   return `${baseUrl}${path}`;
 };
 
+ // Collapsible Tiptap Wrapper Component
+  const CollapsibleTiptap = ({ value, onChange }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const getPreviewText = (html) => {
+      if (!html) return 'No content added...';
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      const text = temp.textContent || temp.innerText || '';
+      return text.length > 60 ? text.substring(0, 60) + '...' : text || 'No content added...';
+    };
+
+    return (
+      <div className="border border-zinc-200 rounded-xl overflow-hidden bg-white shadow-sm transition-all duration-200">
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50/50 hover:bg-zinc-100 transition-colors outline-none"
+        >
+          <div className="flex items-center gap-3 overflow-hidden">
+            <Edit2 className="w-4 h-4 text-zinc-500 shrink-0" />
+            <span className="text-sm font-medium text-zinc-700 truncate">
+              {isOpen ? 'Close Text Editor' : getPreviewText(value)}
+            </span>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="w-4 h-4 text-zinc-500 shrink-0" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0" />
+          )}
+        </button>
+        
+        {isOpen && (
+          <div className="p-4 border-t border-zinc-200 bg-white">
+            <TipTapEditor value={value} onChange={onChange} />
+          </div>
+        )}
+      </div>
+    );
+  };
+  
 const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
   const { type, data } = block;
 
@@ -48,33 +91,16 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
       fetchForms();
     }
   }, [type]);
+
   // Generic change handler for simple inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     updateBlockData(index, name, value);
   };
 
-  // Image Upload Handler
-  const handleImageUpload = async (e, fieldName) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      const res = await apiClient.post('/uploads/image', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      if (res.data.success && res.data.data.url) {
-        updateBlockData(index, fieldName, res.data.data.url);
-      }
-    } catch (err) {
-      console.error(`Failed to upload image for ${fieldName}:`, err);
-      alert('Image upload failed. Max 5MB.');
-    } finally {
-      e.target.value = '';
-    }
+  // Tiptap Handler
+  const handleTiptapChange = (name, value) => {
+    updateBlockData(index, name, value);
   };
 
   // Array Item Change Handlers
@@ -90,19 +116,6 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
     updateBlockData(index, arrayField, newArray);
   };
 
-  const refs = {
-    backImage: useRef(null),
-    frontImage: useRef(null),
-    aboutImage: useRef(null),
-    serviceMain: useRef(null),
-    serviceBottom: useRef(null),
-    projectsBottom: useRef(null),
-    panorama: useRef(null),
-    team: useRef(null),
-    testimonialsMain: useRef(null),
-    testimonialsAuthor: useRef(null),
-    videoBanner: useRef(null),
-  };
 
   const renderGenericFields = (fieldsConfig) => (
     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
@@ -116,7 +129,13 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
             <label className="text-sm font-medium text-zinc-700 capitalize">
               {field.name.replace(/([A-Z])/g, ' $1').trim()}
             </label>
-            {field.type === 'textarea' ? (
+            
+            {field.type === 'tiptap' ? (
+              <CollapsibleTiptap
+                value={data[field.name] !== undefined ? data[field.name] : (field.defaultValue || '')}
+                onChange={(htmlValue) => handleTiptapChange(field.name, htmlValue)}
+              />
+            ) : field.type === 'textarea' ? (
               <textarea
                 rows="4"
                 name={field.name}
@@ -126,15 +145,10 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
                 className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-zinc-50/50"
               />
             ) : field.type === 'image' ? (
-              <div>
-                {data[field.name] && <img src={getAssetUrl(data[field.name])} alt="preview" className="h-32 object-cover rounded mb-2 border border-zinc-200" />}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, field.name)}
-                  className="text-sm text-zinc-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 cursor-pointer"
-                />
-              </div>
+              <ImageField 
+                value={data[field.name] || ''} 
+                onChange={(url) => updateBlockData(index, field.name, url)} 
+              />
             ) : field.type === 'array' ? (
               <div className="space-y-4 border border-zinc-200 rounded-xl p-4 bg-zinc-50/50">
                 {((data[field.name] === undefined ? field.defaultArray : data[field.name]) || []).map((item, itemIdx) => (
@@ -146,7 +160,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
                         newArr.splice(itemIdx, 1);
                         updateBlockData(index, field.name, newArr);
                       }}
-                      className="absolute top-2 right-2 p-1.5 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                      className="absolute top-2 right-2 p-1.5 text-red-500 hover:bg-red-50 rounded-md transition-colors z-10"
                     >
                       <Trash className="w-4 h-4" />
                     </button>
@@ -156,7 +170,13 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
                           <label className="text-xs font-medium text-zinc-600 capitalize">
                             {subField.name.replace(/([A-Z])/g, ' $1').trim()}
                           </label>
-                          {subField.type === 'textarea' ? (
+
+                          {subField.type === 'tiptap' ? (
+                            <CollapsibleTiptap
+                              value={item[subField.name] || ''}
+                              onChange={(htmlValue) => handleArrayItemChange(field.name, itemIdx, subField.name, htmlValue)}
+                            />
+                          ) : subField.type === 'textarea' ? (
                             <textarea
                               rows="2"
                               value={item[subField.name] || ''}
@@ -166,24 +186,9 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
                             />
                           ) : subField.type === 'image' ? (
                             <div className="flex-1">
-                              {item[subField.name] && <img src={getAssetUrl(item[subField.name])} alt="preview" className="h-24 object-cover rounded mb-2 border border-zinc-200" />}
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={async (e) => {
-                                  const file = e.target.files[0];
-                                  if (!file) return;
-                                  const formData = new FormData();
-                                  formData.append('image', file);
-                                  try {
-                                    const res = await apiClient.post('/uploads/image', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-                                    if (res.data.success && res.data.data.url) {
-                                      handleArrayItemChange(field.name, itemIdx, subField.name, res.data.data.url);
-                                    }
-                                  } catch (err) {}
-                                  e.target.value = '';
-                                }}
-                                className="text-xs text-zinc-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-orange-50 file:text-orange-700"
+                              <ImageField 
+                                value={item[subField.name] || ''} 
+                                onChange={(url) => handleArrayItemChange(field.name, itemIdx, subField.name, url)} 
                               />
                             </div>
                           ) : (
@@ -217,24 +222,9 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
                   <div key={itemIdx} className="p-3 border border-zinc-200 rounded-lg bg-white relative flex gap-4 items-start">
                     {field.isImage ? (
                       <div className="flex-1">
-                        {itemStr && <img src={getAssetUrl(itemStr)} alt="preview" className="h-24 object-cover rounded mb-2 border border-zinc-200" />}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={async (e) => {
-                            const file = e.target.files[0];
-                            if (!file) return;
-                            const formData = new FormData();
-                            formData.append('image', file);
-                            try {
-                              const res = await apiClient.post('/uploads/image', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-                              if (res.data.success && res.data.data.url) {
-                                handleArrayStringChange(field.name, itemIdx, res.data.data.url);
-                              }
-                            } catch (err) {}
-                            e.target.value = '';
-                          }}
-                          className="text-xs text-zinc-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-orange-50 file:text-orange-700"
+                        <ImageField 
+                          value={itemStr || ''} 
+                          onChange={(url) => handleArrayStringChange(field.name, itemIdx, url)} 
                         />
                       </div>
                     ) : (
@@ -290,7 +280,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
       return renderGenericFields([
         { name: 'title', type: 'textarea', defaultValue: 'Find Your [Inspired]\n[Interior] Design', placeholder: 'Title...' },
         { name: 'badgeText', type: 'text', defaultValue: 'FAST AND RELIABLE', placeholder: 'FAST AND RELIABLE' },
-        { name: 'description', type: 'textarea', defaultValue: 'Transform your vision into reality with our innovative designs, creating modern spaces that blend functionality, aesthetics, and sustainability.', placeholder: 'Description...' },
+        { name: 'description', type: 'tiptap', defaultValue: 'Transform your vision into reality with our innovative designs, creating modern spaces that blend functionality, aesthetics, and sustainability.', placeholder: 'Description...' },
         { name: 'watermarkText', type: 'text', defaultValue: 'Interior', placeholder: 'Interior' },
         { name: 'backgroundImage', type: 'image' },
       ]);
@@ -298,8 +288,8 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
       return renderGenericFields([
         { name: 'title', type: 'textarea', defaultValue: 'Architecture\n[And Interiors, Our Dual]\nExpertise', placeholder: 'Title...' },
         { name: 'badgeText', type: 'text', defaultValue: 'STARTED IN 1989', placeholder: 'STARTED IN 1989' },
-        { name: 'paragraph1', type: 'textarea', defaultValue: 'We believe that every space has the power to inspire, and that great design brings that inspiration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.', placeholder: 'Paragraph 1...' },
-        { name: 'paragraph2', type: 'textarea', defaultValue: 'With a strong presence in Kolkata, Bhubaneswar, and Ranchi, our turnkey office interiors are thoughtfully crafted to enhance productivity, reflect your brand identity, and support the way your team works every day.', placeholder: 'Paragraph 2...' },
+        { name: 'paragraph1', type: 'tiptap', defaultValue: 'We believe that every space has the power to inspire, and that great design brings that inspiration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.', placeholder: 'Paragraph 1...' },
+        { name: 'paragraph2', type: 'tiptap', defaultValue: 'With a strong presence in Kolkata, Bhubaneswar, and Ranchi, our turnkey office interiors are thoughtfully crafted to enhance productivity, reflect your brand identity, and support the way your team works every day.', placeholder: 'Paragraph 2...' },
         { name: 'buttonText', type: 'text', defaultValue: "Let's Get Started", placeholder: "Let's Get Started" },
         { name: 'image1', type: 'image' },
         { name: 'image2', type: 'image' },
@@ -318,7 +308,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
           ],
           itemFields: [
             { name: 'title', type: 'text', placeholder: 'Title' },
-            { name: 'description', type: 'textarea', placeholder: 'Description' },
+            { name: 'description', type: 'tiptap', placeholder: 'Description' },
             { name: 'image', type: 'image' }
           ]
         }
@@ -327,7 +317,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
       return renderGenericFields([
         { name: 'title', type: 'textarea', defaultValue: 'Description [Architecture]\n[Process] For Exceptional Results.', placeholder: 'Title...' },
         { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH', placeholder: 'GET IN TOUCH' },
-        { name: 'description', type: 'textarea', defaultValue: 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.', placeholder: 'Description...' },
+        { name: 'description', type: 'tiptap', defaultValue: 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.', placeholder: 'Description...' },
         { name: 'image', type: 'image' },
         { 
           name: 'steps', type: 'array', defaultItem: { title: '', description: '' },
@@ -339,7 +329,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
           ],
           itemFields: [
             { name: 'title', type: 'text', placeholder: 'Step Title' },
-            { name: 'description', type: 'textarea', placeholder: 'Step Description' }
+            { name: 'description', type: 'tiptap', placeholder: 'Step Description' }
           ]
         }
       ]);
@@ -400,7 +390,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
           itemFields: [
             { name: 'value', type: 'text', placeholder: 'e.g. 26+' },
             { name: 'title', type: 'text', placeholder: 'Title' },
-            { name: 'description', type: 'textarea', placeholder: 'Description' }
+            { name: 'description', type: 'tiptap', placeholder: 'Description' }
           ]
         }
       ]);
@@ -418,7 +408,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
           ],
           itemFields: [
             { name: 'title', type: 'text', placeholder: 'Title' },
-            { name: 'description', type: 'textarea', placeholder: 'Description' },
+            { name: 'description', type: 'tiptap', placeholder: 'Description' },
             { name: 'image', type: 'image' },
             { name: 'videoUrl', type: 'text', placeholder: 'YouTube Embed URL' }
           ]
@@ -446,10 +436,10 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
       ]);
     case 'testimonialsTwo':
       return renderGenericFields([
-        { name: 'title', type: 'textarea', defaultValue: 'Here’s What [Warm Words]\n[Our Clients] Say', placeholder: 'Title...' },
+        { name: 'title', type: 'textarea', defaultValue: 'Here s What [Warm Words]\n[Our Clients] Say', placeholder: 'Title...' },
         { name: 'badgeText', type: 'text', defaultValue: 'OUR CLIENTS SAY', placeholder: 'OUR CLIENTS SAY' },
-        { name: 'description', type: 'textarea', defaultValue: 'Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors', placeholder: 'Description...' },
-        { name: 'mainQuote', type: 'textarea', defaultValue: 'I absolutely love my the new modern living room! The clean lines, a neutral tones, and minimalist interior create such a calming & stylish atmosphere. Highly recommend their modern interior design services!', placeholder: 'Main Quote...' },
+        { name: 'description', type: 'tiptap', defaultValue: 'Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors', placeholder: 'Description...' },
+        { name: 'mainQuote', type: 'tiptap', defaultValue: 'I absolutely love my the new modern living room! The clean lines, a neutral tones, and minimalist interior create such a calming & stylish atmosphere. Highly recommend their modern interior design services!', placeholder: 'Main Quote...' },
         { name: 'authorName', type: 'text', defaultValue: 'Morgan Dufresne', placeholder: 'Author Name' },
         { name: 'authorRole', type: 'text', defaultValue: 'Company owner', placeholder: 'Author Role' },
         { name: 'image', type: 'image' },
@@ -457,7 +447,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
       ]);
     case 'ctaSectionTwo':
       return renderGenericFields([
-        { name: 'title', type: 'textarea', defaultValue: 'Have A Project In [Mind?] Let’s\n[Make] It Happen', placeholder: 'Title...' },
+        { name: 'title', type: 'textarea', defaultValue: 'Have A Project In [Mind?] Let s\n[Make] It Happen', placeholder: 'Title...' },
         { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH', placeholder: 'GET IN TOUCH' },
         { name: 'buttonText', type: 'text', defaultValue: 'BOOK A FREE CONSULTATION', placeholder: 'BOOK A FREE CONSULTATION' }
       ]);
@@ -469,13 +459,10 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
             <h2 className="text-lg font-semibold text-zinc-800">Rich Text Editor</h2>
           </div>
           <div className="p-8">
-            <textarea
-              rows="8"
-              value={data.content || ''}
-              onChange={(e) => updateBlockData(index, 'content', e.target.value)}
-              placeholder="Enter your HTML or text content here..."
-              className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors font-mono text-sm bg-zinc-50/50"
-            ></textarea>
+            <CollapsibleTiptap 
+              value={data.content || ''} 
+              onChange={(htmlValue) => updateBlockData(index, 'content', htmlValue)} 
+            />
           </div>
         </div>
       );
@@ -488,8 +475,6 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
             <h2 className="text-lg font-semibold text-zinc-800">Contact Form Module</h2>
           </div>
           <div className="p-8 space-y-6">
-            
-            {/* DYNAMIC DROPDOWN API DRIVEN */}
             <div>
               <label className="block text-sm font-medium text-zinc-700 mb-2">Target Form *</label>
               {loadingForms ? (
@@ -557,18 +542,18 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
         </div>
       );
       case 'heading':
-      return renderGenericFields([
-        { name: 'content', type: 'text', placeholder: 'Enter your section heading here...' }
-      ]);
+        return renderGenericFields([
+          { name: 'content', type: 'tiptap', placeholder: 'Enter your section heading here...' }
+        ]);
       
     case 'paragraph':
       return renderGenericFields([
-        { name: 'content', type: 'textarea', placeholder: 'Write your paragraph content...' }
+        { name: 'content', type: 'tiptap', placeholder: 'Write your paragraph content...' }
       ]);
 
     case 'quote':
       return renderGenericFields([
-        { name: 'content', type: 'textarea', placeholder: 'Enter the quote text...' }
+        { name: 'content', type: 'tiptap', placeholder: 'Enter the quote text...' }
       ]);
 
     case 'image':
@@ -600,6 +585,169 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
           <p className="text-sm text-zinc-500 font-medium">Line Divider (No settings required)</p>
         </div>
         );
+        
+    case 'serviceBanner':
+      return renderGenericFields([
+        { name: 'title', type: 'text', defaultValue: 'Residential Interior', placeholder: 'Title...' },
+        { name: 'subTitle', type: 'text', defaultValue: 'Services', placeholder: 'Subtitle...' },
+        { name: 'backgroundImage', type: 'image' }
+      ]);
+
+    case 'serviceDetails':
+      return renderGenericFields([
+        { name: 'aboutTitle', type: 'text', defaultValue: 'About The Service' },
+        { name: 'aboutDescription', type: 'tiptap', defaultValue: 'Commercial interior design is constantly evolving...' },
+        { name: 'typesTitle', type: 'text', defaultValue: 'Types Of Commercial Spaces' },
+        { name: 'typesDescription', type: 'tiptap', defaultValue: 'In design, we bring characteristics...' },
+        { name: 'elementsTitle', type: 'text', defaultValue: 'Key Elements Of Interior Design' },
+        { name: 'elementsDescription', type: 'tiptap', defaultValue: 'Several key elements are essential...' },
+        { name: 'footerDescription', type: 'tiptap', defaultValue: 'Commercial interior design is a dynamic...' },
+        { name: 'sidebarImage', type: 'image' },
+        { name: 'mainImage', type: 'image' },
+        { name: 'midImage1', type: 'image' },
+        { name: 'midImage2', type: 'image' },
+        { 
+          name: 'features', type: 'array', defaultItem: { title: '', description: '' },
+          defaultArray: [{ title: "Space Optimization", description: "Through The Best Smart Space Optimisation." }],
+          itemFields: [
+            { name: 'title', type: 'text', placeholder: 'Feature Title' },
+            { name: 'description', type: 'tiptap', placeholder: 'Feature Description' }
+          ]
+        },
+        { 
+          name: 'leftBullets', type: 'array', defaultItem: { text: '' },
+          defaultArray: [{ text: "We provide high quality design services." }],
+          itemFields: [{ name: 'text', type: 'text', placeholder: 'Bullet Text' }]
+        },
+        { 
+          name: 'rightBullets', type: 'array', defaultItem: { text: '' },
+          defaultArray: [{ text: "Flexible with any structure of the building" }],
+          itemFields: [{ name: 'text', type: 'text', placeholder: 'Bullet Text' }]
+        },
+        { 
+          name: 'faqs', type: 'array', defaultItem: { question: '' },
+          defaultArray: [{ question: "What Interior Design Services Do You Offer?" }],
+          itemFields: [{ name: 'question', type: 'text', placeholder: 'FAQ Question' }]
+        }
+      ]);
+
+    case 'ctaSection':
+      return renderGenericFields([
+        { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH' },
+        { name: 'title', type: 'textarea', defaultValue: 'Have A Project In [Mind? Let\'s]\n[Make] It Happen' },
+        { name: 'buttonText', type: 'text', defaultValue: 'BOOK A FREE CONSULTATION' }
+      ]);
+
+    case 'contactBanner':
+      return renderGenericFields([
+        { name: 'title', type: 'text', defaultValue: 'Contact Us' },
+        { name: 'breadcrumbText', type: 'text', defaultValue: 'Contact Us' },
+        { name: 'backgroundImage', type: 'image' }
+      ]);
+
+    case 'contactInfo':
+      return renderGenericFields([
+        { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH' },
+        { name: 'title', type: 'textarea', defaultValue: 'Have a Project In [Mind? Let\'s]\n[Make] It Happen.' },
+        { name: 'addressTitle', type: 'text', defaultValue: 'Address:' },
+        { name: 'addressText', type: 'textarea', defaultValue: 'Office: AG 40 , Sector II, Salt Lake\nCity, Kolkata: 700091' },
+        { name: 'supportTitle', type: 'text', defaultValue: 'Support' },
+        { name: 'supportPhone', type: 'text', defaultValue: '+91 9831-637-409' },
+        { name: 'supportEmail', type: 'text', defaultValue: 'Subhaakritee@Hotmail.Com' },
+        { name: 'mapIframeUrl', type: 'textarea', defaultValue: 'https://www.google.com/maps/embed?pb=...' },
+        { name: 'workspaceImage', type: 'image' },
+      ]);
+
+    case 'aboutBanner':
+      return renderGenericFields([
+        { name: 'title', type: 'text', defaultValue: 'About Us' },
+        { name: 'breadcrumbText', type: 'text', defaultValue: 'About Us' },
+        { name: 'backgroundImage', type: 'image' }
+      ]);
+
+    case 'aboutExperience':
+      return renderGenericFields([
+        { name: 'badgeText', type: 'text', defaultValue: 'Started in 1989' },
+        { name: 'title', type: 'textarea', defaultValue: 'We Shape [Interior Designs,]\n[Crafting Timeless] And Inspiring\nSpaces' },
+        { name: 'yearsOfExperience', type: 'text', defaultValue: '26' },
+        { name: 'experienceTitle', type: 'textarea', defaultValue: 'Years Of\nExperience' },
+        { name: 'paragraph', type: 'tiptap', defaultValue: '<p>We believe that every space has the power to inspire...</p>' },
+        { name: 'buttonText', type: 'text', defaultValue: 'Learn More' },
+        { name: 'buttonLink', type: 'text', defaultValue: '#' },
+        { name: 'image1', type: 'image' },
+        { name: 'image2', type: 'image' }
+      ]);
+
+    case 'aboutProcess':
+      return renderGenericFields([
+        { name: 'backgroundImage', type: 'image' },
+        { 
+          name: 'steps', type: 'array', defaultItem: { number: '', title: '', desc: '' },
+          defaultArray: [
+            { number: '01', title: 'Concept Design', desc: 'Initial ideation and space planning.' }
+          ],
+          itemFields: [
+            { name: 'number', type: 'text', placeholder: '01' },
+            { name: 'title', type: 'text', placeholder: 'Step Title' },
+            { name: 'desc', type: 'tiptap', placeholder: 'Step Description' }
+          ]
+        }
+      ]);
+
+    case 'timeline':
+      return renderGenericFields([
+        { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH' },
+        { name: 'title', type: 'textarea', defaultValue: 'Our History [Is Full Of]\n[Interesting] Stages And\nEvents.' },
+        { 
+          name: 'items', type: 'array', defaultItem: { year: '', description: '', image: '' },
+          defaultArray: [
+            { year: '1990', description: 'A business house born out of passion for fish keeping.', image: '' }
+          ],
+          itemFields: [
+            { name: 'year', type: 'text', placeholder: 'Year' },
+            { name: 'description', type: 'tiptap', placeholder: 'Description' },
+            { name: 'image', type: 'image' }
+          ]
+        }
+      ]);
+
+    case 'aboutAwards':
+      return renderGenericFields([
+        { name: 'badgeText', type: 'text', defaultValue: 'AWARD & ACHIEVEMENT' },
+        { name: 'title', type: 'textarea', defaultValue: 'Design That [Speaks Our]\n[Industry] Awards' },
+        { name: 'mainImage', type: 'image' },
+        { 
+          name: 'awards', type: 'array', defaultItem: { year: '', title: '' },
+          defaultArray: [{ year: '2020', title: 'Residential Interior Design' }],
+          itemFields: [
+            { name: 'year', type: 'text', placeholder: 'Year' },
+            { name: 'title', type: 'text', placeholder: 'Award Title' }
+          ]
+        }
+      ]);
+
+    case 'aboutGallery':
+      return renderGenericFields([
+        { name: 'badgeText', type: 'text', defaultValue: 'OUR GALLERY' },
+        { name: 'title', type: 'textarea', defaultValue: 'Interior \n Design' },
+        { name: 'description', type: 'tiptap', defaultValue: '<p>Lorem ipsum dolor sit amet consectetur...</p>' },
+        { name: 'backgroundImage', type: 'image' },
+        { 
+          name: 'galleryItems', type: 'array', defaultItem: { title: '', image: '' },
+          defaultArray: [{ title: 'Project 1', image: '' }],
+          itemFields: [
+            { name: 'title', type: 'text', placeholder: 'Project Title' },
+            { name: 'image', type: 'image' }
+          ]
+        }
+      ]);
+
+    case 'projectsBanner':
+      return renderGenericFields([
+        { name: 'title', type: 'text', defaultValue: 'Projects' },
+        { name: 'backgroundImage', type: 'image' }
+      ]);
+
     default:
       return (
         <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-yellow-800 text-sm">

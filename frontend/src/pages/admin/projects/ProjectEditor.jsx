@@ -2,8 +2,52 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { projectsApi } from '../../../api/projects';
 import ImageField from '../../../components/admin/ImageField';
-import { Save, ArrowLeft, Plus, Trash2 } from 'lucide-react';
+import TipTapEditor from '../../../components/admin/TipTapEditor'; 
+import { Save, ArrowLeft, Plus, Trash2, Edit2, ChevronDown, ChevronUp } from 'lucide-react';
 import Can from '../../../components/shared/Can';
+
+const CollapsibleTiptap = ({ label, value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getPreviewText = (html) => {
+    if (!html) return 'No content added...';
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    const text = temp.textContent || temp.innerText || '';
+    return text.length > 60 ? text.substring(0, 60) + '...' : text || 'No content added...';
+  };
+
+  return (
+    <div className="mb-4">
+      {label && <label className="block text-sm font-medium mb-2">{label}</label>}
+      <div className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm transition-all duration-200">
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50 hover:bg-zinc-100 transition-colors outline-none"
+        >
+          <div className="flex items-center gap-3 overflow-hidden">
+            <Edit2 className="w-4 h-4 text-zinc-500 shrink-0" />
+            <span className="text-sm font-medium text-zinc-700 truncate">
+              {isOpen ? 'Close Editor' : getPreviewText(value)}
+            </span>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="w-4 h-4 text-zinc-500 shrink-0" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0" />
+          )}
+        </button>
+        
+        {isOpen && (
+          <div className="p-4 border-t border-gray-200 bg-white">
+            <TipTapEditor value={value || ''} onChange={onChange} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const ProjectEditor = () => {
   const { id } = useParams();
@@ -120,9 +164,17 @@ const ProjectEditor = () => {
               <div><label className="text-sm font-medium">Client</label><input name="client" value={formData.client} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl" /></div>
               <div><label className="text-sm font-medium">Area (sq.ft)</label><input name="area" value={formData.area} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl" /></div>
             </div>
+            <CollapsibleTiptap
+              label="Short Description (List View)"
+              value={formData.description}
+              onChange={(val) => setFormData({ ...formData, description: val })}
+            />
 
-            <div><label className="text-sm font-medium">Short Description (List View)</label><textarea name="description" rows="3" value={formData.description} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl"></textarea></div>
-            <div><label className="text-sm font-medium">Full Details (Project Page)</label><textarea name="details" rows="4" value={formData.details} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl"></textarea></div>
+            <CollapsibleTiptap
+              label="Full Details (Project Page)"
+              value={formData.details}
+              onChange={(val) => setFormData({ ...formData, details: val })}
+            />
           </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-sm space-y-6">
@@ -161,6 +213,18 @@ const ProjectEditor = () => {
             <ImageField value={formData.featuredImageId} onChange={(val) => setFormData({...formData, featuredImageId: val})} />
           </div>
         </div>
+      </div>
+      <div className="flex justify-start mt-8 pt-4">
+        <Can permission={isEditMode ? 'project.edit' : 'project.create'}>
+          <button 
+            type="submit" 
+            disabled={saving} 
+            className="px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-zinc-900/20 disabled:opacity-70 text-sm"
+          >
+            <Save className="w-5 h-5" /> 
+            {saving ? 'Saving...' : 'Save Project'}
+          </button>
+        </Can>
       </div>
     </form>
   );

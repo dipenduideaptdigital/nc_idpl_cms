@@ -62,7 +62,7 @@ const AboutExperienceBlock = ({
               {renderTitle(title || 'We Shape [Interior Designs,]\n[Crafting Timeless] And Inspiring\nSpaces')}
             </h2>
 
-            {/* DESKTOP ROW (Visible only on lg screen) */}
+            {/* DESKTOP ROW */}
             <div className="hidden lg:flex flex-row items-stretch gap-6 lg:gap-10 mt-10 lg:mt-16">
               <div className="flex flex-col justify-start py-2 lg:py-4 gap-4">
                 <div className="text-[120px] sm:text-[160px] lg:text-[260px] font-black leading-[0.75] tracking-[-0.06em] text-[#111827] -ml-2 lg:-ml-3 scale-y-125 origin-center">
@@ -84,9 +84,8 @@ const AboutExperienceBlock = ({
               </div>
             </div>
 
-            {/* MOBILE ROW (Visible only on mobile/tablet) */}
+            {/* MOBILE ROW */}
             <div className="lg:hidden flex flex-row items-center justify-between gap-4 sm:gap-6 mt-10 w-full">
-              {/* Experience counter */}
               <div className="flex flex-col justify-center items-center py-2 gap-2 text-center w-1/3">
                 <div className="text-[64px] sm:text-[90px] font-black leading-[0.75] tracking-[-0.06em] text-[#111827] scale-y-125 origin-center">
                   {yearsOfExperience || '26'}
@@ -97,23 +96,11 @@ const AboutExperienceBlock = ({
                   </h3>
                 </div>
               </div>
-
-              {/* Image 1 */}
               <div className="w-1/3 aspect-[3/4] rounded-2xl overflow-hidden shadow-sm">
-                <img
-                  src={resolvedImg1}
-                  alt="Experience Main"
-                  className="w-full h-full object-cover"
-                />
+                <img src={resolvedImg1} alt="Experience Main" className="w-full h-full object-cover" />
               </div>
-
-              {/* Image 2 */}
               <div className="w-1/3 aspect-[3/4] rounded-2xl overflow-hidden shadow-sm">
-                <img
-                  src={resolvedImg2}
-                  alt="Experience Secondary"
-                  className="w-full h-full object-cover"
-                />
+                <img src={resolvedImg2} alt="Experience Secondary" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
@@ -128,10 +115,14 @@ const AboutExperienceBlock = ({
               />
             </div>
 
-            <div className="w-full max-w-[460px] lg:ml-auto  lg:mt-5 flex flex-col items-center lg:items-start">
-              <p className="text-[#4B5563] leading-relaxed text-[16px] pr-2 text-center lg:text-left whitespace-normal md:whitespace-pre-line">
-                {paragraph || 'We believe that every space has the power to inspire, and that great design brings that integration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.'}
-              </p>
+            <div className="w-full max-w-[460px] lg:ml-auto lg:mt-5 flex flex-col items-center lg:items-start">
+              
+              <div 
+                className="text-[#4B5563] leading-relaxed text-[16px] pr-2 text-center lg:text-left prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
+                dangerouslySetInnerHTML={{ 
+                  __html: paragraph || '<p>We believe that every space has the power to inspire, and that great design brings that integration to life.</p>' 
+                }}
+              />
               
               <a href={buttonLink || '#'} className="mt-8 lg:mt-10 group flex items-center border border-gray-300 rounded-full pl-7 pr-2 py-2 w-max hover:border-[#228BFF] transition-colors duration-300">
                 <span className="font-semibold text-[15px] text-[#111827] group-hover:text-[#228BFF] transition-colors">

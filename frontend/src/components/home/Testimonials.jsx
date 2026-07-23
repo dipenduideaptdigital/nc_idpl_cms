@@ -288,12 +288,12 @@ const Testimonials = ({ data: externalData }) => {
         </div>
 
         {/* Testimonials Body */}
-        <div className="w-full mb-24 min-h-[500px] lg:min-h-[450px] flex items-center">
+        <div className="w-full mb-16 md:mb-24 flex items-center">
           <div 
-            className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-stretch"
+            className="w-full flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-stretch"
           >
             
-            <div className="w-full lg:w-[55%] h-[350px] md:h-[450px] rounded-[2.5rem] overflow-hidden fadeInLeft group shrink-0">
+            <div className="w-full lg:w-[55%] h-[280px] sm:h-[380px] md:h-[450px] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden fadeInLeft group shrink-0">
               <img 
                 key={activeSlide.image}
                 src={activeSlide.image} 
@@ -307,22 +307,22 @@ const Testimonials = ({ data: externalData }) => {
               />
             </div>
 
-            <div className="w-full lg:w-[45%] flex flex-col justify-between h-auto lg:h-[450px] min-h-[350px] md:min-h-[400px] fadeInRight">
+            <div className="w-full lg:w-[45%] flex flex-col justify-between h-[360px] sm:h-[400px] md:h-[450px] lg:h-[450px] shrink-0 fadeInRight">
               
               <div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-6">
-                  <div className="text-6xl font-bold text-gray-900 tracking-tighter shrink-0">{ratingValue}</div>
+                <div className="flex flex-row items-center gap-3 sm:gap-6 mb-6">
+                  <div className="text-4xl sm:text-6xl font-bold text-gray-900 tracking-tighter shrink-0">{ratingValue}</div>
                   
-                  <div className="flex flex-col items-start sm:items-start gap-1 shrink-0">
-                    <div className="bg-[#3B82F6] text-white flex space-x-1 px-3 py-1 rounded-full shadow-md">
+                  <div className="flex flex-col items-start gap-1 shrink-0">
+                    <div className="bg-[#3B82F6] text-white flex space-x-1 px-2.5 sm:px-3 py-1 rounded-full shadow-md">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3.5 h-3.5 fill-white text-white" />
+                        <Star key={i} className="w-3 sm:w-3.5 h-3 sm:h-3.5 fill-white text-white" />
                       ))}
                     </div>
-                    <span className="text-xs font-bold text-gray-900 pl-1">{reviewCount}</span>
+                    <span className="text-[10px] sm:text-xs font-bold text-gray-900 pl-1">{reviewCount}</span>
                   </div>
                   
-                  <div className="sm:pl-6 sm:border-l border-gray-200">
+                  <div className="pl-3 sm:pl-6 border-l border-gray-200">
                     <p key={activeIdx} className="text-[11px] md:text-xs text-gray-700 font-bold leading-relaxed max-w-[280px] line-clamp-3 animate-in fade-in duration-500">
                       {conceptText}
                     </p>
@@ -332,8 +332,8 @@ const Testimonials = ({ data: externalData }) => {
                 <div className="w-full h-[1px] bg-gray-200 mb-6"></div>
               </div>
 
-              <div className="my-auto py-2 flex-1 min-h-[140px] max-h-[300px] overflow-y-auto hide-scrollbar">
-                <p key={activeIdx} className="text-gray-600 text-base md:text-lg lg:text-[19px] font-normal leading-[1.65] max-w-[470px] animate-in fade-in duration-500">
+              <div className="my-auto py-1 sm:py-2 flex-1 overflow-y-auto hide-scrollbar">
+                <p key={activeIdx} className="text-gray-600 text-sm sm:text-base md:text-lg lg:text-[19px] font-normal leading-[1.65] max-w-[470px] animate-in fade-in duration-500">
                   &ldquo;{mainQuote}&rdquo;
                 </p>
               </div>

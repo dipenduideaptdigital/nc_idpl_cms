@@ -35,39 +35,25 @@ const ProjectDesignDetails = ({ project }) => {
           Design in Details
         </h2>
         
-        <p className="text-zinc-500 text-[15px] md:text-[16px] leading-relaxed mb-10 whitespace-pre-line">
-          {project.details || project.description || 'Details coming soon for this project.'}
-        </p>
+        <div 
+          className="text-zinc-500 text-[15px] md:text-[16px] leading-relaxed mb-10 prose prose-zinc max-w-none"
+          dangerouslySetInnerHTML={{ 
+            __html: project.details || '<p>Details coming soon for this project.</p>' 
+          }}
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 md:gap-y-0 mb-16">
-          {/* Left Column */}
-          <div className="flex flex-col space-y-6">
-            {bulletPoints.map((item, index) => (
-              <div key={`left-${index}`} className="flex items-start gap-4">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6] shrink-0 mt-2"></span>
-                <span 
-                  className="text-zinc-900 font-['Outfit'] select-none text-left text-base md:text-lg lg:text-[20px] leading-relaxed"
-                  style={{ fontWeight: 600, fontStyle: 'normal' }}
-                >
-                  {item}
-                </span>
-              </div>
-            ))}
-          </div>
-          {/* Right Column */}
-          <div className="flex flex-col space-y-6">
-            {bulletPoints.map((item, index) => (
-              <div key={`right-${index}`} className="flex items-start gap-4">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6] shrink-0 mt-2"></span>
-                <span 
-                  className="text-zinc-900 font-['Outfit'] select-none text-left text-base md:text-lg lg:text-[20px] leading-relaxed"
-                  style={{ fontWeight: 600, fontStyle: 'normal' }}
-                >
-                  {item}
-                </span>
-              </div>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-16">
+          {bulletPoints.map((item, index) => (
+            <div key={index} className="flex items-start gap-4">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6] shrink-0 mt-2"></span>
+              <span 
+                className="text-zinc-900 font-['Outfit'] select-none text-left text-base md:text-lg lg:text-[20px] leading-relaxed"
+                style={{ fontWeight: 600, fontStyle: 'normal' }}
+              >
+                {item}
+              </span>
+            </div>
+          ))}
         </div>
 
         <div className="border border-zinc-200 rounded-[24px] overflow-hidden grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-zinc-200 bg-white mb-15">
@@ -91,9 +77,13 @@ const ProjectDesignDetails = ({ project }) => {
           >
             Incredible Result
           </h2>
-          <p className="text-zinc-500 text-[15px] md:text-[16px] leading-relaxed mb-10">
-            {project.description || 'Our interior designers use human-centered approaches to address how we live today. Creating novel approaches to promoting health, safety, and welfare, contemporary interiors are increasingly inspired by biophilia as a holistic approach to design.'}
-          </p>
+          
+          <div 
+            className="text-zinc-500 text-[15px] md:text-[16px] leading-relaxed mb-10 prose prose-zinc max-w-none"
+            dangerouslySetInnerHTML={{ 
+              __html: project.description || '<p>Our interior designers use human-centered approaches to address how we live today. Creating novel approaches to promoting health, safety, and welfare, contemporary interiors are increasingly inspired by biophilia as a holistic approach to design.</p>' 
+            }}
+          />
 
           {/* Photos Button */}
           <button 

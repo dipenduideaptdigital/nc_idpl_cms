@@ -1427,6 +1427,17 @@ const HomeCustomization = () => {
           onDeleteLink={handleFooterDeleteLink}
         />
       )}
+
+      <div className="flex justify-start mt-8 pt-4">
+        <button 
+          onClick={handleSave}
+          disabled={saving}
+          className="bg-zinc-900 hover:bg-zinc-800 text-white px-8 py-3 rounded-xl font-medium tracking-wide flex items-center justify-center gap-2 transition-all shadow-lg shadow-zinc-900/20 disabled:opacity-70 text-sm w-full sm:w-auto"
+        >
+          {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+          {saving ? 'Saving...' : 'Save Changes'}
+        </button>
+      </div>
     </div>
   );
 };

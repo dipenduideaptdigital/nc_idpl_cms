@@ -18,7 +18,8 @@ const TestimonialsTwo = ({ data }) => {
   const resolvedAuthorImg = data?.authorImage ? getAssetUrl(data.authorImage, defaultAuthorImg) : defaultAuthorImg;
 
   const badgeText = data?.badgeText || "OUR CLIENTS SAY";
-  const subtitle = data?.description || "Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors";
+  const subtitle = data?.description || "<p>Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors</p>";
+  
   const quote = data?.mainQuote || "I absolutely love my the new modern living room! The clean lines, a neutral tones, and minimalist interior create such a calming & stylish atmosphere. Highly recommend their modern interior design services!";
   const authorName = data?.authorName || "Morgan Dufresne";
   const authorRole = data?.authorRole || "Company owner";
@@ -44,14 +45,10 @@ const TestimonialsTwo = ({ data }) => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold text-gray-950 tracking-tight leading-[1.1] mb-6 font-helvetica">
               {renderTitle(data?.title || 'Here’s What [Warm Words]\n[Our Clients] Say')}
             </h2>
-            <p className="text-gray-500 text-sm md:text-base leading-relaxed font-normal max-w-3xl">
-              {typeof subtitle === 'string' && subtitle.includes('beautifully crafted residential') ? (
-                <>
-                  {subtitle.split('beautifully crafted ')[0]}beautifully crafted <br className="hidden md:inline" />
-                  {subtitle.split('beautifully crafted ')[1]}
-                </>
-              ) : subtitle}
-            </p>
+            <div 
+              className="text-gray-500 text-sm md:text-base leading-relaxed font-normal max-w-3xl prose prose-sm max-w-none prose-p:my-1 prose-a:text-blue-500"
+              dangerouslySetInnerHTML={{ __html: subtitle }}
+            />
           </div>
         </div>
 

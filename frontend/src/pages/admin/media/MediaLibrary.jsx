@@ -3,7 +3,7 @@ import { mediaApi } from '../../../api/media';
 import { resolveAssetUrl } from '../../../utils/assetResolver';
 import { 
   Upload, Search, Copy, Trash2, X, Image as ImageIcon, 
-  CheckCircle, Loader2, Calendar, HardDrive 
+  CheckCircle, Loader2, ArrowLeft, ArrowRight
 } from 'lucide-react';
 import { Can } from '../../../components/shared/Can';
 
@@ -17,25 +17,20 @@ const MediaLibrary = () => {
   const [meta, setMeta] = useState(null);
   const [page, setPage] = useState(1);
 
-  // Fetch with Debounce logic for Search
   const fetchMedia = useCallback(async (searchQuery = '', currentPage = 1) => {
     try {
       setLoading(true);
       const res = await mediaApi.getAllMedia({ search: searchQuery, page: currentPage, limit: 30 });
-      if (currentPage === 1) {
-        setMediaList(res.data || []);
-      } else {
-        setMediaList(prev => [...prev, ...(res.data || [])]);
-      }
+      setMediaList(res.data || []);
       setMeta(res.meta);
     } catch (error) {
       console.error("Failed to fetch media:", error);
+      setMediaList([]);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Handle Search with Debounce
   useEffect(() => {
     const timer = setTimeout(() => {
       setPage(1);
@@ -51,26 +46,23 @@ const MediaLibrary = () => {
     const formData = new FormData();
     if (files.length === 1) {
       formData.append('image', files[0]);
-      try {
-        setUploading(true);
-        await mediaApi.uploadImage(formData);
-        fetchMedia(searchTerm, 1);
-      } catch (err) {
-        alert(err.response?.data?.message || 'Upload failed');
-      } finally {
-        setUploading(false);
-      }
     } else {
       Array.from(files).forEach(file => formData.append('images', file));
-      try {
-        setUploading(true);
+    }
+
+    try {
+      setUploading(true);
+      if (files.length === 1) {
+        await mediaApi.uploadImage(formData);
+      } else {
         await mediaApi.uploadMultipleImages(formData);
-        fetchMedia(searchTerm, 1);
-      } catch (err) {
-        alert(err.response?.data?.message || 'Upload failed');
-      } finally {
-        setUploading(false);
       }
+      setPage(1);
+      fetchMedia(searchTerm, 1);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Upload failed');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -78,7 +70,7 @@ const MediaLibrary = () => {
     if (!window.confirm("Are you sure you want to permanently delete this media?")) return;
     try {
       await mediaApi.deleteMedia(id);
-      setMediaList(prev => prev.filter(m => m.id !== id));
+      fetchMedia(searchTerm, page);
       if (selectedMedia?.id === id) setSelectedMedia(null);
     } catch (err) {
       alert("Failed to delete media.");
@@ -102,7 +94,7 @@ const MediaLibrary = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-100px)] flex flex-col font-sans animate-in fade-in duration-500">
+    <div className="h-[calc(100vh-125px)] flex flex-col font-sans animate-in fade-in duration-500">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-t-2xl shadow-sm border border-zinc-100 mb-4 shrink-0">
         <div>
@@ -110,7 +102,15 @@ const MediaLibrary = () => {
             <ImageIcon className="w-6 h-6 text-zinc-900" />
             Media Library
           </h1>
-          <p className="text-zinc-500 text-sm mt-1">Manage all your uploaded images and assets centrally.</p>
+          <p className="text-zinc-500 text-sm mt-1 flex items-center gap-2">
+            Manage all your uploaded images and assets centrally.
+            {/* Total Item Count Badge */}
+            {meta && (
+              <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-md font-bold text-xs border border-blue-100">
+                {meta.total} Files
+              </span>
+            )}
+          </p>
         </div>
         
         <div className="flex items-center gap-4">
@@ -137,19 +137,19 @@ const MediaLibrary = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex gap-4 overflow-hidden">
-        {/* Left Side: Grid View */}
-        <div className={`flex-1 bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-y-auto p-4 transition-all duration-300 ${selectedMedia ? 'w-2/3' : 'w-full'}`}>
-          {loading && page === 1 ? (
-            <div className="flex items-center justify-center h-full">
-              <Loader2 className="w-8 h-8 animate-spin text-zinc-400" />
-            </div>
-          ) : mediaList.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-zinc-400">
-              <ImageIcon className="w-16 h-16 mb-4 opacity-20" />
-              <p>No media files found.</p>
-            </div>
-          ) : (
-            <>
+        {/* Left Side: Grid View & Pagination */}
+        <div className={`flex-1 bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-y-auto flex flex-col transition-all duration-300 ${selectedMedia ? 'w-2/3' : 'w-full'}`}>
+          <div className="flex-1 p-4">
+            {loading ? (
+              <div className="flex items-center justify-center h-full">
+                <Loader2 className="w-8 h-8 animate-spin text-zinc-400" />
+              </div>
+            ) : mediaList.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-zinc-400">
+                <ImageIcon className="w-16 h-16 mb-4 opacity-20" />
+                <p>No media files found.</p>
+              </div>
+            ) : (
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
                 {mediaList.map((media) => (
                   <div 
@@ -164,28 +164,47 @@ const MediaLibrary = () => {
                       loading="lazy"
                     />
                     {selectedMedia?.id === media.id && (
-                      <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-0.5">
+                      <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-0.5 shadow-sm">
                         <CheckCircle className="w-4 h-4" />
                       </div>
                     )}
                   </div>
                 ))}
               </div>
-              {/* Load More Button */}
-              {meta?.page < meta?.totalPages && (
-                <div className="mt-8 flex justify-center pb-4">
-                  <button 
-                    onClick={() => {
-                      setPage(p => p + 1);
-                      fetchMedia(searchTerm, page + 1);
-                    }}
-                    className="px-6 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-medium rounded-full transition-colors text-sm"
-                  >
-                    {loading ? 'Loading...' : 'Load More'}
-                  </button>
-                </div>
-              )}
-            </>
+            )}
+          </div>
+
+          {/* Custom Pagination */}
+          {meta?.totalPages > 1 && (
+            <div className="p-4 border-t border-zinc-100 flex items-center justify-between bg-zinc-50/50 rounded-b-2xl">
+              <span className="text-sm font-semibold text-zinc-500">
+                Page {page} of {meta.totalPages}
+              </span>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => {
+                    const prevPage = Math.max(1, page - 1);
+                    setPage(prevPage);
+                    fetchMedia(searchTerm, prevPage);
+                  }}
+                  disabled={page === 1 || loading}
+                  className="px-4 py-2 bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 font-medium rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Prev
+                </button>
+                <button 
+                  onClick={() => {
+                    const nextPage = Math.min(meta.totalPages, page + 1);
+                    setPage(nextPage);
+                    fetchMedia(searchTerm, nextPage);
+                  }}
+                  disabled={page === meta.totalPages || loading}
+                  className="px-4 py-2 bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 font-medium rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                >
+                  Next <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           )}
         </div>
 
@@ -194,7 +213,7 @@ const MediaLibrary = () => {
           <div className="w-1/3 bg-zinc-50 rounded-2xl shadow-sm border border-zinc-200 overflow-y-auto hidden md:flex flex-col animate-in slide-in-from-right-4 duration-300">
             <div className="p-4 border-b border-zinc-200 flex justify-between items-center bg-white sticky top-0 z-10">
               <h2 className="font-bold text-zinc-800">Attachment Details</h2>
-              <button onClick={() => setSelectedMedia(null)} className="p-1.5 hover:bg-zinc-100 rounded-full text-zinc-500"><X className="w-5 h-5"/></button>
+              <button onClick={() => setSelectedMedia(null)} className="p-1.5 hover:bg-zinc-100 rounded-full text-zinc-500 transition-colors"><X className="w-5 h-5"/></button>
             </div>
             
             <div className="p-6">
@@ -233,7 +252,7 @@ const MediaLibrary = () => {
                 <div className="mt-8 pt-6 border-t border-zinc-200">
                   <button 
                     onClick={() => handleDelete(selectedMedia.id)}
-                    className="text-red-600 hover:text-red-700 text-sm font-medium flex items-center gap-2 hover:underline"
+                    className="text-red-600 hover:text-red-700 text-sm font-medium flex items-center gap-2 hover:underline transition-colors"
                   >
                     <Trash2 className="w-4 h-4" /> Delete Permanently
                   </button>

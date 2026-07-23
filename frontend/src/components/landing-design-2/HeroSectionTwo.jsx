@@ -39,10 +39,12 @@ const HeroSectionTwo = ({ data, onScrollDown }) => {
             {renderTitle(data?.title || 'Find Your [Inspired]\n[Interior] Design')}
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-white/85 text-sm md:text-base lg:text-lg max-w-[460px] font-normal leading-relaxed mb-8 md:mb-12">
-            {data?.description || 'Transform your vision into reality with our innovative designs, creating modern spaces that blend functionality, aesthetics, and sustainability.'}
-          </p>
+          <div 
+            className="text-white/85 text-sm md:text-base lg:text-lg max-w-[460px] font-normal leading-relaxed mb-8 md:mb-12 [&>p]:mb-3 last:[&>p]:mb-0 [&_strong]:text-white [&_strong]:font-semibold"
+            dangerouslySetInnerHTML={{ 
+              __html: data?.description || '<p>Transform your vision into reality with our innovative designs, creating modern spaces that blend functionality, aesthetics, and sustainability.</p>' 
+            }}
+          />
         </div>
       </div>
 

@@ -178,7 +178,7 @@ const HowWeWork = ({ data: externalData }) => {
         {/* Staggered Cards Section */}
         <div 
           ref={cardsRef}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-24 items-start"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 mb-24 items-start"
         >
           {stepsList.map((step, index) => {
             const stepId = step.id || `0${index + 1}`;
@@ -187,7 +187,7 @@ const HowWeWork = ({ data: externalData }) => {
             return (
               <div 
                 key={index} 
-                className={`bg-[#E3E9F5] rounded-[1.25rem] sm:rounded-[2rem] p-3.5 sm:p-5 relative overflow-hidden flex flex-col ${marginTopClass || ''} transition-all duration-700 ease-out ${
+                className={`bg-[#E3E9F5] rounded-3xl p-6 sm:p-6 lg:p-5 relative overflow-hidden flex flex-col ${marginTopClass || ''} transition-all duration-700 ease-out ${
                   cardsInView 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-20'
@@ -195,7 +195,7 @@ const HowWeWork = ({ data: externalData }) => {
                 style={{ transitionDelay: cardsInView ? `${index * 120}ms` : '0ms' }}
               >
                 {/* Rectangular Image */}
-                <div className="w-full aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden mb-3 sm:mb-6 shrink-0 bg-white">
+                <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-5 sm:mb-6 shrink-0 bg-white shadow-sm">
                   <img 
                     src={step.image} 
                     alt={step.title} 
@@ -211,15 +211,15 @@ const HowWeWork = ({ data: externalData }) => {
                 
                 {/* Content */}
                 <div className="relative z-10 flex-grow px-1">
-                  <h3 className="text-xs sm:text-base lg:text-lg font-bold text-gray-900 mb-2 sm:mb-3">
+                  <h3 className="text-xl sm:text-xl lg:text-lg font-bold text-gray-900 mb-2 sm:mb-3">
                     {stepId}. {step.title}
                   </h3>
-                  <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 font-normal leading-relaxed max-w-[90%] pb-10 sm:pb-16">
+                  <p className="text-sm sm:text-sm text-gray-600 font-normal leading-relaxed max-w-[92%] pb-12 sm:pb-14 lg:pb-16">
                     {step.description}
                   </p>
                 </div>
 
-                <div className="absolute -bottom-1 right-2 md:right-4 text-[60px] sm:text-[90px] md:text-[110px] leading-[0.8] mb-3 font-black text-white/70 z-0 select-none">
+                <div className="absolute -bottom-1 right-2 sm:right-3 md:right-4 text-[75px] sm:text-[90px] md:text-[100px] lg:text-[110px] leading-[0.8] mb-3 font-black text-white/70 z-0 select-none pointer-events-none">
                   {stepId}
                 </div>
               </div>

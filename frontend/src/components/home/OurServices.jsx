@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import defaultServiceImg from '../../assets/homepage/service.png';
 import defaultCountingImg from '../../assets/homepage/counting.png';
 import apiClient from '../../api/client';
 
 const defaultServicesList = [
-  { id: '01', title: 'Residential Interior Design' },
-  { id: '02', title: 'Outdoor & Landscape Design' },
-  { id: '03', title: 'Interior Design Consultation' },
-  { id: '04', title: 'Commercial Interior Design' },
-  { id: '05', title: 'Renovation And Remodeling' },
-  { id: '06', title: 'Interior 2D/3D Layouts' },
+  { id: '01', title: 'Residential Interior Design', link: '/services/residential-interior-design' },
+  { id: '02', title: 'Outdoor & Landscape Design', link: '/services/outdoor-and-landscape-design' },
+  { id: '03', title: 'Interior Design Consultation', link: '/services/interior-design-consultation' },
+  { id: '04', title: 'Commercial Interior Design', link: '/services/commercial-interior-design' },
+  { id: '05', title: 'Renovation And Remodeling', link: '/services/renovation-and-remodeling' },
+  { id: '06', title: 'Interior 2D/3D Layouts', link: '/services/interior-2d-3d-layouts' },
 ];
 
 const defaultStatsData = [
@@ -71,6 +72,7 @@ const AnimatedCounter = ({ text }) => {
 };
 
 const OurServices = ({ data: externalData }) => {
+  const navigate = useNavigate();
   const [activeService, setActiveService] = useState('01');
   const [content, setContent] = useState(externalData || null);
   const [serviceImg, setServiceImg] = useState(defaultServiceImg);
@@ -78,6 +80,13 @@ const OurServices = ({ data: externalData }) => {
   const [houseTranslateX, setHouseTranslateX] = useState(150);
   
   const imageContainerRef = useRef(null);
+
+  const handleServiceClick = (service, serviceId) => {
+    setActiveService(serviceId);
+    const slug = service.title ? service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : '';
+    const targetLink = service.link || service.url || (slug ? `/services/${slug}` : '/services');
+    navigate(targetLink);
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -231,42 +240,37 @@ const OurServices = ({ data: externalData }) => {
           </div>
 
           <div className="fadeInRight w-full">
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:flex lg:flex-col lg:gap-0">
+            <div className="flex flex-col w-full border-t border-gray-200">
               {servicesList.map((service, index) => {
                 const serviceId = service.id || `0${index + 1}`;
                 const isActive = activeService === serviceId;
-                const isLast = index === servicesList.length - 1;
 
                 return (
                   <div
                     key={index}
-                    className={`group flex flex-col justify-between p-3 sm:p-4 rounded-[1.25rem] border cursor-pointer transition-all duration-300
-                      lg:flex-row lg:items-center lg:py-[20px] lg:px-0 lg:border-0 mr-12 lg:border-t lg:border-gray-300 lg:bg-transparent lg:rounded-none lg:hover:bg-transparent lg:hover:shadow-none
-                      ${index >= 4 ? 'hidden lg:flex' : 'flex'}
-                      ${isActive
-                        ? 'border-[#3B82F6] bg-blue-50/30'
-                        : 'border-gray-200 bg-gray-50/50 hover:bg-white hover:shadow-md'
-                      }
-                      ${isLast ? 'lg:border-b lg:border-b-gray-300' : ''}`}
+                    className={`group flex items-center justify-between py-4 sm:py-5 lg:py-6 px-1 sm:px-3 border-b border-gray-200 cursor-pointer transition-all duration-300 ${
+                      isActive ? 'bg-blue-50/40' : 'hover:bg-gray-50/60'
+                    }`}
                     onMouseEnter={() => setActiveService(serviceId)}
+                    onClick={() => handleServiceClick(service, serviceId)}
                   >
-                    <div className="flex flex-col lg:flex-row lg:items-center space-y-1 lg:space-y-0 lg:space-x-4 md:space-x-5 transform lg:group-hover:translate-x-2 transition-transform duration-300 w-full">
-                      <span className="text-xs lg:text-2xl font-medium text-gray-400 lg:text-gray-700 w-6 ">
+                    <div className="flex items-center space-x-3 sm:space-x-5 transform group-hover:translate-x-1.5 transition-transform duration-300 pr-2">
+                      <span className="text-xs sm:text-base lg:text-2xl font-medium text-gray-400 min-w-[24px] sm:min-w-[36px]">
                         {serviceId}
                       </span>
-                      <span className="text-xs sm:text-sm md:text-base ml-4 lg:text-[23px] font-bold text-gray-800 leading-snug lg:leading-[20px] tracking-normal capitalize font-['Helvetica']">
+                      <span className="text-xs sm:text-base md:text-lg lg:text-[23px] font-bold text-gray-800 leading-snug tracking-normal capitalize font-['Helvetica']">
                         {service.title}
                       </span>
                     </div>
 
-                    <div className="mt-3 lg:mt-0 flex justify-end w-full lg:w-auto shrink-0 mr-15">
+                    <div className="flex items-center justify-end shrink-0 ml-2">
                       {isActive ? (
-                        <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-[#3B82F6] flex items-center justify-center text-white shrink-0">
-                          <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
+                        <div className="w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full bg-[#3B82F6] flex items-center justify-center text-white shrink-0 shadow-sm">
+                          <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                         </div>
                       ) : (
-                        <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-gray-900 bg-white border border-gray-200 group-hover:bg-gray-100 lg:bg-transparent lg:border-none transition-colors shrink-0">
-                          <ArrowUpRight className="w-4 h-4 lg:w-6 lg:h-6" />
+                        <div className="w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-gray-600 bg-gray-100 group-hover:bg-gray-200 border border-gray-200/80 transition-colors shrink-0">
+                          <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                         </div>
                       )}
                     </div>
@@ -278,20 +282,20 @@ const OurServices = ({ data: externalData }) => {
         </div>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 mb-16 text-center items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 md:gap-4 mb-16 text-center items-start">
           {statsData.map((stat, index) => (
-            <div key={index} className="flex flex-col items-center opal-move-up">
-              <h3 className="text-[32px] md:text-[40px] font-bold text-[#3B82F6] font-helvetica leading-none mb-1">
+            <div key={index} className="flex flex-col items-center opal-move-up py-2">
+              <h3 className="text-[36px] sm:text-[40px] md:text-[44px] font-bold text-[#3B82F6] font-helvetica leading-none mb-2">
                 <AnimatedCounter text={stat.value} />
               </h3>
 
-              <div className="w-full max-w-[120px] h-[1px] bg-gray-300 mb-1.5"></div>
+              <div className="w-full max-w-[120px] h-[1px] bg-gray-300 mb-2"></div>
 
               <h4 className="text-sm md:text-sm font-bold text-gray-900 mb-1 tracking-wider uppercase leading-tight">
                 {stat.title}
               </h4>
 
-              <p className="text-[11px] md:text-xs text-gray-500 font-normal leading-relaxed max-w-[170px]">
+              <p className="text-xs sm:text-xs text-gray-500 font-normal leading-relaxed max-w-[200px]">
                 {stat.description}
               </p>
             </div>

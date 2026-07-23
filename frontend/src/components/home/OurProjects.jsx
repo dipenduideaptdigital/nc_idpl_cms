@@ -245,7 +245,7 @@ const OurProjects = ({ data: externalData }) => {
             {infiniteProjects.map((project, index) => {
               const originalIndex = index % 3;
               const isEven = index % 2 === 0;
-              const marginTopClass = isEven ? 'mt-0' : 'mt-16 md:mt-24';
+              const marginTopClass = isEven ? 'mt-0' : 'mt-0 md:mt-24';
 
               return (
                 <div

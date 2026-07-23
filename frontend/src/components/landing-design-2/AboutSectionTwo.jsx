@@ -41,7 +41,6 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
       <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-[1500px]">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
 
-          {/* ================= IMAGES ================= */}
           <div className="relative w-full max-w-[1100px] aspect-[862/767] mx-auto min-w-0">
 
             {/* Left Back Card */}
@@ -97,7 +96,6 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
 
           </div>
 
-          {/* ================= CONTENT ================= */}
           <div className="flex flex-col items-start text-left w-full min-w-0">
 
             {/* Badge */}
@@ -114,17 +112,21 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
               {renderTitle(data?.title || 'Architecture\n[And Interiors, Our Dual]\nExpertise', 'text-blue-500')}
             </h2>
 
-            {/* Paragraph 1 */}
-            <p className="text-gray-600 text-base leading-relaxed mb-6">
-              {data?.paragraph1 ||
-                'We believe that every space has the power to inspire, and that great design brings that inspiration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.'}
-            </p>
+            {/* Paragraph 1*/}
+            <div 
+              className="text-gray-600 text-base leading-relaxed mb-6 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
+              dangerouslySetInnerHTML={{ 
+                __html: data?.paragraph1 || '<p>We believe that every space has the power to inspire, and that great design brings that inspiration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.</p>' 
+              }}
+            />
 
-            {/* Paragraph 2 */}
-            <p className="text-gray-600 text-base leading-relaxed mb-10">
-              {data?.paragraph2 ||
-                'With a strong presence in Kolkata, Bhubaneswar, and Ranchi, our turnkey office interiors are thoughtfully crafted to enhance productivity, reflect your brand identity, and support the way your team works every day.'}
-            </p>
+            {/* Paragraph 2  */}
+            <div 
+              className="text-gray-600 text-base leading-relaxed mb-10 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
+              dangerouslySetInnerHTML={{ 
+                __html: data?.paragraph2 || '<p>With a strong presence in Kolkata, Bhubaneswar, and Ranchi, our turnkey office interiors are thoughtfully crafted to enhance productivity, reflect your brand identity, and support the way your team works every day.</p>' 
+              }}
+            />
 
             {/* CTA */}
             <button

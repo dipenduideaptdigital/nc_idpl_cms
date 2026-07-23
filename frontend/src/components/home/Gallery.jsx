@@ -53,13 +53,13 @@ const Gallery = () => {
   // Data ke duto alada row te vag kora holo
   const topRowImages = [
     { id: 't1', img: imagesList[0] || gallery1, aspect: 'aspect-[4/3]', margin: 'mt-0' },
-    { id: 't2', img: imagesList[2] || gallery3, aspect: 'aspect-[16/9]', margin: 'mt-10 md:mt-16' },
+    { id: 't2', img: imagesList[2] || gallery3, aspect: 'aspect-[16/9]', margin: 'mt-0 md:mt-16' },
     { id: 't3', img: imagesList[4] || gallery5, aspect: 'aspect-[4/3]', margin: 'mt-0' }
   ];
 
   const bottomRowImages = [
     { id: 'b1', img: imagesList[1] || gallery2, aspect: 'aspect-[16/9]', margin: 'mt-0' },
-    { id: 'b2', img: imagesList[3] || gallery4, aspect: 'aspect-[4/3]', margin: 'mt-10 md:mt-16' },
+    { id: 'b2', img: imagesList[3] || gallery4, aspect: 'aspect-[4/3]', margin: 'mt-0 md:mt-16' },
     { id: 'b3', img: imagesList[5] || gallery6, aspect: 'aspect-[16/9]', margin: 'mt-0' }
   ];
 
@@ -110,34 +110,34 @@ const Gallery = () => {
   }, []);
 
   return (
-    <section className="py-20 md:py-32 bg-white relative overflow-hidden min-h-[700px]">
-      <div className="absolute -top-24 md:-top-16 left-0 w-full flex justify-center pointer-events-none z-0">
-        <h2 className="text-[35vw] md:text-[26vw] font-black text-[#F3F4F6] tracking-[-0.05em] leading-[0.85] select-none lowercase">
+    <section className="py-10 sm:py-16 md:py-32 bg-white relative overflow-hidden min-h-0 md:min-h-[700px]">
+      <div className="absolute -top-8 sm:-top-16 md:-top-16 left-0 w-full flex justify-center pointer-events-none z-0">
+        <h2 className="text-[22vw] sm:text-[24vw] md:text-[26vw] font-black text-[#F3F4F6] tracking-[-0.05em] leading-[0.85] select-none lowercase">
           {bgText}
         </h2>
       </div>
 
-      <div className="relative z-10 w-full mt-12 md:mt-20 opal-move-up flex flex-col gap-4 md:gap-6">
+      <div className="relative z-10 w-full mt-6 sm:mt-10 md:mt-20 opal-move-up flex flex-col gap-3 sm:gap-4 md:gap-6">
         
         <div 
           ref={row1Ref}
           className="flex overflow-hidden items-start w-full"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          <div ref={half1Ref} className="flex gap-4 md:gap-6 pr-4 md:pr-6 items-start shrink-0">
+          <div ref={half1Ref} className="flex gap-3 sm:gap-4 md:gap-6 pr-3 sm:pr-4 md:pr-6 items-start shrink-0">
             {duplicatedTop.map((item, index) => (
-              <div key={`t1-${index}`} className={`w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
-                <div className={`w-full rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
+              <div key={`t1-${index}`} className={`w-[200px] sm:w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
+                <div className={`w-full rounded-[1rem] sm:rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
                   <img src={item.img} alt="Gallery Top" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />
                 </div>
               </div>
             ))}
           </div>
           
-          <div className="flex gap-4 md:gap-6 pr-4 md:pr-6 items-start shrink-0">
+          <div className="flex gap-3 sm:gap-4 md:gap-6 pr-3 sm:pr-4 md:pr-6 items-start shrink-0">
             {duplicatedTop.map((item, index) => (
-              <div key={`t2-${index}`} className={`w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
-                <div className={`w-full rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
+              <div key={`t2-${index}`} className={`w-[200px] sm:w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
+                <div className={`w-full rounded-[1rem] sm:rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
                   <img src={item.img} alt="Gallery Top" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />
                 </div>
               </div>
@@ -150,20 +150,20 @@ const Gallery = () => {
           className="flex overflow-hidden items-start w-full"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          <div ref={half2Ref} className="flex gap-4 md:gap-6 pr-4 md:pr-6 items-start shrink-0">
+          <div ref={half2Ref} className="flex gap-3 sm:gap-4 md:gap-6 pr-3 sm:pr-4 md:pr-6 items-start shrink-0">
             {duplicatedBottom.map((item, index) => (
-              <div key={`b1-${index}`} className={`w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
-                <div className={`w-full rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
+              <div key={`b1-${index}`} className={`w-[200px] sm:w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
+                <div className={`w-full rounded-[1rem] sm:rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
                   <img src={item.img} alt="Gallery Bottom" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="flex gap-4 md:gap-6 pr-4 md:pr-6 items-start shrink-0">
+          <div className="flex gap-3 sm:gap-4 md:gap-6 pr-3 sm:pr-4 md:pr-6 items-start shrink-0">
             {duplicatedBottom.map((item, index) => (
-              <div key={`b2-${index}`} className={`w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
-                <div className={`w-full rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
+              <div key={`b2-${index}`} className={`w-[200px] sm:w-[280px] md:w-[380px] shrink-0 ${item.margin}`}>
+                <div className={`w-full rounded-[1rem] sm:rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden shadow-sm ${item.aspect} bg-zinc-100`}>
                   <img src={item.img} alt="Gallery Bottom" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />
                 </div>
               </div>

@@ -79,12 +79,14 @@ export const saveMultipleFiles = async (files, userId) => {
 
 export const getMediaList = async (query) => {
   const { page = 1, limit = 20, search } = query;
-  const skip = (page - 1) * limit;
+  const skip = (Number(page) - 1) * Number(limit);
 
   const where = { deletedAt: null };
 
-  if (search) {
-    where.originalName = { contains: search, mode: "insensitive" };
+  if (search && search.trim() !== "") {
+    where.originalName = { 
+      contains: search.trim() 
+    };
   }
 
   const [media, total] = await Promise.all([

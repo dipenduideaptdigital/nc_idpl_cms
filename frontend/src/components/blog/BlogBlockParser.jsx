@@ -11,7 +11,7 @@ const BlockRendererNode = memo(({ block }) => {
           <img 
             src={resolveAssetUrl(data?.url)} 
             alt={data?.caption || "Blog Image"} 
-            className="w-full h-auto object-cover"
+            className="w-full h-auto object-cover" 
           />
           {data?.caption && (
             <figcaption className="text-center text-sm text-zinc-500 italic mt-3">
@@ -20,13 +20,12 @@ const BlockRendererNode = memo(({ block }) => {
           )}
         </figure>
       );
-
     case 'video':
       const isVimeo = data?.platform === 'vimeo';
       const embedUrl = isVimeo 
         ? `https://player.vimeo.com/video/${data?.videoId}`
         : `https://www.youtube.com/embed/${data?.videoId}`;
-      
+        
       return (
         <div className="my-10 w-full aspect-video rounded-2xl overflow-hidden shadow-lg border border-zinc-100">
           <iframe 
@@ -39,10 +38,10 @@ const BlockRendererNode = memo(({ block }) => {
           ></iframe>
         </div>
       );
-
     case 'gallery':
       const imagesArray = data?.images || [];
       if (imagesArray.length === 0) return null;
+
       return (
         <div className="my-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {imagesArray.map((imgUrl, idx) => (
@@ -54,18 +53,18 @@ const BlockRendererNode = memo(({ block }) => {
       );
     case 'heading':
       return (
-        <h2 className="font-['Outfit'] text-[28px] md:text-[34px] font-bold text-zinc-900 tracking-tight mb-6 mt-10 text-left">
-          {data?.text || data?.content}
-        </h2>
+        <h2 
+          className="font-['Outfit'] text-[28px] md:text-[34px] font-bold text-zinc-900 tracking-tight mb-6 mt-10 text-left"
+          dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
+        />
       );
-
     case 'paragraph':
       return (
-        <p className="mb-6 text-[16px] md:text-[19px] text-zinc-500 leading-relaxed font-normal text-left">
-          {data?.text || data?.content}
-        </p>
+        <div 
+          className="mb-6 text-[16px] md:text-[19px] text-zinc-500 leading-relaxed font-normal text-left prose prose-zinc max-w-none prose-a:text-blue-600 hover:prose-a:text-blue-800"
+          dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
+        />
       );
-
     case 'richText':
       return (
         <div 
@@ -73,7 +72,6 @@ const BlockRendererNode = memo(({ block }) => {
           dangerouslySetInnerHTML={{ __html: data?.content || '' }}
         />
       );
-
     case 'quote':
       return (
         <div className="bg-[#EBF5FF] rounded-3xl p-8 md:p-12 relative mt-8 mb-8 overflow-hidden flex flex-col items-center justify-center text-center min-h-[200px]">
@@ -81,16 +79,15 @@ const BlockRendererNode = memo(({ block }) => {
             &ldquo;
           </div>
           <div className="relative z-10 pt-4">
-            <p className="text-lg md:text-2xl font-bold text-zinc-900 leading-snug mb-4 max-w-2xl mx-auto italic">
-              "{data?.text || data?.content}"
-            </p>
+            <div 
+              className="text-lg md:text-2xl font-bold text-zinc-900 leading-snug mb-4 max-w-2xl mx-auto italic prose prose-lg prose-zinc max-w-none prose-p:my-0"
+              dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
+            />
           </div>
         </div>
       );
-
     case 'divider':
       return <div className="w-full h-px bg-zinc-200 my-10 border-0" />;
-
     default:
       return null;
   }

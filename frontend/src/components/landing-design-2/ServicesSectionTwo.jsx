@@ -22,17 +22,17 @@ const ServicesSectionTwo = ({ data }) => {
     : [
         { 
           title: 'Initial Consultation', 
-          description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+          description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>',
           image: img1
         },
         { 
           title: 'Design & Planning', 
-          description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+          description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>',
           image: img2
         },
         { 
           title: 'Implementation', 
-          description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+          description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>',
           image: img3
         }
       ];
@@ -46,7 +46,7 @@ const ServicesSectionTwo = ({ data }) => {
     return {
       num,
       title: service?.title || 'Initial Consultation',
-      desc: service?.description || 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+      desc: service?.description || '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>',
       image: resolvedImg,
       imageAtTop,
     };
@@ -77,7 +77,7 @@ const ServicesSectionTwo = ({ data }) => {
         </div>
 
         {/* Alternating Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {servicesList.map((service, idx) => (
             <div 
               key={idx}
@@ -107,9 +107,11 @@ const ServicesSectionTwo = ({ data }) => {
                         {service.num}
                       </span>
                     </div>
-                    <p className="text-gray-500 text-[10px] sm:text-xs md:text-[14px] leading-relaxed font-normal">
-                      {service.desc}
-                    </p>
+                    {/*Rich Text Rendering */}
+                    <div 
+                      className="text-gray-500 text-[10px] sm:text-xs md:text-[14px] leading-relaxed font-normal prose prose-sm max-w-none prose-p:m-0 prose-strong:font-bold prose-a:text-blue-500"
+                      dangerouslySetInnerHTML={{ __html: service.desc }}
+                    />
                   </div>
                 </>
               ) : (
@@ -124,9 +126,10 @@ const ServicesSectionTwo = ({ data }) => {
                         {service.num}
                       </span>
                     </div>
-                    <p className="text-gray-500 text-[10px] sm:text-xs md:text-[14px] leading-relaxed font-normal">
-                      {service.desc}
-                    </p>
+                    <div 
+                      className="text-gray-500 text-[10px] sm:text-xs md:text-[14px] leading-relaxed font-normal prose prose-sm max-w-none prose-p:m-0 prose-strong:font-bold prose-a:text-blue-500"
+                      dangerouslySetInnerHTML={{ __html: service.desc }}
+                    />
                   </div>
 
                   {/* Bottom Image */}

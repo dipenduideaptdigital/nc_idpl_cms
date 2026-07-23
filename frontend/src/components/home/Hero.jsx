@@ -118,7 +118,7 @@ const Hero = ({ data: externalData }) => {
 
   return (
     <div 
-      className="relative w-full h-[650px] lg:h-[750px] xl:h-[800px] bg-zinc-900 overflow-hidden group select-none animate-in fade-in duration-700"
+      className="relative w-full h-[700px] sm:h-[750px] lg:h-[750px] xl:h-[800px] bg-zinc-900 overflow-hidden group select-none animate-in fade-in duration-700"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -147,11 +147,11 @@ const Hero = ({ data: externalData }) => {
 
             {/* SHARED LAYOUT FOR ALL SLIDES (Glass Card Design) */}
             <div className="w-full h-full flex items-center justify-center relative z-10">
-              <div className="w-full max-w-[1440px] mx-auto px-6 md:px-8 lg:px-12 pt-16 lg:pt-0 pb-16 lg:pb-0">
-                <div className="flex flex-col lg:flex-row justify-between items-center w-full gap-12 lg:gap-8 pt-8 lg:pt-0">
+              <div className="w-full max-w-[1440px] mx-auto px-6 md:px-8 lg:px-12 pt-28 sm:pt-32 lg:pt-0 pb-12 lg:pb-0">
+                <div className="flex flex-col lg:flex-row justify-between items-center w-full gap-8 lg:gap-8 pt-4 sm:pt-6 lg:pt-0">
                   
                   <div className="text-white max-w-xl lg:max-w-2xl xl:max-w-3xl flex flex-col items-start text-left w-full lg:w-auto">
-                    <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-white/30 backdrop-blur-sm mb-6 shadow-sm">
+                    <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-white/30 backdrop-blur-sm mt-2 sm:mt-0 mb-4 sm:mb-6 shadow-sm">
                       <span className="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(249,115,22,0.8)]"></span>
                       <span className="text-[10px] uppercase tracking-wider font-medium text-white/90">
                         {slide.data?.badgeText || slide.fallback.badgeText}
@@ -177,7 +177,7 @@ const Hero = ({ data: externalData }) => {
                     </Link>
                   </div>
 
-                  <div className="flex flex-row items-end justify-center lg:justify-end gap-6 shrink-0 w-full lg:w-auto mt-10 lg:mt-10 pb-1">
+                  <div className="flex flex-row items-end justify-center lg:justify-end gap-6 shrink-0 w-full lg:w-auto mt-2 sm:mt-4 lg:mt-10 pb-1">
                     <div className="w-[200px] h-[200px] md:w-[240px] md:h-[240px] bg-[#3a3532]/40 glass-dark rounded-[24px] p-6 shadow-2xl z-20 flex flex-col justify-between shrink-0">
                       <div>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">{slide.data?.glassCardNumber || slide.fallback.glassCardNumber}</h2>
@@ -205,13 +205,12 @@ const Hero = ({ data: externalData }) => {
         );
       })}
 
-      {/* Scroll Down Arrow Indicator (Visible on all slides & moved slightly upwards) */}
-      <div className="absolute bottom-40 left-1/2 -translate-x-1/2 z-20">
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 lg:bottom-40 left-1/2 -translate-x-1/2 z-20">
         <button 
           onClick={handleScrollDown}
-          className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer animate-bounce"
+          className="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer animate-bounce"
         >
-          <ArrowDown className="w-6 h-6 text-primary" />
+          <ArrowDown className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
         </button>
       </div>
     </div>

@@ -46,21 +46,21 @@ const HappySpaces = ({ data }) => {
     {
       id: 1,
       title: data?.items?.[0]?.title || 'Functional Design Trends That Blend Style And Comfort',
-      desc: data?.items?.[0]?.description || 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.',
+      desc: data?.items?.[0]?.description || '<p>Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.</p>',
       image: resolvedImg1,
       videoUrl: data?.items?.[0]?.videoUrl || 'https://www.youtube.com/embed/62bIsvRcPv0',
     },
     {
       id: 2,
       title: data?.items?.[1]?.title || 'Functional Design Trends That Blend Style And Comfort',
-      desc: data?.items?.[1]?.description || 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.',
+      desc: data?.items?.[1]?.description || '<p>Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.</p>',
       image: resolvedImg2,
       videoUrl: data?.items?.[1]?.videoUrl || 'https://www.youtube.com/embed/62bIsvRcPv0',
     },
     {
       id: 3,
       title: data?.items?.[2]?.title || 'Functional Design Trends That Blend Style And Comfort',
-      desc: data?.items?.[2]?.description || 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.',
+      desc: data?.items?.[2]?.description || '<p>Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.</p>',
       image: resolvedImg3,
       videoUrl: data?.items?.[2]?.videoUrl || 'https://www.youtube.com/embed/62bIsvRcPv0',
     },
@@ -126,9 +126,11 @@ const HappySpaces = ({ data }) => {
                 <h3 className="text-[19px] md:text-[20px] font-bold text-gray-950 mb-3.5 leading-snug group-hover:text-[#3b82f6] transition-colors duration-300">
                   {item.title}
                 </h3>
-                <p className="text-gray-500 text-[13.5px] md:text-[14px] leading-relaxed font-normal">
-                  {item.desc}
-                </p>
+                {/* 👉 UPDATED: Now uses dangerouslySetInnerHTML to render Tiptap content */}
+                <div 
+                  className="text-gray-500 text-[13.5px] md:text-[14px] leading-relaxed font-normal prose prose-sm max-w-none prose-p:my-1 prose-a:text-blue-500 hover:prose-a:text-blue-600 [&_strong]:text-gray-900 [&_strong]:font-semibold"
+                  dangerouslySetInnerHTML={{ __html: item.desc }}
+                />
               </div>
             </div>
           ))}

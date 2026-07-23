@@ -77,22 +77,22 @@ const Services = ({ data: externalData }) => {
         </div>
 
         {/* Bottom Section: Cards Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {servicesList.map((service, index) => (
             <div 
               key={index} 
-              className="group border border-gray-200 rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 md:p-8 hover:shadow-2xl hover:border-primary/30 hover:-translate-y-2 transform transition-all duration-500 bg-white opal-move-up flex flex-col justify-between"
+              className="group border border-gray-200/90 rounded-3xl p-6 sm:p-8 hover:shadow-xl hover:border-blue-500/40 hover:-translate-y-1.5 transform transition-all duration-300 bg-white flex flex-col justify-start"
             >
-              <div className="flex items-center justify-center h-16 sm:h-20 md:h-24 w-full mb-2">
-                <h3 className="text-sm sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900 text-center whitespace-pre-line leading-tight group-hover:text-primary transition-colors">
+              <div className="flex items-center justify-center min-h-[60px] sm:min-h-[72px] w-full mb-3">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 text-center whitespace-pre-line leading-snug group-hover:text-[#3B82F6] transition-colors">
                   {service.title}
                 </h3>
               </div>
               
-              <div className="w-full h-[1px] bg-gray-300 mb-2"></div>
+              <div className="w-full h-[1px] bg-gray-200 my-4"></div>
               
               <div 
-                className="text-gray-400 text-[11px] sm:text-xs md:text-sm font-light leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-a:text-blue-500 hover:prose-a:text-blue-600"
+                className="text-gray-600 text-sm sm:text-base font-normal leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-a:text-blue-500 hover:prose-a:text-blue-600 [&_p]:text-center sm:[&_p]:text-left"
                 dangerouslySetInnerHTML={{ __html: service.description }}
               />
             </div>

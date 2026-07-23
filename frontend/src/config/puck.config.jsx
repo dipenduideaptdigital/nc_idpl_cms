@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Edit2, ChevronUp, ChevronDown } from 'lucide-react';
+import TipTapEditor from '../components/admin/TipTapEditor';
 import HeroSectionTwo from '../components/landing-design-2/HeroSectionTwo';
 import AboutSectionTwo from '../components/landing-design-2/AboutSectionTwo';
 import ServicesSectionTwo from '../components/landing-design-2/ServicesSectionTwo';
@@ -25,13 +27,65 @@ import AboutAwardsBlock from '../components/blocks/AboutAwardsBlock';
 import AboutGalleryBlock from '../components/blocks/AboutGalleryBlock';
 import ProjectsHero from '../components/projects/ProjectsHero';
 
+const CollapsibleTiptap = ({ label, value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getPreviewText = (html) => {
+    if (!html) return 'No content added...';
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    const text = temp.textContent || temp.innerText || '';
+    return text.length > 50 ? text.substring(0, 50) + '...' : text || 'No content added...';
+  };
+
+  return (
+    <div className="mb-4">
+      {label && <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>}
+      <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm transition-all duration-200">
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full px-4 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors outline-none"
+        >
+          <div className="flex items-center gap-3 overflow-hidden">
+            <Edit2 className="w-4 h-4 text-gray-500 shrink-0" />
+            <span className="text-sm text-gray-600 truncate">
+              {isOpen ? 'Close Editor' : getPreviewText(value)}
+            </span>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="w-4 h-4 text-gray-500 shrink-0" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-gray-500 shrink-0" />
+          )}
+        </button>
+        
+        {isOpen && (
+          <div className="p-4 border-t border-gray-200 bg-white">
+            <TipTapEditor value={value || ''} onChange={onChange} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export const puckConfig = {
   components: {
     heroSectionTwo: {
       fields: {
         title: { type: "textarea" },
         badgeText: { type: "text" },
-        description: { type: "textarea" },
+        description: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="Description" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+        },
         watermarkText: { type: "text" },
         backgroundImage: { type: "custom", render: ({ value, name, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
@@ -48,8 +102,26 @@ export const puckConfig = {
       fields: {
         title: { type: "textarea" },
         badgeText: { type: "text" },
-        paragraph1: { type: "textarea" },
-        paragraph2: { type: "textarea" },
+        paragraph1: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="Paragraph 1" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+        },
+        paragraph2: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="Paragraph 2" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+        },
         buttonText: { type: "text" },
         image1: { type: "custom", render: ({ value, name, onChange }) => <ImageField value={value} onChange={onChange} /> },
         image2: { type: "custom", render: ({ value, name, onChange }) => <ImageField value={value} onChange={onChange} /> },
@@ -75,28 +147,48 @@ export const puckConfig = {
           type: "array",
           arrayFields: {
             title: { type: "text" },
-            description: { type: "textarea" },
+            description: { 
+              type: "custom", 
+              render: ({ value, onChange }) => (
+                <CollapsibleTiptap 
+                  label="Description" 
+                  value={value} 
+                  onChange={onChange} 
+                />
+              ) 
+            },
+            
             image: { type: "custom", render: ({ value, name, onChange }) => <ImageField value={value} onChange={onChange} /> }
           },
-          defaultItemProps: { title: 'Initial Consultation', description: 'Description...', image: '' }
+          defaultItemProps: { title: 'Initial Consultation', description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>', image: '' }
         }
       },
       defaultProps: { 
         title: 'Explore Our [Comprehensive]\n[Interior Design] Services',
         badgeText: 'OUR SERVICES', 
         services: [
-          { title: 'Initial Consultation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' },
-          { title: 'Design & Planning', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' },
-          { title: 'Implementation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' }
+          { title: 'Initial Consultation', description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>', image: '' },
+          { title: 'Design & Planning', description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>', image: '' },
+          { title: 'Implementation', description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>', image: '' }
         ] 
       },
       render: (props) => <ServicesSectionTwo data={props} />
     },
+
     processSectionTwo: {
       fields: {
         title: { type: "textarea" },
         badgeText: { type: "text" },
-        description: { type: "textarea" },
+        description: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="Description" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+        },
         image: { type: "custom", render: ({ value, name, onChange }) => <ImageField value={value} onChange={onChange} /> },
         steps: {
           type: "array",
@@ -218,7 +310,17 @@ export const puckConfig = {
           type: "array",
           arrayFields: {
             title: { type: "text" },
-            description: { type: "textarea" },
+            description: { 
+              type: "custom", 
+              render: ({ value, onChange }) => (
+                <CollapsibleTiptap 
+                  label="Description" 
+                  value={value} 
+                  onChange={onChange} 
+                />
+              ) 
+            },
+            
             image: { type: "custom", render: ({ value, name, onChange }) => <ImageField value={value} onChange={onChange} /> },
             videoUrl: { type: "text" }
           },
@@ -274,7 +376,16 @@ export const puckConfig = {
       fields: {
         title: { type: "textarea" },
         badgeText: { type: "text" },
-        description: { type: "textarea" },
+        description: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="Description" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+        },
         mainQuote: { type: "textarea" },
         authorName: { type: "text" },
         authorRole: { type: "text" },
@@ -317,7 +428,17 @@ export const puckConfig = {
       render: (props) => <ContactFormBlock data={props} />
     },
     richText: {
-      fields: { content: { type: "textarea" } },
+      fields: { 
+        content: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
+              <TipTapEditor value={value || ''} onChange={onChange} />
+            </div>
+          ) 
+        } 
+      },
       defaultProps: { content: '<p>Enter your text here.</p>' },
       render: (props) => (
         <div className="py-12 md:py-24 overflow-hidden w-full">
@@ -366,7 +487,16 @@ export const puckConfig = {
         sidebarImage: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
         mainImage: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
         aboutTitle: { type: "text" },
-        aboutDescription: { type: "textarea" },
+        aboutDescription: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="About Description" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+        },
         features: {
           type: "array",
           arrayFields: {
@@ -377,9 +507,27 @@ export const puckConfig = {
         midImage1: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
         midImage2: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
         typesTitle: { type: "text" },
-        typesDescription: { type: "textarea" },
+        typesDescription: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="Types Description" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+        },
         elementsTitle: { type: "text" },
-        elementsDescription: { type: "textarea" },
+        elementsDescription: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="Elements Description" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+        },
         leftBullets: {
           type: "array",
           arrayFields: { text: { type: "text" } }
@@ -388,7 +536,16 @@ export const puckConfig = {
           type: "array",
           arrayFields: { text: { type: "text" } }
         },
-        footerDescription: { type: "textarea" },
+        footerDescription: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="Footer Description" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+        },
         faqs: {
           type: "array",
           arrayFields: { question: { type: "text" } }
@@ -396,12 +553,12 @@ export const puckConfig = {
       },
       defaultProps: {
         aboutTitle: "About The Service",
-        aboutDescription: "Commercial interior design is constantly evolving...",
+        aboutDescription: "<p>Commercial interior design is constantly evolving...</p>",
         typesTitle: "Types Of Commercial Spaces",
-        typesDescription: "In design, we bring characteristics...",
+        typesDescription: "<p>In design, we bring characteristics...</p>",
         elementsTitle: "Key Elements Of Interior Design",
-        elementsDescription: "Several key elements are essential...",
-        footerDescription: "Commercial interior design is a dynamic...",
+        elementsDescription: "<p>Several key elements are essential...</p>",
+        footerDescription: "<p>Commercial interior design is a dynamic...</p>",
         sidebarServices: [
           { name: 'Renovation And Remodelling', path: '/services/commercial', active: true }
         ],
@@ -490,7 +647,17 @@ export const puckConfig = {
         title: { type: "textarea" },
         yearsOfExperience: { type: "text" },
         experienceTitle: { type: "textarea" },
-        paragraph: { type: "textarea" },
+        paragraph: { 
+          type: "custom", 
+          render: ({ onChange, value }) => (
+            <CollapsibleTiptap 
+              label="Experience Description" 
+              value={value} 
+              onChange={onChange} 
+            />
+          )
+        },
+        
         buttonText: { type: "text" },
         buttonLink: { type: "text" },
         image1: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
@@ -501,7 +668,7 @@ export const puckConfig = {
         title: "We Shape [Interior Designs,]\n[Crafting Timeless] And Inspiring\nSpaces",
         yearsOfExperience: "26",
         experienceTitle: "Years Of\nExperience",
-        paragraph: "We believe that every space has the power to inspire...",
+        paragraph: "<p>We believe that every space has the power to inspire, and that great design brings that integration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.</p>",
         buttonText: "Learn More",
         buttonLink: "#",
         image1: "",
@@ -591,7 +758,16 @@ export const puckConfig = {
         backgroundImage: { type: "custom", render: ({ onChange, value }) => <ImageField value={value} onChange={onChange} /> },
         badgeText: { type: "text" },
         title: { type: "textarea" },
-        description: { type: "textarea" },
+        description: { 
+          type: "custom", 
+          render: ({ value, onChange }) => (
+            <CollapsibleTiptap 
+              label="Description" 
+              value={value} 
+              onChange={onChange} 
+            />
+          ) 
+},
         galleryItems: {
           type: "array",
           arrayFields: {
@@ -605,7 +781,7 @@ export const puckConfig = {
         backgroundImage: "",
         badgeText: "OUR GALLERY",
         title: "Interior \n Design",
-        description: "Lorem ipsum dolor sit amet consectetur. Magna nunc porttitor convallis faucibus laoreet.",
+        description: "<p>Lorem ipsum dolor sit amet consectetur. Magna nunc porttitor convallis faucibus laoreet.</p>",
         galleryItems: [
           { title: 'Project 1', image: '' },
           { title: 'Project 2', image: '' },
@@ -628,7 +804,7 @@ export const puckConfig = {
         title: "Projects",
         backgroundImage: ""
       },
-      render: (props) => <ProjectsHero title={props.title} heroImg={props.backgroundImage} />
+      render: (props) => <ProjectsHero title={props.title} backgroundImage={props.backgroundImage} />
     },
   }
 };

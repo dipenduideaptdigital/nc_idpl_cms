@@ -124,9 +124,12 @@ const AboutGalleryBlock = ({ backgroundImage, badgeText, title, description, gal
               {renderTitle(title || 'Designing Beyond the\nExpected')}
             </h2>
 
-            <p className="text-[14px] lg:text-[15px] text-white leading-relaxed max-w-[360px] font-normal whitespace-pre-line">
-              {description || 'Lorem ipsum dolor sit amet consectetur. Magna nunc porttitor convallis faucibus laoreet.'}
-            </p>
+            <div 
+              className="text-[14px] lg:text-[15px] text-white leading-relaxed max-w-[360px] font-normal prose prose-sm prose-invert max-w-none prose-p:my-1 prose-strong:text-white prose-a:text-blue-400"
+              dangerouslySetInnerHTML={{ 
+                __html: description || '<p>Lorem ipsum dolor sit amet consectetur. Magna nunc porttitor convallis faucibus laoreet.</p>' 
+              }}
+            />
           </div>
 
           {/* RIGHT COLUMN: SLIDER */}

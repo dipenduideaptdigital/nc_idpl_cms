@@ -8,7 +8,7 @@ const getEmbedUrl = (url) => {
   if (url.includes('youtube.com/embed/')) {
     return url.includes('?') ? `${url}&autoplay=1` : `${url}?autoplay=1`;
   }
-  
+
   let videoId = '';
   try {
     if (url.includes('youtu.be/')) {
@@ -39,7 +39,7 @@ const VideoBanner = ({ data: externalData }) => {
     const processContent = (fetchedContent) => {
       if (isMounted) setContent(fetchedContent);
       const serverUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1', '') : 'http://localhost:5000';
-      
+
       if (fetchedContent.image) {
         const imgUrl = fetchedContent.image.startsWith('http') ? fetchedContent.image : `${serverUrl}${fetchedContent.image}`;
         const img = new Image();
@@ -91,12 +91,12 @@ const VideoBanner = ({ data: externalData }) => {
 
   return (
     <>
-      <section className="relative w-full h-[320px] sm:h-[450px] md:h-[600px] lg:h-[720px] overflow-hidden group opal-move-up">
-        
+      <section className="relative w-full h-[360px] sm:h-[480px] md:h-[600px] lg:h-[720px] overflow-hidden group opal-move-up">
+
         {/* Background Image */}
-        <img 
+        <img
           src={coverImg}
-          alt="Office Interior Video Thumbnail" 
+          alt="Office Interior Video Thumbnail"
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           onError={(e) => {
             if (e.currentTarget.src !== defaultPlay) {
@@ -104,33 +104,33 @@ const VideoBanner = ({ data: externalData }) => {
             }
           }}
         />
-        
+
         {/* Dark Overlays (Soft gradient from bottom for readability) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent transition-opacity duration-500 group-hover:from-black/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/90"></div>
 
         {/* Play Button (Centered, translucent white circle with solid play icon) */}
         <div className="absolute inset-0 flex items-center justify-center z-10">
-          <button 
+          <button
             onClick={() => setIsModalOpen(true)}
-            className="w-20 mb-30 h-20 sm:w-32 sm:h-32 lg:w-[130px] lg:h-[130px] rounded-full bg-white/30  flex items-center justify-center transition-transform hover:scale-105 hover:bg-white/40 cursor-pointer"
+            className="w-14 h-14 sm:w-24 sm:h-24 lg:w-[130px] lg:h-[130px] mb-8 sm:mb-16 lg:mb-30 rounded-full bg-white/30 backdrop-blur-xs flex items-center justify-center transition-transform hover:scale-105 hover:bg-white/40 cursor-pointer shadow-lg"
           >
-            <Play className="w-8 h-8 sm:w-12 sm:h-12 lg:w-14 lg:h-14 text-white ml-2 lg:ml-3" fill="currentColor" />
+            <Play className="w-6 h-6 sm:w-10 sm:h-10 lg:w-14 lg:h-14 text-white ml-1 lg:ml-3" fill="currentColor" />
           </button>
         </div>
 
         {/* Bottom Content Area */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-12 md:p-16 lg:pb-[70px] lg:pt-0 lg:px-[120px] z-20">
-          
+        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 md:p-16 lg:pb-[70px] lg:pt-0 lg:px-[120px] z-20">
+
           {/* Headlines */}
           <div className="w-full lg:max-w-[1153px]">
-            <h2 className="text-[32px] sm:text-[60px] md:text-[70px] lg:text-[80px] font-bold text-white leading-[44px] sm:leading-[76px] md:leading-[95px] lg:leading-[120px] ml-5 font-helvetica uppercase tracking-normal">
+            <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-[80px] font-bold text-white leading-tight sm:leading-tight md:leading-[70px] lg:leading-[120px] ml-0 sm:ml-5 font-helvetica uppercase tracking-normal">
               {renderTitle(title)}
             </h2>
           </div>
-          
+
           {/* Description Paragraph */}
-          <div className="mt-6 lg:mt-0  mb-3 mr-5 lg:absolute lg:bottom-[70px] lg:right-[120px] lg:w-[510px] shrink-0">
-            <p className="text-white text-[30px] md:text-[20px] leading-[30px] font-normal font-helvetica">
+          <div className="mt-2 sm:mt-4 lg:mt-0 mb-1 sm:mb-3 mr-0 sm:mr-5 lg:absolute lg:bottom-[70px] lg:right-[120px] lg:w-[510px] shrink-0">
+            <p className="text-white text-xs sm:text-sm md:text-[20px] leading-relaxed sm:leading-snug md:leading-[30px] font-normal font-helvetica opacity-90 sm:opacity-100">
               {description}
             </p>
           </div>
@@ -139,30 +139,30 @@ const VideoBanner = ({ data: externalData }) => {
 
       {/* Video Modal Overlay */}
       {isModalOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 md:p-12 animate-fade-in"
           onClick={() => setIsModalOpen(false)}
         >
-          <div 
+          <div
             className="relative w-full max-w-5xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white/70 hover:text-white flex items-center justify-center hover:bg-black/80 transition-colors border border-white/10 cursor-pointer"
               aria-label="Close video"
             >
               <X className="w-5 h-5" />
             </button>
-            
+
             {/* Video IFrame */}
-            <iframe 
+            <iframe
               className="w-full h-full"
               src={getEmbedUrl(videoId)}
-              title="YouTube video player" 
-              frameBorder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             ></iframe>
           </div>

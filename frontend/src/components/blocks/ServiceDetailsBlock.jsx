@@ -188,14 +188,14 @@ const ServiceDetailsBlock = ({
               </h1>
               
               <div 
-                className="text-gray-600 text-[15px] sm:text-[16px] leading-6 sm:leading-7 mb-8 sm:mb-10 whitespace-pre-line prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: aboutDescription }}
+                className="text-gray-600 text-[15px] sm:text-[16px] leading-6 sm:leading-7 mb-8 sm:mb-10 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-strong:text-gray-900 prose-ul:list-disc prose-ol:list-decimal prose-li:ml-4"
+                dangerouslySetInnerHTML={{ __html: aboutDescription || '' }}
               />
 
               <div className="grid grid-cols-2 gap-y-6 gap-x-4 sm:gap-y-8 sm:gap-x-10 mb-10 sm:mb-14">
                 {features.map((item, index) => (
                   <div key={index} className="flex items-center gap-2.5 sm:gap-4">
-                    <div className="w-11 h-11 sm:w-16 sm:h-16 rounded-full bg-[#198CF4] flex items-center justify-center shrink-0  ">
+                    <div className="w-11 h-11 sm:w-16 sm:h-16 rounded-full bg-[#198CF4] flex items-center justify-center shrink-0">
                       <img src={disruptiveInnovation} alt={item.title} className="w-5.5 h-5.5 sm:w-8 sm:h-8 object-contain"/>
                     </div>
                     <div className="flex flex-col justify-center min-w-0">
@@ -220,12 +220,18 @@ const ServiceDetailsBlock = ({
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-5 tracking-tight leading-tight">
                 {typesTitle || 'Types Of Commercial Spaces'}
               </h1>
-              <div className="text-gray-600 text-[15px] sm:text-[16px] leading-6 sm:leading-7 mb-8 px-3 sm:mb-10 whitespace-pre-line prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: typesDescription }} />
+              <div 
+                className="text-gray-600 text-[15px] sm:text-[16px] leading-6 sm:leading-7 mb-8 px-3 sm:mb-10 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-strong:text-gray-900 prose-ul:list-disc prose-ol:list-decimal prose-li:ml-4" 
+                dangerouslySetInnerHTML={{ __html: typesDescription || '' }} 
+              />
 
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold text-gray-900 mb-5 tracking-tight leading-tight">
                 {elementsTitle || 'Key Elements Of Interior Design'}
               </h1>
-              <div className="text-gray-600 text-[15px] px-3 sm:text-[16px] leading-6 sm:leading-7 mb-8 sm:mb-10 whitespace-pre-line prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: elementsDescription }} />
+              <div 
+                className="text-gray-600 text-[15px] px-3 sm:text-[16px] leading-6 sm:leading-7 mb-8 sm:mb-10 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-strong:text-gray-900 prose-ul:list-disc prose-ol:list-decimal prose-li:ml-4" 
+                dangerouslySetInnerHTML={{ __html: elementsDescription || '' }} 
+              />
 
               {/* Mobile-only*/}
               <div className="sm:hidden bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-100 mb-6 overflow-hidden">
@@ -258,7 +264,10 @@ const ServiceDetailsBlock = ({
                 </div>
               </div>
 
-              <div className="text-gray-600 text-[15px] sm:text-[16px] px-3 leading-6 sm:leading-7 mt-6 sm:mt-8 mb-8 sm:mb-10 whitespace-pre-line prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: footerDescription }} />
+              <div 
+                className="text-gray-600 text-[15px] sm:text-[16px] px-3 leading-6 sm:leading-7 mt-6 sm:mt-8 mb-8 sm:mb-10 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-strong:text-gray-900 prose-ul:list-disc prose-ol:list-decimal prose-li:ml-4" 
+                dangerouslySetInnerHTML={{ __html: footerDescription || '' }} 
+              />
 
               <div className="mt-6 sm:mt-8 pt-6 sm:pt-10">
                 <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">Frequently Asked Questions</h3>
