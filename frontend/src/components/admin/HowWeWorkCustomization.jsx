@@ -1,6 +1,51 @@
-import React from 'react';
-import { Settings } from 'lucide-react';
+import React, { useState } from 'react';
+import { Settings, Edit2, ChevronUp, ChevronDown } from 'lucide-react';
+import TipTapEditor from './TipTapEditor';
 
+const CollapsibleTiptap = ({ label, value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getPreviewText = (html) => {
+    if (!html) return 'No content added...';
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    const text = temp.textContent || temp.innerText || '';
+    return text.length > 50 ? text.substring(0, 50) + '...' : text || 'No content added...';
+  };
+
+  return (
+    <div className="w-full">
+      {label && <label className="block text-xs font-medium text-zinc-500 mb-1">{label}</label>}
+      <div className="border border-zinc-200 rounded-xl overflow-hidden bg-white shadow-sm transition-all duration-200">
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50 hover:bg-zinc-100 transition-colors outline-none"
+        >
+          <div className="flex items-center gap-3 overflow-hidden">
+            <Edit2 className="w-4 h-4 text-zinc-500 shrink-0" />
+            <span className="text-sm font-medium text-zinc-700 truncate">
+              {isOpen ? 'Close Rich Text Editor' : getPreviewText(value)}
+            </span>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="w-4 h-4 text-zinc-500 shrink-0" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0" />
+          )}
+        </button>
+        
+        {isOpen && (
+          <div className="p-4 border-t border-zinc-200 bg-white">
+            <TipTapEditor value={value || ''} onChange={onChange} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// 2. Main Component
 const HowWeWorkCustomization = ({
   howWeWorkData,
   onChange,
@@ -38,12 +83,9 @@ const HowWeWorkCustomization = ({
           </div>
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-zinc-700 mb-2">Description</label>
-            <textarea 
-              name="description"
+            <CollapsibleTiptap 
               value={howWeWorkData.description || ''}
-              onChange={onChange}
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition-all resize-none"
+              onChange={(htmlValue) => onChange({ target: { name: 'description', value: htmlValue } })}
             />
           </div>
         </div>
@@ -67,12 +109,10 @@ const HowWeWorkCustomization = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-zinc-500 mb-1">Step Description</label>
-                  <textarea 
+                  <CollapsibleTiptap 
+                    label="Step Description"
                     value={step.description || ''}
-                    onChange={(e) => onStepItemChange(index, 'description', e.target.value)}
-                    rows={3}
-                    className="w-full px-3 py-2 rounded-lg bg-white border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 text-sm resize-none"
+                    onChange={(htmlValue) => onStepItemChange(index, 'description', htmlValue)}
                   />
                 </div>
               </div>

@@ -1,6 +1,51 @@
-import React from 'react';
-import { FileText } from 'lucide-react';
+import React, { useState } from 'react';
+import { FileText, Edit2, ChevronUp, ChevronDown } from 'lucide-react';
 import ImageField from './ImageField';
+import TipTapEditor from './TipTapEditor';
+
+// Collapsible Tiptap Wrapper Component
+const CollapsibleTiptap = ({ label, value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getPreviewText = (html) => {
+    if (!html) return 'No content added...';
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    const text = temp.textContent || temp.innerText || '';
+    return text.length > 60 ? text.substring(0, 60) + '...' : text || 'No content added...';
+  };
+
+  return (
+    <div className="w-full">
+      {label && <label className="block text-sm font-medium text-zinc-700 mb-2">{label}</label>}
+      <div className="border border-zinc-200 rounded-xl overflow-hidden bg-white shadow-sm transition-all duration-200">
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50/50 hover:bg-zinc-100 transition-colors outline-none"
+        >
+          <div className="flex items-center gap-3 overflow-hidden">
+            <Edit2 className="w-4 h-4 text-zinc-500 shrink-0" />
+            <span className="text-sm font-medium text-zinc-700 truncate">
+              {isOpen ? 'Close Rich Text Editor' : getPreviewText(value)}
+            </span>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="w-4 h-4 text-zinc-500 shrink-0" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0" />
+          )}
+        </button>
+        
+        {isOpen && (
+          <div className="p-4 border-t border-zinc-200 bg-white">
+            <TipTapEditor value={value || ''} onChange={onChange} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const OurProjectsCustomization = ({
   ourProjectsData,
@@ -38,13 +83,11 @@ const OurProjectsCustomization = ({
             />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-zinc-700 mb-2">Description</label>
-            <textarea 
-              name="description"
+            <CollapsibleTiptap 
+              label="Description"
               value={ourProjectsData.description || ''}
-              onChange={onChange}
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition-all resize-none"
+              // parent-এর onChange event format maintain করার জন্য
+              onChange={(htmlValue) => onChange({ target: { name: 'description', value: htmlValue } })}
             />
           </div>
         </div>
@@ -106,12 +149,10 @@ const OurProjectsCustomization = ({
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-medium text-zinc-500 mb-1">Project Description</label>
-                    <textarea 
+                    <CollapsibleTiptap 
+                      label="Project Description"
                       value={project.description || ''}
-                      onChange={(e) => onProjectItemChange(index, 'description', e.target.value)}
-                      rows={3}
-                      className="w-full px-3 py-2 rounded-lg bg-white border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 text-sm resize-none"
+                      onChange={(htmlValue) => onProjectItemChange(index, 'description', htmlValue)}
                     />
                   </div>
                 </div>

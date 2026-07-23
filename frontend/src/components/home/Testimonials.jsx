@@ -281,9 +281,10 @@ const Testimonials = ({ data: externalData }) => {
             <h2 className="text-4xl md:text-5xl lg:text-[56px] font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
               {renderTitle(title)}
             </h2>
-            <p className="text-gray-500 max-w-[540px] font-normal text-sm md:text-base leading-relaxed">
-              {description}
-            </p>
+            <div 
+              className="text-gray-500 max-w-[540px] font-normal text-sm md:text-base leading-relaxed [&>p]:mb-2 last:[&>p]:mb-0"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           </div>
         </div>
 
@@ -333,9 +334,12 @@ const Testimonials = ({ data: externalData }) => {
               </div>
 
               <div className="my-auto py-1 sm:py-2 flex-1 overflow-y-auto hide-scrollbar">
-                <p key={activeIdx} className="text-gray-600 text-sm sm:text-base md:text-lg lg:text-[19px] font-normal leading-[1.65] max-w-[470px] animate-in fade-in duration-500">
-                  &ldquo;{mainQuote}&rdquo;
-                </p>
+                
+                <div 
+                  key={activeIdx} 
+                  className="text-gray-600 text-sm sm:text-base md:text-lg lg:text-[19px] font-normal leading-[1.65] max-w-[470px] animate-in fade-in duration-500 [&>p]:mb-2 last:[&>p]:mb-0"
+                  dangerouslySetInnerHTML={{ __html: mainQuote }}
+                />
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-4">

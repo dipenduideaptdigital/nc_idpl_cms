@@ -10,25 +10,25 @@ const defaultStepsData = [
   {
     id: '01',
     title: 'Initial Consultation',
-    description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+    description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>',
     image: hww1
   },
   {
     id: '02',
     title: 'Design & Planning',
-    description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+    description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>',
     image: hww2
   },
   {
     id: '03',
     title: 'Implementation',
-    description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+    description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>',
     image: hww3
   },
   {
     id: '04',
     title: 'Project Handover',
-    description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.',
+    description: '<p>We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.</p>',
     image: hww4
   },
 ];
@@ -117,7 +117,7 @@ const HowWeWork = ({ data: externalData }) => {
 
   const badgeText = content?.badgeText || "HOW WE WORK";
   const title = content?.title || "Description [Architecture \\n Process] For Exceptional \\n Results.";
-  const description = content?.description || "Our process is alive – adapting, refining, and growing with your vision. Always. Like artists with a blank canvas, we transform rooms into living works of art.";
+  const description = content?.description || "<p>Our process is alive – adapting, refining, and growing with your vision. Always. Like artists with a blank canvas, we transform rooms into living works of art.</p>";
   const bottomText = content?.bottomText || "We've Been Working Hard To Impress You.";
   const bottomLinkText = content?.bottomLinkText || "Start Your's Today";
   const bottomLinkUrl = content?.bottomLinkUrl || "#";
@@ -169,9 +169,10 @@ const HowWeWork = ({ data: externalData }) => {
           
           {/* Right: Description Text */}
           <div className="pb-2 fadeInRight mt-6 lg:mt-[110px]">
-            <p className="text-gray-500 text-sm font-normal leading-relaxed max-w-md">
-              {description}
-            </p>
+            <div 
+              className="text-gray-500 text-sm font-normal leading-relaxed max-w-md [&>p]:mb-2 last:[&>p]:mb-0"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           </div>
         </div>
 
@@ -214,9 +215,11 @@ const HowWeWork = ({ data: externalData }) => {
                   <h3 className="text-xl sm:text-xl lg:text-lg font-bold text-gray-900 mb-2 sm:mb-3">
                     {stepId}. {step.title}
                   </h3>
-                  <p className="text-sm sm:text-sm text-gray-600 font-normal leading-relaxed max-w-[92%] pb-12 sm:pb-14 lg:pb-16">
-                    {step.description}
-                  </p>
+                  
+                  <div 
+                    className="text-sm sm:text-sm text-gray-600 font-normal leading-relaxed max-w-[92%] pb-12 sm:pb-14 lg:pb-16 [&>p]:mb-1 last:[&>p]:mb-0 [&>ul]:list-disc [&>ul]:ml-4 [&>ol]:list-decimal [&>ol]:ml-4"
+                    dangerouslySetInnerHTML={{ __html: step.description }}
+                  />
                 </div>
 
                 <div className="absolute -bottom-1 right-2 sm:right-3 md:right-4 text-[75px] sm:text-[90px] md:text-[100px] lg:text-[110px] leading-[0.8] mb-3 font-black text-white/70 z-0 select-none pointer-events-none">

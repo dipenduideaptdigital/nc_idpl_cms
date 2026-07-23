@@ -8,11 +8,11 @@ import defaultInterior from '../../assets/homepage/interior.png';
 import apiClient from '../../api/client';
 
 const defaultProjectsData = [
-  { id: 1, category: 'LANDSCAPE', title: 'Art Deco Revival', description: 'Improving homes with expert craftsmanship for years', image: project1 },
-  { id: 2, category: 'RESIDENTIAL', title: 'Modern Minimalist', description: 'Improving homes with expert craftsmanship for years', image: project2 },
-  { id: 3, category: 'SINGLE HOME', title: 'Urban Oasis', description: 'Improving homes with expert craftsmanship for years', image: project3 },
-  { id: 4, category: 'OFFICE AREA', title: 'Corporate Elegance', description: 'Improving homes with expert craftsmanship for years', image: project4 },
-  { id: 5, category: 'COMMERCIAL', title: 'Retail Experience', description: 'Improving homes with expert craftsmanship for years', image: project5 }
+  { id: 1, category: 'LANDSCAPE', title: 'Art Deco Revival', description: '<p>Improving homes with expert craftsmanship for years</p>', image: project1 },
+  { id: 2, category: 'RESIDENTIAL', title: 'Modern Minimalist', description: '<p>Improving homes with expert craftsmanship for years</p>', image: project2 },
+  { id: 3, category: 'SINGLE HOME', title: 'Urban Oasis', description: '<p>Improving homes with expert craftsmanship for years</p>', image: project3 },
+  { id: 4, category: 'OFFICE AREA', title: 'Corporate Elegance', description: '<p>Improving homes with expert craftsmanship for years</p>', image: project4 },
+  { id: 5, category: 'COMMERCIAL', title: 'Retail Experience', description: '<p>Improving homes with expert craftsmanship for years</p>', image: project5 }
 ];
 
 const smoothScrollTo = (element, target, duration) => {
@@ -175,7 +175,7 @@ const OurProjects = ({ data: externalData }) => {
 
   const badgeText = content?.badgeText || "OUR PROJECT";
   const title = content?.title || "Creative [Projects That \\n Define] Our Style";
-  const description = content?.description || "Our portfolio showcases a diverse range of projects, from beautifully crafted \n residential spaces functional and stylish commercial interiors";
+  const description = content?.description || "<p>Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors</p>";
 
   const renderTitle = (titleText) => {
     if (!titleText) return null;
@@ -222,13 +222,16 @@ const OurProjects = ({ data: externalData }) => {
               <h2 className="text-4xl md:text-5xl lg:text-[62px] font-bold tracking-tight text-gray-900 leading-[1.05] text-left">
                 {renderTitle(title)}
               </h2>
-              <p className="text-gray-500 text-sm md:text-[19px] font-normal leading-relaxed max-w-[750px] text-left mt-6 whitespace-pre-line">
-                {description}
-              </p>
+              {/* Updated: Changed <p> to <div> and added dangerouslySetInnerHTML */}
+              <div 
+                className="text-gray-500 text-sm md:text-[19px] font-normal leading-relaxed max-w-[750px] text-left mt-6 prose-p:m-0"
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
             </div>
           </div>
         </div>
       </div>
+      
       {/* Carousel Section */}
       <div className="container mx-auto w-full max-w-full px-6 md:px-0 md:max-w-[1050px] lg:max-w-[1172px] overflow-hidden">
         <div
@@ -276,9 +279,11 @@ const OurProjects = ({ data: externalData }) => {
                   {/* Card Text */}
                   <div className="px-2">
                     <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{project.title}</h3>
-                    <p className="text-sm text-gray-500 font-normal leading-relaxed">
-                      {project.description}
-                    </p>
+                   
+                    <div 
+                      className="text-sm text-gray-500 font-normal leading-relaxed prose-p:m-0"
+                      dangerouslySetInnerHTML={{ __html: project.description }}
+                    />
                   </div>
                 </div>
               );

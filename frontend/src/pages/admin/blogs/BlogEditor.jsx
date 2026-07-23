@@ -326,6 +326,20 @@ const BlogEditor = () => {
           )}
         </div>
       </div>
+      <div className="flex justify-start mt-8 pt-4">
+        <button 
+          type="submit" 
+          disabled={saving} 
+          className="flex items-center gap-2 px-8 py-3 bg-[#3B82F6] text-white rounded-xl font-bold hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-70 text-sm w-full sm:w-auto justify-center"
+        >
+          {saving ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            <Save className="w-5 h-5" />
+          )}
+          {saving ? 'Saving...' : 'Save Post'}
+        </button>
+      </div>
       <MediaPickerModal 
         isOpen={isMediaModalOpen} 
         onClose={() => setIsMediaModalOpen(false)} 
