@@ -78,10 +78,7 @@ export const runOrphanMediaCleanup = async () => {
     
     for (const media of softDeletedMedia) {
       try {
-        await deleteFromCloudinary(media.filename); 
-        const thumbPublicId = media.filename.replace("main/", "thumbs/").replace(".webp", "-thumb.webp");
-        await deleteFromCloudinary(thumbPublicId);
-
+        await deleteFromCloudinary(media.filename);
         await prisma.media.delete({
           where: { id: media.id }
         });
@@ -102,6 +99,6 @@ export const runOrphanMediaCleanup = async () => {
   }
 };
 
-export const initMediaCleanupJob = () => {
-  cron.schedule("0 3 * * *", () => runOrphanMediaCleanup());
-};
+// export const initMediaCleanupJob = () => {
+//   cron.schedule("0 3 * * *", () => runOrphanMediaCleanup());
+// };

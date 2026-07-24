@@ -1,3 +1,4 @@
+// shared/utils/imageProcessor.js
 import sharp from "sharp";
 import crypto from "crypto";
 import { AppError } from "../errors/AppError.js";
@@ -7,29 +8,22 @@ export const processImageBuffer = async (buffer, originalName) => {
   try {
     const uniqueId = crypto.randomBytes(16).toString("hex");
     const filename = `${uniqueId}.webp`;
-    const thumbFilename = `${uniqueId}-thumb.webp`;
 
     const mainBuffer = await sharp(buffer)
-      .resize(1920, 1080, {
+      .resize(2560, 2560, {
         fit: "inside",
-        withoutEnlargement: true, 
+        withoutEnlargement: true,
       })
-      .webp({ quality: 95, effort: 6 }) 
+      .withMetadata() 
+      .webp({ 
+        quality: 100, 
+        effort: 6 
+      })
       .toBuffer({ resolveWithObject: true });
-
-    const thumbBuffer = await sharp(buffer)
-      .resize(300, 300, {
-        fit: "cover",
-        position: "entropy",
-      })
-      .webp({ quality: 80 })
-      .toBuffer();
 
     return {
       filename,
-      thumbFilename,
       mainBuffer: mainBuffer.data,
-      thumbBuffer: thumbBuffer,
       finalSize: mainBuffer.info.size,
       mimeType: "image/webp",
     };

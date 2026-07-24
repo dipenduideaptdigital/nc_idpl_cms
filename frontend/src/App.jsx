@@ -42,6 +42,8 @@ const BlogList = lazy(() => import('./pages/admin/blogs/BlogList'));
 const BlogEditor = lazy(() => import('./pages/admin/blogs/BlogEditor'));
 const TaxonomyManager = lazy(() => import('./pages/admin/blogs/TaxonomyManager'));
 const GeneralSettings = lazy(() => import('./pages/admin/settings/GeneralSettings'));
+const CmsSettings = lazy(() => import('./pages/admin/settings/CmsSettings'));
+const WhatsAppSettings = lazy(() => import('./pages/admin/settings/WhatsAppSettings'));
 const RolesList = lazy(() => import('./pages/admin/roles/RolesList'));
 const RoleEditor = lazy(() => import('./pages/admin/roles/RoleEditor'));
 const UsersList = lazy(() => import('./pages/admin/users/UsersList'));
@@ -99,6 +101,8 @@ function App() {
                 <Route path="roles" element={<RolesList />} />
                 <Route path="roles/create" element={<RoleEditor />} />
                 <Route path="roles/edit/:id" element={<RoleEditor />} />
+                <Route path="cms" element={<CmsSettings />} />
+                <Route path="whatsapp" element={<WhatsAppSettings />} />
               </Route>
             </Route>
 

@@ -13,6 +13,8 @@ import {
   gallerySchema,
   ctaSchema,
   generalSettingsSchema,
+  cmsSettingsSchema,
+  whatsappSettingsSchema,
   footerSchema
 } from "./cms.validation.js";
 
@@ -32,5 +34,7 @@ export const CMS_REGISTRY = {
   "homepage_gallery": gallerySchema,
   "homepage_cta": ctaSchema,
   "homepage_general": generalSettingsSchema,
-  "homepage_footer": footerSchema
+  "homepage_footer": footerSchema,
+  "cms_settings": cmsSettingsSchema,
+  "whatsapp_settings": whatsappSettingsSchema
 };

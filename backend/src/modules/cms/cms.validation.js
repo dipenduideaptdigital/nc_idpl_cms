@@ -208,6 +208,24 @@ export const generalSettingsSchema = z.object({
   }).strict()
 });
 
+// CMS Settings Section
+export const cmsSettingsSchema = z.object({
+  content: z.object({
+    cmsName: z.string().max(100).optional(),
+    cmsTagline: z.string().max(200).optional(),
+  })
+});
+
+// WhatsApp Settings Section
+export const whatsappSettingsSchema = z.object({
+  content: z.object({
+    phoneNumber: z.string().max(50).optional(),
+    defaultMessage: z.string().max(300).optional(),
+    isActive: z.boolean().default(true),
+  })
+});
+
+
 // Footer Section
 export const footerSchema = z.object({
   content: z.object({

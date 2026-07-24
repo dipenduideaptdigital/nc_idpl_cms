@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, Navigate, useLocation } from 'react-router-dom';
-import { Settings, Users, Shield, SlidersHorizontal } from 'lucide-react';
+import { Settings, Users, Shield, SlidersHorizontal, Layout, MessageSquare } from 'lucide-react';
 import { usePermission } from '../../hooks/usePermission';
 
 const SettingsLayout = () => {
@@ -11,6 +11,8 @@ const SettingsLayout = () => {
     { name: 'General', path: '/admin/settings/general', icon: SlidersHorizontal, permission: 'settings.manage' },
     { name: 'Team & Users', path: '/admin/settings/users', icon: Users, permission: 'user.view' },
     { name: 'Access Roles', path: '/admin/settings/roles', icon: Shield, permission: 'role.view' },
+    { name: 'CMS Settings', path: '/admin/settings/cms', icon: Layout, permission: 'settings.manage' },
+    { name: 'WhatsApp Settings', path: '/admin/settings/whatsapp', icon: MessageSquare, permission: 'settings.manage' },
   ];
 
   const visibleTabs = tabs.filter(tab => hasPermission(tab.permission));

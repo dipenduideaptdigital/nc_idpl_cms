@@ -13,12 +13,10 @@ export const saveUploadedFile = async (file, userId) => {
 
   const fileHash = crypto.createHash("sha256").update(file.buffer).digest("hex");
 
-  // Check if exactly the same file already exists in the database
   const existingMedia = await prisma.media.findUnique({
     where: { fileHash }
   });
 
-  // If duplicate found, return it immediately
   if (existingMedia) {
     if (existingMedia.deletedAt) {
       await prisma.media.update({
@@ -29,16 +27,17 @@ export const saveUploadedFile = async (file, userId) => {
     return existingMedia;
   }
 
-  // If new image, proceed to process and upload
   const processed = await processImageBuffer(file.buffer, file.originalname);
   
   let mainUpload;
-  let thumbUpload;
 
   try {
     mainUpload = await uploadBufferToCloudinary(processed.mainBuffer, "main");
-    thumbUpload = await uploadBufferToCloudinary(processed.thumbBuffer, "thumbs");
 
+    const parts = mainUpload.secure_url.split('/upload/');
+    const dynamicThumbUrl = `${parts[0]}/upload/c_fill,w_300,h_300,q_auto,f_auto/${parts[1]}`;
+
+    // Save to Database
     const media = await prisma.media.create({
       data: {
         fileHash,
@@ -47,7 +46,7 @@ export const saveUploadedFile = async (file, userId) => {
         mimeType: processed.mimeType,
         size: processed.finalSize,
         url: mainUpload.secure_url,
-        thumbnailUrl: thumbUpload.secure_url,
+        thumbnailUrl: dynamicThumbUrl,
         uploadedById: userId,
       },
     });
@@ -55,7 +54,6 @@ export const saveUploadedFile = async (file, userId) => {
     return media;
   } catch (error) {
     if (mainUpload?.public_id) await deleteFromCloudinary(mainUpload.public_id);
-    if (thumbUpload?.public_id) await deleteFromCloudinary(thumbUpload.public_id);
     throw new AppError("Failed to save file metadata to Cloudinary or Database", StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
@@ -129,8 +127,6 @@ export const deleteMediaItem = async (id) => {
   try {
     if (media.filename) {
       await deleteFromCloudinary(media.filename);
-      const thumbPublicId = media.filename.replace("main/", "thumbs/").replace(".webp", "-thumb.webp");
-      await deleteFromCloudinary(thumbPublicId);
     }
   } catch (error) {
     logger.error(`Failed to delete media ${id} from Cloudinary. Proceeding to delete from DB.`, error);

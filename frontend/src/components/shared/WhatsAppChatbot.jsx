@@ -96,14 +96,18 @@ const chatbotSteps = {
   }
 };
 
-const WhatsAppChatbot = ({ isOpen, onClose }) => {
+const WhatsAppChatbot = ({ isOpen, onClose, configuredPhoneNumber, configuredDefaultMessage }) => {
   const [messages, setMessages] = useState([]);
   const [currentStep, setCurrentStep] = useState('welcome');
   const [isTyping, setIsTyping] = useState(false);
   
   const chatEndRef = useRef(null);
-  const phoneNumber = '919831637409';
-  const defaultWhatsAppUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent("Hi Subhaakritee, I am interested in your interior design services.")}`;
+  
+  // Format clean digits (e.g. "+91 9831-637-409" -> "919831637409")
+  const rawNumber = (configuredPhoneNumber || '919831637409').replace(/[^0-9]/g, '');
+  const phoneNumber = rawNumber || '919831637409';
+  const customMessage = configuredDefaultMessage || "Hi Subhaakritee, I am interested in your interior design services.";
+  const defaultWhatsAppUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(customMessage)}`;
 
   // Helper to format current time
   const getCurrentTime = () => {

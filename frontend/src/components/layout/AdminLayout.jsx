@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext'; 
 import { usePermission } from '../../hooks/usePermission'; 
+import apiClient from '../../api/client';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -18,6 +19,41 @@ const AdminLayout = () => {
   const mainContentRef = useRef(null);
   const profileDropdownRef = useRef(null);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [cmsName, setCmsName] = useState(() => localStorage.getItem('idpl_cms_name') || 'IDPL CMS');
+  const [cmsTagline, setCmsTagline] = useState(() => localStorage.getItem('idpl_cms_tagline') || '');
+
+  useEffect(() => {
+    const fetchCmsSettings = async () => {
+      try {
+        const res = await apiClient.get('/cms/section/cms_settings');
+        const content = res.data?.data?.content || res.data?.content;
+        if (content) {
+          if (content.cmsName) {
+            setCmsName(content.cmsName);
+            localStorage.setItem('idpl_cms_name', content.cmsName);
+          }
+          if (content.cmsTagline !== undefined) {
+            setCmsTagline(content.cmsTagline);
+            localStorage.setItem('idpl_cms_tagline', content.cmsTagline);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch CMS settings in AdminLayout:', err);
+      }
+    };
+    fetchCmsSettings();
+
+    const handleSettingsUpdated = (e) => {
+      if (e.detail?.cmsName) {
+        setCmsName(e.detail.cmsName);
+      }
+      if (e.detail?.cmsTagline !== undefined) {
+        setCmsTagline(e.detail.cmsTagline);
+      }
+    };
+    window.addEventListener('cms_settings_updated', handleSettingsUpdated);
+    return () => window.removeEventListener('cms_settings_updated', handleSettingsUpdated);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -167,10 +203,15 @@ const AdminLayout = () => {
 
       {/* Sidebar */}
       <aside className={`fixed md:relative w-72 h-full bg-blue-900 text-white flex flex-col transition-transform duration-300 ease-in-out border-r border-blue-800/50 shadow-2xl z-30 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-        <div className="p-3 mt-2 flex items-center justify-center border-b border-blue-800/50 relative">
+        <div className="p-3 mt-2 flex flex-col items-center justify-center border-b border-blue-800/50 relative">
           <div className="text-2xl font-sans font-extrabold tracking-wider mt-1.5 uppercase text-white text-center">
-            IDPL CMS
+            {cmsName}
           </div>
+          {cmsTagline && (
+            <div className="text-xs text-blue-200 tracking-wide mt-0.5 font-medium text-center">
+              {cmsTagline}
+            </div>
+          )}
           <button className="absolute right-8 md:hidden text-white hover:bg-blue-800 p-2 rounded-lg" onClick={() => setIsMobileMenuOpen(false)}><X className="w-6 h-6" /></button>
         </div>
 

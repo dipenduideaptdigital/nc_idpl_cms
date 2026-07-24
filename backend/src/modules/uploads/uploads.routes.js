@@ -30,7 +30,7 @@ router.post(
 router.post(
   "/images",
   requirePermission("media.upload"),
-  uploadImage.array("images", 5),
+  uploadImage.array("images", 50),
   uploadMultipleImagesController
 );
 

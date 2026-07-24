@@ -1,10 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import WhatsAppChatbot from './WhatsAppChatbot';
+import apiClient from '../../api/client';
 
 const WhatsAppButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showPulse, setShowPulse] = useState(false);
   const [showWelcomeBubble, setShowWelcomeBubble] = useState(false);
+  const [isActive, setIsActive] = useState(() => {
+    const cached = localStorage.getItem('idpl_whatsapp_active');
+    return cached !== null ? cached === 'true' : true;
+  });
+  const [phoneNumber, setPhoneNumber] = useState(() => localStorage.getItem('idpl_whatsapp_number') || '+91 9831-637-409');
+  const [defaultMessage, setDefaultMessage] = useState(() => localStorage.getItem('idpl_whatsapp_message') || '');
+
+  useEffect(() => {
+    const fetchWaSettings = async () => {
+      try {
+        const res = await apiClient.get('/cms/section/whatsapp_settings');
+        const content = res.data?.data?.content || res.data?.content;
+        if (content) {
+          if (content.isActive !== undefined) {
+            setIsActive(Boolean(content.isActive));
+            localStorage.setItem('idpl_whatsapp_active', String(content.isActive));
+          }
+          if (content.phoneNumber) {
+            setPhoneNumber(content.phoneNumber);
+            localStorage.setItem('idpl_whatsapp_number', content.phoneNumber);
+          }
+          if (content.defaultMessage !== undefined) {
+            setDefaultMessage(content.defaultMessage);
+            localStorage.setItem('idpl_whatsapp_message', content.defaultMessage);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch WhatsApp settings:', err);
+      }
+    };
+    fetchWaSettings();
+
+    const handleWaUpdated = (e) => {
+      if (e.detail) {
+        if (e.detail.isActive !== undefined) setIsActive(Boolean(e.detail.isActive));
+        if (e.detail.phoneNumber) setPhoneNumber(e.detail.phoneNumber);
+        if (e.detail.defaultMessage !== undefined) setDefaultMessage(e.detail.defaultMessage);
+      }
+    };
+
+    window.addEventListener('whatsapp_settings_updated', handleWaUpdated);
+    return () => window.removeEventListener('whatsapp_settings_updated', handleWaUpdated);
+  }, []);
 
   useEffect(() => {
     let timeoutId;
@@ -62,10 +106,12 @@ const WhatsAppButton = () => {
     setIsOpen(false);
   };
 
+  if (!isActive) return null;
+
   return (
     <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end">
       {/* Interactive Chatbot Dialog */}
-      <WhatsAppChatbot isOpen={isOpen} onClose={handleClose} />
+      <WhatsAppChatbot isOpen={isOpen} onClose={handleClose} configuredPhoneNumber={phoneNumber} configuredDefaultMessage={defaultMessage} />
 
       <div className="flex items-center group relative mt-2">
         {/* Welcome Popup Bubble (nudges user to chat) */}
