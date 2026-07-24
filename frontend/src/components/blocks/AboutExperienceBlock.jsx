@@ -53,7 +53,7 @@ const AboutExperienceBlock = ({
           <div className="w-full lg:w-[55%] flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 w-max mb-8">
               <span className="w-2 h-2 rounded-full bg-orange-500"></span>
-              <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-600">
+              <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-600 font-['Helvetica',sans-serif]">
                 {badgeText || 'Started in 1989'}
               </span>
             </div>
@@ -118,14 +118,14 @@ const AboutExperienceBlock = ({
             <div className="w-full max-w-[460px] lg:ml-auto lg:mt-5 flex flex-col items-center lg:items-start">
               
               <div 
-                className="text-[#4B5563] leading-relaxed text-[16px] pr-2 text-center lg:text-left prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
+                className="font-['Outfit',sans-serif] text-[#4B5563] leading-relaxed text-[16px] pr-2 text-center lg:text-left prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
                 dangerouslySetInnerHTML={{ 
-                  __html: paragraph || '<p>We believe that every space has the power to inspire, and that great design brings that integration to life.</p>' 
+                  __html: paragraph || '<p>We believe that every space has the power to inspire, and that great design brings that inspiration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.</p>' 
                 }}
               />
               
-              <a href={buttonLink || '#'} className="mt-8 lg:mt-10 group flex items-center border border-gray-300 rounded-full pl-7 pr-2 py-2 w-max hover:border-[#228BFF] transition-colors duration-300">
-                <span className="font-semibold text-[15px] text-[#111827] group-hover:text-[#228BFF] transition-colors">
+              <a href={buttonLink || '#'} className="mt-8 lg:mt-10 group flex items-center border border-gray-300 rounded-full pl-7 pr-2 py-2 w-max hover:border-[#228BFF] transition-colors duration-300 font-['Outfit',sans-serif]">
+                <span className="font-['Outfit',sans-serif] font-semibold text-[15px] text-[#111827] group-hover:text-[#228BFF] transition-colors">
                   {buttonText || 'Learn More'}
                 </span>
                 <div className="ml-5 w-10 h-10 rounded-full bg-[#228BFF] flex items-center justify-center group-hover:bg-[#1b6ecc] transition-colors">

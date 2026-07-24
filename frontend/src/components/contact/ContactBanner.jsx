@@ -4,7 +4,7 @@ import bannerImg from '../../assets/homepage/play.jpg';
 
 const ContactBanner = () => {
   return (
-    <div className="relative w-full h-[350px] md:h-[450px] lg:h-[500px] flex items-center justify-center overflow-hidden bg-zinc-900 font-helvetica">
+    <div className="relative w-full h-[300px] md:h-[380px] lg:h-[420px] flex items-center justify-center overflow-hidden bg-zinc-900 font-helvetica">
       
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 hover:scale-105"
@@ -16,16 +16,16 @@ const ContactBanner = () => {
 
       <div className="relative z-10 text-center px-6 flex flex-col items-center opal-move-up mt-10">
         
-        <h1 className="text-4xl md:text-5xl lg:text-[64px] font-bold text-white mb-4 tracking-tight drop-shadow-lg">
+        <h1 className="font-['Montserrat',sans-serif] font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[54px] lg:leading-[62px] text-white mb-3 tracking-normal text-center capitalize drop-shadow-md">
           Contact Us
         </h1>
         
-        <div className="flex items-center space-x-3 text-sm md:text-base font-medium text-gray-200">
+        <div className="font-['Helvetica',sans-serif] font-normal text-xs sm:text-sm md:text-base tracking-normal text-center flex items-center space-x-2 text-gray-200 uppercase">
           <Link to="/" className="hover:text-[#3B82F6] transition-colors">Home</Link>
         
-          <span className="text-gray-400 font-light text-xs">&gt;</span>
+          <span className="text-gray-400 font-light text-xs sm:text-sm">&gt;</span>
           
-          <span className="text-white font-bold">Contact Us</span>
+          <span className="text-white">Contact Us</span>
         </div>
 
       </div>

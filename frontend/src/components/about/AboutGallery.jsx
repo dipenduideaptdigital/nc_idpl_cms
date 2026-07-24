@@ -15,28 +15,11 @@ const GALLERY_DATA = [
 ];
 
 const AboutGallery = () => {
-  const [visibleCards, setVisibleCards] = useState(3.2);
-  const [currentIndex, setCurrentIndex] = useState(4); // Start at first item of the middle set
+  const [currentIndex, setCurrentIndex] = useState(4);
   const [isTransitioning, setIsTransitioning] = useState(true);
 
   // Triple the data to enable seamless loop wrapping
   const tripledData = [...GALLERY_DATA, ...GALLERY_DATA, ...GALLERY_DATA];
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setVisibleCards(1.2);
-      } else if (window.innerWidth < 1024) {
-        setVisibleCards(2.2);
-      } else {
-        setVisibleCards(3.2);
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleNext = () => {
     if (!isTransitioning) return;
@@ -50,12 +33,11 @@ const AboutGallery = () => {
 
   useEffect(() => {
     const total = GALLERY_DATA.length;
-    // When we transition past the boundaries, reset position instantly
     if (currentIndex >= total * 2) {
       const timer = setTimeout(() => {
         setIsTransitioning(false);
         setCurrentIndex(currentIndex - total);
-      }, 700); // must match the transition duration
+      }, 700);
       return () => clearTimeout(timer);
     } else if (currentIndex < total) {
       const timer = setTimeout(() => {
@@ -75,13 +57,12 @@ const AboutGallery = () => {
     }
   }, [isTransitioning]);
 
-  const isMobileOrTablet = visibleCards < 3.2;
-  const translateXValue = isMobileOrTablet 
-    ? `translateX(calc(50% - 110px - ${currentIndex * 244}px))` 
-    : `translateX(-${currentIndex * 244}px)`;
+  // Card width 180px + Gap 18px = 198px per card step
+  const cardStep = 198;
+  const translateXValue = `translateX(-${currentIndex * cardStep}px)`;
 
   return (
-    <section className="relative w-full py-20 font-helvetica overflow-hidden flex flex-col justify-center min-h-[650px] lg:min-h-[750px]">
+    <section className="relative w-full py-20 font-['Outfit',sans-serif] overflow-hidden flex flex-col justify-center min-h-[650px] lg:min-h-[750px]">
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <img
@@ -89,38 +70,36 @@ const AboutGallery = () => {
           alt="Gallery Background"
           className="w-full h-full object-cover"
         />
-        {/* Subtle overlay darkening to keep white text readable */}
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/30" />
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 w-full">
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-12">
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 w-full">
 
           {/* LEFT COLUMN: TEXT */}
-          <div className="w-full lg:w-[38%] flex flex-col justify-center items-center lg:items-start text-center lg:text-left lg:ml-12 mx-auto shrink-0">
+          <div className="w-full lg:w-[32%] flex flex-col justify-center items-center lg:items-start text-center lg:text-left shrink-0">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 border border-white/30 rounded-full px-4 py-1.5 mb-6 w-fit bg-white/5 backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-              <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white">
-                Our Approach
+            <div className="inline-flex items-center gap-2 border border-white/40 rounded-full px-4 py-1.5 mb-6 w-fit bg-white/10 backdrop-blur-sm">
+              <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
+              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white font-['Helvetica',sans-serif]">
+                OUR GALLERY
               </span>
             </div>
 
-            <h2 className="text-[36px] xs:text-[44px] md:text-[60px] lg:text-[90px] font-black text-white font-['Outfit'] leading-[1.15] tracking-tight mb-6">
-              Designing Beyond the<br />
-              Expected
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-black text-white font-['Outfit',sans-serif] leading-[1.1] tracking-tight mb-5">
+              Interior<br />Design
             </h2>
 
-            <p className="text-[14px] lg:text-[15px] text-white leading-relaxed max-w-[360px] font-normal">
-              At subhAAkritee, our process is deeply collaborative and precision-driven. From initial concept to final execution, we focus on thoughtful detailing, seamless coordination, and uncompromised quality—delivering refined residential, corporate, and architectural spaces that are both functional and distinctive.
+            <p className="text-[14px] lg:text-[15px] text-white/90 leading-relaxed max-w-[340px] font-normal font-['Outfit',sans-serif]">
+              Lorem ipsum dolor sit amet consectetur. Magna nunc porttitor convallis faucibus laoreet.
             </p>
           </div>
 
-          {/* RIGHT COLUMN: SLIDER */}
-          <div className="w-full lg:w-[70%] overflow-hidden mt-8">
+          {/* RIGHT COLUMN: SLIDER WITH EXACTLY 4 CARDS VISIBLE */}
+          <div className="w-full lg:w-auto max-w-[774px] overflow-hidden mt-8 lg:mt-0">
             <div 
-              className="flex gap-6"
+              className="flex gap-[18px]"
               style={{ 
                 transform: translateXValue,
                 transition: isTransitioning ? 'transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none',
@@ -129,10 +108,10 @@ const AboutGallery = () => {
               {tripledData.map((item, index) => (
                 <div
                   key={`${item.id}-${index}`}
-                  className="flex-shrink-0 flex flex-col group cursor-pointer w-[220px]"
+                  className="flex-shrink-0 flex flex-col group cursor-pointer w-[180px]"
                 >
                   {/* Card Container */}
-                  <div className="overflow-hidden rounded-[32px] w-full h-[300px] relative shadow-lg hover:shadow-2xl transition-all duration-500 border-2 border-white/10 group-hover:border-white/20">
+                  <div className="overflow-hidden rounded-[24px] w-full h-[270px] relative shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 group-hover:border-white/40">
                     <img
                       src={item.src}
                       alt={item.title}
@@ -141,7 +120,7 @@ const AboutGallery = () => {
                   </div>
 
                   {/* Title */}
-                  <h4 className="text-center text-white font-bold text-[16px] lg:text-[18px] mt-4">
+                  <h4 className="text-center text-white font-bold text-[16px] lg:text-[18px] mt-3 font-['Outfit',sans-serif]">
                     {item.title}
                   </h4>
                 </div>
@@ -152,21 +131,21 @@ const AboutGallery = () => {
         </div>
 
         {/* CENTERED BUTTONS BELOW THE COLUMNS */}
-        <div className="flex items-center justify-center gap-4 mt-12 lg:mt-16 z-20 lg:ml-12">
+        <div className="flex items-center justify-center gap-4 mt-12 lg:mt-14 z-20">
           <button
             onClick={handlePrev}
             aria-label="Previous"
-            className="w-12 h-12 rounded-full border border-white/50 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 cursor-pointer active:scale-95 bg-black/10 backdrop-blur-sm"
+            className="w-11 h-11 rounded-full border border-white/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 cursor-pointer active:scale-95 bg-black/20 backdrop-blur-sm"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} />
           </button>
 
           <button
             onClick={handleNext}
             aria-label="Next"
-            className="w-12 h-12 rounded-full border border-white/50 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 cursor-pointer active:scale-95 bg-black/10 backdrop-blur-sm"
+            className="w-11 h-11 rounded-full border border-white/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 cursor-pointer active:scale-95 bg-black/20 backdrop-blur-sm"
           >
-            <ArrowRight size={20} />
+            <ArrowRight size={18} />
           </button>
         </div>
       </div>

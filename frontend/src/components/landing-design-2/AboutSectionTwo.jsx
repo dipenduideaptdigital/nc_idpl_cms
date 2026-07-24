@@ -114,7 +114,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
 
             {/* Paragraph 1*/}
             <div 
-              className="text-gray-600 text-base leading-relaxed mb-6 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
+              className="font-['Outfit',sans-serif] text-gray-600 text-base leading-relaxed mb-6 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
               dangerouslySetInnerHTML={{ 
                 __html: data?.paragraph1 || '<p>We believe that every space has the power to inspire, and that great design brings that inspiration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.</p>' 
               }}
@@ -122,7 +122,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
 
             {/* Paragraph 2  */}
             <div 
-              className="text-gray-600 text-base leading-relaxed mb-10 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
+              className="font-['Outfit',sans-serif] text-gray-600 text-base leading-relaxed mb-10 prose prose-sm max-w-none prose-p:my-2 prose-strong:font-bold prose-a:text-blue-500"
               dangerouslySetInnerHTML={{ 
                 __html: data?.paragraph2 || '<p>With a strong presence in Kolkata, Bhubaneswar, and Ranchi, our turnkey office interiors are thoughtfully crafted to enhance productivity, reflect your brand identity, and support the way your team works every day.</p>' 
               }}
@@ -142,6 +142,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
                 border
                 border-gray-300
                 rounded-full
+                font-['Outfit',sans-serif]
                 font-semibold
                 text-gray-700
                 hover:border-gray-500
@@ -150,7 +151,7 @@ const AboutSectionTwo = ({ data, onCtaClick }) => {
                 duration-300
               "
             >
-              <span>
+              <span className="font-['Outfit',sans-serif]">
                 {data?.buttonText || "Let's Get Started"}
               </span>
 

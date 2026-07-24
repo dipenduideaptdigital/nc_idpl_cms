@@ -63,28 +63,28 @@ const Cta = ({ data: externalData }) => {
   };
 
   return (
-    <section className="py-20 lg:py-28 bg-white border-t border-gray-100 font-helvetica">
+    <section className="py-20 lg:py-28 bg-white border-t border-gray-100 font-['Helvetica',sans-serif]">
       <div className="container mx-auto max-w-[1300px] px-6 lg:px-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start font-['Helvetica',sans-serif]">
           
           <div className="lg:col-span-3 flex items-start">
             <div className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 w-max">
               <span className="w-2 h-2 rounded-full bg-orange-500"></span>
-              <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-600">
+              <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-600 font-['Helvetica',sans-serif]">
                 {badgeText}
               </span>
             </div>
           </div>
           
-          <div className="lg:col-span-9 flex flex-col items-start">
+          <div className="lg:col-span-9 flex flex-col items-start font-['Helvetica',sans-serif]">
             
-            <h2 className="text-[36px] md:text-[54px] lg:text-[64px] font-bold text-[#111827] leading-[1.1] tracking-[-0.03em] mb-12">
+            <h2 className="text-[36px] md:text-[54px] lg:text-[64px] font-bold text-[#111827] leading-[1.1] tracking-[-0.03em] mb-12 font-['Helvetica',sans-serif]">
               {renderTitle(title)}
             </h2>
             
             <Link to="/contact">
-              <button className="group flex items-center border border-gray-300 rounded-full pl-7 pr-2 py-2 w-max hover:border-[#228BFF] transition-colors duration-300 cursor-pointer">
-                <span className="font-semibold text-[15px] text-[#111827] group-hover:text-[#228BFF] transition-colors tracking-wide mr-6">
+              <button className="group flex items-center border border-gray-300 rounded-full pl-7 pr-2 py-2 w-max hover:border-[#228BFF] transition-colors duration-300 cursor-pointer font-['Helvetica',sans-serif]">
+                <span className="font-semibold text-[15px] text-[#111827] group-hover:text-[#228BFF] transition-colors tracking-wide mr-6 font-['Helvetica',sans-serif]">
                   {buttonText}
                 </span>
                 <div className="w-11 h-11 rounded-full bg-[#228BFF] flex items-center justify-center text-white transition-all duration-300 group-hover:bg-[#1b6ecc]">

@@ -17,27 +17,31 @@ const TIMELINE_DATA = [
 
 const Timeline = () => {
   return (
-    <section className="py-20 lg:py-24 bg-white font-helvetica overflow-hidden">
+    <section className="py-20 lg:py-24 bg-white font-['Outfit',sans-serif] overflow-hidden">
       <div className="container mx-auto max-w-[1300px] px-6 lg:px-8">
         
-        {/* Badge & Heading Container */}
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-left mb-12 lg:mb-16">
+        {/* Header Grid: Left Badge, Right Title */}
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 lg:gap-12 mb-12 lg:mb-16 text-left">
           {/* Badge */}
-          <div className="inline-flex items-center justify-center gap-1.5 border border-gray-200 rounded-full px-4 py-1.5 bg-white mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#f97316]"></span>
-            <span className="text-[9px] font-bold tracking-[0.15em] text-gray-500 uppercase">
-              GET IN TOUCH
-            </span>
+          <div className="shrink-0">
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-gray-200 bg-white">
+              <span className="w-2 h-2 rounded-full bg-[#f97316]"></span>
+              <span className="text-[10px] md:text-xs font-bold tracking-widest uppercase text-gray-600 font-['Helvetica',sans-serif]">
+                GET IN TOUCH
+              </span>
+            </div>
           </div>
 
           {/* Heading */}
-          <h2 className="text-[32px] sm:text-[44px] md:text-[50px] lg:text-[60px] font-bold text-[#111827] leading-[1.05] tracking-[-0.02em] whitespace-normal lg:whitespace-nowrap">
-            Our History <span className="text-[#3B82F6]">Is Full Of</span>
-            <br className="hidden sm:inline" />
-            <span className="text-[#3B82F6]">Interesting</span> Stages And
-            <br className="hidden sm:inline" />
-            Events.
-          </h2>
+          <div className="max-w-4xl">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold leading-[1.15] tracking-tight font-['Outfit',sans-serif] text-gray-900">
+              Our History <span className="text-[#3B82F6]">Is Full Of</span>
+              <br className="hidden sm:inline" />
+              <span className="text-[#3B82F6]">Interesting</span> Stages And
+              <br className="hidden sm:inline" />
+              Events.
+            </h2>
+          </div>
         </div>
 
         {/* DESKTOP HORIZONTAL TIMELINE (Visible only on lg screen) */}
@@ -59,11 +63,11 @@ const Timeline = () => {
                 <div className="w-[12px] h-[12px] rounded-full bg-[#3B82F6] shrink-0 ring-4 ring-white"></div>
                 <div className="h-[25px] w-full"></div>
 
-                <div className="w-full flex flex-col items-start px-1">
-                  <h3 className="text-[35px] lg:text-[42px] font-bold text-[#111827] leading-none mb-3">
+                <div className="w-full flex flex-col items-start px-1 font-['Outfit',sans-serif]">
+                  <h3 className="text-[35px] lg:text-[42px] font-bold text-[#111827] leading-none mb-3 font-['Outfit',sans-serif]">
                     {item.year}
                   </h3>
-                  <p className="text-[15px] lg:text-[16px] text-gray-600 leading-[1.2] font-normal text-left">
+                  <p className="text-[15px] lg:text-[16px] text-gray-600 leading-[1.2] font-normal text-left font-['Outfit',sans-serif]">
                     A business house born out of passion for fish keeping and nature conservation
                   </p>
                 </div>
@@ -79,7 +83,7 @@ const Timeline = () => {
 
           <div className="flex flex-col gap-8">
             {TIMELINE_DATA.map((item) => (
-              <div key={item.id} className="flex flex-col relative pl-12 sm:pl-16 w-full">
+              <div key={item.id} className="flex flex-col relative pl-12 sm:pl-16 w-full font-['Outfit',sans-serif]">
                 {/* Timeline Dot */}
                 <div className="absolute left-[18px] sm:left-[26px] top-1/2 transform -translate-y-1/2 w-[12px] h-[12px] rounded-full bg-[#3B82F6] z-10 ring-4 ring-white"></div>
 
@@ -95,11 +99,11 @@ const Timeline = () => {
                   </div>
 
                   {/* Text info */}
-                  <div className="flex-grow text-center sm:text-left">
-                    <h3 className="text-[28px] sm:text-[32px] font-bold text-[#111827] leading-none mb-2 mt-1">
+                  <div className="flex-grow text-center sm:text-left font-['Outfit',sans-serif]">
+                    <h3 className="text-[28px] sm:text-[32px] font-bold text-[#111827] leading-none mb-2 mt-1 font-['Outfit',sans-serif]">
                       {item.year}
                     </h3>
-                    <p className="text-[13px] sm:text-[14px] text-gray-600 leading-[1.3] font-normal">
+                    <p className="text-[14px] text-gray-600 leading-[1.3] font-normal font-['Outfit',sans-serif]">
                       A business house born out of passion for fish keeping and nature conservation
                     </p>
                   </div>
