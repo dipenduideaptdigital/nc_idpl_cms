@@ -3,10 +3,10 @@ import http from "http";
 import app from "./app.js";
 import { env } from "./config/env.js";
 import { logger } from "./config/logger.js";
+import { systemStateStore } from "./shared/core/systemStateStore.js";
 
 // all jobs
 import { cleanupExpiredTokens } from "./jobs/cleanupExpiredTokens.job.js";
-// import { initMediaCleanupJob } from "./jobs/cleanupOrphanMedia.job.js";
 import { initPreviewCleanupJob } from "./jobs/cleanupPreviewTokens.job.js";
 import { initBlogJobs } from "./jobs/blogs.job.js";
 
@@ -24,10 +24,10 @@ const startServer = async () => {
     logger.info("Connecting to database...");
     await prisma.$connect();
     logger.info("Database connected successfully.");
-
+    logger.info("Initializing System State Engine...");
+    await systemStateStore.initialize();
     logger.info("Starting background jobs...");
     cleanupExpiredTokens();
-    // initMediaCleanupJob();
     initPreviewCleanupJob();
     initBlogJobs();
     logger.info("Background jobs initialized.");
