@@ -1,14 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi+Ink&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Instrument+Serif:ital@1&family=Kanit:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @theme {
   --font-sans: 'Outfit', sans-serif;
+  --font-reem: 'Reem Kufi Ink', sans-serif;
+  --font-kanit: 'Kanit', sans-serif;
+  --font-larken: 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', serif;
   --font-helvetica: 'Helvetica Neue', Helvetica, 'Arimo', Arial, sans-serif;
   --color-primary: #3B82F6;
   --color-secondary: #f97316;
+}
+
+.font-kanit {
+  font-family: 'Kanit', sans-serif;
+}
+
+.font-reem {
+  font-family: 'Reem Kufi Ink', sans-serif;
+}
+
+.font-larken {
+  font-family: 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', Georgia, serif;
+  font-style: italic;
 }
 
 body {

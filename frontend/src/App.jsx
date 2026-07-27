@@ -21,6 +21,7 @@ const LandingReference = lazy(() => import('./pages/LandingReference'));
 const LandingReference2 = lazy(() => import('./pages/LandingReference2'));
 const DynamicPage = lazy(() => import('./pages/DynamicPage'));
 const PreviewPage = lazy(() => import('./pages/PreviewPage')); 
+const NatureHomePreview = lazy(() => import('./pages/NatureHomePreview')); 
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
@@ -134,6 +135,7 @@ function App() {
             </Route>
 
             {/* Public Routes - Landing Pages */}
+            <Route path="/nature-home" element={<NatureHomePreview />} />
             <Route element={<LandingLayout />}>
               <Route path="/hero-preview" element={<LandingReference />} />
               <Route path="/hero-preview-2" element={<LandingReference2 />} />
