@@ -40,14 +40,25 @@ const NatureNavbar = () => {
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-8 xl:space-x-10">
           {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="font-kanit text-xs font-normal tracking-[0.18em] text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group"
-            >
-              {link.name}
-              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
-            </a>
+            link.href.startsWith('/') ? (
+              <Link
+                key={link.name}
+                to={link.href}
+                className="font-kanit text-xs font-normal tracking-[0.18em] text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group"
+              >
+                {link.name}
+                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
+              </Link>
+            ) : (
+              <a
+                key={link.name}
+                href={link.href}
+                className="font-kanit text-xs font-normal tracking-[0.18em] text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group"
+              >
+                {link.name}
+                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
+              </a>
+            )
           ))}
         </nav>
 
@@ -81,14 +92,25 @@ const NatureNavbar = () => {
       {mobileMenuOpen && (
         <div className="lg:hidden mt-4 bg-zinc-950/95 backdrop-blur-md rounded-lg p-6 border border-zinc-800 space-y-4 font-kanit">
           {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-normal tracking-widest text-zinc-200 hover:text-emerald-400 transition-colors uppercase"
-            >
-              {link.name}
-            </a>
+            link.href.startsWith('/') ? (
+              <Link
+                key={link.name}
+                to={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-sm font-normal tracking-widest text-zinc-200 hover:text-emerald-400 transition-colors uppercase"
+              >
+                {link.name}
+              </Link>
+            ) : (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-sm font-normal tracking-widest text-zinc-200 hover:text-emerald-400 transition-colors uppercase"
+              >
+                {link.name}
+              </a>
+            )
           ))}
           <a
             href="#store"

@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import Navbar from './Navbar';
+import { Outlet } from 'react-router-dom';
 import NatureNavbar from '../nature_homepage/NatureNavbar';
-import Footer from './Footer';
 import NatureFooter from '../nature_homepage/NatureFooter';
 import GetInTouch from '../landing/GetInTouch';
 import WhatsAppButton from '../shared/WhatsAppButton';
 
-const MainLayout = () => {
+const NatureLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const location = useLocation();
-
-  const isNaturePage = location.pathname.startsWith('/ripples') || location.pathname === '/nature-home';
 
   useEffect(() => {
     const handleOpenModal = () => setIsModalOpen(true);
@@ -26,26 +21,18 @@ const MainLayout = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (location.pathname === '/') {
-      const hasSeen = sessionStorage.getItem('has_seen_consultation_modal');
-      if (!hasSeen) {
-        const timer = setTimeout(() => {
-          setIsModalOpen(true);
-          sessionStorage.setItem('has_seen_consultation_modal', 'true');
-        }, 5000);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [location.pathname]);
-
   return (
-    <div className={`font-sans antialiased min-h-screen flex flex-col overflow-x-hidden relative ${isNaturePage ? 'bg-[#070e06] text-white' : 'bg-white text-gray-900'}`}>
-      {isNaturePage ? <NatureNavbar /> : <Navbar />}
+    <div className="font-sans antialiased text-white bg-[#070e06] min-h-screen flex flex-col relative overflow-x-hidden">
+      {/* Top Nature Navigation */}
+      <NatureNavbar />
+
+      {/* Main Page Content */}
       <main className="flex-grow">
         <Outlet />
       </main>
-      {isNaturePage ? <NatureFooter /> : <Footer />}
+
+      {/* Nature Footer */}
+      <NatureFooter />
 
       {/* WhatsApp Floating Button */}
       <WhatsAppButton />
@@ -60,7 +47,7 @@ const MainLayout = () => {
           ></div>
 
           {/* Modal Content Card */}
-          <div className="relative bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto z-10 transition-transform duration-300 transform scale-100 flex flex-col">
+          <div className="relative bg-white text-zinc-900 rounded-2xl shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto z-10 transition-transform duration-300 transform scale-100 flex flex-col">
             <GetInTouch isModal={true} onClose={() => setIsModalOpen(false)} />
           </div>
         </div>
@@ -69,4 +56,4 @@ const MainLayout = () => {
   );
 };
 
-export default MainLayout;
+export default NatureLayout;

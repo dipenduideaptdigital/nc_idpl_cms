@@ -22,6 +22,7 @@ const LandingReference2 = lazy(() => import('./pages/LandingReference2'));
 const DynamicPage = lazy(() => import('./pages/DynamicPage'));
 const PreviewPage = lazy(() => import('./pages/PreviewPage')); 
 const NatureHomePreview = lazy(() => import('./pages/NatureHomePreview')); 
+const RipplesPage = lazy(() => import('./pages/RipplesPage'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
@@ -153,6 +154,8 @@ function App() {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/services" element={<ServicePage />} />
               <Route path="/services/:slug" element={<ServicePage />} />
+              <Route path="/ripples" element={<RipplesPage />} />
+              <Route path="/ripple" element={<RipplesPage />} />
               
               {/* Dynamic Pages Catch-All */}
               <Route path="/*" element={<DynamicPage />} />

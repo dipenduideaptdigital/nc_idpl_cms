@@ -10,11 +10,11 @@ const NatureHero = () => {
         <img
           src={heroBg}
           alt="NatureCube Aquascape"
-          className="w-full h-full object-cover object-center scale-105 filter brightness-75 contrast-110"
+          className="w-full h-full object-cover object-center scale-105 filter brightness-95 contrast-105"
         />
         {/* Dark radial and linear gradients for contrast and atmosphere */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060e05] via-transparent to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060e05] via-transparent to-black/35" />
       </div>
 
       {/* Main Hero Content */}

@@ -9,7 +9,7 @@
   --font-sans: 'Outfit', sans-serif;
   --font-reem: 'Reem Kufi Ink', sans-serif;
   --font-kanit: 'Kanit', sans-serif;
-  --font-larken: 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', serif;
+  --font-larken: 'Larken-MediumItalic', 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', serif;
   --font-helvetica: 'Helvetica Neue', Helvetica, 'Arimo', Arial, sans-serif;
   --color-primary: #3B82F6;
   --color-secondary: #f97316;
@@ -24,7 +24,7 @@
 }
 
 .font-larken {
-  font-family: 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', Georgia, serif;
+  font-family: 'Larken-MediumItalic', 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', Georgia, serif;
   font-style: italic;
 }
 

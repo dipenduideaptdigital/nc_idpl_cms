@@ -6,7 +6,7 @@ import ellipseBtnImg from '../../assets/nc_logo/Ellipse_plus_btn.png';
 
 const LivingMandalasSection = () => {
   return (
-    <section className="relative w-full bg-white py-10 md:py-24 px-4 sm:px-8 overflow-hidden select-none">
+    <section className="relative w-full bg-white pt-10 md:pt-25 pb-6 md:pb-15 px-4 sm:px-8 overflow-hidden select-none">
       
       {/* SECTION-LEVEL BRUSH SPLASHES (z-0) - STRICTLY BEHIND MANDALA */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -29,7 +29,7 @@ const LivingMandalasSection = () => {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto relative min-h-[560px] lg:min-h-[640px] flex items-center justify-center">
+      <div className="max-w-6xl mx-auto relative min-h-[460px] lg:min-h-[500px] flex items-center justify-center">
 
         {/* LAYER 2: DEAD-CENTER MANDALA ARTWORK (z-20) - IN FRONT OF BRUSHES */}
         <div className="relative z-20 w-[300px] sm:w-[400px] md:w-[480px] lg:w-[520px] aspect-square flex items-center justify-center my-6 lg:my-0">
