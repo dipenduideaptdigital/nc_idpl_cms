@@ -1,14 +1,30 @@
 import React from 'react';
-import heroBg from '../../assets/nc_home/hero.jpg';
+import defaultHeroBg from '../../assets/nc_home/hero.jpg';
 import NatureFeaturesBar from './NatureFeaturesBar';
 
-const NatureHero = () => {
+// Helper to resolve the correct image URL from your backend
+const getAssetUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http') || path.startsWith('data:')) return path;
+  const baseUrl = import.meta.env.VITE_API_URL 
+    ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
+    : 'http://localhost:5000';
+  return `${baseUrl}${path}`;
+};
+
+const NatureHero = ({ data }) => {
+  const bgImage = data?.backgroundImage ? getAssetUrl(data.backgroundImage) : defaultHeroBg;
+  const titleLine1 = data?.titleLine1 || "NATURE HAS";
+  const titleLine2 = data?.titleLine2 || "ALWAYS BEEN CALLING.";
+  const subHeadline = data?.subHeadline || "WE SIMPLY HELP YOU";
+  const italicWord = data?.italicWord || "answer";
+
   return (
     <section className="relative min-h-screen w-full flex flex-col justify-between bg-black text-white overflow-hidden pt-28 md:pt-36">
       {/* Background Image with Dark Vignette Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src={heroBg}
+          src={bgImage}
           alt="NatureCube Aquascape"
           className="w-full h-full object-cover object-center scale-105 filter brightness-95 contrast-105"
         />
@@ -22,21 +38,21 @@ const NatureHero = () => {
         {/* Left Column: Typography */}
         <div className="lg:col-span-7 space-y-3 md:space-y-4">
           <h1 className="font-reem text-3xl sm:text-5xl lg:text-6xl tracking-[0.08em] leading-[1.15] text-white uppercase font-light drop-shadow-lg">
-            <div>NATURE HAS</div>
-            <div>ALWAYS BEEN CALLING.</div>
+            <div>{titleLine1}</div>
+            <div>{titleLine2}</div>
           </h1>
 
           <div className="pt-4 md:pt-6 space-y-1">
             <h2 className="font-reem text-2xl sm:text-4xl lg:text-5xl tracking-[0.08em] leading-[1.15] text-white uppercase font-light">
-              WE SIMPLY HELP YOU
+              {subHeadline}
             </h2>
             <div className="font-larken text-5xl sm:text-7xl lg:text-8xl text-zinc-100 font-normal italic tracking-normal transform -translate-y-2 select-none">
-              answer
+              {italicWord}
             </div>
           </div>
         </div>
 
-        {/* Right Column: Empty space so hero.jpg's embedded 3D wireframe box is clearly visible */}
+        {/* Right Column: Empty space */}
         <div className="hidden lg:block lg:col-span-5" />
       </div>
 

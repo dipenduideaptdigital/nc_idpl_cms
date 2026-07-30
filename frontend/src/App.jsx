@@ -34,7 +34,8 @@ const ServicePage = lazy(() => import('./pages/ServicePage'));
 
 // Admin Pages
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
-const HomeCustomization = lazy(() => import('./pages/admin/HomeCustomization'));
+const NcHomeCustomization = lazy(() => import('./pages/admin/NcHomeCustomization'));
+// const HomeCustomization = lazy(() => import('./pages/admin/HomeCustomization'));
 const PageList = lazy(() => import('./pages/admin/pages/PageList'));
 const PageEditor = lazy(() => import('./pages/admin/pages/PageEditor'));
 const ProjectList = lazy(() => import('./pages/admin/projects/ProjectList'));
@@ -100,7 +101,8 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
-              <Route path="home-customization" element={<HomeCustomization />} />
+              {/* <Route path="home-customization" element={<HomeCustomization />} /> */}
+              <Route path="home-customization" element={<NcHomeCustomization />} />
               <Route path="pages" element={<PageList />} />
               <Route path="pages/create" element={<PageEditor />} />
               <Route path="pages/edit/:id" element={<PageEditor />} />

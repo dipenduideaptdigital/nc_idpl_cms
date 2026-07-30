@@ -15,11 +15,21 @@ import {
   generalSettingsSchema,
   cmsSettingsSchema,
   whatsappSettingsSchema,
-  footerSchema
+  footerSchema,
+  
+  // ----NATURE CUBE SCHEMAS ----
+  ncHeroSchema,
+  ncMandalasSchema,
+  ncLivingArtSchema,
+  ncShowcaseSchema,
+  ncPlantDisplaySchema,
+  ncServicesSchema,
+  ncPartnersSchema
 } from "./cms.validation.js";
 
 // Maps frontend section keys to backend validation schemas
 export const CMS_REGISTRY = {
+  // EXISTING SUBHAKRITEE SECTIONS
   "homepage_hero": heroSchema,
   "homepage_services": servicesSchema,
   "homepage_about": aboutSchema,
@@ -36,5 +46,14 @@ export const CMS_REGISTRY = {
   "homepage_general": generalSettingsSchema,
   "homepage_footer": footerSchema,
   "cms_settings": cmsSettingsSchema,
-  "whatsapp_settings": whatsappSettingsSchema
+  "whatsapp_settings": whatsappSettingsSchema,
+
+  // NEW NATURE CUBE SECTIONS
+  "nc_homepage_hero": ncHeroSchema,
+  "nc_homepage_mandalas": ncMandalasSchema,
+  "nc_homepage_living_art": ncLivingArtSchema,
+  "nc_homepage_showcase": ncShowcaseSchema,
+  "nc_homepage_plant_display": ncPlantDisplaySchema,
+  "nc_homepage_services": ncServicesSchema,
+  "nc_homepage_partners": ncPartnersSchema
 };
