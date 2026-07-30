@@ -11,7 +11,7 @@ const MainLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation();
 
-  const isNaturePage = location.pathname.startsWith('/ripples') || location.pathname === '/nature-home';
+  const isNaturePage = location.pathname.startsWith('/ripples') || location.pathname.startsWith('/gulmo') || location.pathname === '/nature-home';
 
   useEffect(() => {
     const handleOpenModal = () => setIsModalOpen(true);

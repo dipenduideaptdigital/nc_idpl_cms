@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
-import RipplesHero from '../components/ripples/RipplesHero';
+import GulmoHero from '../components/gulmo/GulmoHero';
 import RipplesIntroSection from '../components/ripples/RipplesIntroSection';
+import GulmoTerrariumSection from '../components/gulmo/GulmoTerrariumSection';
+import GulmoQuoteSection from '../components/gulmo/GulmoQuoteSection';
 import RipplesNatureAquariumSection from '../components/ripples/RipplesNatureAquariumSection';
 import RipplesLetsBeginSection from '../components/ripples/RipplesLetsBeginSection';
 import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
 
-const RipplesPage = () => {
+const GulmoPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -13,16 +15,18 @@ const RipplesPage = () => {
   return (
     <div className="w-full min-h-screen bg-[#070e06] text-white font-sans antialiased">
       {/* Hero Section */}
-      <RipplesHero />
+      <GulmoHero />
 
       {/* Intro & Takashi Amano Quote Section */}
       <RipplesIntroSection />
 
-      {/* What is Nature Aquarium & Our Projects Section */}
-      <RipplesNatureAquariumSection />
+      {/* Terrariums, Paludariums & Indoor Gardens Showcase */}
+      <GulmoTerrariumSection />
 
-      {/* Let's Begin Section */}
-      <RipplesLetsBeginSection />
+      {/* Gautama Buddha Quote Section with Table Jar Background */}
+      <GulmoQuoteSection />
+
+      
 
       {/* Get Started CTA Section */}
       <GetStartedCtaSection />
@@ -30,4 +34,4 @@ const RipplesPage = () => {
   );
 };
 
-export default RipplesPage;
+export default GulmoPage;
