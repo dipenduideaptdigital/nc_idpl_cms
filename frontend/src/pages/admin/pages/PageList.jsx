@@ -65,35 +65,6 @@ const PageList = () => {
     }
   };
 
-  const staticPages = [
-    {
-      id: 'static-landing-reference',
-      title: 'Original Landing Page (Reference)',
-      fullPath: '/hero-preview',
-      status: 'SYSTEM',
-      author: { name: 'System' },
-      isStatic: true,
-      updatedAt: null
-    },
-    {
-      id: 'static-landing-reference-2',
-      title: 'Premium Landing Page (Reference 2)',
-      fullPath: '/hero-preview-2',
-      status: 'SYSTEM',
-      author: { name: 'System' },
-      isStatic: true,
-      updatedAt: null
-    }
-  ];
-
-  const coreSiteSlugs = [
-    'about', 'about-us', 
-    'projects', 'project', 'our-projects',
-    'contact', 'contact-us', 
-    'blog', 'blogs',
-    'home', 'homepage'
-  ];
-
   const relevantPages = pages.filter(page => {
     const currentSlug = (page.slug || '').toLowerCase().trim();
     const fullPath = (page.fullPath || '').toLowerCase().trim();
@@ -103,14 +74,11 @@ const PageList = () => {
 
     if (isServicesMode) {
       return isServicePage;
-    } else if (isSitePagesMode) {
-      return coreSiteSlugs.includes(currentSlug) && !isServicePage;
     } else {
-      return !coreSiteSlugs.includes(currentSlug) && !isServicePage;
+      return !isServicePage;
     }
   });
-
-  const allPages = (isSitePagesMode || isServicesMode) ? relevantPages : [...staticPages, ...relevantPages];
+  const allPages = relevantPages;
 
   const filteredPages = allPages.filter(page => 
     page.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -125,8 +93,6 @@ const PageList = () => {
         return <span className="px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200">Draft</span>;
       case 'ARCHIVED':
         return <span className="px-3 py-1 rounded-full text-xs font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">Archived</span>;
-      case 'SYSTEM':
-        return <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700 border border-purple-200">System Reference</span>;
       default:
         return <span className="px-3 py-1 rounded-full text-xs font-medium bg-zinc-100 text-zinc-700">{status}</span>;
     }
@@ -148,14 +114,12 @@ const PageList = () => {
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
             {isServicesMode ? <Wrench className="w-6 h-6 text-zinc-900" /> : <FileText className="w-6 h-6 text-zinc-900" />}
-            {isServicesMode ? 'Service Pages' : (isSitePagesMode ? 'Site Pages' : 'Landing Pages')}
+            {isServicesMode ? 'Service Pages' : 'Pages'}
           </h1>
           <p className="text-zinc-500 text-sm mt-1">
             {isServicesMode 
               ? 'Manage all your service offerings and detailed service pages.'
-              : isSitePagesMode 
-              ? 'Manage main website pages like About Us, Contact, etc.' 
-              : 'Manage your marketing and landing pages.'}
+              : 'Manage all your website pages, landing pages, and content.'}
           </p>
         </div>
         
@@ -263,37 +227,30 @@ const PageList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end gap-2">
-                        {!page.isStatic && (
-                          <>
-                            <Can permission="page.edit">
-                              <Link 
-                                to={`${basePath}/edit/${page.id}`}
-                                className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                title="Edit Page"
-                              >
-                                <Edit3 className="w-4 h-4" />
-                              </Link>
-                            </Can>
-                            
-                            <Can permission="page.delete">
-                              <button 
-                                onClick={() => handleDelete(page.id)}
-                                disabled={isDeleting === page.id}
-                                className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                                title="Delete Page"
-                              >
-                                {isDeleting === page.id ? (
-                                  <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                                ) : (
-                                  <Trash2 className="w-4 h-4" />
-                                )}
-                              </button>
-                            </Can>
-                          </>
-                        )}
-                        {page.isStatic && (
-                          <span className="text-xs text-zinc-400 mr-2">Hardcoded reference</span>
-                        )}
+                        <Can permission="page.edit">
+                          <Link 
+                            to={`${basePath}/edit/${page.id}`}
+                            className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Edit Page"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </Link>
+                        </Can>
+                        
+                        <Can permission="page.delete">
+                          <button 
+                            onClick={() => handleDelete(page.id)}
+                            disabled={isDeleting === page.id}
+                            className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                            title="Delete Page"
+                          >
+                            {isDeleting === page.id ? (
+                              <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </button>
+                        </Can>
                       </div>
                     </td>
                   </tr>

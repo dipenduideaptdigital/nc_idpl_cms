@@ -1,61 +1,117 @@
 import React from 'react';
+import { Type, Image as ImageIcon } from 'lucide-react';
+import TipTapEditor from '../TipTapEditor';
+import ImageField from '../ImageField';
 
-const getAssetUrl = (path) => {
-  if (!path) return '';
-  if (path.startsWith('http') || path.startsWith('data:')) return path;
-  const baseUrl = import.meta.env.VITE_API_URL 
-    ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
-    : 'http://localhost:5000';
-  return `${baseUrl}${path}`;
-};
-
-const MandalasCustomization = ({ data, onChange, onImageUpload }) => {
+const MandalasCustomization = ({ data, onChange }) => {
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-bold border-b pb-2 mb-4">Living Mandalas Section</h2>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-semibold mb-1">Tagline</label>
-          <input type="text" className="w-full border rounded-lg p-2" value={data.tagline || ''} onChange={e => onChange('tagline', e.target.value)} />
+    <div className="space-y-8">
+      
+      {/* Top Level Text Fields */}
+      <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50/50">
+          <Type className="w-5 h-5 text-zinc-700" />
+          <h3 className="text-lg font-semibold text-zinc-800">Main Heading Content</h3>
         </div>
-        <div>
-          <label className="block text-sm font-semibold mb-1">Main Title</label>
-          <input type="text" className="w-full border rounded-lg p-2" value={data.mainTitle || ''} onChange={e => onChange('mainTitle', e.target.value)} />
-        </div>
-        <div>
-          <label className="block text-sm font-semibold mb-1">Heading Line 1</label>
-          <input type="text" className="w-full border rounded-lg p-2" value={data.headingLine1 || ''} onChange={e => onChange('headingLine1', e.target.value)} />
-        </div>
-        <div>
-          <label className="block text-sm font-semibold mb-1">Heading Line 2</label>
-          <input type="text" className="w-full border rounded-lg p-2" value={data.headingLine2 || ''} onChange={e => onChange('headingLine2', e.target.value)} />
-        </div>
-        <div>
-          <label className="block text-sm font-semibold mb-1">Italic Word</label>
-          <input type="text" className="w-full border rounded-lg p-2" value={data.italicWord || ''} onChange={e => onChange('italicWord', e.target.value)} />
-        </div>
-        <div>
-          <label className="block text-sm font-semibold mb-1">Button Text</label>
-          <input type="text" className="w-full border rounded-lg p-2" value={data.buttonText || ''} onChange={e => onChange('buttonText', e.target.value)} />
-        </div>
-        <div className="col-span-2">
-          <label className="block text-sm font-semibold mb-1">Desc Line 1</label>
-          <input type="text" className="w-full border rounded-lg p-2" value={data.descLine1 || ''} onChange={e => onChange('descLine1', e.target.value)} />
-        </div>
-        <div className="col-span-2">
-          <label className="block text-sm font-semibold mb-1">Desc Line 2</label>
-          <input type="text" className="w-full border rounded-lg p-2" value={data.descLine2 || ''} onChange={e => onChange('descLine2', e.target.value)} />
-        </div>
-      </div>
-      <div className="mt-4">
-        <label className="block text-sm font-semibold mb-2">Mandala Image</label>
-        <input type="file" accept="image/*" onChange={e => onImageUpload(e, 'nc_mandalas')} className="mb-2" />
-        {data.mandalaImage && (
-          <div className="mt-2">
-            <img src={getAssetUrl(data.mandalaImage)} alt="mandala" className="h-32 rounded-lg object-contain bg-zinc-100" />
+        
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Tagline</label>
+            <input 
+              type="text" 
+              className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-zinc-50/50" 
+              value={data.tagline || ''} 
+              onChange={e => onChange('tagline', e.target.value)} 
+              placeholder="e.g. Bringing nature indoors"
+            />
           </div>
-        )}
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Main Title</label>
+            <input 
+              type="text" 
+              className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-zinc-50/50" 
+              value={data.mainTitle || ''} 
+              onChange={e => onChange('mainTitle', e.target.value)} 
+              placeholder="e.g. Living Mandalas"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Heading Line 1</label>
+            <input 
+              type="text" 
+              className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-zinc-50/50" 
+              value={data.headingLine1 || ''} 
+              onChange={e => onChange('headingLine1', e.target.value)} 
+              placeholder="e.g. Experience the beauty"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Heading Line 2</label>
+            <input 
+              type="text" 
+              className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-zinc-50/50" 
+              value={data.headingLine2 || ''} 
+              onChange={e => onChange('headingLine2', e.target.value)} 
+              placeholder="e.g. of aquatic life"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Italic Word</label>
+            <input 
+              type="text" 
+              className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-zinc-50/50" 
+              value={data.italicWord || ''} 
+              onChange={e => onChange('italicWord', e.target.value)} 
+              placeholder="e.g. serenity"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Button Text</label>
+            <input 
+              type="text" 
+              className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-zinc-50/50" 
+              value={data.buttonText || ''} 
+              onChange={e => onChange('buttonText', e.target.value)} 
+              placeholder="e.g. Explore Now"
+            />
+          </div>
+          
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Desc Line 1</label>
+            <TipTapEditor 
+              value={data.descLine1 || ''} 
+              onChange={html => onChange('descLine1', html)} 
+              placeholder="First line of description..."
+            />
+          </div>
+          
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Desc Line 2</label>
+            <TipTapEditor 
+              value={data.descLine2 || ''} 
+              onChange={html => onChange('descLine2', html)} 
+              placeholder="Second line of description..."
+            />
+          </div>
+        </div>
       </div>
+
+      {/* Image Upload Section */}
+      <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50/50">
+          <ImageIcon className="w-5 h-5 text-zinc-700" />
+          <h3 className="text-lg font-semibold text-zinc-800">Mandala Image</h3>
+        </div>
+        
+        <div className="p-6">
+          <label className="block text-sm font-medium text-zinc-700 mb-1.5">Upload or Select Image</label>
+          <ImageField 
+            value={data.mandalaImage} 
+            onChange={(url) => onChange('mandalaImage', url)} 
+          />
+        </div>
+      </div>
+
     </div>
   );
 };

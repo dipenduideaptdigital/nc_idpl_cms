@@ -1,53 +1,31 @@
 import { 
-  heroSchema, 
-  servicesSchema, 
-  aboutSchema,
-  ourServicesSchema,
-  howWeWorkSchema,
-  ourProjectsSchema,
-  panoramasSchema,
-  teamSchema,
-  testimonialsSchema,
-  videoBannerSchema,
-  blogSectionSchema,
-  gallerySchema,
-  ctaSchema,
+  // ---- GLOBAL SETTINGS SCHEMAS ----
   generalSettingsSchema,
   cmsSettingsSchema,
   whatsappSettingsSchema,
+  globalGeneralSettingsSchema,
   footerSchema,
   
-  // ----NATURE CUBE SCHEMAS ----
+  // ---- NATURE CUBE SCHEMAS ----
   ncHeroSchema,
   ncMandalasSchema,
   ncLivingArtSchema,
   ncShowcaseSchema,
   ncPlantDisplaySchema,
   ncServicesSchema,
-  ncPartnersSchema
+  ncPartnersSchema,
+  ncBlogsSchema,
+  ncWhatTheySaySchema,
+  ncCtaSchema
 } from "./cms.validation.js";
 
-// Maps frontend section keys to backend validation schemas
 export const CMS_REGISTRY = {
-  // EXISTING SUBHAKRITEE SECTIONS
-  "homepage_hero": heroSchema,
-  "homepage_services": servicesSchema,
-  "homepage_about": aboutSchema,
-  "homepage_our_services": ourServicesSchema,
-  "homepage_how_we_work": howWeWorkSchema,
-  "homepage_our_projects": ourProjectsSchema,
-  "homepage_panoramas": panoramasSchema,
-  "homepage_team": teamSchema,
-  "homepage_testimonials": testimonialsSchema,
-  "homepage_video_banner": videoBannerSchema,
-  "homepage_blog_section": blogSectionSchema,
-  "homepage_gallery": gallerySchema,
-  "homepage_cta": ctaSchema,
+  // GLOBAL SETTINGS
   "homepage_general": generalSettingsSchema,
   "homepage_footer": footerSchema,
   "cms_settings": cmsSettingsSchema,
   "whatsapp_settings": whatsappSettingsSchema,
-
+  "global_general_settings": globalGeneralSettingsSchema,
   // NEW NATURE CUBE SECTIONS
   "nc_homepage_hero": ncHeroSchema,
   "nc_homepage_mandalas": ncMandalasSchema,
@@ -55,5 +33,8 @@ export const CMS_REGISTRY = {
   "nc_homepage_showcase": ncShowcaseSchema,
   "nc_homepage_plant_display": ncPlantDisplaySchema,
   "nc_homepage_services": ncServicesSchema,
-  "nc_homepage_partners": ncPartnersSchema
+  "nc_homepage_partners": ncPartnersSchema,
+  "nc_homepage_blogs": ncBlogsSchema,
+  "nc_homepage_what_they_say": ncWhatTheySaySchema,
+  "nc_homepage_cta": ncCtaSchema
 };

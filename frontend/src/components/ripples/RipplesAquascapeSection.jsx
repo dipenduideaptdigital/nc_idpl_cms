@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import card1 from '../../assets/nc_home/card1.png';
 import card2 from '../../assets/nc_home/card2.png';
 import card3 from '../../assets/nc_home/card3.png';
@@ -7,24 +7,50 @@ import gallery1 from '../../assets/nc_home/gallery1.png';
 import gallery2 from '../../assets/nc_home/gallery2.png';
 import gallery3 from '../../assets/nc_home/gallery3.png';
 import fishImg from '../../assets/nc_home/fish.png';
-import ripplesLogo from '../../assets/nc_logo/ripples.png';
 
-const RipplesAquascapeSection = () => {
-  const [activeTab, setActiveTab] = useState('nature');
-
-  const categories = [
+const RipplesAquascapeSection = ({ data }) => {
+  // Default fallbacks for categories
+  const defaultCategories = [
     { id: 'nature', label: 'Nature Aquariums', img: card1, desc: 'Captivating underwater landscapes styled after natural forests, mountains, and valleys with vibrant living plants.' },
     { id: 'biotope', label: 'Low-Maintenance Biotopes', img: card2, desc: 'Authentic habitat recreations tailored for easy maintenance while mirroring natural rivers and aquatic ecosystems.' },
     { id: 'hardscape', label: 'Custom Hardscapes', img: card3, desc: 'Artisanal stone structures, fossil wood, and natural driftwood scapes crafted as permanent interior focal points.' },
     { id: 'paludarium', label: 'Paludariums & Ripariums', img: card4, desc: 'Seamlessly blending underwater aquatic realms with lush above-water terrarium plant growth.' },
   ];
 
+  const categories = data?.categories?.length > 0 ? data.categories : defaultCategories;
+  
+  const [activeTab, setActiveTab] = useState(categories[0]?.id || 'nature');
+
+  // Prevent UI break if dynamic categories change from admin panel
+  useEffect(() => {
+    if (categories.length > 0 && !categories.some(cat => cat.id === activeTab)) {
+      setActiveTab(categories[0].id);
+    }
+  }, [categories, activeTab]);
+
+  // Dynamic Texts with Fallbacks
+  const displaySubtitle = data?.subtitle || 'RIPPLES AQUATIC STUDIO';
+  const displayTitle = data?.title || 'LIVING ART UNDER WATER';
+  const displayDescription = data?.description || 'At Ripples Aquatic Studio, we engineer pristine underwater ecosystems that bring tranquility, life, and architectural grandeur into your space. From high-tech Dutch aquascapes to low-maintenance biotope environments, each installation is a handcrafted living masterpiece.';
+
+  const displayGallerySubtitle = data?.gallerySubtitle || 'GALLERY SHOWCASE';
+  const displayGalleryTitle = data?.galleryTitle || 'CRAFTED WITH PRECISION & PASSION';
+
+  // Default fallbacks for galleries
+  const defaultGalleries = [
+    { img: gallery1, caption: 'Nature Aquarium Hardscape' },
+    { img: gallery2, caption: 'High Precision CO2 Plant System' },
+    { img: gallery3, caption: 'Custom Architectural Tank Fitments' }
+  ];
+  
+  const galleries = data?.galleries?.length > 0 ? data.galleries : defaultGalleries;
+
   return (
     <div className="w-full bg-[#070e06] text-white py-24 px-6 md:px-12 lg:px-20 relative overflow-hidden select-none font-kanit">
       
       {/* Background Subtle Fish Accent */}
       <div className="absolute top-12 right-[-60px] w-64 md:w-96 opacity-15 pointer-events-none filter blur-[1px] transform rotate-12">
-        <img src={fishImg} alt="" className="w-full h-auto object-contain" />
+        <img src={fishImg} alt="Fish Accent" className="w-full h-auto object-contain" />
       </div>
 
       <div className="max-w-7xl mx-auto space-y-24 relative z-10">
@@ -33,15 +59,15 @@ const RipplesAquascapeSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center border-b border-zinc-800/80 pb-16">
           <div className="lg:col-span-5 space-y-4">
             <span className="text-[#7BA641] text-xs font-semibold tracking-[0.25em] uppercase">
-              RIPPLES AQUATIC STUDIO
+              {displaySubtitle}
             </span>
             <h2 className="text-3xl md:text-5xl font-light tracking-wide text-white leading-tight">
-              LIVING ART UNDER WATER
+              {displayTitle}
             </h2>
           </div>
           <div className="lg:col-span-7">
             <p className="text-zinc-400 text-base md:text-lg font-light leading-relaxed">
-              At Ripples Aquatic Studio, we engineer pristine underwater ecosystems that bring tranquility, life, and architectural grandeur into your space. From high-tech Dutch aquascapes to low-maintenance biotope environments, each installation is a handcrafted living masterpiece.
+              {displayDescription}
             </p>
           </div>
         </div>
@@ -94,7 +120,7 @@ const RipplesAquascapeSection = () => {
                   </div>
                   <div className="lg:col-span-6 rounded-xl overflow-hidden shadow-2xl border border-zinc-800 group relative">
                     <img
-                      src={item.img}
+                      src={item.img || card1} // Fallback to card1 if image is missing from admin
                       alt={item.label}
                       className="w-full h-[320px] md:h-[400px] object-cover group-hover:scale-105 transition-transform duration-700"
                     />
@@ -109,32 +135,28 @@ const RipplesAquascapeSection = () => {
         <div className="space-y-8 pt-8">
           <div className="text-center space-y-2">
             <span className="text-[#7BA641] text-xs font-semibold tracking-[0.2em] uppercase">
-              GALLERY SHOWCASE
+              {displayGallerySubtitle}
             </span>
             <h3 className="text-2xl md:text-4xl font-light tracking-wide text-white">
-              CRAFTED WITH PRECISION & PASSION
+              {displayGalleryTitle}
             </h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-xl overflow-hidden border border-zinc-800 shadow-lg group relative h-80">
-              <img src={gallery1} alt="Aquascape 1" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
-                <span className="text-xs tracking-widest text-zinc-300 uppercase font-light">Nature Aquarium Hardscape</span>
+            {galleries.map((item, index) => (
+              <div key={index} className="rounded-xl overflow-hidden border border-zinc-800 shadow-lg group relative h-80">
+                <img 
+                  src={item.img || gallery1} // Fallback if image is missing
+                  alt={item.caption} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+                  <span className="text-xs tracking-widest text-zinc-300 uppercase font-light">
+                    {item.caption}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="rounded-xl overflow-hidden border border-zinc-800 shadow-lg group relative h-80">
-              <img src={gallery2} alt="Aquascape 2" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
-                <span className="text-xs tracking-widest text-zinc-300 uppercase font-light">High Precision CO2 Plant System</span>
-              </div>
-            </div>
-            <div className="rounded-xl overflow-hidden border border-zinc-800 shadow-lg group relative h-80">
-              <img src={gallery3} alt="Aquascape 3" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
-                <span className="text-xs tracking-widest text-zinc-300 uppercase font-light">Custom Architectural Tank Fitments</span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 

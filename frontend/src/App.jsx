@@ -1,12 +1,11 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { useDynamicHead } from './hooks/useDynamicHead';
 
 import MainLayout from './components/layout/MainLayout';
-import LandingLayout from './components/layout/LandingLayout';
 import AdminLayout from './components/layout/AdminLayout';
 import SettingsLayout from './components/layout/SettingsLayout';
-import LandingContainer from './pages/LandingContainer';
 import MaintenancePage from './components/shared/MaintenancePage';
 
 // Auth Pages
@@ -17,11 +16,9 @@ const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const AdminSetup = lazy(() => import('./pages/AdminSetup'));
 
 // Public Pages
-const LandingReference = lazy(() => import('./pages/LandingReference'));
-const LandingReference2 = lazy(() => import('./pages/LandingReference2'));
 const DynamicPage = lazy(() => import('./pages/DynamicPage'));
 const PreviewPage = lazy(() => import('./pages/PreviewPage')); 
-const NatureHomePreview = lazy(() => import('./pages/NatureHomePreview')); 
+const NatureHomePreview = lazy(() => import('./pages/NatureHomePreview'));
 const RipplesPage = lazy(() => import('./pages/RipplesPage'));
 const GulmoPage = lazy(() => import('./pages/GulmoPage'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
@@ -35,7 +32,6 @@ const ServicePage = lazy(() => import('./pages/ServicePage'));
 // Admin Pages
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const NcHomeCustomization = lazy(() => import('./pages/admin/NcHomeCustomization'));
-// const HomeCustomization = lazy(() => import('./pages/admin/HomeCustomization'));
 const PageList = lazy(() => import('./pages/admin/pages/PageList'));
 const PageEditor = lazy(() => import('./pages/admin/pages/PageEditor'));
 const ProjectList = lazy(() => import('./pages/admin/projects/ProjectList'));
@@ -62,6 +58,7 @@ const GlobalSuspenseFallback = () => (
 );
 
 function App() {
+  useDynamicHead();
   const [maintenanceData, setMaintenanceData] = useState(null);
 
   useEffect(() => {
@@ -101,7 +98,6 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
-              {/* <Route path="home-customization" element={<HomeCustomization />} /> */}
               <Route path="home-customization" element={<NcHomeCustomization />} />
               <Route path="pages" element={<PageList />} />
               <Route path="pages/create" element={<PageEditor />} />
@@ -138,17 +134,11 @@ function App() {
               </Route>
             </Route>
 
-            {/* Public Routes - Landing Pages */}
-            <Route path="/nature-home" element={<NatureHomePreview />} />
-            <Route element={<LandingLayout />}>
-              <Route path="/hero-preview" element={<LandingReference />} />
-              <Route path="/hero-preview-2" element={<LandingReference2 />} />
-              <Route path="/preview/:token" element={<PreviewPage />} /> 
-            </Route>
+            <Route path="/" element={<NatureHomePreview />} />
 
-            {/* Public Routes - Main Pages */}
+            {/* Public Routes - Inner Pages & Previews (Uses standard MainLayout) */}
             <Route element={<MainLayout />}>
-              <Route path="/" element={<LandingContainer />} />
+              <Route path="/preview/:token" element={<PreviewPage />} /> 
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogDetail />} />

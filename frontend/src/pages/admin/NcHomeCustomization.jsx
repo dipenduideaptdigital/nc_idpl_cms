@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Save, Image as ImageIcon, Loader2, CheckCircle, List, Settings, ChevronDown, Trash2, Plus } from 'lucide-react';
+import { Save, Image as ImageIcon, Loader2, CheckCircle, List, Settings, ChevronDown, Trash2, Plus, Send } from 'lucide-react';
 import apiClient from '../../api/client';
 import HeroCustomization from '../../components/admin/NcHome/HeroCustomization';
 import MandalasCustomization from '../../components/admin/NcHome/MandalasCustomization';
@@ -9,6 +9,9 @@ import ShowcaseCustomization from '../../components/admin/NcHome/ShowcaseCustomi
 import PlantDisplayCustomization from '../../components/admin/NcHome/PlantDisplayCustomization';
 import ServicesCustomization from '../../components/admin/NcHome/ServicesCustomization';
 import PartnersCustomization from '../../components/admin/NcHome/PartnersCustomization';
+import BlogsCustomization from '../../components/admin/NcHome/BlogsCustomization';
+import WhatTheySayCustomization from '../../components/admin/NcHome/WhatTheySayCustomization';
+import CtaCustomization from '../../components/admin/NcHome/CtaCustomization';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
@@ -26,7 +29,10 @@ const TABS = [
   { key: 'nc_showcase', label: 'Showcase Grid', icon: List },
   { key: 'nc_plant_display', label: 'Plant Banner', icon: ImageIcon },
   { key: 'nc_services', label: 'Our Services', icon: List },
-  { key: 'nc_partners', label: 'Our Partners', icon: List }
+  { key: 'nc_partners', label: 'Our Partners', icon: List },
+  { key: 'nc_blogs', label: 'Our Blogs', icon: List },
+  { key: 'nc_what_they_say', label: 'What They Say', icon: List },
+  { key: 'nc_cta', label: 'Call to Action', icon: Send }
 ];
 
 const NcHomeCustomization = () => {
@@ -102,6 +108,32 @@ const NcHomeCustomization = () => {
     buttonText: 'STORE', buttonLink: '#store', partnerLogos: []
   });
 
+  // --- NC Blogs State ---
+  const [ncBlogsData, setNcBlogsData] = useState({
+    tagline: '', mainTitle: '', italicTitle: '', subText: '', headline: '',
+    cards: [
+      { title: '', description: '', image: '' },
+      { title: '', description: '', image: '' },
+      { title: '', description: '', image: '' },
+      { title: '', description: '', image: '' }
+    ]
+  });
+
+  const [ncWhatTheySayData, setNcWhatTheySayData] = useState({
+    tagline: 'what they say', titlePrefix: 'OUR', italicTitle: 'partners', headline: 'Real people with<br />life-changing results',
+    testimonials: [{ name: '', location: '', comment: '', image: '' }]
+  });
+
+  // --- NC CTA State ---
+  const [ncCtaData, setNcCtaData] = useState({
+    titlePart1: 'LIVING',
+    titlePart2: 'art',
+    headline: 'It is a long established<br />fact that a reader will be<br />distracted.',
+    subtext: 'It is a long established fact that a reader will be distracted.',
+    buttonText: "LET'S GET STARTED",
+    buttonLink: '#contact'
+  });
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -120,15 +152,18 @@ const NcHomeCustomization = () => {
     try {
       setLoading(true);
       setErrorMsg('');
-      
-      const [heroRes, mandalasRes, livingArtRes, showcaseRes, plantRes, servicesRes] = await Promise.allSettled([
+
+      const [heroRes, mandalasRes, livingArtRes, showcaseRes, plantRes, servicesRes, partnersRes, blogsRes, whatTheySayRes, ctaRes] = await Promise.allSettled([
         apiClient.get('/cms/section/nc_homepage_hero'),
         apiClient.get('/cms/section/nc_homepage_mandalas'),
         apiClient.get('/cms/section/nc_homepage_living_art'),
         apiClient.get('/cms/section/nc_homepage_showcase'),
         apiClient.get('/cms/section/nc_homepage_plant_display'),
         apiClient.get('/cms/section/nc_homepage_services'),
-        apiClient.get('/cms/section/nc_homepage_partners')
+        apiClient.get('/cms/section/nc_homepage_partners'),
+        apiClient.get('/cms/section/nc_homepage_blogs'),
+        apiClient.get('/cms/section/nc_homepage_what_they_say'),
+        apiClient.get('/cms/section/nc_homepage_cta')
       ]);
 
       if (heroRes.status === 'fulfilled' && heroRes.value.data?.data?.content) {
@@ -152,13 +187,22 @@ const NcHomeCustomization = () => {
       if (partnersRes.status === 'fulfilled' && partnersRes.value.data?.data?.content) {
         if (Object.keys(partnersRes.value.data.data.content).length > 0) setNcPartnersData(partnersRes.value.data.data.content);
       }
+      if (blogsRes.status === 'fulfilled' && blogsRes.value.data?.data?.content) {
+        if (Object.keys(blogsRes.value.data.data.content).length > 0) setNcBlogsData(blogsRes.value.data.data.content);
+      }
+      if (whatTheySayRes.status === 'fulfilled' && whatTheySayRes.value.data?.data?.content) {
+        if (Object.keys(whatTheySayRes.value.data.data.content).length > 0) setNcWhatTheySayData(whatTheySayRes.value.data.data.content);
+      }
+      if (ctaRes.status === 'fulfilled' && ctaRes.value.data?.data?.content) {
+        if (Object.keys(ctaRes.value.data.data.content).length > 0) setNcCtaData(ctaRes.value.data.data.content);
+      }
     } catch (error) {
       console.error('Failed to fetch NC homepage data:', error);
       setErrorMsg('Failed to load initial data. Please refresh.');
     } finally {
-        setLoading(false);
-      }
-    };
+      setLoading(false);
+    }
+  };
 
   const handleNcHeroChange = (field, value) => {
     setNcHeroData(prev => ({
@@ -168,11 +212,11 @@ const NcHomeCustomization = () => {
   };
 
   const handleNcMandalasChange = (field, value) => {
-  setNcMandalasData(prev => ({
-    ...prev,
-    [field]: value
-  }));
-};
+    setNcMandalasData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
   const handleSave = async () => {
     try {
@@ -203,6 +247,15 @@ const NcHomeCustomization = () => {
       } else if (activeTab === 'nc_partners') {
         url = '/cms/section/nc_homepage_partners';
         payload = { content: ncPartnersData };
+      } else if (activeTab === 'nc_blogs') {
+        url = '/cms/section/nc_homepage_blogs';
+        payload = { content: ncBlogsData };
+      } else if (activeTab === 'nc_what_they_say') {
+        url = '/cms/section/nc_homepage_what_they_say';
+        payload = { content: ncWhatTheySayData };
+      } else if (activeTab === 'nc_cta') {
+        url = '/cms/section/nc_homepage_cta';
+        payload = { content: ncCtaData };
       }
       const res = await apiClient.put(url, payload);
       
@@ -274,6 +327,20 @@ const NcHomeCustomization = () => {
             newLogos[tabIndex] = url;
             return { ...prev, partnerLogos: newLogos };
           });
+        } else if (section === 'nc_blogs_card') {
+          setNcBlogsData(prev => {
+            const newCards = [...(prev.cards || [{},{},{},{}])];
+            if (!newCards[tabIndex]) newCards[tabIndex] = {};
+            newCards[tabIndex].image = url;
+            return { ...prev, cards: newCards };
+          });
+        } else if (section === 'nc_what_they_say_image') {
+          setNcWhatTheySayData(prev => {
+            const newItems = [...(prev.testimonials || [])];
+            if (!newItems[tabIndex]) newItems[tabIndex] = {};
+            newItems[tabIndex].image = url;
+            return { ...prev, testimonials: newItems };
+          });
         }
       }
     } catch (error) {
@@ -284,47 +351,47 @@ const NcHomeCustomization = () => {
   };
 
   if (loading) {
-    return <div className="h-64 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-zinc-900" /></div>;
+    return <div className="h-64 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-zinc-900 dark:text-zinc-100" /></div>;
   }
 
   return (
-    <div className="space-y-8 pb-10 animation-fade-in">
+    <div className="space-y-8 pb-10 animation-fade-in text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">NatureCube Home Settings</h1>
-          <p className="text-zinc-500 mt-1 text-sm">Manage dynamic content for the new NatureCube homepage.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">NatureCube Home Settings</h1>
+          <p className="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">Manage dynamic content for the new NatureCube homepage.</p>
         </div>
-        <button onClick={handleSave} disabled={saving} className="bg-zinc-900 hover:bg-zinc-800 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg text-sm w-full sm:w-auto">
+        <button onClick={handleSave} disabled={saving} className="bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg dark:shadow-none text-sm w-full sm:w-auto">
           {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
 
       {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-3">
+        <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-xl flex items-center gap-3 transition-colors duration-300">
           <CheckCircle className="w-5 h-5" /> <span className="font-medium">Changes saved successfully!</span>
         </div>
       )}
       {errorMsg && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3">
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl flex items-center gap-3 transition-colors duration-300">
           <span className="font-medium">{errorMsg}</span>
         </div>
       )}
 
       {/* Tab Selector */}
       <div className="relative mb-6 z-40" ref={dropdownRef}>
-        <button onClick={() => setDropdownOpen(!dropdownOpen)} className="w-full sm:max-w-md flex items-center justify-between bg-white border border-zinc-200 px-4 py-3 rounded-xl shadow-sm">
+        <button onClick={() => setDropdownOpen(!dropdownOpen)} className="w-full sm:max-w-md flex items-center justify-between bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-4 py-3 rounded-xl shadow-sm transition-colors duration-300">
           <div className="flex items-center gap-3">
-            <span className="font-semibold text-zinc-900">{TABS.find(t => t.key === activeTab)?.label}</span>
+            <span className="font-semibold text-zinc-900 dark:text-zinc-100">{TABS.find(t => t.key === activeTab)?.label}</span>
           </div>
-          <ChevronDown className="w-5 h-5 text-zinc-400" />
+          <ChevronDown className="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
         </button>
         {dropdownOpen && (
-          <div className="absolute left-0 mt-2 w-full sm:max-w-md bg-white border border-zinc-200 rounded-xl shadow-xl z-50">
+          <div className="absolute left-0 mt-2 w-full sm:max-w-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl dark:shadow-black/50 z-50 transition-colors duration-300">
             <div className="p-2 grid gap-1">
               {TABS.map((tab) => (
-                <button key={tab.key} onClick={() => { setActiveTab(tab.key); setDropdownOpen(false); }} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg w-full text-left ${activeTab === tab.key ? 'bg-zinc-900 text-white' : 'hover:bg-zinc-100 text-zinc-700'}`}>
+                <button key={tab.key} onClick={() => { setActiveTab(tab.key); setDropdownOpen(false); }} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg w-full text-left transition-colors duration-200 ${activeTab === tab.key ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300'}`}>
                   <span className="font-medium text-sm">{tab.label}</span>
                 </button>
               ))}
@@ -333,7 +400,7 @@ const NcHomeCustomization = () => {
         )}
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6">
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 p-6 transition-colors duration-300">
         
         {/* 1. HERO FORM */}
         {activeTab === 'nc_hero' && (
@@ -394,6 +461,32 @@ const NcHomeCustomization = () => {
             data={ncPartnersData} 
             setData={setNcPartnersData} 
             onImageUpload={handleImageUpload} 
+          />
+        )}
+
+        {/* BLOGS FORM */}
+        {activeTab === 'nc_blogs' && (
+          <BlogsCustomization 
+            data={ncBlogsData} 
+            setData={setNcBlogsData} 
+            onImageUpload={handleImageUpload} 
+          />
+        )}
+
+        {/* WHAT THEY SAY FORM */}
+        {activeTab === 'nc_what_they_say' && (
+          <WhatTheySayCustomization 
+            data={ncWhatTheySayData} 
+            setData={setNcWhatTheySayData} 
+            onImageUpload={handleImageUpload} 
+          />
+        )}
+
+        {/* CTA FORM */}
+        {activeTab === 'nc_cta' && (
+          <CtaCustomization 
+            data={ncCtaData} 
+            setData={setNcCtaData} 
           />
         )}
       </div>

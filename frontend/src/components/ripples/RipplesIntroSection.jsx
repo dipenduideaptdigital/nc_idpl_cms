@@ -2,7 +2,7 @@ import React from 'react';
 import personImg from '../../assets/nc_home/person.png';
 import ellipseBtnImg from '../../assets/nc_logo/Ellipse_plus_btn.png';
 
-const RipplesIntroSection = () => {
+const RipplesIntroSection = ({ data }) => {
   return (
     <section className="w-full bg-white select-none font-kanit pb-16 md:pb-24 overflow-hidden">
       {/* Top Part: White Background Content */}
@@ -11,19 +11,19 @@ const RipplesIntroSection = () => {
           
           {/* Left Column: Big Bold Title */}
           <div className="lg:col-span-7 pr-0 lg:pr-6">
-            <h2 className="font-kanit text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold text-[#333333] leading-[1.16] tracking-tight">
-              It is a long established fact that a reader will be distracted.
+            <h2 className="font-kanit text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold text-[#333333] leading-[1.16] tracking-tight whitespace-pre-line">
+              {data?.mainTitle || 'It is a long established fact that a reader will be distracted.'}
             </h2>
           </div>
 
           {/* Right Column: Secondary Heading, Paragraph & Explore CTA */}
           <div className="lg:col-span-5 space-y-6">
-            <h3 className="font-kanit text-lg sm:text-xl md:text-[22px] font-bold text-[#4a4a4a] leading-snug">
-              It is a long established fact that a reader will be distracted.
+            <h3 className="font-kanit text-lg sm:text-xl md:text-[22px] font-bold text-[#4a4a4a] leading-snug whitespace-pre-line">
+              {data?.subTitle || 'It is a long established fact that a reader will be distracted.'}
             </h3>
 
-            <p className="font-kanit text-sm sm:text-base font-light text-[#666666] leading-relaxed max-w-lg">
-              Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India. Specializing in setting up &lsquo;Nature Aquariums&rsquo; and &lsquo;Biotopes&rsquo; that mimic actual fish habitats, we offer international quality brands and exceptional customer service, helping you build and maintain your dream aquarium.
+            <p className="font-kanit text-sm sm:text-base font-light text-[#666666] leading-relaxed max-w-lg whitespace-pre-line">
+              {data?.description || "Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India. Specializing in setting up 'Nature Aquariums' and 'Biotopes' that mimic actual fish habitats, we offer international quality brands and exceptional customer service, helping you build and maintain your dream aquarium."}
             </p>
 
             {/* Explore Button */}
@@ -61,8 +61,8 @@ const RipplesIntroSection = () => {
             <div className="lg:col-span-6 relative z-10 flex justify-center lg:justify-start -my-14 sm:-my-20 md:-my-28 lg:-my-32">
               <div className="w-[280px] sm:w-[380px] md:w-[460px] lg:w-[500px] overflow-hidden shadow-2xl rounded-xs border border-white/10">
                 <img
-                  src={personImg}
-                  alt="Takashi Amano"
+                  src={data?.personImage || personImg}
+                  alt={data?.authorName || "Takashi Amano"}
                   className="w-full h-auto object-cover block"
                 />
               </div>
@@ -70,11 +70,11 @@ const RipplesIntroSection = () => {
 
             {/* Right Side: Quote & Author Signature */}
             <div className="lg:col-span-6 space-y-4 py-8 lg:py-12 pl-0 lg:pl-4 text-white">
-              <blockquote className="font-kanit text-xl sm:text-2xl md:text-3xl lg:text-[34px] font-normal leading-tight tracking-wide">
-                &ldquo;To know Mother Nature is to love her smallest creations.&rdquo;
+              <blockquote className="font-kanit text-xl sm:text-2xl md:text-3xl lg:text-[34px] font-normal leading-tight tracking-wide whitespace-pre-line">
+                {data?.quote || '“To know Mother Nature is to love her smallest creations.”'}
               </blockquote>
-              <p className="font-kanit text-lg sm:text-xl md:text-2xl font-normal italic tracking-wide text-zinc-200">
-                &ndash;Takashi Amano
+              <p className="font-kanit text-lg sm:text-xl md:text-2xl font-normal italic tracking-wide text-zinc-200 whitespace-pre-line">
+                {data?.authorName || '–Takashi Amano'}
               </p>
             </div>
 

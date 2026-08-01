@@ -1,31 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Architects+Daughter&family=Patrick+Hand&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Reem+Kufi+Ink&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Instrument+Serif:ital@1&family=Kanit:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: 'Outfit', sans-serif;
   --font-reem: 'Reem Kufi Ink', sans-serif;
   --font-kanit: 'Kanit', sans-serif;
+  --font-caveat: 'Caveat', cursive;
+  --font-architects: 'Architects Daughter', cursive;
+  --font-patrick: 'Patrick Hand', cursive;
   --font-larken: 'Larken-MediumItalic', 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', serif;
-  --font-helvetica: 'Helvetica Neue', Helvetica, 'Arimo', Arial, sans-serif;
   --color-primary: #3B82F6;
   --color-secondary: #f97316;
 }
 
-.font-kanit {
-  font-family: 'Kanit', sans-serif;
+.font-caveat {
+  font-family: 'Caveat', 'Architects Daughter', 'Patrick Hand', cursive;
 }
 
-.font-reem {
-  font-family: 'Reem Kufi Ink', sans-serif;
-}
-
-.font-larken {
-  font-family: 'Larken-MediumItalic', 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', Georgia, serif;
-  font-style: italic;
+.font-architects {
+  font-family: 'Architects Daughter', 'Caveat', cursive;
 }
 
 body {
@@ -94,6 +90,43 @@ html {
 @keyframes fadeInRight {
   0% { transform: translateX(40px); opacity: 0; }
   100% { transform: translateX(0); opacity: 1; }
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d8 transparent;
+}
+
+html.dark {
+  scrollbar-color: #3f3f46 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+/* Light Mode Scrollbar Thumb */
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8; /* zinc-300 */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa; /* zinc-400 */
+}
+
+/* Dark Mode Scrollbar Thumb */
+.dark ::-webkit-scrollbar-thumb {
+  background: #3f3f46; /* zinc-700 */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #52525b; /* zinc-600 */
 }
 
 .opal-move-up, .opal-move-right, .opal-move-left, .fadeInLeft, .fadeInRight {

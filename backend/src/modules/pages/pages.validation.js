@@ -16,43 +16,14 @@ export const ALLOWED_TEMPLATES = [
   "about-page"
 ];
 
-const heroBlockSchema = z.object({ type: z.literal("hero"), data: z.record(z.any()).default({}) });
-const servicesBlockSchema = z.object({ type: z.literal("services"), data: z.record(z.any()).default({}) });
-const aboutBlockSchema = z.object({ type: z.literal("about"), data: z.record(z.any()).default({}) });
-const ourServicesBlockSchema = z.object({ type: z.literal("our_services"), data: z.record(z.any()).default({}) });
-const howWeWorkBlockSchema = z.object({ type: z.literal("how_we_work"), data: z.record(z.any()).default({}) });
-const ourProjectsBlockSchema = z.object({ type: z.literal("our_projects"), data: z.record(z.any()).default({}) });
-const panoramasBlockSchema = z.object({ type: z.literal("panoramas"), data: z.record(z.any()).default({}) });
-const teamBlockSchema = z.object({ type: z.literal("team"), data: z.record(z.any()).default({}) });
-const testimonialsBlockSchema = z.object({ type: z.literal("testimonials"), data: z.record(z.any()).default({}) });
-const videoBannerBlockSchema = z.object({ type: z.literal("video_banner"), data: z.record(z.any()).default({}) });
-const blogSectionBlockSchema = z.object({ type: z.literal("blog_section"), data: z.record(z.any()).default({}) });
-const galleryBlockSchema = z.object({ type: z.literal("gallery"), data: z.record(z.any()).default({}) });
-const ctaBlockSchema = z.object({ type: z.literal("cta"), data: z.record(z.any()).default({}) });
 const richTextBlockSchema = z.object({ type: z.literal("richText"), data: z.record(z.any()).default({}) });
-const heroSectionTwoBlockSchema = z.object({ type: z.literal("heroSectionTwo"), data: z.record(z.any()).default({}) });
-const aboutSectionTwoBlockSchema = z.object({ type: z.literal("aboutSectionTwo"), data: z.record(z.any()).default({}) });
-const servicesSectionTwoBlockSchema = z.object({ type: z.literal("servicesSectionTwo"), data: z.record(z.any()).default({}) });
-const processSectionTwoBlockSchema = z.object({ type: z.literal("processSectionTwo"), data: z.record(z.any()).default({}) });
-const projectSliderTwoBlockSchema = z.object({ type: z.literal("projectSliderTwo"), data: z.record(z.any()).default({}) });
-const trustedPartnersBlockSchema = z.object({ type: z.literal("trustedPartners"), data: z.record(z.any()).default({}) });
-const statsSectionTwoBlockSchema = z.object({ type: z.literal("statsSectionTwo"), data: z.record(z.any()).default({}) });
-const happySpacesBlockSchema = z.object({ type: z.literal("happySpaces"), data: z.record(z.any()).default({}) });
-const happyCustomersBlockSchema = z.object({ type: z.literal("happyCustomers"), data: z.record(z.any()).default({}) });
-const testimonialsTwoBlockSchema = z.object({ type: z.literal("testimonialsTwo"), data: z.record(z.any()).default({}) });
-const ctaSectionTwoBlockSchema = z.object({ type: z.literal("ctaSectionTwo"), data: z.record(z.any()).default({}) });
-const serviceBannerBlockSchema = z.object({ type: z.literal("serviceBanner"), data: z.record(z.any()).default({}) });
-const serviceDetailsBlockSchema = z.object({ type: z.literal("serviceDetails"), data: z.record(z.any()).default({}) });
-const ctaSectionBlockSchema = z.object({ type: z.literal("ctaSection"), data: z.record(z.any()).default({}) });
-const contactBannerBlockSchema = z.object({ type: z.literal("contactBanner"), data: z.record(z.any()).default({}) });
-const contactInfoBlockSchema = z.object({ type: z.literal("contactInfo"), data: z.record(z.any()).default({}) });
-const aboutBannerBlockSchema = z.object({ type: z.literal("aboutBanner"), data: z.record(z.any()).default({}) });
-const aboutExperienceBlockSchema = z.object({ type: z.literal("aboutExperience"), data: z.record(z.any()).default({}) });
-const aboutProcessBlockSchema = z.object({ type: z.literal("aboutProcess"), data: z.record(z.any()).default({}) });
-const timelineBlockSchema = z.object({ type: z.literal("timeline"), data: z.record(z.any()).default({}) });
-const aboutAwardsBlockSchema = z.object({ type: z.literal("aboutAwards"), data: z.record(z.any()).default({}) });
-const aboutGalleryBlockSchema = z.object({ type: z.literal("aboutGallery"), data: z.record(z.any()).default({}) });
-const projectsBannerBlockSchema = z.object({ type: z.literal("projectsBanner"), data: z.record(z.any()).default({}) });
+
+const ripplesHeroBlockSchema = z.object({ type: z.literal("ripplesHero"), data: z.record(z.any()).default({}) });
+const ripplesIntroBlockSchema = z.object({ type: z.literal("ripplesIntro"), data: z.record(z.any()).default({}) });
+const ripplesNatureAquariumBlockSchema = z.object({ type: z.literal("ripplesNatureAquarium"), data: z.record(z.any()).default({}) });
+const ripplesLetsBeginBlockSchema = z.object({ type: z.literal("ripplesLetsBegin"), data: z.record(z.any()).default({}) });
+const ripplesAquascapeBlockSchema = z.object({ type: z.literal("ripplesAquascape"), data: z.record(z.any()).default({}) });
+const getStartedCtaBlockSchema = z.object({ type: z.literal("getStartedCta"), data: z.record(z.any()).default({}) });
 
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
@@ -67,44 +38,14 @@ const contactFormBlockSchema = z.object({
 });
 
 const blockSchema = z.discriminatedUnion("type", [
-  heroBlockSchema,
-  servicesBlockSchema,
-  aboutBlockSchema,
-  ourServicesBlockSchema,
-  howWeWorkBlockSchema,
-  ourProjectsBlockSchema,
-  panoramasBlockSchema,
-  teamBlockSchema,
-  testimonialsBlockSchema,
-  videoBannerBlockSchema,
-  blogSectionBlockSchema,
-  galleryBlockSchema,
-  ctaBlockSchema,
   richTextBlockSchema,
   contactFormBlockSchema,
-  heroSectionTwoBlockSchema,
-  aboutSectionTwoBlockSchema,
-  servicesSectionTwoBlockSchema,
-  processSectionTwoBlockSchema,
-  projectSliderTwoBlockSchema,
-  trustedPartnersBlockSchema,
-  statsSectionTwoBlockSchema,
-  happySpacesBlockSchema,
-  happyCustomersBlockSchema,
-  testimonialsTwoBlockSchema,
-  ctaSectionTwoBlockSchema,
-  serviceBannerBlockSchema,
-  serviceDetailsBlockSchema,
-  ctaSectionBlockSchema,
-  contactBannerBlockSchema,
-  contactInfoBlockSchema,
-  aboutBannerBlockSchema,
-  aboutExperienceBlockSchema,
-  aboutProcessBlockSchema,
-  timelineBlockSchema,
-  aboutAwardsBlockSchema,
-  aboutGalleryBlockSchema,
-  projectsBannerBlockSchema,
+  ripplesHeroBlockSchema,
+  ripplesIntroBlockSchema,
+  ripplesNatureAquariumBlockSchema,
+  ripplesLetsBeginBlockSchema,
+  ripplesAquascapeBlockSchema,
+  getStartedCtaBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

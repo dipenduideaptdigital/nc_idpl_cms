@@ -16,7 +16,7 @@ import DynamicBlockEditor from '../../../components/admin/DynamicBlockEditor';
 import PreviewManager from '../../../components/admin/PreviewManager';
 import { Puck } from '@measured/puck';
 import '@measured/puck/puck.css';
-import { puckConfig } from '../../../config/puck.config';
+import { ncPuckConfig } from '../../../config/ncPuck.config';
 import Can from '../../../components/shared/Can';
 
 const PageEditor = () => {
@@ -47,24 +47,14 @@ const PageEditor = () => {
   }, [isPuckMode]);
 
   const AVAILABLE_BLOCKS = [
-    { type: 'heroSectionTwo', label: 'Hero Section Two' },
-    { type: 'aboutSectionTwo', label: 'About Section Two' },
-    { type: 'servicesSectionTwo', label: 'Services Section Two' },
-    { type: 'processSectionTwo', label: 'Process Section Two' },
-    { type: 'projectSliderTwo', label: 'Project Slider Two' },
-    { type: 'trustedPartners', label: 'Trusted Partners' },
-    { type: 'statsSectionTwo', label: 'Stats Section Two' },
-    { type: 'happySpaces', label: 'Happy Spaces' },
-    { type: 'happyCustomers', label: 'Happy Customers' },
-    { type: 'testimonialsTwo', label: 'Testimonials Two' },
-    { type: 'ctaSectionTwo', label: 'CTA Section Two' },
     { type: 'richText', label: 'Rich Text Box' },
     { type: 'contactForm', label: 'Contact Form (Dynamic Engine)' },
-    { type: 'serviceBanner', label: 'Service Banner' },
-    { type: 'serviceDetails', label: 'Service Details Main Content' },
-    { type: 'ctaSection', label: 'Call To Action (CTA) Section' },
-    { type: 'contactBanner', label: 'Contact Us Banner' },
-    { type: 'contactInfo', label: 'Contact Info & Form' }
+    { type: 'ripplesHero', label: 'Ripples: Hero Section' },
+    { type: 'ripplesIntro', label: 'Ripples: Intro & Quote' },
+    { type: 'ripplesNatureAquarium', label: 'Ripples: Nature Aquarium Projects' },
+    { type: 'ripplesLetsBegin', label: 'Ripples: Let\'s Begin Steps' },
+    { type: 'ripplesAquascape', label: 'Ripples: Aquascape Categories' },
+    { type: 'getStartedCta', label: 'Ripples: Get Started CTA' }
   ];
 
   const [formData, setFormData] = useState({
@@ -93,22 +83,7 @@ const PageEditor = () => {
         ...prev,
         content: {
           blocks: [
-            { id: Date.now().toString() + "1", type: 'serviceBanner', data: { title: 'New Service', subTitle: 'Services', backgroundImage: '' } },
-            { id: Date.now().toString() + "2", type: 'serviceDetails', data: { 
-                aboutTitle: "About The Service",
-                aboutDescription: "Service details go here...",
-                typesTitle: "Types Of Commercial Spaces",
-                typesDescription: "In design, we bring characteristics...",
-                elementsTitle: "Key Elements Of Interior Design",
-                elementsDescription: "Several key elements are essential...",
-                footerDescription: "Commercial interior design is a dynamic...",
-                features: [{ title: "Space Optimization", description: "Through The Best Smart Space Optimisation." }],
-                leftBullets: [{ text: "We provide high quality design services." }],
-                rightBullets: [{ text: "Flexible with any structure of the building" }],
-                faqs: [{ question: "What Interior Design Services Do You Offer?" }],
-                sidebarImage: "", mainImage: "", midImage1: "", midImage2: ""
-            } },
-            { id: Date.now().toString() + "3", type: 'ctaSection', data: { badgeText: "GET IN TOUCH", title: "Have A Project In [Mind? Let's]\n[Make] It Happen", buttonText: "BOOK A FREE CONSULTATION" } }
+            { id: Date.now().toString() + "1", type: 'richText', data: { content: '<h2>New Service Page</h2><p>Start writing your service details here...</p>' } }
           ]
         }
       }));
@@ -128,7 +103,7 @@ const PageEditor = () => {
 
       setFormData({
         title: data.data.title || '',
-        slug: displaySlug, // 👉 Use the cleaned up slug
+        slug: displaySlug,
         excerpt: data.data.excerpt || '',
         status: data.data.status || 'DRAFT',
         template: data.data.template || 'default',
@@ -162,112 +137,6 @@ const PageEditor = () => {
     let defaultData = {};
 
     switch (type) {
-      case 'heroSectionTwo':
-        defaultData = { title: 'Find Your [Inspired]\n[Interior] Design', badgeText: 'FAST AND RELIABLE', description: 'Transform your vision into reality with our innovative designs, creating modern spaces that blend functionality, aesthetics, and sustainability.', watermarkText: 'Interior', backgroundImage: '' }; break;
-      case 'aboutSectionTwo':
-        defaultData = {
-          title: 'Architecture\n[And Interiors, Our Dual]\nExpertise',
-          badgeText: 'STARTED IN 1989',
-          paragraph1: 'We believe that every space has the power to inspire, and that great design brings that inspiration to life. Our mission is to craft environments that stir creativity, evoke emotion, and reflect the essence of those who inhabit them.',
-          paragraph2: 'With a strong presence in Kolkata, Bhubaneswar, and Ranchi, our turnkey office interiors are thoughtfully crafted to enhance productivity, reflect your brand identity, and support the way your team works every day.',
-          buttonText: "Let's Get Started",
-          image1: '', image2: '', image3: ''
-        }; break;
-      case 'servicesSectionTwo':
-        defaultData = {
-          title: 'Explore Our [Comprehensive]\n[Interior Design] Services',
-          badgeText: 'OUR SERVICES',
-          services: [
-            { title: 'Initial Consultation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' },
-            { title: 'Design & Planning', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' },
-            { title: 'Implementation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: '' }
-          ]
-        }; break;
-      case 'processSectionTwo':
-        defaultData = {
-          title: 'Description [Architecture]\n[Process] For Exceptional Results.',
-          badgeText: 'GET IN TOUCH',
-          description: 'We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.',
-          image: '',
-          steps: [
-            { title: 'Initial Consultation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
-            { title: 'Design & Planning', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
-            { title: 'Implementation', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' },
-            { title: 'Project Handover', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.' }
-          ]
-        }; break;
-      case 'projectSliderTwo':
-        defaultData = {
-          projects: [
-            { title: 'Industrial Elegance Condo', year: '2024', location: 'Kolkata', image: '' },
-            { title: 'Residential Interior Design', year: '2024', location: 'Bhubaneswar', image: '' },
-            { title: 'Serene Space Studio', year: '2024', location: 'Ranchi', image: '' },
-            { title: 'Art Decor Revival', year: '2024', location: 'Kolkata', image: '' },
-            { title: 'Modern Minimalist Oasis', year: '2024', location: 'Siliguri', image: '' },
-            { title: 'Corporate Executive Suite', year: '2024', location: 'Delhi', image: '' }
-          ]
-        }; break;
-      case 'trustedPartners':
-        defaultData = {
-          title: 'OUR [TRUSTED PARTNERS]',
-          partners: [
-            { name: 'Aristo', logo: '', heightClass: 'h-11 md:h-[44px]' },
-            { name: 'Spitze', logo: '', heightClass: 'h-12 md:h-[48px]' },
-            { name: 'Faber', logo: '', heightClass: 'h-11 md:h-[44px]' },
-            { name: 'Everyday', logo: '', heightClass: 'h-12 md:h-[48px]' },
-            { name: 'Fevicol', logo: '', heightClass: 'h-[54px] md:h-[60px]' },
-            { name: 'Urban Ladder', logo: '', heightClass: 'h-11 md:h-[44px]' }
-          ]
-        }; break;
-      case 'statsSectionTwo':
-        defaultData = {
-          title: 'Behind [Every Statistic]\n[Pulses] A Human Story',
-          badgeText: 'TRUSTED EXPERIENCE',
-          buttonText: 'BOOK A FREE CONSULTATION',
-          backgroundImage: '',
-          stats: [
-            { value: '26+', title: 'YEARS EXPERIENCE', description: 'Improving homes with expert craftsmanship for years' },
-            { value: '100', title: 'PROJECTS DONE', description: 'Over 250 successful projects delivered with quality and care' },
-            { value: '100', title: 'SATISFIED CUSTOMER', description: 'Our team of 30 experts ensures top-quality results' },
-            { value: '4+', title: 'LOCATION', description: 'All of our clients are satisfied with our work and service' }
-          ]
-        }; break;
-      case 'happySpaces':
-        defaultData = {
-          badgeText: 'STRAIGHT FROM THE NEWSROOM',
-          titleLine1: 'Happy Spaces by',
-          titleLine2: 'subhAAkritee',
-          items: [
-            { title: 'Functional Design Trends That Blend Style And Comfort', description: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '', videoUrl: 'https://www.youtube.com/embed/62bIsvRcPv0' },
-            { title: 'Functional Design Trends That Blend Style And Comfort', description: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '', videoUrl: 'https://www.youtube.com/embed/62bIsvRcPv0' },
-            { title: 'Functional Design Trends That Blend Style And Comfort', description: 'Modern interior design is all about creating a sleek, functional, and aesthetically pleasing space that reflects contemporary living.', image: '', videoUrl: 'https://www.youtube.com/embed/62bIsvRcPv0' }
-          ]
-        }; break;
-      case 'happyCustomers':
-        defaultData = {
-          title: 'OUR [HAPPY CUSTOMERS]',
-          partners: [
-            { name: 'Aristo', logo: '', heightClass: 'h-11 md:h-[44px]' },
-            { name: 'Spitze', logo: '', heightClass: 'h-12 md:h-[48px]' },
-            { name: 'Faber', logo: '', heightClass: 'h-11 md:h-[44px]' },
-            { name: 'Everyday', logo: '', heightClass: 'h-12 md:h-[48px]' },
-            { name: 'Fevicol', logo: '', heightClass: 'h-[54px] md:h-[60px]' },
-            { name: 'Urban Ladder', logo: '', heightClass: 'h-11 md:h-[44px]' }
-          ]
-        }; break;
-      case 'testimonialsTwo':
-        defaultData = {
-          title: 'Here’s What [Warm Words]\n[Our Clients] Say',
-          badgeText: 'OUR CLIENTS SAY',
-          description: 'Our portfolio showcases a diverse range of projects, from beautifully crafted residential spaces functional and stylish commercial interiors',
-          mainQuote: 'I absolutely love my the new modern living room! The clean lines, a neutral tones, and minimalist interior create such a calming & stylish atmosphere. Highly recommend their modern interior design services!',
-          authorName: 'Morgan Dufresne',
-          authorRole: 'Company owner',
-          image: '',
-          authorImage: ''
-        }; break;
-      case 'ctaSectionTwo':
-        defaultData = { title: 'Have A Project In [Mind?] Let’s\n[Make] It Happen', badgeText: 'GET IN TOUCH', buttonText: 'BOOK A FREE CONSULTATION' }; break;
       case 'richText':
         defaultData = { content: '' }; break;
 
@@ -278,62 +147,6 @@ const PageEditor = () => {
           submitButtonText: 'Submit Inquiry',
           redirectPath: ''
         }; break;
-      case 'serviceBanner':
-        defaultData = { 
-          title: 'Residential Interior', 
-          subTitle: 'Services', 
-          backgroundImage: '' 
-        }; 
-        break;
-        
-      case 'serviceDetails':
-        defaultData = {
-          aboutTitle: "About The Service",
-          aboutDescription: "Commercial interior design is constantly evolving...",
-          typesTitle: "Types Of Commercial Spaces",
-          typesDescription: "In design, we bring characteristics...",
-          elementsTitle: "Key Elements Of Interior Design",
-          elementsDescription: "Several key elements are essential...",
-          footerDescription: "Commercial interior design is a dynamic...",
-          features: [{ title: "Space Optimization", description: "Through The Best Smart Space Optimisation." }],
-          leftBullets: [{ text: "We provide high quality design services." }],
-          rightBullets: [{ text: "Flexible with any structure of the building" }],
-          faqs: [{ question: "What Interior Design Services Do You Offer?" }],
-          sidebarImage: "", mainImage: "", midImage1: "", midImage2: ""
-        }; 
-        break;
-        
-      case 'ctaSection':
-        defaultData = { 
-          badgeText: "GET IN TOUCH", 
-          title: "Have A Project In [Mind? Let's]\n[Make] It Happen", 
-          buttonText: "BOOK A FREE CONSULTATION" 
-        }; 
-        break;
-      
-      case 'contactBanner':
-        defaultData = {
-          title: "Contact Us",
-          breadcrumbText: "Contact Us",
-          backgroundImage: ""
-        };
-        break;
-
-      case 'contactInfo':
-        defaultData = {
-          badgeText: 'GET IN TOUCH',
-          title: "Have a Project In [Mind? Let's]\n[Make] It Happen.",
-          addressTitle: 'Address:',
-          addressText: 'Office: AG 40 , Sector II, Salt Lake\nCity, Kolkata: 700091',
-          supportTitle: 'Support',
-          supportPhone: '+91 9831-637-409',
-          supportEmail: 'Subhaakritee@Hotmail.Com',
-          workspaceImage: '',
-          mapIframeUrl: '',
-          formId: ''
-        };
-        break;
-        
       default:
         defaultData = {};
     }
@@ -509,7 +322,7 @@ const PageEditor = () => {
           <p className="text-sm text-zinc-500">Click "Publish" in Puck to apply changes to the form</p>
         </div>
         <div className="flex-1 overflow-y-auto h-full min-h-[calc(100vh-70px)]">
-          <Puck config={puckConfig} data={puckData} onPublish={handlePuckPublish} iframe={{ enabled: false }} />
+          <Puck config={ncPuckConfig} data={puckData} onPublish={handlePuckPublish} iframe={{ enabled: false }} />
         </div>
       </div>
     );

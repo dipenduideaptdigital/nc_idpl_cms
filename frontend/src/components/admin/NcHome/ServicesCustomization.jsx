@@ -1,16 +1,9 @@
 import React from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Type, LayoutGrid, Plus, Trash2, Settings } from 'lucide-react';
+import TipTapEditor from '../TipTapEditor';
+import ImageField from '../ImageField';
 
-const getAssetUrl = (path) => {
-  if (!path) return '';
-  if (path.startsWith('http') || path.startsWith('data:')) return path;
-  const baseUrl = import.meta.env.VITE_API_URL 
-    ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
-    : 'http://localhost:5000';
-  return `${baseUrl}${path}`;
-};
-
-const ServicesCustomization = ({ data, setData, onImageUpload }) => {
+const ServicesCustomization = ({ data, setData }) => {
   
   const handleChange = (field, value) => {
     setData(prev => ({ ...prev, [field]: value }));
@@ -43,70 +36,134 @@ const ServicesCustomization = ({ data, setData, onImageUpload }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-lg font-bold border-b pb-2">Our Services Section</h2>
+    <div className="space-y-8">
       
-      {/* Top Level Fields */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-semibold mb-1">Tagline</label>
-          <input type="text" className="w-full border rounded-lg p-2" value={data.tagline || ''} onChange={e => handleChange('tagline', e.target.value)} />
+      <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50/50">
+          <Type className="w-5 h-5 text-zinc-700" />
+          <h3 className="text-lg font-semibold text-zinc-800">Main Heading Content</h3>
         </div>
-        <div className="col-span-1 md:col-span-2">
-          <label className="block text-sm font-semibold mb-1">Main Headline</label>
-          <textarea className="w-full border rounded-lg p-2" rows="2" value={data.headline || ''} onChange={e => handleChange('headline', e.target.value)} />
-        </div>
-        <div className="col-span-1 md:col-span-2">
-          <label className="block text-sm font-semibold mb-1">Sub Paragraph</label>
-          <textarea className="w-full border rounded-lg p-2" rows="2" value={data.subtext || ''} onChange={e => handleChange('subtext', e.target.value)} />
+        
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Tagline</label>
+            <input 
+              type="text" 
+              className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-zinc-50/50" 
+              value={data.tagline || ''} 
+              onChange={e => handleChange('tagline', e.target.value)} 
+              placeholder="e.g. OUR SERVICES"
+            />
+          </div>
+          
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Main Headline</label>
+            <TipTapEditor 
+              value={data.headline || ''} 
+              onChange={html => handleChange('headline', html)} 
+              placeholder="Enter main headline here..."
+            />
+          </div>
+          
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Sub Paragraph</label>
+            <TipTapEditor 
+              value={data.subtext || ''} 
+              onChange={html => handleChange('subtext', html)} 
+              placeholder="Enter subtext or short description..."
+            />
+          </div>
         </div>
       </div>
 
-      {/* Services Array Management */}
-      <div className="mt-8 border-t pt-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-md font-bold">Service Cards</h3>
+      <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
+          <div className="flex items-center gap-3">
+            <LayoutGrid className="w-5 h-5 text-zinc-700" />
+            <h3 className="text-lg font-semibold text-zinc-800">Service Cards</h3>
+          </div>
           <button 
             onClick={handleAddService}
-            className="text-sm bg-zinc-100 px-3 py-1 rounded-md hover:bg-zinc-200 flex items-center gap-1"
+            className="text-sm bg-zinc-900 text-white px-4 py-2 rounded-lg hover:bg-zinc-800 flex items-center gap-2 transition-colors font-medium shadow-sm"
           >
             <Plus className="w-4 h-4" /> Add Service
           </button>
         </div>
         
-        <div className="space-y-4">
+        <div className="p-6 space-y-6">
           {(data.services || []).map((svc, idx) => (
-            <div key={idx} className="border border-zinc-200 p-4 rounded-xl bg-zinc-50 relative">
+            <div key={idx} className="border border-zinc-200 p-6 rounded-xl bg-zinc-50/30 hover:bg-zinc-50 transition-colors relative">
               <button 
                 onClick={() => handleRemoveService(idx)} 
-                className="absolute top-4 right-4 text-red-500 hover:text-red-700"
+                className="absolute top-4 right-4 p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                title="Remove Service"
               >
-                <Trash2 className="w-4 h-4"/>
+                <Trash2 className="w-5 h-5"/>
               </button>
               
-              <div className="grid grid-cols-2 gap-4 pr-6">
+              <div className="flex items-center gap-2 mb-6 border-b border-zinc-200 pb-4">
+                <Settings className="w-5 h-5 text-zinc-400" />
+                <h4 className="font-bold text-sm text-zinc-700">Service Item {idx + 1}</h4>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-semibold mb-1">Service Number (e.g. 01)</label>
-                  <input type="text" className="w-full border rounded-lg p-1.5 text-sm" value={svc.number || ''} onChange={e => handleServiceChange(idx, 'number', e.target.value)} />
+                  <label className="block text-xs font-semibold text-zinc-600 mb-1.5">Service Number (e.g. 01)</label>
+                  <input 
+                    type="text" 
+                    className="w-full px-3 py-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-white" 
+                    value={svc.number || ''} 
+                    onChange={e => handleServiceChange(idx, 'number', e.target.value)} 
+                    placeholder="01"
+                  />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold mb-1">Title</label>
-                  <input type="text" className="w-full border rounded-lg p-1.5 text-sm" value={svc.title || ''} onChange={e => handleServiceChange(idx, 'title', e.target.value)} />
+                  <label className="block text-xs font-semibold text-zinc-600 mb-1.5">Service Title</label>
+                  <input 
+                    type="text" 
+                    className="w-full px-3 py-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors text-sm bg-white" 
+                    value={svc.title || ''} 
+                    onChange={e => handleServiceChange(idx, 'title', e.target.value)} 
+                    placeholder="Enter service title..."
+                  />
                 </div>
-                <div className="col-span-2">
-                  <label className="block text-xs font-semibold mb-1">Description</label>
-                  <textarea className="w-full border rounded-lg p-1.5 text-sm" rows="3" value={svc.description || ''} onChange={e => handleServiceChange(idx, 'description', e.target.value)} />
+                
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-semibold text-zinc-600 mb-1.5">Description</label>
+                  <TipTapEditor 
+                    value={svc.description || ''} 
+                    onChange={html => handleServiceChange(idx, 'description', html)} 
+                    placeholder="Write detailed service description..."
+                  />
                 </div>
-                <div className="col-span-2">
-                  <label className="block text-xs font-semibold mb-1">Service Image</label>
-                  <input type="file" accept="image/*" onChange={e => onImageUpload(e, 'nc_services_image', idx)} className="text-sm mb-2" />
-                  {svc.image && <img src={getAssetUrl(svc.image)} alt="service preview" className="h-24 rounded-md object-cover mt-2" />}
+                
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-semibold text-zinc-600 mb-1.5">Service Image</label>
+                  <div className="max-w-sm">
+                    <ImageField 
+                      value={svc.image} 
+                      onChange={(url) => handleServiceChange(idx, 'image', url)} 
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           ))}
+
+          {(!data.services || data.services.length === 0) && (
+            <div className="text-center py-10 border-2 border-dashed border-zinc-200 rounded-xl bg-zinc-50">
+              <p className="text-sm text-zinc-500 font-medium">No services added yet.</p>
+              <button 
+                onClick={handleAddService}
+                className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium hover:underline"
+              >
+                Click here to add your first service
+              </button>
+            </div>
+          )}
         </div>
       </div>
+      
     </div>
   );
 };
