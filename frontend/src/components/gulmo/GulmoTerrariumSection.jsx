@@ -11,7 +11,7 @@ import terraIcon from '../../assets/nc_logo/terra.png';
 import paluIcon from '../../assets/nc_logo/palu.png';
 import indoorIcon from '../../assets/nc_logo/indoor.png';
 
-const GulmoTerrariumSection = () => {
+const GulmoTerrariumSection = ({ data }) => {
   return (
     <section className="w-full bg-white select-none font-kanit py-16 md:py-24 px-6 md:px-12 lg:px-20 overflow-hidden">
       <div className="max-w-6xl mx-auto space-y-20 md:space-y-28">
@@ -42,7 +42,7 @@ const GulmoTerrariumSection = () => {
             {/* Main Featured DOOA Jar */}
             <div className="relative z-10 w-[240px] sm:w-[300px] md:w-[340px] ml-5  sm:mt-20">
               <img
-                src={jar1}
+                src={data?.mainJarImage || jar1}
                 alt="DOOA Glass Terrarium"
                 className="w-full h-auto object-contain drop-shadow-xl hover:scale-102 transition-transform duration-500"
               />
@@ -56,17 +56,17 @@ const GulmoTerrariumSection = () => {
             <div className="flex items-start gap-5 group">
               <div className="w-14 sm:w-16 h-14 sm:h-16 shrink-0 flex items-center justify-center pt-0.5">
                 <img
-                  src={terraIcon}
+                  src={data?.cat1Icon || terraIcon}
                   alt="Terrariums"
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="space-y-1.5">
                 <h3 className="font-kanit text-xl sm:text-2xl font-bold text-[#1f2937] tracking-tight">
-                  Terrariums
+                  {data?.cat1Title || 'Terrariums'}
                 </h3>
-                <p className="font-kanit text-sm sm:text-base font-light text-[#6b7280] leading-relaxed max-w-md">
-                  Elevate your indoor spaces with lush, green gardens tailored to thrive in various home environments, promoting health and well-being.
+                <p className="font-kanit text-sm sm:text-base font-light text-[#6b7280] leading-relaxed max-w-md whitespace-pre-wrap">
+                  {data?.cat1Desc || 'Elevate your indoor spaces with lush, green gardens tailored to thrive in various home environments, promoting health and well-being.'}
                 </p>
               </div>
             </div>
@@ -75,17 +75,17 @@ const GulmoTerrariumSection = () => {
             <div className="flex items-start gap-5 group">
               <div className="w-14 sm:w-16 h-14 sm:h-16 shrink-0 flex items-center justify-center pt-0.5">
                 <img
-                  src={paluIcon}
+                  src={data?.cat2Icon || paluIcon}
                   alt="Paludariums"
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="space-y-1.5">
                 <h3 className="font-kanit text-xl sm:text-2xl font-bold text-[#1f2937] tracking-tight">
-                  Paludariums
+                  {data?.cat2Title || 'Paludariums'}
                 </h3>
-                <p className="font-kanit text-sm sm:text-base font-light text-[#6b7280] leading-relaxed max-w-md">
-                  Experience the best of both worlds with our paludariums, which combine aquatic and terrestrial elements to create a unique and captivating display.
+                <p className="font-kanit text-sm sm:text-base font-light text-[#6b7280] leading-relaxed max-w-md whitespace-pre-wrap">
+                  {data?.cat2Desc || 'Experience the best of both worlds with our paludariums, which combine aquatic and terrestrial elements to create a unique and captivating display.'}
                 </p>
               </div>
             </div>
@@ -94,17 +94,17 @@ const GulmoTerrariumSection = () => {
             <div className="flex items-start gap-5 group">
               <div className="w-14 sm:w-16 h-14 sm:h-16 shrink-0 flex items-center justify-center pt-0.5">
                 <img
-                  src={indoorIcon}
+                  src={data?.cat3Icon || indoorIcon}
                   alt="Indoor Gardens"
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="space-y-1.5">
                 <h3 className="font-kanit text-xl sm:text-2xl font-bold text-[#1f2937] tracking-tight">
-                  Indoor Gardens
+                  {data?.cat3Title || 'Indoor Gardens'}
                 </h3>
-                <p className="font-kanit text-sm sm:text-base font-light text-[#6b7280] leading-relaxed max-w-md">
-                  Transform any space with our custom-designed aquariums that mimic natural aquatic ecosystems, providing a stunning visual and calming presence.
+                <p className="font-kanit text-sm sm:text-base font-light text-[#6b7280] leading-relaxed max-w-md whitespace-pre-wrap">
+                  {data?.cat3Desc || 'Transform any space with our custom-designed aquariums that mimic natural aquatic ecosystems, providing a stunning visual and calming presence.'}
                 </p>
               </div>
             </div>
@@ -120,7 +120,7 @@ const GulmoTerrariumSection = () => {
             {/* Jar 2 */}
             <div className="w-full flex justify-center hover:scale-105 transition-transform duration-500">
               <img
-                src={jar2}
+                src={data?.bottomJar1 || jar2}
                 alt="Slim Glass Terrarium"
                 className="h-44 sm:h-52 md:h-64 w-auto object-contain drop-shadow-md"
               />
@@ -129,7 +129,7 @@ const GulmoTerrariumSection = () => {
             {/* Jar 3 */}
             <div className="w-full flex justify-center hover:scale-105 transition-transform duration-500">
               <img
-                src={jar3}
+                src={data?.bottomJar2 || jar3}
                 alt="Teardrop Glass Terrarium"
                 className="h-48 sm:h-56 md:h-68 w-auto object-contain drop-shadow-md"
               />
@@ -138,7 +138,7 @@ const GulmoTerrariumSection = () => {
             {/* Jar 4 */}
             <div className="w-full flex justify-center hover:scale-105 transition-transform duration-500">
               <img
-                src={jar4}
+                src={data?.bottomJar3 || jar4}
                 alt="Jewel Orchid Plant Dish"
                 className="h-36 sm:h-44 md:h-52 w-auto object-contain drop-shadow-md"
               />
@@ -147,7 +147,7 @@ const GulmoTerrariumSection = () => {
             {/* Jar 5 */}
             <div className="w-full flex justify-center hover:scale-105 transition-transform duration-500">
               <img
-                src={jar5}
+                src={data?.bottomJar4 || jar5}
                 alt="Tall Wall Glass Terrarium"
                 className="h-44 sm:h-52 md:h-64 w-auto object-contain drop-shadow-md"
               />

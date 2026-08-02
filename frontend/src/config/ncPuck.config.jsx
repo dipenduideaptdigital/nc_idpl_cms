@@ -4,13 +4,22 @@ import TipTapEditor from '../components/admin/TipTapEditor';
 import ContactFormBlock from '../components/blocks/ContactFormBlock';
 import ImageField from '../components/admin/ImageField';
 
-// Import all your Ripple Components
+// Import Ripple
 import RipplesHero from '../components/ripples/RipplesHero';
 import RipplesIntroSection from '../components/ripples/RipplesIntroSection';
 import RipplesNatureAquariumSection from '../components/ripples/RipplesNatureAquariumSection';
 import RipplesLetsBeginSection from '../components/ripples/RipplesLetsBeginSection';
 import RipplesAquascapeSection from '../components/ripples/RipplesAquascapeSection';
 import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
+
+// Import Gulmo 
+import GulmoHero from '../components/gulmo/GulmoHero';
+import GulmoTerrariumSection from '../components/gulmo/GulmoTerrariumSection';
+import GulmoQuoteSection from '../components/gulmo/GulmoQuoteSection';
+import GulmoForestOrganismSection from '../components/gulmo/GulmoForestOrganismSection';
+import GulmoOurProjectsSection from '../components/gulmo/GulmoOurProjectsSection';
+import GulmoLetsBeginSection from '../components/gulmo/GulmoLetsBeginSection';
+import GulmoConceptSection from '../components/gulmo/GulmoConceptSection';
 
 const CollapsibleTiptap = ({ label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -235,6 +244,163 @@ export const ncPuckConfig = {
         buttonText: 'Get Started'
       },
       render: (props) => <GetStartedCtaSection data={props} />
-    }
+    },
+
+    gulmoHero: {
+      fields: {
+        backgroundImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: { backgroundImage: '' },
+      render: (props) => <GulmoHero data={props} />
+    },
+
+    gulmoTerrarium: {
+      fields: {
+        // Main Jar
+        mainJarImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        
+        // Category 1
+        cat1Title: { type: "text" },
+        cat1Desc: { type: "textarea" },
+        cat1Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        
+        // Category 2
+        cat2Title: { type: "text" },
+        cat2Desc: { type: "textarea" },
+        cat2Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        
+        // Category 3
+        cat3Title: { type: "text" },
+        cat3Desc: { type: "textarea" },
+        cat3Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // Bottom Jars
+        bottomJar1: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        bottomJar2: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        bottomJar3: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        bottomJar4: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+      },
+      defaultProps: {
+        cat1Title: 'Terrariums',
+        cat1Desc: 'Elevate your indoor spaces with lush, green gardens tailored to thrive in various home environments, promoting health and well-being.',
+        cat2Title: 'Paludariums',
+        cat2Desc: 'Experience the best of both worlds with our paludariums, which combine aquatic and terrestrial elements to create a unique and captivating display.',
+        cat3Title: 'Indoor Gardens',
+        cat3Desc: 'Transform any space with our custom-designed aquariums that mimic natural aquatic ecosystems, providing a stunning visual and calming presence.'
+      },
+      render: (props) => <GulmoTerrariumSection data={props} />
+    },
+
+    gulmoQuote: {
+      fields: {
+        bgImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        quoteIcon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        quoteText: { type: "textarea" },
+        quoteAuthor: { type: "text" }
+      },
+      defaultProps: {
+        quoteText: "The forest is a peculiar organism of unlimited kindness and benevolence that makes no demands for its sustenance and extends generously the products of its life activity; it affords protection to all beings, offering shade even to the axe-man who destroys it.",
+        quoteAuthor: "Gautama Buddha"
+      },
+      render: (props) => <GulmoQuoteSection data={props} />
+    },
+
+    gulmoForestOrganism: {
+      fields: {
+        mainTitle: { type: "text" },
+        brushImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        jarImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        
+        f1Label: { type: "text" }, f1Title: { type: "text" }, f1Desc: { type: "textarea" },
+        f2Label: { type: "text" }, f2Title: { type: "text" }, f2Desc: { type: "textarea" },
+        f3Label: { type: "text" }, f3Title: { type: "text" }, f3Desc: { type: "textarea" },
+        f4Label: { type: "text" }, f4Sub: { type: "text" }, f4Title: { type: "text" }, f4Desc: { type: "textarea" },
+        f5Label: { type: "text" }, f5Title: { type: "text" }, f5Desc: { type: "textarea" },
+        f6Label: { type: "text" }, f6Sub: { type: "text" }, f6Title: { type: "text" }, f6Desc: { type: "textarea" },
+      },
+      defaultProps: {
+        mainTitle: "The Forest Is A Peculiar Organism",
+        f1Label: "GLASS", f1Title: "GLASS: TOP CASE", f1Desc: "A tall glass cover with ventilation holes that maintains high humidity and temperature.",
+        f2Label: "LIGHTING SYSTEM", f2Title: "LIGHTING SYSTEM", f2Desc: "High-spectrum LED lighting engineered specifically to support photosynthesis and vibrant plant growth.",
+        f3Label: "PLANTS", f3Title: "PLANTS & FLORA", f3Desc: "Lush evergreen mosses, miniature ferns, and humidity-retaining species crafted for long-term health.",
+        f4Label: "TERRA BASE", f4Sub: "TERRA PLATE", f4Title: "TERRA BASE & TERRA PLATE", f4Desc: "Cylindrical porous ceramic base supplying continuous hydration through natural water evaporation.",
+        f5Label: "SUBSTRATE", f5Title: "SUBSTRATE & SOIL", f5Desc: "Multi-layered nutrient substratum optimized for root breathability and balanced moisture retention.",
+        f6Label: "LAYOUT &", f6Sub: "MAINTENANCE TOOL", f6Title: "LAYOUT & MAINTENANCE TOOL", f6Desc: "Precision aquascaping tools for delicate planting, trimming, and pin-point maintenance."
+      },
+      render: (props) => <GulmoForestOrganismSection data={props} />
+    },
+
+    gulmoOurProjects: {
+      fields: {
+        title: { type: "text" },
+        description: { type: "textarea" },
+        bgSplash: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        imageLeft: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        imageRight: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: {
+        title: "OUR PROJECTS",
+        description: "Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India."
+      },
+      render: (props) => <GulmoOurProjectsSection data={props} />
+    },
+
+    gulmoLetsBegin: {
+      fields: {
+        title: { type: "text" },
+        description: { type: "textarea" },
+        storeUrl: { type: "text" },
+        storeUrlText: { type: "text" },
+        btnText: { type: "text" },
+        imageMain: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        imageOverlay: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: {
+        title: "Let's begin",
+        description: "Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.",
+        storeUrl: "https://naturecube.store",
+        storeUrlText: "naturecube.store",
+        btnText: "STORE"
+      },
+      render: (props) => <GulmoLetsBeginSection data={props} />
+    },
+
+    gulmoConcept: {
+      fields: {
+        studioName: { type: "text" },
+        mainTitle: { type: "text" },
+        description: { type: "textarea" },
+        jarSectionTitle: { type: "text" },
+        jarSectionHeading: { type: "text" },
+        categories: {
+          type: "array",
+          arrayFields: {
+            id: { type: "text" },
+            label: { type: "text" },
+            desc: { type: "textarea" },
+            img: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          }
+        },
+        galleryJars: {
+          type: "array",
+          arrayFields: {
+            id: { type: "text" },
+            title: { type: "text" },
+            subtitle: { type: "text" },
+            img: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          }
+        }
+      },
+      defaultProps: {
+        studioName: "GULMO BOTANICAL STUDIO",
+        mainTitle: "MINIATURE NATURE IN GLASS",
+        description: "Gulmo Concept Gardening reimagines indoor greenery through handcrafted living terrariums, enclosed ecosystems, and bespoke botanical installations. Each creation balances humidity, light, and natural substrata to form self-sustaining indoor habitats.",
+        jarSectionTitle: "JAR COLLECTION",
+        jarSectionHeading: "EXPLORE OUR BOTANICAL SANCTUARIES",
+        categories: [],
+        galleryJars: []
+      },
+      render: (props) => <GulmoConceptSection data={props} />
+    },
   }
 };

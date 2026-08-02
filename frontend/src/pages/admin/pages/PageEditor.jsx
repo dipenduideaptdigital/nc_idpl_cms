@@ -54,7 +54,14 @@ const PageEditor = () => {
     { type: 'ripplesNatureAquarium', label: 'Ripples: Nature Aquarium Projects' },
     { type: 'ripplesLetsBegin', label: 'Ripples: Let\'s Begin Steps' },
     { type: 'ripplesAquascape', label: 'Ripples: Aquascape Categories' },
-    { type: 'getStartedCta', label: 'Ripples: Get Started CTA' }
+    { type: 'getStartedCta', label: 'Ripples: Get Started CTA' },
+    { type: 'gulmoHero', label: 'Gulmo: Hero Section' },
+    { type: 'gulmoTerrarium', label: 'Gulmo: Terrarium Showcase' },
+    { type: 'gulmoQuote', label: 'Gulmo: Quote Section' },
+    { type: 'gulmoForestOrganism', label: 'Gulmo: Forest Organism Diagram' },
+    { type: 'gulmoOurProjects', label: 'Gulmo: Our Projects' },
+    { type: 'gulmoLetsBegin', label: 'Gulmo: Lets Begin Store' },
+    { type: 'gulmoConcept', label: 'Gulmo: Concept Gardening' },
   ];
 
   const [formData, setFormData] = useState({

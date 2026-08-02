@@ -16,7 +16,16 @@ import {
   ncPartnersSchema,
   ncBlogsSchema,
   ncWhatTheySaySchema,
-  ncCtaSchema
+  ncCtaSchema,
+
+  // ---- GULMO PAGE SCHEMAS ----
+  gulmoHeroSchema,
+  gulmoTerrariumSchema,
+  gulmoQuoteSchema,
+  gulmoForestOrganismSchema,
+  gulmoOurProjectsSchema,
+  gulmoLetsBeginSchema,
+  gulmoConceptSchema
 } from "./cms.validation.js";
 
 export const CMS_REGISTRY = {
@@ -26,7 +35,8 @@ export const CMS_REGISTRY = {
   "cms_settings": cmsSettingsSchema,
   "whatsapp_settings": whatsappSettingsSchema,
   "global_general_settings": globalGeneralSettingsSchema,
-  // NEW NATURE CUBE SECTIONS
+  
+  // NATURE CUBE SECTIONS
   "nc_homepage_hero": ncHeroSchema,
   "nc_homepage_mandalas": ncMandalasSchema,
   "nc_homepage_living_art": ncLivingArtSchema,
@@ -36,5 +46,14 @@ export const CMS_REGISTRY = {
   "nc_homepage_partners": ncPartnersSchema,
   "nc_homepage_blogs": ncBlogsSchema,
   "nc_homepage_what_they_say": ncWhatTheySaySchema,
-  "nc_homepage_cta": ncCtaSchema
+  "nc_homepage_cta": ncCtaSchema,
+
+  // GULMO SECTIONS
+  "gulmo_hero": gulmoHeroSchema,
+  "gulmo_terrarium": gulmoTerrariumSchema,
+  "gulmo_quote": gulmoQuoteSchema,
+  "gulmo_forest_organism": gulmoForestOrganismSchema,
+  "gulmo_our_projects": gulmoOurProjectsSchema,
+  "gulmo_lets_begin": gulmoLetsBeginSchema,
+  "gulmo_concept": gulmoConceptSchema
 };

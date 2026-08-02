@@ -24,7 +24,14 @@ const ripplesNatureAquariumBlockSchema = z.object({ type: z.literal("ripplesNatu
 const ripplesLetsBeginBlockSchema = z.object({ type: z.literal("ripplesLetsBegin"), data: z.record(z.any()).default({}) });
 const ripplesAquascapeBlockSchema = z.object({ type: z.literal("ripplesAquascape"), data: z.record(z.any()).default({}) });
 const getStartedCtaBlockSchema = z.object({ type: z.literal("getStartedCta"), data: z.record(z.any()).default({}) });
-
+// GULMO BLOCKS
+const gulmoHeroBlockSchema = z.object({ type: z.literal("gulmoHero"), data: z.record(z.any()).default({}) });
+const gulmoTerrariumBlockSchema = z.object({ type: z.literal("gulmoTerrarium"), data: z.record(z.any()).default({}) });
+const gulmoQuoteBlockSchema = z.object({ type: z.literal("gulmoQuote"), data: z.record(z.any()).default({}) });
+const gulmoForestOrganismBlockSchema = z.object({ type: z.literal("gulmoForestOrganism"), data: z.record(z.any()).default({}) });
+const gulmoOurProjectsBlockSchema = z.object({ type: z.literal("gulmoOurProjects"), data: z.record(z.any()).default({}) });
+const gulmoLetsBeginBlockSchema = z.object({ type: z.literal("gulmoLetsBegin"), data: z.record(z.any()).default({}) });
+const gulmoConceptBlockSchema = z.object({ type: z.literal("gulmoConcept"), data: z.record(z.any()).default({}) });
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
   data: z.object({
@@ -46,6 +53,14 @@ const blockSchema = z.discriminatedUnion("type", [
   ripplesLetsBeginBlockSchema,
   ripplesAquascapeBlockSchema,
   getStartedCtaBlockSchema,
+  // Gulmo Blocks
+  gulmoHeroBlockSchema,
+  gulmoTerrariumBlockSchema,
+  gulmoQuoteBlockSchema,
+  gulmoForestOrganismBlockSchema,
+  gulmoOurProjectsBlockSchema,
+  gulmoLetsBeginBlockSchema,
+  gulmoConceptBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

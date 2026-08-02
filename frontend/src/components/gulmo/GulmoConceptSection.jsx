@@ -6,23 +6,26 @@ import jar4 from '../../assets/nc_home/jar4.png';
 import jar5 from '../../assets/nc_home/jar5.png';
 import plantBox from '../../assets/nc_home/plant_box.png';
 
-const GulmoConceptSection = () => {
-  const [activeTab, setActiveTab] = useState('terrariums');
-
-  const categories = [
+const GulmoConceptSection = ({ data }) => {
+  const defaultCategories = [
     { id: 'terrariums', label: 'Glass Terrariums', img: jar1, desc: 'Self-sustaining miniature botanical worlds encapsulated in hand-blown crystal glass vessels.' },
     { id: 'moss', label: 'Moss Art & Biomes', img: jar2, desc: 'Lush evergreen moss scapes crafted with natural stone, ancient wood, and humidity-retaining flora.' },
     { id: 'desktop', label: 'Desktop Ecosystems', img: jar3, desc: 'Compact living sculptures tailored for executive desks, luxury homes, and minimal workspaces.' },
     { id: 'planters', label: 'Concept Planters', img: plantBox, desc: 'Artisanal planters and custom wooden frames engineered to house exotic tropical specimens.' },
   ];
 
-  const galleryJars = [
-    { id: 1, img: jar1, title: 'Enclosed Rain-Forest Biome', subtitle: 'Self-Sustaining Glass Jar' },
-    { id: 2, img: jar2, title: 'Miniature Moss Oasis', subtitle: 'High Humidity Flora Setup' },
-    { id: 3, img: jar3, title: 'Tropical Fern Sanctum', subtitle: 'Botanical Glass Display' },
-    { id: 4, img: jar4, title: 'Curated Moss Sphere', subtitle: 'Artisanal Miniature World' },
-    { id: 5, img: jar5, title: 'Closed Ecosystem Vessel', subtitle: 'Zero-Maintenance Greenery' },
+  const defaultJars = [
+    { id: '1', img: jar1, title: 'Enclosed Rain-Forest Biome', subtitle: 'Self-Sustaining Glass Jar' },
+    { id: '2', img: jar2, title: 'Miniature Moss Oasis', subtitle: 'High Humidity Flora Setup' },
+    { id: '3', img: jar3, title: 'Tropical Fern Sanctum', subtitle: 'Botanical Glass Display' },
+    { id: '4', img: jar4, title: 'Curated Moss Sphere', subtitle: 'Artisanal Miniature World' },
+    { id: '5', img: jar5, title: 'Closed Ecosystem Vessel', subtitle: 'Zero-Maintenance Greenery' },
   ];
+
+  const categories = data?.categories?.length > 0 ? data.categories : defaultCategories;
+  const galleryJars = data?.galleryJars?.length > 0 ? data.galleryJars : defaultJars;
+
+  const [activeTab, setActiveTab] = useState(categories[0]?.id || 'terrariums');
 
   return (
     <section className="w-full bg-[#070e06] text-white py-24 px-6 md:px-12 lg:px-20 relative overflow-hidden select-none font-kanit">
@@ -36,15 +39,15 @@ const GulmoConceptSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center border-b border-zinc-800/80 pb-16">
           <div className="lg:col-span-5 space-y-4">
             <span className="text-[#7BA641] text-xs font-semibold tracking-[0.25em] uppercase">
-              GULMO BOTANICAL STUDIO
+              {data?.studioName || 'GULMO BOTANICAL STUDIO'}
             </span>
             <h2 className="text-3xl md:text-5xl font-light tracking-wide text-white leading-tight">
-              MINIATURE NATURE IN GLASS
+              {data?.mainTitle || 'MINIATURE NATURE IN GLASS'}
             </h2>
           </div>
           <div className="lg:col-span-7">
-            <p className="text-zinc-400 text-base md:text-lg font-light leading-relaxed">
-              Gulmo Concept Gardening reimagines indoor greenery through handcrafted living terrariums, enclosed ecosystems, and bespoke botanical installations. Each creation balances humidity, light, and natural substrata to form self-sustaining indoor habitats.
+            <p className="text-zinc-400 text-base md:text-lg font-light leading-relaxed whitespace-pre-wrap">
+              {data?.description || 'Gulmo Concept Gardening reimagines indoor greenery through handcrafted living terrariums, enclosed ecosystems, and bespoke botanical installations. Each creation balances humidity, light, and natural substrata to form self-sustaining indoor habitats.'}
             </p>
           </div>
         </div>
@@ -80,7 +83,7 @@ const GulmoConceptSection = () => {
                     <h3 className="text-2xl md:text-4xl font-light text-white tracking-wide">
                       {item.label}
                     </h3>
-                    <p className="text-zinc-300 text-sm md:text-base font-light leading-relaxed">
+                    <p className="text-zinc-300 text-sm md:text-base font-light leading-relaxed whitespace-pre-wrap">
                       {item.desc}
                     </p>
                     <div className="pt-4">
@@ -97,7 +100,7 @@ const GulmoConceptSection = () => {
                   </div>
                   <div className="lg:col-span-6 rounded-xl overflow-hidden shadow-2xl border border-zinc-800 group relative bg-zinc-900 flex items-center justify-center p-6">
                     <img
-                      src={item.img}
+                      src={item.img || jar1}
                       alt={item.label}
                       className="w-full max-h-[360px] object-contain group-hover:scale-105 transition-transform duration-700"
                     />
@@ -111,22 +114,22 @@ const GulmoConceptSection = () => {
         <div className="space-y-8 pt-8">
           <div className="text-center space-y-2">
             <span className="text-[#7BA641] text-xs font-semibold tracking-[0.2em] uppercase">
-              JAR COLLECTION
+              {data?.jarSectionTitle || 'JAR COLLECTION'}
             </span>
             <h3 className="text-2xl md:text-4xl font-light tracking-wide text-white">
-              EXPLORE OUR BOTANICAL SANCTUARIES
+              {data?.jarSectionHeading || 'EXPLORE OUR BOTANICAL SANCTUARIES'}
             </h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {galleryJars.map((jar) => (
+            {galleryJars.map((jar, index) => (
               <div
-                key={jar.id}
+                key={jar.id || index}
                 className="bg-zinc-900/60 rounded-xl border border-zinc-800 p-4 hover:border-[#7BA641]/50 transition-all duration-300 group flex flex-col items-center text-center"
               >
                 <div className="w-full h-48 flex items-center justify-center overflow-hidden mb-4">
                   <img
-                    src={jar.img}
+                    src={jar.img || jar1}
                     alt={jar.title}
                     className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500"
                   />

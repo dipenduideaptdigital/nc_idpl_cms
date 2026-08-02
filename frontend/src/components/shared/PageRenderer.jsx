@@ -1,13 +1,22 @@
 import React, { memo } from 'react';
 import ContactFormBlock from '../blocks/ContactFormBlock';
 
-// Import the new Ripples Components
+//Ripples
 import RipplesHero from '../ripples/RipplesHero';
 import RipplesIntroSection from '../ripples/RipplesIntroSection';
 import RipplesNatureAquariumSection from '../ripples/RipplesNatureAquariumSection';
 import RipplesLetsBeginSection from '../ripples/RipplesLetsBeginSection';
 import RipplesAquascapeSection from '../ripples/RipplesAquascapeSection';
 import GetStartedCtaSection from '../nature_homepage/GetStartedCtaSection';
+
+//Gulmo
+import GulmoHero from '../gulmo/GulmoHero';
+import GulmoTerrariumSection from '../gulmo/GulmoTerrariumSection';
+import GulmoQuoteSection from '../gulmo/GulmoQuoteSection';
+import GulmoForestOrganismSection from '../gulmo/GulmoForestOrganismSection';
+import GulmoOurProjectsSection from '../gulmo/GulmoOurProjectsSection';
+import GulmoLetsBeginSection from '../gulmo/GulmoLetsBeginSection';
+import GulmoConceptSection from '../gulmo/GulmoConceptSection';
 
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
@@ -30,6 +39,20 @@ const BlockMapper = memo(({ block, index }) => {
       return <RipplesAquascapeSection key={index} data={data} />;
     case 'getStartedCta': 
       return <GetStartedCtaSection key={index} data={data} />;
+    case 'gulmoHero': 
+      return <GulmoHero key={index} data={data} />;
+    case 'gulmoTerrarium': 
+      return <GulmoTerrariumSection key={index} data={data} />;
+    case 'gulmoQuote': 
+      return <GulmoQuoteSection key={index} data={data} />;
+    case 'gulmoForestOrganism': 
+      return <GulmoForestOrganismSection key={index} data={data} />;
+    case 'gulmoOurProjects': 
+      return <GulmoOurProjectsSection key={index} data={data} />;
+    case 'gulmoLetsBegin': 
+      return <GulmoLetsBeginSection key={index} data={data} />;
+    case 'gulmoConcept': 
+      return <GulmoConceptSection key={index} data={data} />;
       
     // Rich Text Block (Updated for dark theme)
     case 'richText':

@@ -1,13 +1,13 @@
 import React from 'react';
 import gulmoBg from '../../assets/nc_home/Gulmo.png';
 
-const GulmoHero = () => {
+const GulmoHero = ({ data }) => {
   return (
     <section className="relative w-full h-screen min-h-[500px] overflow-hidden select-none">
       {/* Background Hero Image - Contains Full Built-in Logo & Design */}
       <div className="absolute inset-0 w-full h-full">
         <img
-          src={gulmoBg}
+          src={data?.backgroundImage || gulmoBg}
           alt="Gulmo Concept Gardening"
           className="w-full h-full object-cover object-center"
         />

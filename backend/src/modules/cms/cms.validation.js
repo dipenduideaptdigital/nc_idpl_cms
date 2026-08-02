@@ -211,3 +211,99 @@ export const ncCtaSchema = z.object({
     buttonLink: z.string().max(200).optional(),
   })
 });
+
+export const gulmoHeroSchema = z.object({
+  content: z.object({
+    backgroundImage: z.string().optional()
+  })
+});
+
+export const gulmoTerrariumSchema = z.object({
+  content: z.object({
+    mainJarImage: z.string().optional(),
+    cat1Title: z.string().optional(),
+    cat1Desc: z.string().max(1500).optional(),
+    cat1Icon: z.string().optional(),
+    cat2Title: z.string().optional(),
+    cat2Desc: z.string().max(1500).optional(),
+    cat2Icon: z.string().optional(),
+    cat3Title: z.string().optional(),
+    cat3Desc: z.string().max(1500).optional(),
+    cat3Icon: z.string().optional(),
+    bottomJar1: z.string().optional(),
+    bottomJar2: z.string().optional(),
+    bottomJar3: z.string().optional(),
+    bottomJar4: z.string().optional(),
+  })
+});
+
+export const gulmoQuoteSchema = z.object({
+  content: z.object({
+    bgImage: z.string().optional(),
+    quoteIcon: z.string().optional(),
+    quoteText: z.string().max(2000).optional(),
+    quoteAuthor: z.string().max(150).optional()
+  })
+});
+
+export const gulmoForestOrganismSchema = z.object({
+  content: z.object({
+    mainTitle: z.string().max(200).optional(),
+    brushImage: z.string().optional(),
+    jarImage: z.string().optional(),
+    f1Label: z.string().optional(), f1Title: z.string().optional(), f1Desc: z.string().max(1000).optional(),
+    f2Label: z.string().optional(), f2Title: z.string().optional(), f2Desc: z.string().max(1000).optional(),
+    f3Label: z.string().optional(), f3Title: z.string().optional(), f3Desc: z.string().max(1000).optional(),
+    f4Label: z.string().optional(), f4Sub: z.string().optional(), f4Title: z.string().optional(), f4Desc: z.string().max(1000).optional(),
+    f5Label: z.string().optional(), f5Title: z.string().optional(), f5Desc: z.string().max(1000).optional(),
+    f6Label: z.string().optional(), f6Sub: z.string().optional(), f6Title: z.string().optional(), f6Desc: z.string().max(1000).optional(),
+  })
+});
+
+export const gulmoOurProjectsSchema = z.object({
+  content: z.object({
+    title: z.string().max(200).optional(),
+    description: z.string().max(2000).optional(),
+    bgSplash: z.string().optional(),
+    imageLeft: z.string().optional(),
+    imageRight: z.string().optional()
+  })
+});
+
+export const gulmoLetsBeginSchema = z.object({
+  content: z.object({
+    title: z.string().max(200).optional(),
+    description: z.string().max(2000).optional(),
+    storeUrl: z.string().max(500).optional(),
+    storeUrlText: z.string().max(150).optional(),
+    btnText: z.string().max(100).optional(),
+    imageMain: z.string().optional(),
+    imageOverlay: z.string().optional()
+  })
+});
+
+export const gulmoConceptSchema = z.object({
+  content: z.object({
+    studioName: z.string().max(150).optional(),
+    mainTitle: z.string().max(250).optional(),
+    description: z.string().max(2000).optional(),
+    jarSectionTitle: z.string().max(150).optional(),
+    jarSectionHeading: z.string().max(250).optional(),
+    categories: z.array(
+      z.object({
+        id: z.string().optional(),
+        label: z.string().optional(),
+        desc: z.string().max(1000).optional(),
+        img: z.string().optional()
+      })
+    ).optional(),
+    galleryJars: z.array(
+      z.object({
+        id: z.string().optional(),
+        title: z.string().optional(),
+        subtitle: z.string().optional(),
+        img: z.string().optional()
+      })
+    ).optional()
+  })
+});
