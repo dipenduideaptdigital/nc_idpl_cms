@@ -43,22 +43,22 @@ const MenuBar = ({ editor }) => {
 
   const buttonClass = (isActive) => `
     p-1.5 rounded-md transition-colors flex items-center justify-center
-    ${isActive ? 'bg-zinc-800 text-white' : 'text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900'}
+    ${isActive ? 'bg-zinc-800 dark:bg-zinc-100 text-white dark:text-zinc-900' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100'}
   `;
 
-  const labelClass = `p-1.5 rounded-md transition-colors flex items-center justify-center text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900 cursor-pointer`;
+  const labelClass = `p-1.5 rounded-md transition-colors flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer`;
 
   return (
-    <div className="flex flex-wrap items-center gap-1.5 p-2 border-b border-zinc-200 bg-zinc-50/80 rounded-t-xl">
+    <div className="flex flex-wrap items-center gap-1.5 p-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-800/50 rounded-t-xl transition-colors duration-300">
       
       {/* 1. History & Clear Formatting */}
       <div className="flex items-center gap-0.5">
         <button type="button" onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().chain().focus().undo().run()} className={buttonClass(false)} title="Undo"><Undo className="w-4 h-4" /></button>
         <button type="button" onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().chain().focus().redo().run()} className={buttonClass(false)} title="Redo"><Redo className="w-4 h-4" /></button>
-        <button type="button" onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()} className={buttonClass(false)} title="Clear Formatting"><Eraser className="w-4 h-4 text-red-500" /></button>
+        <button type="button" onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()} className={buttonClass(false)} title="Clear Formatting"><Eraser className="w-4 h-4 text-red-500 dark:text-red-400" /></button>
       </div>
 
-      <div className="w-px h-5 bg-zinc-300 mx-1"></div>
+      <div className="w-px h-5 bg-zinc-300 dark:bg-zinc-700 mx-1 transition-colors duration-300"></div>
 
       {/*Text Styles */}
       <div className="flex items-center gap-0.5">
@@ -70,7 +70,7 @@ const MenuBar = ({ editor }) => {
         <button type="button" onClick={() => editor.chain().focus().toggleSuperscript().run()} className={buttonClass(editor.isActive('superscript'))} title="Superscript"><SuperIcon className="w-4 h-4" /></button>
       </div>
 
-      <div className="w-px h-5 bg-zinc-300 mx-1"></div>
+      <div className="w-px h-5 bg-zinc-300 dark:bg-zinc-700 mx-1 transition-colors duration-300"></div>
 
       {/* Colors */}
       <div className="flex items-center gap-1 relative">
@@ -93,7 +93,7 @@ const MenuBar = ({ editor }) => {
         </label>
       </div>
 
-      <div className="w-px h-5 bg-zinc-300 mx-1"></div>
+      <div className="w-px h-5 bg-zinc-300 dark:bg-zinc-700 mx-1 transition-colors duration-300"></div>
 
       {/* Headings & Alignment */}
       <div className="flex items-center gap-0.5">
@@ -106,7 +106,7 @@ const MenuBar = ({ editor }) => {
         <button type="button" onClick={() => editor.chain().focus().setTextAlign('justify').run()} className={buttonClass(editor.isActive({ textAlign: 'justify' }))} title="Justify"><AlignJustify className="w-4 h-4" /></button>
       </div>
 
-      <div className="w-px h-5 bg-zinc-300 mx-1"></div>
+      <div className="w-px h-5 bg-zinc-300 dark:bg-zinc-700 mx-1 transition-colors duration-300"></div>
 
       {/* Lists & Links */}
       <div className="flex items-center gap-0.5">
@@ -117,12 +117,12 @@ const MenuBar = ({ editor }) => {
         <button type="button" onClick={() => editor.chain().focus().unsetLink().run()} disabled={!editor.isActive('link')} className={buttonClass(false)} title="Remove Link"><Unlink className="w-4 h-4" /></button>
       </div>
 
-      <div className="w-px h-5 bg-zinc-300 mx-1"></div>
+      <div className="w-px h-5 bg-zinc-300 dark:bg-zinc-700 mx-1 transition-colors duration-300"></div>
 
       {/*Tables */}
       <div className="flex items-center gap-0.5">
         <button type="button" onClick={insertTable} className={buttonClass(false)} title="Insert Table"><TableIcon className="w-4 h-4" /></button>
-        <button type="button" onClick={() => editor.chain().focus().deleteTable().run()} disabled={!editor.can().deleteTable()} className={buttonClass(false)} title="Delete Table"><Trash2 className="w-4 h-4 text-red-500" /></button>
+        <button type="button" onClick={() => editor.chain().focus().deleteTable().run()} disabled={!editor.can().deleteTable()} className={buttonClass(false)} title="Delete Table"><Trash2 className="w-4 h-4 text-red-500 dark:text-red-400" /></button>
       </div>
 
     </div>
@@ -148,13 +148,13 @@ const TipTapEditor = ({ value, onChange, placeholder = 'Start typing...' }) => {
       TableCell,
       Link.configure({
         openOnClick: false,
-        HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' },
+        HTMLAttributes: { class: 'text-blue-600 dark:text-blue-400 underline cursor-pointer' },
       }),
     ],
     content: value || '',
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose-base max-w-none focus:outline-none min-h-[200px] p-4 text-zinc-800',
+        class: 'prose prose-sm sm:prose-base dark:prose-invert max-w-none focus:outline-none min-h-[200px] p-4 text-zinc-800 dark:text-zinc-200',
       },
     },
     onUpdate: ({ editor }) => {
@@ -170,9 +170,9 @@ const TipTapEditor = ({ value, onChange, placeholder = 'Start typing...' }) => {
   }, [value, editor]);
 
   return (
-    <div className="w-full border border-zinc-200 rounded-xl bg-white focus-within:ring-2 focus-within:ring-zinc-900 focus-within:border-zinc-900 transition-all overflow-hidden">
+    <div className="w-full border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 focus-within:ring-2 focus-within:ring-zinc-900 dark:focus-within:ring-zinc-100 focus-within:border-zinc-900 dark:focus-within:border-zinc-100 transition-all overflow-hidden">
       <MenuBar editor={editor} />
-      <div className="max-h-[500px] overflow-y-auto bg-white editor-content-area">
+      <div className="max-h-[500px] overflow-y-auto bg-white dark:bg-zinc-900 editor-content-area transition-colors duration-300">
         <EditorContent editor={editor} />
       </div>
     </div>
