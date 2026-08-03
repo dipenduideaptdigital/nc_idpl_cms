@@ -1,65 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { pagesApi } from '../api/pages';
-import ServiceBanner from '../components/service/ServiceBanner';
-import ServiceDetails from '../components/service/ServiceDetails';
-import CtaSection from '../components/home/CtaSection'; 
-import useScrollAnimation from '../hooks/useScrollAnimation';
-import PageRenderer from '../components/shared/PageRenderer'; 
+// import React, { useEffect, useState } from 'react';
+// import { useParams } from 'react-router-dom';
+// import { pagesApi } from '../api/pages';
+// import ServiceBanner from '../components/service/ServiceBanner';
+// import ServiceDetails from '../components/service/ServiceDetails';
+// import CtaSection from '../components/home/CtaSection'; 
+// import useScrollAnimation from '../hooks/useScrollAnimation';
+// import PageRenderer from '../components/shared/PageRenderer'; 
 
-const ServicePage = () => {
-  useScrollAnimation();
-  const { slug } = useParams();
+// const ServicePage = () => {
+//   useScrollAnimation();
+//   const { slug } = useParams();
   
-  const [pageData, setPageData] = useState(null);
-  const [loading, setLoading] = useState(true);
+//   const [pageData, setPageData] = useState(null);
+//   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchServicePage = async () => {
-      try {
-        const queryTarget = slug ? `services/${slug}` : 'services'; 
+//   useEffect(() => {
+//     const fetchServicePage = async () => {
+//       try {
+//         const queryTarget = slug ? `services/${slug}` : 'services'; 
         
-        const response = await pagesApi.getPublicPageBySlug(queryTarget); 
-        const data = response.data || response;
+//         const response = await pagesApi.getPublicPageBySlug(queryTarget); 
+//         const data = response.data || response;
         
-        if (data) {
-          setPageData(data);
-          document.title = `${data.title || 'Services'} | Subhaakritee`;
-        }
-      } catch (error) {
-        console.error("Failed to fetch service page content. Showing static fallback.", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+//         if (data) {
+//           setPageData(data);
+//           document.title = `${data.title || 'Services'} | Subhaakritee`;
+//         }
+//       } catch (error) {
+//         console.error("Failed to fetch service page content. Showing static fallback.", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
 
-    fetchServicePage();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [slug]);
+//     fetchServicePage();
+//     window.scrollTo({ top: 0, behavior: 'smooth' });
+//   }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center bg-white">
+//         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+//       </div>
+//     );
+//   }
 
-  return (
-    <div className="min-h-screen bg-white font-helvetica">
-      {pageData && pageData.content?.blocks?.length > 0 ? (
+//   return (
+//     <div className="min-h-screen bg-white font-helvetica">
+//       {pageData && pageData.content?.blocks?.length > 0 ? (
         
-        <PageRenderer blocks={pageData.content.blocks} />
+//         <PageRenderer blocks={pageData.content.blocks} />
         
-      ) : (
-        <>
-          <ServiceBanner title="Commercial Interior" subTitle="Services" />
-          <ServiceDetails />
-          <CtaSection />
-        </>
-      )}
-    </div>
-  );
-};
+//       ) : (
+//         <>
+//           <ServiceBanner title="Commercial Interior" subTitle="Services" />
+//           <ServiceDetails />
+//           <CtaSection />
+//         </>
+//       )}
+//     </div>
+//   );
+// };
 
-export default ServicePage;
+// export default ServicePage;
