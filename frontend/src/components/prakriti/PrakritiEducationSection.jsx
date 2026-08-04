@@ -6,11 +6,26 @@ import brush2Img from '../../assets/nc_logo/brush2.png';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
+  
+  if (typeof path === 'object' && path.url) {
+    return getAssetUrl(path.url);
+  }
+  
+  if (typeof path !== 'string') return path;
   if (path.startsWith('http') || path.startsWith('data:')) return path;
+
+  if (path.startsWith('/src/') || path.startsWith('/assets/') || path.startsWith('/@fs/')) {
+    return path;
+  }
+
   const baseUrl = import.meta.env.VITE_API_URL 
     ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
     : 'http://localhost:5000';
-  return `${baseUrl}${path}`;
+    
+  const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  
+  return `${cleanBaseUrl}${cleanPath}`;
 };
 
 const defaultCards = [
@@ -53,6 +68,7 @@ const PrakritiEducationSection = ({ data }) => {
   return (
     <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-24 sm:py-32 lg:py-40 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
       
+      {/* Bottom-Left Watercolor Brush Accent */}
       <div className="absolute -bottom-36 -left-28 sm:-bottom-40 sm:-left-32 md:-bottom-48 md:-left-36 w-[450px] sm:w-[550px] md:w-[600px] aspect-square pointer-events-none z-0">
         <img 
           src={brushBottom} 
@@ -80,7 +96,7 @@ const PrakritiEducationSection = ({ data }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-start">
           {cardsToRender.map((card, index) => {
             const cardHeight = card.heightClass || heightClasses[index % heightClasses.length];
-            const imgSrc = card.image ? getAssetUrl(card.image) : card.image;
+            const imgSrc = card.image ? getAssetUrl(card.image) : '';
 
             return (
               <div 
@@ -88,11 +104,13 @@ const PrakritiEducationSection = ({ data }) => {
                 className={`relative w-full ${cardHeight} rounded-xs overflow-hidden group shadow-md hover:shadow-2xl transition-all duration-500`}
               >
                 {/* Background Card Image */}
-                <img 
-                  src={imgSrc} 
-                  alt={card.alt || card.title} 
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
+                {imgSrc && (
+                  <img 
+                    src={imgSrc} 
+                    alt={card.alt || card.title || 'Education Card'} 
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent transition-opacity duration-300" />
                 
                 {/* Text Title Overlay at Bottom-Left */}
