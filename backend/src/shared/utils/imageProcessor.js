@@ -14,10 +14,10 @@ export const processImageBuffer = async (buffer, originalName) => {
         fit: "inside",
         withoutEnlargement: true,
       })
-      .withMetadata() 
-      .webp({ 
-        quality: 100, 
-        effort: 6 
+      .withMetadata()
+      .webp({
+        quality: 80,
+        effort: 4
       })
       .toBuffer({ resolveWithObject: true });
 

@@ -63,16 +63,15 @@ export const saveMultipleFiles = async (files, userId) => {
     throw new AppError("No files provided", StatusCodes.BAD_REQUEST);
   }
 
-  const savedMedia = [];
-  for (const file of files) {
-    try {
-      const media = await saveUploadedFile(file, userId);
-      savedMedia.push(media);
-    } catch (error) {
+  const uploadPromises = files.map(file => 
+    saveUploadedFile(file, userId).catch(error => {
       logger.error(`Failed to process file ${file.originalname}`, error);
-    }
-  }
-  return savedMedia;
+      return null;
+    })
+  );
+
+  const savedMedia = await Promise.all(uploadPromises);
+  return savedMedia.filter(Boolean);
 };
 
 export const getMediaList = async (query) => {

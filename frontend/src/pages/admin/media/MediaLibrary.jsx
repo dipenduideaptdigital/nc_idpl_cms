@@ -39,32 +39,31 @@ const MediaLibrary = () => {
     return () => clearTimeout(timer);
   }, [searchTerm, fetchMedia]);
 
-  const handleUpload = async (e) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  // admin/media/MediaLibrary.jsx
+const handleUpload = async (e) => {
+  const files = e.target.files;
+  if (!files || files.length === 0) return;
 
-    const formData = new FormData();
-    if (files.length === 1) {
-      formData.append('image', files[0]);
-    } else {
-      Array.from(files).forEach(file => formData.append('images', file));
-    }
+  try {
+    setUploading(true);
 
-    try {
-      setUploading(true);
-      if (files.length === 1) {
-        await mediaApi.uploadImage(formData);
-      } else {
-        await mediaApi.uploadMultipleImages(formData);
-      }
-      setPage(1);
-      fetchMedia(searchTerm, 1);
-    } catch (err) {
-      alert(err.response?.data?.message || 'Upload failed');
-    } finally {
-      setUploading(false);
-    }
-  };
+    const uploadPromises = Array.from(files).map(file => {
+      const formData = new FormData();
+      formData.append('image', file);
+      return mediaApi.uploadImage(formData); 
+    });
+
+    await Promise.allSettled(uploadPromises);
+
+    setPage(1);
+    fetchMedia(searchTerm, 1);
+  } catch (err) {
+    alert('Some uploads might have failed. Please check the library.');
+  } finally {
+    setUploading(false);
+    e.target.value = null; 
+  }
+};
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to permanently delete this media?")) return;
