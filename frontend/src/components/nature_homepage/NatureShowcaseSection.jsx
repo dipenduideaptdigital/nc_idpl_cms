@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import brush1Img from '../../assets/nc_logo/brush1.png';
 import ellipseBtnImg from '../../assets/nc_logo/Ellipse_plus_btn.png';
 
@@ -94,14 +95,14 @@ const NatureShowcaseSection = ({ data }) => {
             />
 
             <div className="flex justify-end pr-8 sm:pr-12 pt-2">
-              <button className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#7BA641] transition-colors cursor-pointer">
+              <Link to="/ripples" className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#7BA641] transition-colors cursor-pointer">
                 <div className="w-7 h-7 rounded-full flex items-center justify-center relative overflow-hidden bg-[#eaf2e3] group-hover:bg-[#7BA641] transition-colors">
                   <img src={ellipseBtnImg} alt="+" className="w-full h-full object-cover" />
                 </div>
                 <span className="font-kanit text-xs sm:text-sm font-semibold tracking-wide lowercase text-zinc-800 group-hover:text-[#7BA641]">
                   {row2BtnText}
                 </span>
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -134,14 +135,14 @@ const NatureShowcaseSection = ({ data }) => {
             />
 
             <div className="flex justify-center pr-8 sm:pr-16 pt-2">
-              <button className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#7BA641] transition-colors cursor-pointer">
+              <Link to="/gulmo" className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#7BA641] transition-colors cursor-pointer">
                 <div className="w-7 h-7 rounded-full flex items-center justify-center relative overflow-hidden bg-[#eaf2e3] group-hover:bg-[#7BA641] transition-colors">
                   <img src={ellipseBtnImg} alt="+" className="w-full h-full object-cover" />
                 </div>
                 <span className="font-kanit text-xs sm:text-sm font-semibold tracking-wide lowercase text-zinc-800 group-hover:text-[#7BA641]">
                   {row3BtnText}
                 </span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>

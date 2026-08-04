@@ -21,6 +21,16 @@ import GulmoOurProjectsSection from '../components/gulmo/GulmoOurProjectsSection
 import GulmoLetsBeginSection from '../components/gulmo/GulmoLetsBeginSection';
 import GulmoConceptSection from '../components/gulmo/GulmoConceptSection';
 
+// Import Prakriti
+import PrakritiHero from '../components/prakriti/PrakritiHero';
+import PrakritiIntroSection from '../components/prakriti/PrakritiIntroSection';
+import PrakritiEducationSection from '../components/prakriti/PrakritiEducationSection';
+import PrakritiUpcomingWorkshopsSection from '../components/prakriti/PrakritiUpcomingWorkshopsSection';
+import PrakritiLabExperienceSection from '../components/prakriti/PrakritiLabExperienceSection';
+import PrakritiLabShowcaseSection from '../components/prakriti/PrakritiLabShowcaseSection';
+import PrakritiGetInTouchSection from '../components/prakriti/PrakritiGetInTouchSection';
+import PrakritiLetsBeginSection from '../components/prakriti/PrakritiLetsBeginSection';
+
 const CollapsibleTiptap = ({ label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -401,6 +411,186 @@ export const ncPuckConfig = {
         galleryJars: []
       },
       render: (props) => <GulmoConceptSection data={props} />
+    },
+
+    prakritiHero: {
+      fields: {
+        headlineLines: {
+          type: "array",
+          arrayFields: { line: { type: "text" } }
+        },
+        brushImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: {
+        headlineLines: [
+          { line: "It is a long" },
+          { line: "established" },
+          { line: "fact that a" },
+          { line: "reader will be" },
+          { line: "distracted." }
+        ]
+      },
+      render: (props) => <PrakritiHero data={props} />
+    },
+
+    prakritiIntro: {
+      fields: {
+        brandName: { type: "text" },
+        title: { type: "text" },
+        description: { type: "textarea" },
+        features: {
+          type: "array",
+          arrayFields: {
+            id: { type: "text" },
+            title: { type: "text" },
+            desc: { type: "textarea" }
+          }
+        }
+      },
+      defaultProps: {
+        brandName: "Prakriti Lab Research",
+        title: "Cultivating the Science of Living Ecosystems.",
+        description: "Prakriti Lab is NatureCube s experimental sanctuary where biological balance meets artistic expression. We blend botanical science, precision hydrodynamics, and sustainable design to craft living art installations that flourish for generations.",
+        features: []
+      },
+      render: (props) => <PrakritiIntroSection data={props} />
+    },
+
+    prakritiEducation: {
+      fields: {
+        headline: { type: "text" },
+        description: { type: "textarea" },
+        cards: {
+          type: "array",
+          arrayFields: {
+            id: { type: "text" },
+            title: { type: "textarea" },
+            image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          }
+        },
+        brushBottomImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: {
+        headline: "It is a long established fact that a reader will be distracted.",
+        description: "At Naturecube, we take students from schools and colleges on extensive field tours to natural surroundings...",
+        cards: []
+      },
+      render: (props) => <PrakritiEducationSection data={props} />
+    },
+
+    prakritiUpcomingWorkshops: {
+      fields: {
+        heading: { type: "text" },
+        subtext: { type: "textarea" },
+        buttonText: { type: "text" },
+        workshops: {
+          type: "array",
+          arrayFields: {
+            id: { type: "text" },
+            title: { type: "text" },
+            image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          }
+        }
+      },
+      defaultProps: {
+        heading: "UPCOMING WORKSHOPS",
+        subtext: "It is a long\nestablished fact\nthat a reader will\nbe distracted.",
+        buttonText: "Reserve Your Seat",
+        workshops: []
+      },
+      render: (props) => <PrakritiUpcomingWorkshopsSection data={props} />
+    },
+
+    prakritiLabExperience: {
+      fields: {
+        title: { type: "text" },
+        galleryImages: {
+          type: "array",
+          arrayFields: {
+            id: { type: "text" },
+            title: { type: "text" },
+            src: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          }
+        },
+        testimonials: {
+          type: "array",
+          arrayFields: {
+            id: { type: "text" },
+            name: { type: "textarea" },
+            location: { type: "text" },
+            batch: { type: "text" },
+            text: { type: "textarea" },
+            image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          }
+        }
+      },
+      defaultProps: {
+        title: "PRAKRITI LAB EXPERIENCE",
+        galleryImages: [],
+        testimonials: []
+      },
+      render: (props) => <PrakritiLabExperienceSection data={props} />
+    },
+
+    prakritiLabShowcase: {
+      fields: {
+        tagline: { type: "text" },
+        title: { type: "text" },
+        description: { type: "textarea" },
+        showcaseItems: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+            category: { type: "text" },
+            desc: { type: "textarea" },
+            image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          }
+        }
+      },
+      defaultProps: {
+        tagline: "Laboratory Portfolio",
+        title: "Prakriti Lab Experiments",
+        description: "Each creation is a meticulously engineered natural ecosystem designed for aesthetic tranquility and low-maintenance longevity.",
+        showcaseItems: []
+      },
+      render: (props) => <PrakritiLabShowcaseSection data={props} />
+    },
+
+    prakritiGetInTouch: {
+      fields: {
+        image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        badgeText: { type: "text" },
+        phone: { type: "text" },
+        heading: { type: "text" },
+        subtext: { type: "textarea" }
+      },
+      defaultProps: {
+        badgeText: "Our dedicated team is ready to assist you.",
+        phone: "+ 91-9830086975",
+        heading: "Get in touch.",
+        subtext: "Reach out to us today to schedule your personalized design consultation and start bringing your vision of nature to life."
+      },
+      render: (props) => <PrakritiGetInTouchSection data={props} />
+    },
+
+    prakritiLetsBegin: {
+      fields: {
+        title: { type: "text" },
+        description: { type: "textarea" },
+        storeUrl: { type: "text" },
+        storeUrlText: { type: "text" },
+        btnText: { type: "text" },
+        imageMain: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        imageOverlay: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: {
+        title: "Let's begin",
+        description: "Transform your indoor spaces with living art. Explore our curated collections of botanical aquascapes, terrariums, and custom biomes built by Prakriti Lab.",
+        storeUrl: "https://naturecube.store",
+        storeUrlText: "naturecube.store",
+        btnText: "STORE"
+      },
+      render: (props) => <PrakritiLetsBeginSection data={props} />
     },
   }
 };

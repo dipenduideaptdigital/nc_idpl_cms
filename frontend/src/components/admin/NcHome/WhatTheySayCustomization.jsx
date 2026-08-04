@@ -1,6 +1,5 @@
 import React from 'react';
 import { Plus, Trash2 } from 'lucide-react';
-import TipTapEditor from '../TipTapEditor';
 import ImageField from '../ImageField';
 
 const WhatTheySayCustomization = ({ data, setData }) => {
@@ -40,7 +39,7 @@ const WhatTheySayCustomization = ({ data, setData }) => {
             className="w-full border border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-zinc-100/10 focus:border-zinc-900 dark:focus:border-zinc-100 transition-colors duration-300" 
             value={data.tagline || ''} 
             onChange={e => handleChange('tagline', e.target.value)} 
-            placeholder="e.g. Testimonials"
+            placeholder="e.g. what they say"
           />
         </div>
         <div>
@@ -60,16 +59,18 @@ const WhatTheySayCustomization = ({ data, setData }) => {
             className="w-full border border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-zinc-100/10 focus:border-zinc-900 dark:focus:border-zinc-100 transition-colors duration-300" 
             value={data.italicTitle || ''} 
             onChange={e => handleChange('italicTitle', e.target.value)} 
-            placeholder="e.g. clients"
+            placeholder="e.g. partners"
           />
         </div>
 
         <div className="col-span-2">
-          <label className="block text-sm font-semibold mb-1 text-zinc-700 dark:text-zinc-300 transition-colors duration-300">Headline</label>
-          <TipTapEditor 
+          <label className="block text-sm font-semibold mb-1 text-zinc-700 dark:text-zinc-300 transition-colors duration-300">Headline (Use &lt;br /&gt; for line break)</label>
+          <textarea 
+            rows="2"
+            className="w-full border border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-zinc-100/10 focus:border-zinc-900 dark:focus:border-zinc-100 transition-colors duration-300"
             value={data.headline || ''} 
-            onChange={html => handleChange('headline', html)} 
-            placeholder="Enter main headline..."
+            onChange={e => handleChange('headline', e.target.value)} 
+            placeholder="e.g. Real people with<br />life-changing results"
           />
         </div>
       </div>
@@ -79,7 +80,7 @@ const WhatTheySayCustomization = ({ data, setData }) => {
           <h3 className="text-md font-bold text-zinc-900 dark:text-zinc-100 transition-colors duration-300">Testimonials</h3>
           <button 
             onClick={handleAddTestimonial} 
-            className="text-sm bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 px-3 py-1 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 flex items-center gap-1 transition-colors"
+            className="text-sm bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 px-3 py-1 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 flex items-center gap-1 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" /> Add Item
           </button>
@@ -90,7 +91,7 @@ const WhatTheySayCustomization = ({ data, setData }) => {
             <div key={idx} className="border border-zinc-200 dark:border-zinc-800 p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 relative transition-colors duration-300">
               <button 
                 onClick={() => handleRemoveTestimonial(idx)} 
-                className="absolute top-4 right-4 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 rounded-md transition-colors z-10"
+                className="absolute top-4 right-4 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 rounded-md transition-colors z-10 cursor-pointer"
                 title="Remove Testimonial"
               >
                 <Trash2 className="w-4 h-4"/>
@@ -104,7 +105,7 @@ const WhatTheySayCustomization = ({ data, setData }) => {
                     className="w-full border border-zinc-200 dark:border-zinc-700 rounded-lg p-2 text-sm bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors duration-300" 
                     value={item.name || ''} 
                     onChange={e => handleTestimonialChange(idx, 'name', e.target.value)} 
-                    placeholder="e.g. John Doe"
+                    placeholder="e.g. Mr. Dhiraj Basin"
                   />
                 </div>
                 <div>
@@ -114,15 +115,17 @@ const WhatTheySayCustomization = ({ data, setData }) => {
                     className="w-full border border-zinc-200 dark:border-zinc-700 rounded-lg p-2 text-sm bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors duration-300" 
                     value={item.location || ''} 
                     onChange={e => handleTestimonialChange(idx, 'location', e.target.value)} 
-                    placeholder="e.g. New York, USA"
+                    placeholder="e.g. Kolkata"
                   />
                 </div>
                 
                 <div className="col-span-2">
                   <label className="block text-xs font-semibold mb-1 text-zinc-600 dark:text-zinc-400 transition-colors duration-300">Comment</label>
-                  <TipTapEditor 
+                  <textarea 
+                    rows="3"
+                    className="w-full border border-zinc-200 dark:border-zinc-700 rounded-lg p-2 text-sm bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors duration-300"
                     value={item.comment || ''} 
-                    onChange={html => handleTestimonialChange(idx, 'comment', html)} 
+                    onChange={e => handleTestimonialChange(idx, 'comment', e.target.value)} 
                     placeholder="Enter client testimonial text..."
                   />
                 </div>

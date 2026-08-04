@@ -18,6 +18,16 @@ import GulmoOurProjectsSection from '../gulmo/GulmoOurProjectsSection';
 import GulmoLetsBeginSection from '../gulmo/GulmoLetsBeginSection';
 import GulmoConceptSection from '../gulmo/GulmoConceptSection';
 
+//Prakriti Lab
+import PrakritiHero from '../prakriti/PrakritiHero';
+import PrakritiIntroSection from '../prakriti/PrakritiIntroSection';
+import PrakritiEducationSection from '../prakriti/PrakritiEducationSection';
+import PrakritiLabShowcaseSection from '../prakriti/PrakritiLabShowcaseSection';
+import PrakritiLabExperienceSection from '../prakriti/PrakritiLabExperienceSection';
+import PrakritiUpcomingWorkshopsSection from '../prakriti/PrakritiUpcomingWorkshopsSection';
+import PrakritiGetInTouchSection from '../prakriti/PrakritiGetInTouchSection';
+import PrakritiLetsBeginSection from '../prakriti/PrakritiLetsBeginSection';
+
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
   
@@ -53,8 +63,24 @@ const BlockMapper = memo(({ block, index }) => {
       return <GulmoLetsBeginSection key={index} data={data} />;
     case 'gulmoConcept': 
       return <GulmoConceptSection key={index} data={data} />;
+    case 'prakritiHero': 
+      return <PrakritiHero key={index} data={data} />;
+    case 'prakritiIntro': 
+      return <PrakritiIntroSection key={index} data={data} />;
+    case 'prakritiEducation': 
+      return <PrakritiEducationSection key={index} data={data} />;
+    case 'prakritiUpcomingWorkshops': 
+      return <PrakritiUpcomingWorkshopsSection key={index} data={data} />;
+    case 'prakritiLabExperience': 
+      return <PrakritiLabExperienceSection key={index} data={data} />;
+    case 'prakritiLabShowcase': 
+      return <PrakritiLabShowcaseSection key={index} data={data} />;
+    case 'prakritiGetInTouch': 
+      return <PrakritiGetInTouchSection key={index} data={data} />;
+    case 'prakritiLetsBegin': 
+      return <PrakritiLetsBeginSection key={index} data={data} />;
       
-    // Rich Text Block (Updated for dark theme)
+    // Rich Text Block
     case 'richText':
       return (
         <div key={index} className="py-12 md:py-24 overflow-hidden w-full bg-[#070e06] text-white">

@@ -32,6 +32,17 @@ const gulmoForestOrganismBlockSchema = z.object({ type: z.literal("gulmoForestOr
 const gulmoOurProjectsBlockSchema = z.object({ type: z.literal("gulmoOurProjects"), data: z.record(z.any()).default({}) });
 const gulmoLetsBeginBlockSchema = z.object({ type: z.literal("gulmoLetsBegin"), data: z.record(z.any()).default({}) });
 const gulmoConceptBlockSchema = z.object({ type: z.literal("gulmoConcept"), data: z.record(z.any()).default({}) });
+
+// PRAKRITI LAB BLOCKS 
+const prakritiHeroBlockSchema = z.object({ type: z.literal("prakritiHero"), data: z.record(z.any()).default({}) });
+const prakritiIntroBlockSchema = z.object({ type: z.literal("prakritiIntro"), data: z.record(z.any()).default({}) });
+const prakritiEducationBlockSchema = z.object({ type: z.literal("prakritiEducation"), data: z.record(z.any()).default({}) });
+const prakritiUpcomingWorkshopsBlockSchema = z.object({ type: z.literal("prakritiUpcomingWorkshops"), data: z.record(z.any()).default({}) });
+const prakritiLabExperienceBlockSchema = z.object({ type: z.literal("prakritiLabExperience"), data: z.record(z.any()).default({}) });
+const prakritiLabShowcaseBlockSchema = z.object({ type: z.literal("prakritiLabShowcase"), data: z.record(z.any()).default({}) });
+const prakritiGetInTouchBlockSchema = z.object({ type: z.literal("prakritiGetInTouch"), data: z.record(z.any()).default({}) });
+const prakritiLetsBeginBlockSchema = z.object({ type: z.literal("prakritiLetsBegin"), data: z.record(z.any()).default({}) });
+
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
   data: z.object({
@@ -61,6 +72,16 @@ const blockSchema = z.discriminatedUnion("type", [
   gulmoOurProjectsBlockSchema,
   gulmoLetsBeginBlockSchema,
   gulmoConceptBlockSchema,
+
+  // PRAKRITI LAB BLOCKS
+  prakritiHeroBlockSchema,
+  prakritiIntroBlockSchema,
+  prakritiEducationBlockSchema,
+  prakritiUpcomingWorkshopsBlockSchema,
+  prakritiLabExperienceBlockSchema,
+  prakritiLabShowcaseBlockSchema,
+  prakritiGetInTouchBlockSchema,
+  prakritiLetsBeginBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

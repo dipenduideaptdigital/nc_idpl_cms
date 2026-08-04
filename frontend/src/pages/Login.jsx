@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
-import heroback from '../assets/homepage/banner_back.png';
-import logo from '../assets/logos/logo2.svg';
+import heroback from '../assets/nc_home/plant_hero.jpg';
+import logo from '../assets/nc_logo/naturecube.png';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
@@ -79,8 +79,8 @@ const Login = () => {
     }
   };
 
-  const activeColor = '#3B82F6';
-  const shadowColor = 'rgba(59,130,246,0.25)';
+  const activeColor = '#7BA641';
+  const shadowColor = 'rgba(123, 166, 65, 0.25)';
 
   return (
     <div 
@@ -92,34 +92,34 @@ const Login = () => {
         backgroundRepeat: 'no-repeat',
       }}
     >
+      {/* Background Glowing Orbs - restored to visible ambient glow */}
       <div 
         className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none transition-all duration-1000"
-        style={{ backgroundColor: activeColor, opacity: 0.15 }}
+        style={{ backgroundColor: activeColor, opacity: 0.14 }}
       />
       <div 
         className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none transition-all duration-1000"
-        style={{ backgroundColor: activeColor, opacity: 0.1 }}
+        style={{ backgroundColor: activeColor, opacity: 0.09 }}
       />
 
+      {/* Main Glassmorphism Card */}
       <div 
-        className="relative w-full max-w-md backdrop-blur-2xl bg-zinc-950/45 border rounded-[2rem] p-8 text-white transition-all duration-500 shadow-2xl flex flex-col items-center"
+        className="relative w-full max-w-md backdrop-blur-2xl bg-zinc-950/70 border rounded-[2rem] p-8 text-white transition-all duration-500 shadow-2xl flex flex-col items-center"
         style={{
-          borderColor: 'rgba(255, 255, 255, 0.08)',
-          boxShadow: `0 0 50px ${shadowColor}, inset 0 0 20px rgba(255, 255, 255, 0.02)`,
+          borderColor: 'rgba(123, 166, 65, 0.15)',
+          boxShadow: `0 0 60px ${shadowColor}, 0 0 100px rgba(0,0,0,0.4), inset 0 0 20px rgba(255, 255, 255, 0.02)`,
         }}
       >
-        {/* Logo Section  */}
+        
+        {/* Logo Section - Blended, Premium (no white box, matches dark glass card) */}
         <div className="flex flex-col items-center mb-8 cursor-pointer select-none">
           <Link to="/" className="flex items-center justify-center hover:opacity-90 transition-opacity">
             <img 
               src={logo} 
-              alt="Subhaakritee Logo" 
-              className="h-10 md:h-12 w-auto object-contain brightness-0 invert" 
+              alt="NatureCube Logo" 
+              className="h-12 md:h-14 w-auto object-contain brightness-0 invert drop-shadow-[0_0_15px_rgba(123,166,65,0.35)]" 
             />
           </Link>
-          <div className="text-[9px] tracking-[0.22em] mt-3 uppercase opacity-60 text-center">
-            The Design People
-          </div>
         </div>
 
         <h2 className="text-2xl font-bold tracking-wide text-zinc-100 mb-6 text-center">
@@ -146,7 +146,7 @@ const Login = () => {
               Email Address
             </label>
             <div className="relative group">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-white transition-colors" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-[#7BA641] transition-colors" />
               <input 
                 type="email" 
                 name="email"
@@ -158,7 +158,7 @@ const Login = () => {
                 style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }}
                 onFocus={(e) => {
                   e.target.style.borderColor = activeColor;
-                  e.target.style.boxShadow = `0 0 12px rgba(59,130,246,0.2)`;
+                  e.target.style.boxShadow = `0 0 12px ${shadowColor}`;
                 }}
                 onBlur={(e) => {
                   e.target.style.borderColor = 'rgba(255, 255, 255, 0.08)';
@@ -175,13 +175,13 @@ const Login = () => {
               </label>
               <Link 
                 to="/forgot-password" 
-                className="text-xs text-zinc-500 hover:text-white transition-colors"
+                className="text-xs text-zinc-500 hover:text-[#7BA641] transition-colors"
               >
                 Forgot?
               </Link>
             </div>
             <div className="relative group">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-white transition-colors" />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-[#7BA641] transition-colors" />
               <input 
                 type={showPassword ? 'text' : 'password'} 
                 name="password"
@@ -193,7 +193,7 @@ const Login = () => {
                 style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }}
                 onFocus={(e) => {
                   e.target.style.borderColor = activeColor;
-                  e.target.style.boxShadow = `0 0 12px rgba(59,130,246,0.2)`;
+                  e.target.style.boxShadow = `0 0 12px ${shadowColor}`;
                 }}
                 onBlur={(e) => {
                   e.target.style.borderColor = 'rgba(255, 255, 255, 0.08)';
@@ -217,7 +217,7 @@ const Login = () => {
             style={{
               backgroundColor: activeColor,
               color: 'white',
-              boxShadow: `0 4px 20px ${shadowColor}`,
+              boxShadow: `0 4px 30px rgba(123, 166, 65, 0.5)`,
             }}
           >
             {loading ? (
@@ -232,8 +232,8 @@ const Login = () => {
         </form>
 
         <div className="mt-6 text-sm text-zinc-400">
-          New to subAAkritee?{' '}
-          <Link to="/register" className="text-blue-500 hover:text-blue-400 font-medium transition-colors">
+          New to NatureCube?{' '}
+          <Link to="/register" className="text-[#7BA641] hover:text-[#6b9337] font-medium transition-colors">
             Sign Up
           </Link>
         </div>
@@ -242,8 +242,8 @@ const Login = () => {
         <div className="mt-8 pt-6 border-t border-white/10 w-full text-center space-y-3">
           <p className="text-[10px] text-zinc-500 leading-relaxed max-w-[280px] mx-auto">
             This site is protected by reCAPTCHA and the Google{' '}
-            <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-400 hover:underline transition-colors">Privacy Policy</a> and{' '}
-            <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-400 hover:underline transition-colors">Terms of Service</a> apply.
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer" className="text-[#7BA641] hover:underline transition-colors">Privacy Policy</a> and{' '}
+            <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer" className="text-[#7BA641] hover:underline transition-colors">Terms of Service</a> apply.
           </p>
           <p className="text-[10px] text-zinc-600 leading-relaxed max-w-[280px] mx-auto">
             Secured access using corporate credentials. Managed by internal IT operations &trade;.

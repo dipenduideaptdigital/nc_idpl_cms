@@ -43,12 +43,16 @@ const ServicesSection = ({ data }) => {
           <span className="font-kanit text-[20px] sm:text-[30px] font-medium text-[#7BA641] leading-[100%] tracking-[0%] align-middle block lowercase" style={{ fontWeight: 500, verticalAlign: 'middle' }}>
             {tagline}
           </span>
-          <h2 className="font-kanit text-xl sm:text-4xl lg:text-[37px] font-light text-zinc-900 leading-[38px] sm:leading-[48px] lg:leading-[55px] tracking-[0%] align-middle max-w-4xl" style={{ fontWeight: 300, verticalAlign: 'middle' }}>
-            {headline}
-          </h2>
-          <p className="font-kanit text-base sm:text-lg text-zinc-500 font-light leading-[34px] tracking-[0%] align-middle max-w-[420px]" style={{ fontWeight: 300, lineHeight: '34px', letterSpacing: '0%', verticalAlign: 'middle' }}>
-            {subtext}
-          </p>
+          <div 
+            className="font-kanit text-xl sm:text-4xl lg:text-[37px] font-light text-zinc-900 leading-[38px] sm:leading-[48px] lg:leading-[55px] tracking-[0%] align-middle max-w-4xl [&>p]:m-0" 
+            style={{ fontWeight: 300, verticalAlign: 'middle' }}
+            dangerouslySetInnerHTML={{ __html: headline }}
+          />
+          <div 
+            className="font-kanit text-base sm:text-lg text-zinc-500 font-light leading-[34px] tracking-[0%] align-middle max-w-[420px] [&>p]:m-0" 
+            style={{ fontWeight: 300, lineHeight: '34px', letterSpacing: '0%', verticalAlign: 'middle' }}
+            dangerouslySetInnerHTML={{ __html: subtext }}
+          />
         </div>
 
         {/* Dynamically Render Service Cards */}
@@ -78,9 +82,11 @@ const ServicesSection = ({ data }) => {
                   <h3 className="font-kanit text-2xl sm:text-3xl font-bold text-white tracking-wide uppercase">
                     {svc.title}
                   </h3>
-                  <p className="font-kanit text-sm sm:text-base text-zinc-200/90 font-light leading-[34px] tracking-[0%] align-middle" style={{ fontWeight: 300, lineHeight: '34px', letterSpacing: '0%', verticalAlign: 'middle' }}>
-                    {svc.description}
-                  </p>
+                  <div 
+                    className="font-kanit text-sm sm:text-base text-zinc-200/90 font-light leading-[34px] tracking-[0%] align-middle [&>p]:m-0" 
+                    style={{ fontWeight: 300, lineHeight: '34px', letterSpacing: '0%', verticalAlign: 'middle' }}
+                    dangerouslySetInnerHTML={{ __html: svc.description }}
+                  />
                 </div>
 
               </div>

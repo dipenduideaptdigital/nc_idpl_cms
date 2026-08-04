@@ -62,6 +62,14 @@ const PageEditor = () => {
     { type: 'gulmoOurProjects', label: 'Gulmo: Our Projects' },
     { type: 'gulmoLetsBegin', label: 'Gulmo: Lets Begin Store' },
     { type: 'gulmoConcept', label: 'Gulmo: Concept Gardening' },
+    { type: 'prakritiHero', label: 'Prakriti: Hero Section' },
+    { type: 'prakritiIntro', label: 'Prakriti: Intro Section' },
+    { type: 'prakritiEducation', label: 'Prakriti: Education Field Trips' },
+    { type: 'prakritiUpcomingWorkshops', label: 'Prakriti: Upcoming Workshops' },
+    { type: 'prakritiLabExperience', label: 'Prakriti: Lab Experience & Carousel' },
+    { type: 'prakritiLabShowcase', label: 'Prakriti: Showcase Portfolio' },
+    { type: 'prakritiGetInTouch', label: 'Prakriti: Get In Touch Form' },
+    { type: 'prakritiLetsBegin', label: 'Prakriti: Lets Begin Store' },
   ];
 
   const [formData, setFormData] = useState({

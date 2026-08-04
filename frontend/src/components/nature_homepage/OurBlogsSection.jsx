@@ -72,14 +72,16 @@ const OurBlogsSection = ({ data }) => {
           </div>
 
           {/* Light Subtext */}
-          <p className="font-kanit font-light text-lg sm:text-2xl text-[#6A6A6A] leading-relaxed mb-6 pt-4">
-            {subText}
-          </p>
+          <div 
+            className="font-kanit font-light text-lg sm:text-2xl text-[#6A6A6A] leading-relaxed mb-6 pt-4 [&>p]:m-0"
+            dangerouslySetInnerHTML={{ __html: subText }}
+          />
 
           {/* Bold Headline */}
-          <h2 className="font-kanit font-bold text-2xl sm:text-3xl lg:text-[36px] text-zinc-900 leading-snug">
-            {headline}
-          </h2>
+          <div 
+            className="font-kanit font-bold text-2xl sm:text-3xl lg:text-[36px] text-zinc-900 leading-snug [&>p]:m-0"
+            dangerouslySetInnerHTML={{ __html: headline }}
+          />
         </div>
 
         {/* Stepped Cards Grid */}
@@ -110,9 +112,10 @@ const OurBlogsSection = ({ data }) => {
                 </h3>
 
                 {/* Card Description */}
-                <p className="font-kanit font-light text-xs sm:text-sm text-zinc-500 leading-relaxed">
-                  {card.description}
-                </p>
+                <div 
+                  className="font-kanit font-light text-xs sm:text-sm text-zinc-500 leading-relaxed [&>p]:m-0"
+                  dangerouslySetInnerHTML={{ __html: card.description }}
+                />
               </div>
             );
           })}
