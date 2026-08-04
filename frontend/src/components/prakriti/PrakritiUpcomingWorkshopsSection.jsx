@@ -6,7 +6,6 @@ import card3 from '../../assets/nc_home/card3.png';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
-  
   if (typeof path === 'object' && path.url) {
     return getAssetUrl(path.url);
   }
@@ -54,7 +53,6 @@ const PrakritiUpcomingWorkshopsSection = ({ data }) => {
   return (
     <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-20 sm:py-28 lg:py-36 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
       
-      {/* Top-Left Paint Splash (bush3) */}
       <div className="absolute -top-20 -left-20 sm:-top-28 sm:-left-24 md:-top-32 md:-left-28 w-[420px] sm:w-[520px] md:w-[620px] aspect-square pointer-events-none z-0">
         <img
           src={bush3}
@@ -65,7 +63,6 @@ const PrakritiUpcomingWorkshopsSection = ({ data }) => {
 
       <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
         
-        {/* Left Column: Starts at top with UPCOMING WORKSHOPS */}
         <div className="lg:col-span-5 flex flex-col items-start space-y-10 pr-0 lg:pr-4">
           <h2 className="font-kanit font-bold text-3xl sm:text-4xl lg:text-[40px] xl:text-[42px] text-[#1E293B] tracking-tight uppercase leading-tight">
             {heading}
@@ -92,24 +89,26 @@ const PrakritiUpcomingWorkshopsSection = ({ data }) => {
             
             <div className="absolute -top-5 -left-7 w-full h-full bg-white/70 rounded-xs shadow-md border border-zinc-200/50 transform -rotate-1 pointer-events-none" />
             <div className="absolute -top-2.5 -left-3.5 w-full h-full bg-white/90 rounded-xs shadow-lg border border-zinc-200/80 transform rotate-0.5 pointer-events-none" />
-            
-            {/* Layer 2: Main Poster Card Slider Track */}
             <div className="relative z-10 bg-white rounded-xs shadow-2xl border border-zinc-200/90 p-2 sm:p-3 overflow-hidden">
               <div 
                 className="flex transition-transform duration-700 ease-in-out w-full"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
               >
-                {workshops.map((ws) => {
+                {workshops.map((ws, index) => {
                   const imgSrc = ws.image ? getAssetUrl(ws.image) : '';
                   
                   return (
-                    <div key={ws.id} className="w-full flex-shrink-0">
-                      {imgSrc && (
+                    <div key={ws.id || `workshop-${index}`} className="w-full flex-shrink-0">
+                      {imgSrc ? (
                         <img
                           src={imgSrc}
                           alt={ws.title || 'Workshop'}
-                          className="w-full h-auto object-contain rounded-xs"
+                          className="w-full aspect-[4/5] object-cover rounded-xs bg-zinc-50"
                         />
+                      ) : (
+                        <div className="w-full aspect-[4/5] bg-zinc-100 rounded-xs flex items-center justify-center border border-zinc-200">
+                          <span className="font-kanit text-zinc-400">No Image</span>
+                        </div>
                       )}
                     </div>
                   );
