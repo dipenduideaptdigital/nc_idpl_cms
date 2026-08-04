@@ -6,11 +6,25 @@ import card3 from '../../assets/nc_home/card3.png';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
+  
+  if (typeof path === 'object' && path.url) {
+    return getAssetUrl(path.url);
+  }
+  
+  if (typeof path !== 'string') return path;
   if (path.startsWith('http') || path.startsWith('data:')) return path;
+  if (path.startsWith('/src/') || path.startsWith('/assets/') || path.startsWith('/@fs/')) {
+    return path;
+  }
+
   const baseUrl = import.meta.env.VITE_API_URL 
     ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
     : 'http://localhost:5000';
-  return `${baseUrl}${path}`;
+    
+  const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  
+  return `${cleanBaseUrl}${cleanPath}`;
 };
 
 const defaultWorkshops = [
@@ -85,15 +99,21 @@ const PrakritiUpcomingWorkshopsSection = ({ data }) => {
                 className="flex transition-transform duration-700 ease-in-out w-full"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
               >
-                {workshops.map((ws) => (
-                  <div key={ws.id} className="w-full flex-shrink-0">
-                    <img
-                      src={ws.image ? getAssetUrl(ws.image) : ''}
-                      alt={ws.title}
-                      className="w-full h-auto object-contain rounded-xs"
-                    />
-                  </div>
-                ))}
+                {workshops.map((ws) => {
+                  const imgSrc = ws.image ? getAssetUrl(ws.image) : '';
+                  
+                  return (
+                    <div key={ws.id} className="w-full flex-shrink-0">
+                      {imgSrc && (
+                        <img
+                          src={imgSrc}
+                          alt={ws.title || 'Workshop'}
+                          className="w-full h-auto object-contain rounded-xs"
+                        />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
