@@ -70,6 +70,9 @@ const PageEditor = () => {
     { type: 'prakritiLabShowcase', label: 'Prakriti: Showcase Portfolio' },
     { type: 'prakritiGetInTouch', label: 'Prakriti: Get In Touch Form' },
     { type: 'prakritiLetsBegin', label: 'Prakriti: Lets Begin Store' },
+    { type: 'workshopHero', label: 'Workshop: Hero Section' },
+    { type: 'workshopDetails', label: 'Workshop: Details & Pricing' },
+    { type: 'workshopGallery', label: 'Workshop: Photo Gallery' },
   ];
 
   const [formData, setFormData] = useState({

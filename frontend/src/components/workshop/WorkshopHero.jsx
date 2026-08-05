@@ -1,14 +1,21 @@
 import React from 'react';
 import workshopBg from '../../assets/nc_home/Workshop_hero.png';
 
-// Helper to resolve asset URL if dynamic CMS image is passed
 const getAssetUrl = (path) => {
   if (!path) return '';
+  if (typeof path === 'object' && path.url) return getAssetUrl(path.url);
+  if (typeof path !== 'string') return path;
   if (path.startsWith('http') || path.startsWith('data:')) return path;
+  if (path.startsWith('/src/') || path.startsWith('/assets/') || path.startsWith('/@fs/')) return path;
+
   const baseUrl = import.meta.env.VITE_API_URL 
     ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
     : 'http://localhost:5000';
-  return `${baseUrl}${path}`;
+    
+  const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  
+  return `${cleanBaseUrl}${cleanPath}`;
 };
 
 const WorkshopHero = ({ data }) => {

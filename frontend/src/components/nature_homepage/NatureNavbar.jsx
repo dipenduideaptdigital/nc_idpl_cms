@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
 import leaveIcon from '../../assets/nc_logo/leave.png';
 
 const NatureNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isAboutPage = location.pathname === '/about';
 
   const navLinks = [
     { name: 'PHILOSOPHY', href: '#philosophy' },
@@ -13,6 +16,92 @@ const NatureNavbar = () => {
     { name: 'KNOWLEDGE', href: '#knowledge' },
     { name: 'CONTACT US', href: '/contact' },
   ];
+
+  if (isAboutPage) {
+    return (
+      <header className="absolute top-0 left-0 right-0 z-50 bg-transparent pt-6 pb-4 px-6 md:px-12 transition-all font-kanit">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+
+          {/* Logo */}
+          <Link to="/" className="flex items-center group">
+            <img
+              src={naturecubeLogo}
+              alt="NatureCube"
+              className="h-10 sm:h-12 w-auto object-contain"
+            />
+          </Link>
+
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center space-x-8 xl:space-x-12">
+            {navLinks.map((link) => (
+              link.href.startsWith('/') ? (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-xs font-bold tracking-[0.18em] text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
+                >
+                  {link.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
+                </Link>
+              ) : (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="text-xs font-bold tracking-[0.18em] text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
+                >
+                  {link.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
+                </a>
+              )
+            ))}
+          </nav>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden text-[#000000] p-2 focus:outline-none"
+            aria-label="Toggle Menu"
+          >
+            <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+              {mobileMenuOpen ? (
+                <path fillRule="evenodd" clipRule="evenodd" d="M18.278 16.864a1 1 0 01-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 01-1.414-1.414l4.828-4.828a1 1 0 01-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 011.414-1.414l4.829 4.828 4.828-4.828a1 1 0 111.414 1.414l-4.828 4.829 4.828 4.828z" />
+              ) : (
+                <path fillRule="evenodd" d="M4 5h16a1 1 0 010 2H4a1 1 0 110-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z" />
+              )}
+            </svg>
+          </button>
+
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden mt-4 bg-white/95 backdrop-blur-md rounded-lg p-6 border border-zinc-200 shadow-xl space-y-4 font-kanit">
+            {navLinks.map((link) => (
+              link.href.startsWith('/') ? (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-sm font-bold tracking-widest text-[#000000] hover:text-[#7BA641] transition-colors uppercase"
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-sm font-bold tracking-widest text-[#000000] hover:text-[#7BA641] transition-colors uppercase"
+                >
+                  {link.name}
+                </a>
+              )
+            ))}
+          </div>
+        )}
+      </header>
+    );
+  }
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 via-black/40 to-transparent pt-6 pb-4 px-6 md:px-12 transition-all">

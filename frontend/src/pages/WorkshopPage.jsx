@@ -11,16 +11,9 @@ const WorkshopPage = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#070e06] text-white font-sans antialiased">
-      {/* Hero Section */}
       <WorkshopHero />
-
-      {/* Workshop Details & Highlights Section */}
       <WorkshopDetailsSection />
-
-      {/* Workshop Photo Gallery Section */}
       <WorkshopGallerySection />
-
-      {/* Get Started CTA Section */}
       <GetStartedCtaSection />
     </div>
   );

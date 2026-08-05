@@ -4,7 +4,7 @@ import TipTapEditor from '../components/admin/TipTapEditor';
 import ContactFormBlock from '../components/blocks/ContactFormBlock';
 import ImageField from '../components/admin/ImageField';
 
-// Import Ripple
+// Ripple Components
 import RipplesHero from '../components/ripples/RipplesHero';
 import RipplesIntroSection from '../components/ripples/RipplesIntroSection';
 import RipplesNatureAquariumSection from '../components/ripples/RipplesNatureAquariumSection';
@@ -12,7 +12,7 @@ import RipplesLetsBeginSection from '../components/ripples/RipplesLetsBeginSecti
 import RipplesAquascapeSection from '../components/ripples/RipplesAquascapeSection';
 import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
 
-// Import Gulmo 
+// Gulmo Components
 import GulmoHero from '../components/gulmo/GulmoHero';
 import GulmoTerrariumSection from '../components/gulmo/GulmoTerrariumSection';
 import GulmoQuoteSection from '../components/gulmo/GulmoQuoteSection';
@@ -21,7 +21,7 @@ import GulmoOurProjectsSection from '../components/gulmo/GulmoOurProjectsSection
 import GulmoLetsBeginSection from '../components/gulmo/GulmoLetsBeginSection';
 import GulmoConceptSection from '../components/gulmo/GulmoConceptSection';
 
-// Import Prakriti
+// Prakriti Components
 import PrakritiHero from '../components/prakriti/PrakritiHero';
 import PrakritiIntroSection from '../components/prakriti/PrakritiIntroSection';
 import PrakritiEducationSection from '../components/prakriti/PrakritiEducationSection';
@@ -30,6 +30,12 @@ import PrakritiLabExperienceSection from '../components/prakriti/PrakritiLabExpe
 import PrakritiLabShowcaseSection from '../components/prakriti/PrakritiLabShowcaseSection';
 import PrakritiGetInTouchSection from '../components/prakriti/PrakritiGetInTouchSection';
 import PrakritiLetsBeginSection from '../components/prakriti/PrakritiLetsBeginSection';
+
+// Workshop Components
+import WorkshopHero from '../components/workshop/WorkshopHero';
+import WorkshopDetailsSection from '../components/workshop/WorkshopDetailsSection';
+import WorkshopGallerySection from '../components/workshop/WorkshopGallerySection';
+
 
 const CollapsibleTiptap = ({ label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,6 +82,7 @@ const CollapsibleTiptap = ({ label, value, onChange }) => {
 
 export const ncPuckConfig = {
   components: {
+
     // GENERIC BLOCKS
     richText: {
       fields: { 
@@ -113,8 +120,20 @@ export const ncPuckConfig = {
       render: (props) => <ContactFormBlock data={props} />
     },
 
-    // RIPPLES PAGE BLOCKS
+    getStartedCta: {
+      fields: {
+        title: { type: "textarea" },
+        buttonText: { type: "text" }
+      },
+      defaultProps: {
+        title: 'Ready to build your dream aquarium?',
+        buttonText: 'Get Started'
+      },
+      render: (props) => <GetStartedCtaSection data={props} />
+    },
 
+
+    // RIPPLES PAGE BLOCKS
     ripplesHero: {
       fields: {
         backgroundImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
@@ -127,7 +146,10 @@ export const ncPuckConfig = {
       fields: {
         mainTitle: { type: "textarea" },
         subTitle: { type: "textarea" },
-        description: { type: "textarea" },
+        description: { 
+          type: "custom", 
+          render: ({ value, onChange }) => <CollapsibleTiptap label="Description" value={value} onChange={onChange} /> 
+        },
         personImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         quote: { type: "textarea" },
         authorName: { type: "text" }
@@ -180,7 +202,7 @@ export const ncPuckConfig = {
             description: { type: "textarea" },
             img: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
           },
-          defaultItemProps: { num: '01', title: 'Step Title', description: 'Step description', img: '' }
+          defaultItemProps: { num: '01', title: 'New Step', description: 'Step description goes here...', img: '' }
         }
       },
       defaultProps: {
@@ -220,42 +242,29 @@ export const ncPuckConfig = {
             img: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
             caption: { type: "text" }
           },
-          defaultItemProps: { img: '', caption: 'Caption' }
+          defaultItemProps: { img: '', caption: 'New Gallery Item' }
         }
       },
       defaultProps: {
         subtitle: 'RIPPLES AQUATIC STUDIO',
         title: 'LIVING ART UNDER WATER',
-        description: 'At Ripples Aquatic Studio, we engineer pristine underwater ecosystems that bring tranquility, life, and architectural grandeur into your space. From high-tech Dutch aquascapes to low-maintenance biotope environments, each installation is a handcrafted living masterpiece.',
+        description: 'At Ripples Aquatic Studio, we engineer pristine underwater ecosystems that bring tranquility, life, and architectural grandeur into your space.',
         categories: [
-          { id: 'nature', label: 'Nature Aquariums', desc: 'Captivating underwater landscapes styled after natural forests, mountains, and valleys with vibrant living plants.', img: '' },
-          { id: 'biotope', label: 'Low-Maintenance Biotopes', desc: 'Authentic habitat recreations tailored for easy maintenance while mirroring natural rivers and aquatic ecosystems.', img: '' },
-          { id: 'hardscape', label: 'Custom Hardscapes', desc: 'Artisanal stone structures, fossil wood, and natural driftwood scapes crafted as permanent interior focal points.', img: '' },
-          { id: 'paludarium', label: 'Paludariums & Ripariums', desc: 'Seamlessly blending underwater aquatic realms with lush above-water terrarium plant growth.', img: '' }
+          { id: 'nature', label: 'Nature Aquariums', desc: 'Captivating underwater landscapes styled after natural forests, mountains, and valleys.', img: '' },
+          { id: 'biotope', label: 'Low-Maintenance Biotopes', desc: 'Authentic habitat recreations tailored for easy maintenance.', img: '' }
         ],
         gallerySubtitle: 'GALLERY SHOWCASE',
         galleryTitle: 'CRAFTED WITH PRECISION & PASSION',
         galleries: [
           { img: '', caption: 'Nature Aquarium Hardscape' },
-          { img: '', caption: 'High Precision CO2 Plant System' },
-          { img: '', caption: 'Custom Architectural Tank Fitments' }
+          { img: '', caption: 'High Precision CO2 Plant System' }
         ]
       },
       render: (props) => <RipplesAquascapeSection data={props} />
     },
 
-    getStartedCta: {
-      fields: {
-        title: { type: "textarea" },
-        buttonText: { type: "text" }
-      },
-      defaultProps: {
-        title: 'Ready to build your dream aquarium?',
-        buttonText: 'Get Started'
-      },
-      render: (props) => <GetStartedCtaSection data={props} />
-    },
 
+    // GULMO PAGE BLOCKS
     gulmoHero: {
       fields: {
         backgroundImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
@@ -266,25 +275,10 @@ export const ncPuckConfig = {
 
     gulmoTerrarium: {
       fields: {
-        // Main Jar
         mainJarImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
-        
-        // Category 1
-        cat1Title: { type: "text" },
-        cat1Desc: { type: "textarea" },
-        cat1Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
-        
-        // Category 2
-        cat2Title: { type: "text" },
-        cat2Desc: { type: "textarea" },
-        cat2Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
-        
-        // Category 3
-        cat3Title: { type: "text" },
-        cat3Desc: { type: "textarea" },
-        cat3Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
-
-        // Bottom Jars
+        cat1Title: { type: "text" }, cat1Desc: { type: "textarea" }, cat1Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        cat2Title: { type: "text" }, cat2Desc: { type: "textarea" }, cat2Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        cat3Title: { type: "text" }, cat3Desc: { type: "textarea" }, cat3Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         bottomJar1: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         bottomJar2: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         bottomJar3: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
@@ -292,11 +286,11 @@ export const ncPuckConfig = {
       },
       defaultProps: {
         cat1Title: 'Terrariums',
-        cat1Desc: 'Elevate your indoor spaces with lush, green gardens tailored to thrive in various home environments, promoting health and well-being.',
+        cat1Desc: 'Elevate your indoor spaces with lush, green gardens...',
         cat2Title: 'Paludariums',
-        cat2Desc: 'Experience the best of both worlds with our paludariums, which combine aquatic and terrestrial elements to create a unique and captivating display.',
+        cat2Desc: 'Experience the best of both worlds with our paludariums...',
         cat3Title: 'Indoor Gardens',
-        cat3Desc: 'Transform any space with our custom-designed aquariums that mimic natural aquatic ecosystems, providing a stunning visual and calming presence.'
+        cat3Desc: 'Transform any space with our custom-designed aquariums...'
       },
       render: (props) => <GulmoTerrariumSection data={props} />
     },
@@ -309,7 +303,7 @@ export const ncPuckConfig = {
         quoteAuthor: { type: "text" }
       },
       defaultProps: {
-        quoteText: "The forest is a peculiar organism of unlimited kindness and benevolence that makes no demands for its sustenance and extends generously the products of its life activity; it affords protection to all beings, offering shade even to the axe-man who destroys it.",
+        quoteText: "The forest is a peculiar organism of unlimited kindness and benevolence that makes no demands for its sustenance...",
         quoteAuthor: "Gautama Buddha"
       },
       render: (props) => <GulmoQuoteSection data={props} />
@@ -320,7 +314,6 @@ export const ncPuckConfig = {
         mainTitle: { type: "text" },
         brushImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         jarImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
-        
         f1Label: { type: "text" }, f1Title: { type: "text" }, f1Desc: { type: "textarea" },
         f2Label: { type: "text" }, f2Title: { type: "text" }, f2Desc: { type: "textarea" },
         f3Label: { type: "text" }, f3Title: { type: "text" }, f3Desc: { type: "textarea" },
@@ -330,12 +323,12 @@ export const ncPuckConfig = {
       },
       defaultProps: {
         mainTitle: "The Forest Is A Peculiar Organism",
-        f1Label: "GLASS", f1Title: "GLASS: TOP CASE", f1Desc: "A tall glass cover with ventilation holes that maintains high humidity and temperature.",
-        f2Label: "LIGHTING SYSTEM", f2Title: "LIGHTING SYSTEM", f2Desc: "High-spectrum LED lighting engineered specifically to support photosynthesis and vibrant plant growth.",
-        f3Label: "PLANTS", f3Title: "PLANTS & FLORA", f3Desc: "Lush evergreen mosses, miniature ferns, and humidity-retaining species crafted for long-term health.",
-        f4Label: "TERRA BASE", f4Sub: "TERRA PLATE", f4Title: "TERRA BASE & TERRA PLATE", f4Desc: "Cylindrical porous ceramic base supplying continuous hydration through natural water evaporation.",
-        f5Label: "SUBSTRATE", f5Title: "SUBSTRATE & SOIL", f5Desc: "Multi-layered nutrient substratum optimized for root breathability and balanced moisture retention.",
-        f6Label: "LAYOUT &", f6Sub: "MAINTENANCE TOOL", f6Title: "LAYOUT & MAINTENANCE TOOL", f6Desc: "Precision aquascaping tools for delicate planting, trimming, and pin-point maintenance."
+        f1Label: "GLASS", f1Title: "GLASS: TOP CASE", f1Desc: "A tall glass cover...",
+        f2Label: "LIGHTING", f2Title: "LIGHTING SYSTEM", f2Desc: "High-spectrum LED...",
+        f3Label: "PLANTS", f3Title: "PLANTS & FLORA", f3Desc: "Lush evergreen mosses...",
+        f4Label: "TERRA BASE", f4Sub: "PLATE", f4Title: "TERRA BASE", f4Desc: "Cylindrical porous...",
+        f5Label: "SUBSTRATE", f5Title: "SUBSTRATE & SOIL", f5Desc: "Multi-layered nutrient...",
+        f6Label: "TOOL", f6Sub: "MAINTENANCE", f6Title: "LAYOUT TOOL", f6Desc: "Precision tools..."
       },
       render: (props) => <GulmoForestOrganismSection data={props} />
     },
@@ -350,7 +343,7 @@ export const ncPuckConfig = {
       },
       defaultProps: {
         title: "OUR PROJECTS",
-        description: "Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India."
+        description: "Founded in 2014 with a vision of promoting ethical fish keeping..."
       },
       render: (props) => <GulmoOurProjectsSection data={props} />
     },
@@ -367,7 +360,7 @@ export const ncPuckConfig = {
       },
       defaultProps: {
         title: "Let's begin",
-        description: "Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.",
+        description: "Founded in 2014 with a vision...",
         storeUrl: "https://naturecube.store",
         storeUrlText: "naturecube.store",
         btnText: "STORE"
@@ -389,7 +382,8 @@ export const ncPuckConfig = {
             label: { type: "text" },
             desc: { type: "textarea" },
             img: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
-          }
+          },
+          defaultItemProps: { id: 'new', label: 'New Category', desc: 'Description...', img: '' }
         },
         galleryJars: {
           type: "array",
@@ -398,13 +392,14 @@ export const ncPuckConfig = {
             title: { type: "text" },
             subtitle: { type: "text" },
             img: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
-          }
+          },
+          defaultItemProps: { id: 'new', title: 'New Jar', subtitle: 'Subtitle...', img: '' }
         }
       },
       defaultProps: {
         studioName: "GULMO BOTANICAL STUDIO",
         mainTitle: "MINIATURE NATURE IN GLASS",
-        description: "Gulmo Concept Gardening reimagines indoor greenery through handcrafted living terrariums, enclosed ecosystems, and bespoke botanical installations. Each creation balances humidity, light, and natural substrata to form self-sustaining indoor habitats.",
+        description: "Gulmo Concept Gardening reimagines indoor greenery...",
         jarSectionTitle: "JAR COLLECTION",
         jarSectionHeading: "EXPLORE OUR BOTANICAL SANCTUARIES",
         categories: [],
@@ -413,11 +408,14 @@ export const ncPuckConfig = {
       render: (props) => <GulmoConceptSection data={props} />
     },
 
+
+    // PRAKRITI LAB BLOCKS
     prakritiHero: {
       fields: {
         headlineLines: {
           type: "array",
-          arrayFields: { line: { type: "text" } }
+          arrayFields: { line: { type: "text" } },
+          defaultItemProps: { line: "New text line" }
         },
         brushImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
@@ -437,20 +435,24 @@ export const ncPuckConfig = {
       fields: {
         brandName: { type: "text" },
         title: { type: "text" },
-        description: { type: "textarea" },
+        description: { 
+          type: "custom", 
+          render: ({ value, onChange }) => <CollapsibleTiptap label="Description" value={value} onChange={onChange} /> 
+        },
         features: {
           type: "array",
           arrayFields: {
             id: { type: "text" },
             title: { type: "text" },
             desc: { type: "textarea" }
-          }
+          },
+          defaultItemProps: { id: '01', title: 'New Feature', desc: 'Description goes here...' }
         }
       },
       defaultProps: {
         brandName: "Prakriti Lab Research",
         title: "Cultivating the Science of Living Ecosystems.",
-        description: "Prakriti Lab is NatureCube s experimental sanctuary where biological balance meets artistic expression. We blend botanical science, precision hydrodynamics, and sustainable design to craft living art installations that flourish for generations.",
+        description: "Prakriti Lab is NatureCube s experimental sanctuary...",
         features: []
       },
       render: (props) => <PrakritiIntroSection data={props} />
@@ -459,20 +461,24 @@ export const ncPuckConfig = {
     prakritiEducation: {
       fields: {
         headline: { type: "text" },
-        description: { type: "textarea" },
+        description: { 
+          type: "custom", 
+          render: ({ value, onChange }) => <CollapsibleTiptap label="Description" value={value} onChange={onChange} /> 
+        },
         cards: {
           type: "array",
           arrayFields: {
             id: { type: "text" },
             title: { type: "textarea" },
             image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
-          }
+          },
+          defaultItemProps: { id: '1', title: 'New Card', image: '' }
         },
         brushBottomImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
       defaultProps: {
         headline: "It is a long established fact that a reader will be distracted.",
-        description: "At Naturecube, we take students from schools and colleges on extensive field tours to natural surroundings...",
+        description: "At Naturecube, we take students from schools and colleges...",
         cards: []
       },
       render: (props) => <PrakritiEducationSection data={props} />
@@ -481,7 +487,10 @@ export const ncPuckConfig = {
     prakritiUpcomingWorkshops: {
       fields: {
         heading: { type: "text" },
-        subtext: { type: "textarea" },
+        subtext: { 
+          type: "custom", 
+          render: ({ value, onChange }) => <CollapsibleTiptap label="Subtext" value={value} onChange={onChange} /> 
+        },
         buttonText: { type: "text" },
         workshops: {
           type: "array",
@@ -489,7 +498,8 @@ export const ncPuckConfig = {
             id: { type: "text" },
             title: { type: "text" },
             image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
-          }
+          },
+          defaultItemProps: { id: '1', title: 'NEW WORKSHOP', image: '' }
         }
       },
       defaultProps: {
@@ -498,7 +508,7 @@ export const ncPuckConfig = {
         buttonText: "Reserve Your Seat",
         workshops: []
       },
-      render: (props) => <PrakritiUpcomingWorkshopsSection data={props} />
+      render: (props) => <PrakritiUpcomingWorkshopsSection data={props} {...props} />
     },
 
     prakritiLabExperience: {
@@ -510,7 +520,8 @@ export const ncPuckConfig = {
             id: { type: "text" },
             title: { type: "text" },
             src: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
-          }
+          },
+          defaultItemProps: { id: '1', title: 'Gallery Image', src: '' }
         },
         testimonials: {
           type: "array",
@@ -519,9 +530,13 @@ export const ncPuckConfig = {
             name: { type: "textarea" },
             location: { type: "text" },
             batch: { type: "text" },
-            text: { type: "textarea" },
+            text: { 
+              type: "custom", 
+              render: ({ value, onChange }) => <CollapsibleTiptap label="Testimonial Text" value={value} onChange={onChange} /> 
+            },
             image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
-          }
+          },
+          defaultItemProps: { id: '1', name: 'Name', location: '', batch: 'Batch', text: 'Testimonial text...', image: '' }
         }
       },
       defaultProps: {
@@ -536,7 +551,10 @@ export const ncPuckConfig = {
       fields: {
         tagline: { type: "text" },
         title: { type: "text" },
-        description: { type: "textarea" },
+        description: { 
+          type: "custom", 
+          render: ({ value, onChange }) => <CollapsibleTiptap label="Description" value={value} onChange={onChange} /> 
+        },
         showcaseItems: {
           type: "array",
           arrayFields: {
@@ -544,7 +562,8 @@ export const ncPuckConfig = {
             category: { type: "text" },
             desc: { type: "textarea" },
             image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
-          }
+          },
+          defaultItemProps: { title: 'Item Title', category: 'Category', desc: 'Description...', image: '' }
         }
       },
       defaultProps: {
@@ -562,7 +581,10 @@ export const ncPuckConfig = {
         badgeText: { type: "text" },
         phone: { type: "text" },
         heading: { type: "text" },
-        subtext: { type: "textarea" }
+        subtext: { 
+          type: "custom", 
+          render: ({ value, onChange }) => <CollapsibleTiptap label="Subtext" value={value} onChange={onChange} /> 
+        }
       },
       defaultProps: {
         badgeText: "Our dedicated team is ready to assist you.",
@@ -576,7 +598,10 @@ export const ncPuckConfig = {
     prakritiLetsBegin: {
       fields: {
         title: { type: "text" },
-        description: { type: "textarea" },
+        description: { 
+          type: "custom", 
+          render: ({ value, onChange }) => <CollapsibleTiptap label="Description" value={value} onChange={onChange} /> 
+        },
         storeUrl: { type: "text" },
         storeUrlText: { type: "text" },
         btnText: { type: "text" },
@@ -591,6 +616,79 @@ export const ncPuckConfig = {
         btnText: "STORE"
       },
       render: (props) => <PrakritiLetsBeginSection data={props} />
+    },
+
+    // WORKSHOP PAGE BLOCKS
+    workshopHero: {
+      fields: {
+        backgroundImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: { backgroundImage: '' },
+      render: (props) => <WorkshopHero data={props} />
+    },
+
+    workshopDetails: {
+      fields: {
+        title: { type: "text" },
+        mentor: { type: "text" },
+        date: { type: "text" },
+        fee: { type: "text" },
+        feeSubtext: { type: "text" },
+        buttonText: { type: "text" },
+        detailsSubtitle: { type: "text" },
+        detailsDescription: { 
+          type: "custom", 
+          render: ({ value, onChange }) => <CollapsibleTiptap label="Details Description" value={value} onChange={onChange} /> 
+        },
+        option1Title: { type: "text" },
+        option1Items: {
+          type: "array",
+          arrayFields: { item: { type: "text" } },
+          defaultItemProps: { item: "New Option Item" }
+        },
+        option2Title: { type: "text" },
+        option2Items: {
+          type: "array",
+          arrayFields: { item: { type: "text" } },
+          defaultItemProps: { item: "New Option Item" }
+        }
+      },
+      defaultProps: {
+        title: "TERRARIUM WORKSHOP",
+        mentor: "GAUTAM GUPTA",
+        date: "22nd March, 2026",
+        fee: "₹ 8500.00",
+        feeSubtext: "inclusive of all taxes",
+        buttonText: "BOOK NOW",
+        detailsSubtitle: "AN ALL-INCLUSIVE WORKSHOP EXPERIENCE",
+        detailsDescription: "At Naturecube, we take students from schools and colleges on extensive field tours...",
+        option1Title: "DOOA GLASS POT MARU 95",
+        option1Items: [{ item: "DOOA GLASS POT MARU 95" }, { item: "DOOA JUNGLE SOIL 700ML" }],
+        option2Title: "EXTRA CLEAR CUSTOM TANK",
+        option2Items: [{ item: "EXTRA CLEAR CUSTOM TANK" }, { item: "PLANTS & MOSS" }]
+      },
+      render: (props) => {
+        const normalizedProps = {
+          ...props,
+          option1Items: props.option1Items?.map(obj => typeof obj === 'string' ? obj : obj.item) || [],
+          option2Items: props.option2Items?.map(obj => typeof obj === 'string' ? obj : obj.item) || []
+        };
+        return <WorkshopDetailsSection data={normalizedProps} />;
+      }
+    },
+
+    workshopGallery: {
+      fields: {
+        image1: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        image2: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        image3: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        image4: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        image5: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+      },
+      defaultProps: {
+        image1: '', image2: '', image3: '', image4: '', image5: ''
+      },
+      render: (props) => <WorkshopGallerySection data={props} />
     },
   }
 };

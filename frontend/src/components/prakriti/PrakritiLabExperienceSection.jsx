@@ -31,7 +31,7 @@ const defaultTestimonials = [
     location: "KOLKATA",
     batch: "Batch of Feb'26",
     image: team1,
-    text: "At Naturecube, we take students from schools and colleges on extensive field tours to natural surroundings and nature reserves, teaching them about nature, conservation, and ecosystem functions."
+    text: ", we take students from schools and cAt Naturecubeolleges on extensive field tours to natural surroundings and nature reserves, teaching them about nature, conservation, and ecosystem functions."
   },
   {
     id: 2,

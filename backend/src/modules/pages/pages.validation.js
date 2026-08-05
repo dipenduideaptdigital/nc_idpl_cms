@@ -43,6 +43,11 @@ const prakritiLabShowcaseBlockSchema = z.object({ type: z.literal("prakritiLabSh
 const prakritiGetInTouchBlockSchema = z.object({ type: z.literal("prakritiGetInTouch"), data: z.record(z.any()).default({}) });
 const prakritiLetsBeginBlockSchema = z.object({ type: z.literal("prakritiLetsBegin"), data: z.record(z.any()).default({}) });
 
+// WORKSHOP BLOCKS
+const workshopHeroBlockSchema = z.object({ type: z.literal("workshopHero"), data: z.record(z.any()).default({}) });
+const workshopDetailsBlockSchema = z.object({ type: z.literal("workshopDetails"), data: z.record(z.any()).default({}) });
+const workshopGalleryBlockSchema = z.object({ type: z.literal("workshopGallery"), data: z.record(z.any()).default({}) });
+
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
   data: z.object({
@@ -82,6 +87,11 @@ const blockSchema = z.discriminatedUnion("type", [
   prakritiLabShowcaseBlockSchema,
   prakritiGetInTouchBlockSchema,
   prakritiLetsBeginBlockSchema,
+
+  // WORKSHOP BLOCKS
+  workshopHeroBlockSchema,
+  workshopDetailsBlockSchema,
+  workshopGalleryBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

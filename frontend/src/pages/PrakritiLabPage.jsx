@@ -14,25 +14,18 @@ const PrakritiLabPage = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#FAFAF7] text-zinc-900 font-sans antialiased">
-      {/* Hero Section */}
       <PrakritiHero />
 
-      {/* Field Trips, Community Interaction & Nature Workshops Section */}
       <PrakritiEducationSection />
 
-      {/* Upcoming Workshops Section */}
       <PrakritiUpcomingWorkshopsSection />
 
-      {/* Prakriti Lab Experience Section */}
       <PrakritiLabExperienceSection />
 
-      {/* Get In Touch Contact Form Section */}
       <PrakritiGetInTouchSection />
 
-      {/* Store & Let's Begin CTA */}
       <PrakritiLetsBeginSection />
 
-      {/* Get Started CTA */}
       <GetStartedCtaSection />
     </div>
   );

@@ -4,16 +4,22 @@ import card1 from '../../assets/nc_home/plab3.png';
 import card2 from '../../assets/nc_home/plab4.png';
 import card3 from '../../assets/nc_home/card3.png';
 
+// Upgraded getAssetUrl: Handles deeper Puck ImageField objects & string paths flawlessly
 const getAssetUrl = (path) => {
   if (!path) return '';
-  if (typeof path === 'object' && path.url) {
-    return getAssetUrl(path.url);
+  
+  let urlPath = path;
+  
+  if (typeof path === 'object') {
+    urlPath = path.url || path.src || path.path || '';
   }
   
-  if (typeof path !== 'string') return path;
-  if (path.startsWith('http') || path.startsWith('data:')) return path;
-  if (path.startsWith('/src/') || path.startsWith('/assets/') || path.startsWith('/@fs/')) {
-    return path;
+  if (typeof urlPath !== 'string' || !urlPath) return '';
+  
+  if (urlPath.startsWith('http') || urlPath.startsWith('data:')) return urlPath;
+  
+  if (urlPath.startsWith('/src/') || urlPath.startsWith('/assets/') || urlPath.startsWith('/@fs/')) {
+    return urlPath;
   }
 
   const baseUrl = import.meta.env.VITE_API_URL 
@@ -21,7 +27,7 @@ const getAssetUrl = (path) => {
     : 'http://localhost:5000';
     
   const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const cleanPath = urlPath.startsWith('/') ? urlPath : `/${urlPath}`;
   
   return `${cleanBaseUrl}${cleanPath}`;
 };
@@ -32,13 +38,18 @@ const defaultWorkshops = [
   { id: 3, title: "BIOPHILIC ART WORKSHOP", image: card3 }
 ];
 
-const PrakritiUpcomingWorkshopsSection = ({ data }) => {
+const PrakritiUpcomingWorkshopsSection = (props) => {
+  const blockData = props?.data || props || {};
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const heading = data?.heading || "UPCOMING WORKSHOPS";
-  const subtext = data?.subtext || "It is a long\nestablished fact\nthat a reader will\nbe distracted.";
-  const buttonText = data?.buttonText || "Reserve Your Seat";
-  const workshops = (data?.workshops && data.workshops.length > 0) ? data.workshops : defaultWorkshops;
+  const heading = blockData.heading || "UPCOMING WORKSHOPS";
+  const subtext = blockData.subtext || "It is a long\nestablished fact\nthat a reader will\nbe distracted.";
+  const buttonText = blockData.buttonText || "Reserve Your Seat";
+  
+  // Array Fallbacks for Workshops
+  const dynamicWorkshops = blockData.workshops || blockData.cards || blockData.items || [];
+  const workshops = dynamicWorkshops.length > 0 ? dynamicWorkshops : defaultWorkshops;
 
   const currentWorkshop = workshops[currentIndex] || workshops[0];
 
@@ -53,16 +64,18 @@ const PrakritiUpcomingWorkshopsSection = ({ data }) => {
   return (
     <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-20 sm:py-28 lg:py-36 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
       
+      {/* Top-Left Paint Splash */}
       <div className="absolute -top-20 -left-20 sm:-top-28 sm:-left-24 md:-top-32 md:-left-28 w-[420px] sm:w-[520px] md:w-[620px] aspect-square pointer-events-none z-0">
         <img
           src={bush3}
-          alt=""
+          alt="Paint Splash Accent"
           className="w-full h-full object-contain object-left-top opacity-55 filter brightness-105 contrast-105"
         />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
         
+        {/* Left Column */}
         <div className="lg:col-span-5 flex flex-col items-start space-y-10 pr-0 lg:pr-4">
           <h2 className="font-kanit font-bold text-3xl sm:text-4xl lg:text-[40px] xl:text-[42px] text-[#1E293B] tracking-tight uppercase leading-tight">
             {heading}
@@ -83,41 +96,46 @@ const PrakritiUpcomingWorkshopsSection = ({ data }) => {
           </div>
         </div>
 
-        {/* Right Column: Poster Card Deck with Continuous Smooth Slide Track */}
+        {/* Right Column: Dynamic Stacked Cards Loop */}
         <div className="lg:col-span-5 relative w-full flex items-center justify-center lg:justify-end pt-10 lg:pt-30">
-          <div className="relative w-full max-w-[500px] xl:max-w-[540px]">
+          <div className="relative w-full max-w-[500px] xl:max-w-[540px] aspect-[4/3] sm:aspect-[1.25/1]">
             
-            <div className="absolute -top-5 -left-7 w-full h-full bg-white/70 rounded-xs shadow-md border border-zinc-200/50 transform -rotate-1 pointer-events-none" />
-            <div className="absolute -top-2.5 -left-3.5 w-full h-full bg-white/90 rounded-xs shadow-lg border border-zinc-200/80 transform rotate-0.5 pointer-events-none" />
-            <div className="relative z-10 bg-white rounded-xs shadow-2xl border border-zinc-200/90 p-2 sm:p-3 overflow-hidden">
-              <div 
-                className="flex transition-transform duration-700 ease-in-out w-full"
-                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-              >
-                {workshops.map((ws, index) => {
-                  const imgSrc = ws.image ? getAssetUrl(ws.image) : '';
-                  
-                  return (
-                    <div key={ws.id || `workshop-${index}`} className="w-full flex-shrink-0">
-                      {imgSrc ? (
-                        <img
-                          src={imgSrc}
-                          alt={ws.title || 'Workshop'}
-                          className="w-full aspect-[4/5] object-cover rounded-xs bg-zinc-50"
-                        />
-                      ) : (
-                        <div className="w-full aspect-[4/5] bg-zinc-100 rounded-xs flex items-center justify-center border border-zinc-200">
-                          <span className="font-kanit text-zinc-400">No Image</span>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            {workshops.map((ws, index) => {
+              const uploadedImgField = ws.image || ws.imageUrl || ws.src || ws.picture;
+              
+              const adminImg = uploadedImgField ? getAssetUrl(uploadedImgField) : '';
+              const fallbackImg = defaultWorkshops[index]?.image || card1;
+              const finalImageSrc = adminImg || fallbackImg;
+
+              const relativeIndex = (index - currentIndex + workshops.length) % workshops.length;
+              
+              let stackStyles = "";
+              if (relativeIndex === 0) {
+                stackStyles = "z-30 translate-y-0 translate-x-0 rotate-0 scale-100 opacity-100 shadow-2xl";
+              } else if (relativeIndex === 1) {
+                stackStyles = "z-20 -translate-y-3 -translate-x-4 rotate-1 scale-[0.97] opacity-90 shadow-lg";
+              } else if (relativeIndex === 2) {
+                stackStyles = "z-10 -translate-y-6 -translate-x-8 -rotate-1 scale-[0.94] opacity-70 shadow-md";
+              } else {
+                stackStyles = "z-0 -translate-y-8 -translate-x-10 scale-[0.9] opacity-0 pointer-events-none"; 
+              }
+
+              return (
+                <div 
+                  key={ws.id || index}
+                  className={`absolute top-0 left-0 w-full h-full bg-white rounded-xs border border-zinc-200/90 p-2 sm:p-3 transition-all duration-700 ease-in-out origin-bottom-right ${stackStyles}`}
+                >
+                   <img
+                      src={finalImageSrc}
+                      alt={ws.title || 'Workshop'}
+                      className="w-full h-full object-cover rounded-xs"
+                    />
+                </div>
+              );
+            })}
 
             {/* Attached Dark Overlay Box */}
-            <div className="absolute -right-4 sm:-right-60 bottom-8 sm:bottom-30 z-20 bg-[#0C1A22] text-white p-5 sm:p-6 w-[210px] sm:w-[245px] rounded-xs shadow-2xl flex flex-col justify-between border border-zinc-800/80 min-h-[175px] sm:min-h-[195px]">
+            <div className="absolute -right-4 sm:-right-60 bottom-8 sm:bottom-12 z-40 bg-[#0C1A22] text-white p-5 sm:p-6 w-[210px] sm:w-[245px] rounded-xs shadow-2xl flex flex-col justify-between border border-zinc-800/80 min-h-[175px] sm:min-h-[195px]">
               <div className="mb-4">
                 <h3 className="font-kanit font-bold text-lg sm:text-xl tracking-wide uppercase text-white leading-tight transition-all duration-500">
                   {currentWorkshop?.title}
@@ -132,12 +150,13 @@ const PrakritiUpcomingWorkshopsSection = ({ data }) => {
                 <button
                   onClick={handleNext}
                   aria-label="Next Workshop"
-                  className="text-white hover:text-[#7BA641] transition-all duration-300 text-xl font-bold p-1 cursor-pointer flex items-center gap-1 group hover:scale-110 active:scale-95"
+                  className="text-[#ffffff] hover:text-[#7BA641] transition-all duration-300 text-xl font-bold p-1 cursor-pointer flex items-center gap-1 group hover:scale-110 active:scale-95"
                 >
                   <span className="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
                 </button>
               </div>
             </div>
+            
           </div>
         </div>
       </div>

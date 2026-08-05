@@ -14,12 +14,22 @@ const WorkshopDetailsSection = ({ data }) => {
   const fee = data?.fee || "₹ 8500.00";
   const feeSubtext = data?.feeSubtext || "inclusive of all taxes";
   const buttonText = data?.buttonText || "BOOK NOW";
-
   const detailsSubtitle = data?.detailsSubtitle || "AN ALL-INCLUSIVE WORKSHOP EXPERIENCE";
-  const detailsDescription = data?.detailsDescription || "At Naturecube, we take students from schools and colleges on extensive field tours to natural surroundings and nature reserves, teaching them about nature, conservation, and ecosystem functions. Using both outdoor environments and our gallery’s aquariums and terrariums as models.";
+  const detailsDescription = data?.detailsDescription || "<p>At Naturecube, we take students from schools and colleges on extensive field tours to natural surroundings and nature reserves, teaching them about nature, conservation, and ecosystem functions. Using both outdoor environments and our gallery's aquariums and terrariums as models.</p>";
+  
+  // SENIOR ENGINEER FIX: Foolproof extraction for Puck CMS array objects
+  // This guarantees that React will always receive a valid string, preventing the white screen crash.
+  const extractText = (val) => {
+    if (!val) return "";
+    if (typeof val === 'string') return val;
+    if (typeof val === 'object') {
+      // Safely extract the target string even if Puck injects hidden _id fields
+      return val.item || val.name || val.title || Object.values(val)[0] || "";
+    }
+    return String(val);
+  };
 
-  const option1Title = data?.option1Title || "DOOA GLASS POT MARU 95";
-  const option1Items = data?.option1Items || [
+  const defaultOpt1 = [
     "DOOA GLASS POT MARU 95",
     "DOOA JUNGLE SOIL 700ML",
     "DOOA JUNGLE BASE 200ML",
@@ -30,8 +40,12 @@ const WorkshopDetailsSection = ({ data }) => {
     "TWEEZER"
   ];
 
-  const option2Title = data?.option2Title || "EXTRA CLEAR CUSTOM TANK";
-  const option2Items = data?.option2Items || [
+  const option1Title = data?.option1Title || "DOOA GLASS POT MARU 95";
+  const rawOpt1 = Array.isArray(data?.option1Items) && data.option1Items.length > 0 ? data.option1Items : defaultOpt1;
+  // Apply the secure extraction
+  const option1Items = rawOpt1.map(extractText);
+
+  const defaultOpt2 = [
     "EXTRA CLEAR CUSTOM TANK",
     "DOOA JUNGLE SOIL 700ML",
     "DOOA JUNGLE BASE 200ML",
@@ -41,6 +55,11 @@ const WorkshopDetailsSection = ({ data }) => {
     "TERRARIUM HUMIDIFIER BOTTLE",
     "TWEEZER"
   ];
+
+  const option2Title = data?.option2Title || "EXTRA CLEAR CUSTOM TANK";
+  const rawOpt2 = Array.isArray(data?.option2Items) && data.option2Items.length > 0 ? data.option2Items : defaultOpt2;
+  // Apply the secure extraction
+  const option2Items = rawOpt2.map(extractText);
 
   return (
     <section className="w-full bg-[#FAFAF7] text-zinc-900 py-16 sm:py-24 px-6 sm:px-12 lg:px-20 xl:px-24 select-none font-kanit">
@@ -98,7 +117,6 @@ const WorkshopDetailsSection = ({ data }) => {
                 {buttonText}
               </button>
             </div>
-
           </div>
 
           {/* Right Column: Workshop Details, Highlights & Packages */}
@@ -112,9 +130,11 @@ const WorkshopDetailsSection = ({ data }) => {
               <h3 className="text-[#0C1A22] font-bold text-xl sm:text-2xl tracking-tight uppercase leading-snug mb-4">
                 {detailsSubtitle}
               </h3>
-              <p className="text-[#6A6A6A] text-sm sm:text-base leading-relaxed max-w-2xl font-normal">
-                {detailsDescription}
-              </p>
+              
+              <div 
+                className="text-[#6A6A6A] text-sm sm:text-base leading-relaxed max-w-2xl font-normal tiptap-content"
+                dangerouslySetInnerHTML={{ __html: detailsDescription }}
+              />
             </div>
 
             {/* Highlights Section */}
@@ -122,55 +142,30 @@ const WorkshopDetailsSection = ({ data }) => {
               <h2 className="text-[#6A6A6A] font-bold text-sm sm:text-base tracking-wider uppercase mb-6">
                 HIGHLIGHTS
               </h2>
-
               <div className="space-y-6">
-                {/* Highlight 1: Knowledge Session */}
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-center">
-                    <img
-                      src={knowledgeIcon}
-                      alt="Knowledge Session"
-                      className="w-full h-full object-contain"
-                    />
+                    <img src={knowledgeIcon} alt="Knowledge Session" className="w-full h-full object-contain" />
                   </div>
-                  <span className="text-[#0C1A22] font-bold text-lg sm:text-xl tracking-wide">
-                    Knowledge Session
-                  </span>
+                  <span className="text-[#0C1A22] font-bold text-lg sm:text-xl tracking-wide">Knowledge Session</span>
                 </div>
-
-                {/* Highlight 2: Demo Session */}
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-center">
-                    <img
-                      src={demoIcon}
-                      alt="Demo Session"
-                      className="w-full h-full object-contain"
-                    />
+                    <img src={demoIcon} alt="Demo Session" className="w-full h-full object-contain" />
                   </div>
-                  <span className="text-[#0C1A22] font-bold text-lg sm:text-xl tracking-wide">
-                    Demo Session
-                  </span>
+                  <span className="text-[#0C1A22] font-bold text-lg sm:text-xl tracking-wide">Demo Session</span>
                 </div>
-
-                {/* Highlight 3: Hands-on-Experience */}
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-center">
-                    <img
-                      src={handsIcon}
-                      alt="Hands-on-Experience"
-                      className="w-full h-full object-contain"
-                    />
+                    <img src={handsIcon} alt="Hands-on-Experience" className="w-full h-full object-contain" />
                   </div>
-                  <span className="text-[#0C1A22] font-bold text-lg sm:text-xl tracking-wide">
-                    Hands-on-Experience
-                  </span>
+                  <span className="text-[#0C1A22] font-bold text-lg sm:text-xl tracking-wide">Hands-on-Experience</span>
                 </div>
               </div>
             </div>
 
             {/* Packages / Options Section */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
-              
               {/* Option 01 */}
               <div>
                 <p className="text-[#6A6A6A] font-semibold text-xs tracking-wider uppercase mb-1">
@@ -179,7 +174,7 @@ const WorkshopDetailsSection = ({ data }) => {
                 <h4 className="text-[#0C1A22] font-bold text-sm sm:text-base tracking-tight uppercase mb-4">
                   {option1Title}
                 </h4>
-                <ul className="space-y-1.5 text-[#6A6A6A] text-xs sm:text-sm font-medium tracking-wide uppercase">
+                <ul className="space-y-1.5 text-[#6A6A6A] text-xs sm:text-sm font-medium tracking-wide uppercase list-none pl-0">
                   {option1Items.map((item, idx) => (
                     <li key={idx}>{item}</li>
                   ))}
@@ -197,7 +192,7 @@ const WorkshopDetailsSection = ({ data }) => {
                 <h4 className="text-[#0C1A22] font-bold text-sm sm:text-base tracking-tight uppercase mb-4">
                   {option2Title}
                 </h4>
-                <ul className="space-y-1.5 text-[#6A6A6A] text-xs sm:text-sm font-medium tracking-wide uppercase">
+                <ul className="space-y-1.5 text-[#6A6A6A] text-xs sm:text-sm font-medium tracking-wide uppercase list-none pl-0">
                   {option2Items.map((item, idx) => (
                     <li key={idx}>{item}</li>
                   ))}
@@ -206,11 +201,9 @@ const WorkshopDetailsSection = ({ data }) => {
                   *LIGHT NOT INCLUDED
                 </span>
               </div>
-
             </div>
 
           </div>
-
         </div>
       </div>
     </section>

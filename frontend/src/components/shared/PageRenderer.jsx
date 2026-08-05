@@ -28,6 +28,11 @@ import PrakritiUpcomingWorkshopsSection from '../prakriti/PrakritiUpcomingWorksh
 import PrakritiGetInTouchSection from '../prakriti/PrakritiGetInTouchSection';
 import PrakritiLetsBeginSection from '../prakriti/PrakritiLetsBeginSection';
 
+// WORKSHOP 
+import WorkshopHero from '../workshop/WorkshopHero';
+import WorkshopDetailsSection from '../workshop/WorkshopDetailsSection';
+import WorkshopGallerySection from '../workshop/WorkshopGallerySection';
+
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
   
@@ -79,6 +84,12 @@ const BlockMapper = memo(({ block, index }) => {
       return <PrakritiGetInTouchSection key={index} data={data} />;
     case 'prakritiLetsBegin': 
       return <PrakritiLetsBeginSection key={index} data={data} />;
+    case 'workshopHero':
+      return <WorkshopHero key={index} data={data} />;
+    case 'workshopDetails':
+      return <WorkshopDetailsSection key={index} data={data} />;
+    case 'workshopGallery':
+      return <WorkshopGallerySection key={index} data={data} />;
       
     // Rich Text Block
     case 'richText':

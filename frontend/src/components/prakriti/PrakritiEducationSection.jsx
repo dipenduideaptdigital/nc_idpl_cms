@@ -60,7 +60,7 @@ const heightClasses = [
 
 const PrakritiEducationSection = ({ data }) => {
   const headlineText = data?.headline || "It is a long established fact that a reader will be distracted.";
-  const descriptionText = data?.description || "At Naturecube, we take students from schools and colleges on extensive field tours to natural surroundings and nature reserves, teaching them about nature, conservation, and ecosystem functions. Using both outdoor environments and our gallery's aquariums and terrariums as models, we expose students to basic scientific techniques and E-STEM teachings that complement their curriculum. Conducted year-round by multidisciplinary teachers, these workshops provide practical, hands-on learning experiences, and students receive certificates upon completion.";
+  const descriptionText = data?.description || "<p>At Naturecube, we take students from schools and colleges on extensive field tours to natural surroundings and nature reserves, teaching them about nature, conservation, and ecosystem functions. Using both outdoor environments and our gallery's aquariums and terrariums as models, we expose students to basic scientific techniques and E-STEM teachings that complement their curriculum. Conducted year-round by multidisciplinary teachers, these workshops provide practical, hands-on learning experiences, and students receive certificates upon completion.</p>";
 
   const cardsToRender = (data?.cards && data.cards.length > 0) ? data.cards : defaultCards;
   const brushBottom = data?.brushBottomImage ? getAssetUrl(data.brushBottomImage) : brush2Img;
@@ -84,11 +84,11 @@ const PrakritiEducationSection = ({ data }) => {
               {headlineText}
             </h2>
           </div>
-          {/* Right Column: Paragraph Description */}
           <div className="lg:col-span-6 lg:pt-2 ml-0 lg:ml-10">
-            <p className="font-sans text-sm sm:text-base lg:text-[18px] text-[#6A6A6A] font-normal leading-[1.8] max-w-[420px]">
-              {descriptionText}
-            </p>
+            <div 
+              className="font-sans text-sm sm:text-base lg:text-[18px] text-[#6A6A6A] font-normal leading-[1.8] max-w-[420px] tiptap-content"
+              dangerouslySetInnerHTML={{ __html: descriptionText }}
+            />
           </div>
         </div>
 
