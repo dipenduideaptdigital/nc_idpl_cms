@@ -19,9 +19,6 @@ const AdminSetup = lazy(() => import('./pages/AdminSetup'));
 const DynamicPage = lazy(() => import('./pages/DynamicPage'));
 const PreviewPage = lazy(() => import('./pages/PreviewPage')); 
 const NatureHomePreview = lazy(() => import('./pages/NatureHomePreview'));
-const RipplesPage = lazy(() => import('./pages/RipplesPage'));
-const GulmoPage = lazy(() => import('./pages/GulmoPage'));
-// const PrakritiLabPage = lazy(() => import('./pages/PrakritiLabPage'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
@@ -29,7 +26,6 @@ const Projects = lazy(() => import('./pages/Projects'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
 const AboutUs = lazy(() => import('./pages/AboutUs'));
 const ServicePage = lazy(() => import('./pages/ServicePage'));
-// const WorkshopPage = lazy(() => import('./pages/WorkshopPage'));
 
 // Admin Pages
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -149,14 +145,6 @@ function App() {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/services" element={<ServicePage />} />
               <Route path="/services/:slug" element={<ServicePage />} />
-              <Route path="/ripples" element={<RipplesPage />} />
-              <Route path="/ripple" element={<RipplesPage />} />
-              <Route path="/gulmo" element={<GulmoPage />} />
-              <Route path="/gulmo-page" element={<GulmoPage />} />
-              {/* <Route path="/prakriti" element={<PrakritiLabPage />} />
-              <Route path="/prakriti-lab" element={<PrakritiLabPage />} />
-              <Route path="/workshop" element={<WorkshopPage />} />
-              <Route path="/workshops" element={<WorkshopPage />} /> */}
               
               {/* Dynamic Pages Catch-All */}
               <Route path="/*" element={<DynamicPage />} />
