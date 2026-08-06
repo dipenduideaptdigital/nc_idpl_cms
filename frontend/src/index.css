@@ -261,3 +261,31 @@ body.puck-mode .fadeInRight {
 .animate-fade-in-down {
   animation: fadeInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ABOUT HORIZONTAL SCROLL Converts horizontal scroll to vertical stack in edit mode */
+
+body.puck-mode .h-screen.overflow-hidden {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+body.puck-mode .flex-row.overflow-x-auto {
+  flex-direction: column !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  height: auto !important;
+}
+
+body.puck-mode .w-screen,
+body.puck-mode .min-w-\[100vw\] {
+  width: 100% !important;
+  min-width: 100% !important;
+  min-height: 100vh !important;
+  height: auto !important;
+}
+
+body.puck-mode .left-\[95vw\],
+body.puck-mode .fixed.bottom-6,
+body.puck-mode button.absolute.top-1\/2 {
+  display: none !important;
+}

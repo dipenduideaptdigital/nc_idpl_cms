@@ -128,6 +128,7 @@ const AdminLayout = () => {
     { name: 'Pages', icon: FileText, path: '/admin/pages', permission: 'page.view' },
     { name: 'Service Pages', icon: Wrench, path: '/admin/services', permission: 'page.view' },
     { name: 'Home Settings', icon: ImageIcon, path: '/admin/home-customization', permission: 'page.edit' },
+    { name: 'About Settings', icon: Globe, path: '/admin/about-customization', permission: 'page.edit' },
     { 
       name: 'Blogs', 
       icon: BookOpen, 

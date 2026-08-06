@@ -1,6 +1,7 @@
 import React from 'react';
 import tank2Img from '../../assets/nc_about/tank2.png';
 import tank3Img from '../../assets/nc_about/tank3.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutSeminarsPanel = ({ data }) => {
   const year2011Title = data?.year2011Title || "2011";
@@ -43,7 +44,7 @@ const AboutSeminarsPanel = ({ data }) => {
       {/* Bottom-Left: Tank 2 Image */}
       <div className="relative w-full h-full overflow-hidden bg-zinc-900">
         <img
-          src={tank2Img}
+          src={data?.image1 ? resolveAssetUrl(data.image1) : tank2Img}
           alt="First Nature Aquarium Seminar 2011"
           className="w-full h-full object-cover"
         />
@@ -52,7 +53,7 @@ const AboutSeminarsPanel = ({ data }) => {
       {/* Bottom-Right: Tank 3 Image */}
       <div className="relative w-full h-full overflow-hidden bg-zinc-900 border-l border-zinc-100">
         <img
-          src={tank3Img}
+          src={data?.image2 ? resolveAssetUrl(data.image2) : tank3Img}
           alt="First Public Aquarium Setup Cuttak 2014"
           className="w-full h-full object-cover"
         />

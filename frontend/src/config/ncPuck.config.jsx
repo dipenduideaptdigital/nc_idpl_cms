@@ -36,6 +36,8 @@ import WorkshopHero from '../components/workshop/WorkshopHero';
 import WorkshopDetailsSection from '../components/workshop/WorkshopDetailsSection';
 import WorkshopGallerySection from '../components/workshop/WorkshopGallerySection';
 
+// ABOUT PAGE COMPONENTS
+import AboutHorizontalScroll from '../components/nc_about/AboutHorizontalScroll';
 
 const CollapsibleTiptap = ({ label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -690,5 +692,178 @@ export const ncPuckConfig = {
       },
       render: (props) => <WorkshopGallerySection data={props} />
     },
+
+    // ABOUT HORIZONTAL SCROLL BLOCK
+    aboutHorizontalScroll: {
+      fields: {
+        // --- GLOBAL PANORAMIC IMAGE ---
+        panoramic_image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // --- HERO PANEL ---
+        hero_headlineLine1: { type: "text" },
+        hero_headlineLine2: { type: "text" },
+        hero_subtext: { type: "custom", render: ({ value, onChange }) => <CollapsibleTiptap label="Hero Subtext" value={value} onChange={onChange} /> },
+        hero_yearsExp: { type: "text" },
+        hero_sinceYear: { type: "text" },
+        hero_clientCount: { type: "text" },
+
+        // --- JOURNEY PANEL ---
+        journey_heading: { type: "text" },
+        journey_paragraph1: { type: "custom", render: ({ value, onChange }) => <CollapsibleTiptap label="Journey Paragraph 1" value={value} onChange={onChange} /> },
+        journey_paragraph2: { type: "custom", render: ({ value, onChange }) => <CollapsibleTiptap label="Journey Paragraph 2" value={value} onChange={onChange} /> },
+        journey_bgImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // --- AWARDS PANEL ---
+        awards_headingLine1: { type: "text" },
+        awards_headingLine2: { type: "text" },
+        awards_subtext: { type: "custom", render: ({ value, onChange }) => <CollapsibleTiptap label="Awards Subtext" value={value} onChange={onChange} /> },
+        awards_list: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+            subtitle: { type: "text" },
+            image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          },
+          defaultItemProps: { title: "NEW AWARD", subtitle: "Rank 1, 2026", image: "" }
+        },
+
+        // --- HISTORY PANEL ---
+        history_title: { type: "text" },
+        history_smallText: { type: "textarea" },
+        history_boldText: { type: "textarea" },
+        history_image1: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        history_image2: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // --- SEMINARS PANEL ---
+        seminars_year2011Title: { type: "text" },
+        seminars_seminarHeading: { type: "text" },
+        seminars_seminarText: { type: "textarea" },
+        seminars_image1: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        seminars_year2014Title: { type: "text" },
+        seminars_cuttakHeading: { type: "text" },
+        seminars_cuttakText: { type: "textarea" },
+        seminars_image2: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // --- RIPPLES PANEL ---
+        ripples_year2015Title: { type: "text" },
+        ripples_shopHeading: { type: "text" },
+        ripples_shopText: { type: "textarea" },
+        ripples_image1: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        ripples_year2016Title: { type: "text" },
+        ripples_journalHeading: { type: "text" },
+        ripples_image2: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // --- BRANDS PANEL ---
+        brands_year2017Title: { type: "text" },
+        brands_terrariumHeading: { type: "text" },
+        brands_terrariumText: { type: "textarea" },
+        brands_image1: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        brands_year2020Title: { type: "text" },
+        brands_bringsLine1: { type: "text" },
+        brands_bringsLine2: { type: "text" },
+        brands_image2: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        brands_year2025Title: { type: "text" },
+        brands_centreHeading: { type: "text" },
+        brands_image3: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // --- MAIN SHOWCASE IMAGE PANEL ---
+        main_image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // --- TEAM PANEL (Gautam Gupta) ---
+        team_title: { type: "text" },
+        team_statement: { type: "textarea" },
+        team_name: { type: "text" },
+        team_role: { type: "text" },
+        team_description: { type: "custom", render: ({ value, onChange }) => <CollapsibleTiptap label="Team Member Detailed Bio" value={value} onChange={onChange} /> },
+        team_image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // --- TEAM MEMBERS PANEL ---
+        members_leader1Name: { type: "text" },
+        members_leader1Bio: { type: "textarea" },
+        members_image1: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        members_leader2Name: { type: "text" },
+        members_leader2Bio: { type: "textarea" },
+        members_image2: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        members_leader3Name: { type: "text" },
+        members_leader3Bio: { type: "textarea" },
+        members_image3: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        members_groupImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+      },
+      defaultProps: {
+        panoramic_image: "",
+        hero_headlineLine1: "LOOK DEEP INTO NATURE, AND THEN YOU WILL",
+        hero_headlineLine2: "UNDERSTAND EVERYTHING BETTER",
+        hero_subtext: "We are evolving the landscape of how nature and science bringing peace in your inner world.",
+        hero_yearsExp: "25+",
+        hero_sinceYear: "SINCE 2010",
+        hero_clientCount: "+100K SATISFIED CLIENTS",
+        
+        journey_heading: "BORN FROM A CHILDHOOD FASCINATION WITH LOCAL WATERBODIES, NATURECUBE BEGAN AS A PASSION PROJECT ALMOST 40 YEARS AGO.",
+        journey_paragraph1: "<p>EVOLVING FROM ARTIFICIAL DECOR TO NATURAL AQUASCAPING, OUR JOURNEY WAS SHAPED BY ENCOUNTERS WITH LEGENDARY AQUARIST TAKASHI AMANO.</p>",
+        journey_paragraph2: "<p>WITH A COMMITMENT TO ETHICAL BUSINESS PRACTICES AND KEEPING ENVIRONMENTAL SUSTAINABILITY AT THE CORE.</p>",
+        journey_bgImage: "",
+
+        awards_headingLine1: "THE AWARDS WON",
+        awards_headingLine2: "BY OUR PROJECTS.",
+        awards_subtext: "Evolving from artificial decor to natural aquascaping, our journey was shaped by encounters with legendary aquarist Takashi Amano.",
+        awards_list: [],
+
+        history_title: "OUR HISTORY",
+        history_smallText: "EVOLVING FROM ARTIFICIAL DECOR TO NATURAL AQUASCAPING...",
+        history_boldText: "EVOLVING FROM ARTIFICIAL DECOR TO NATURAL AQUASCAPING, OUR JOURNEY WAS SHAPED BY ENCOUNTERS",
+        history_image1: "",
+        history_image2: "",
+
+        seminars_year2011Title: "2011",
+        seminars_seminarHeading: "FIRST NATURE AQUARIUM SEMINAR ORGANIZED",
+        seminars_seminarText: "The Seminar offers lots to both retailers as well as hobbyists.",
+        seminars_image1: "",
+        seminars_year2014Title: "2014",
+        seminars_cuttakHeading: "FIRST PUBLIC AQUARIUM SETUP IN CUTTAK",
+        seminars_cuttakText: "Nature Cube plays an active role in setting up a state-of-the-art public aquarium.",
+        seminars_image2: "",
+
+        ripples_year2015Title: "2015",
+        ripples_shopHeading: "RIPPLES STARTS SHOP",
+        ripples_shopText: "RIPPLES, THE RETAIL STORE CUM GALLERY OF NATURE CUBE GETS INAUGURATED.",
+        ripples_image1: "",
+        ripples_year2016Title: "2016",
+        ripples_journalHeading: "RIPPLES FEATURED IN THE ADA AQUA JOURNAL",
+        ripples_image2: "",
+
+        brands_year2017Title: "2017",
+        brands_terrariumHeading: "TERRARIUM PRODUCTS INTRODUCED",
+        brands_terrariumText: "NATURE CUBE STARTS DEALING WITH PRESTIGIOUS TERRARIUM PRODUCTS...",
+        brands_image1: "",
+        brands_year2020Title: "2020",
+        brands_bringsLine1: "NATURE CUBE BRINGS 2 HR AQUARIST TO INDIA",
+        brands_bringsLine2: "NATURE CUBE BRINGS OASE TO INDIA",
+        brands_image2: "",
+        brands_year2025Title: "2025",
+        brands_centreHeading: "OPPENSTATE OF THE ART EXPERIENCE CENTRE IN KOLKATA",
+        brands_image3: "",
+
+        main_image: "",
+
+        team_title: "OUR TEAM",
+        team_statement: "EVOLVING FROM ARTIFICIAL DECOR TO NATURAL AQUASCAPING, OUR JOURNEY WAS SHAPED BY ENCOUNTERS WITH LEGENDARY AQUARIST TAKASHI AMANO.",
+        team_name: "GAUTAM GUPTA",
+        team_role: "MENTOR",
+        team_description: "<p>Gautam Gupta is a committed Nature Advocate, environmental steward...</p>",
+        team_image: "",
+
+        members_leader1Name: "COL. BASUDEV MITRA",
+        members_leader1Bio: "Colonel Basudev Mitra retired from the army in 2008 after 23 years...",
+        members_image1: "",
+        members_leader2Name: "PARTHA CHAKRABORTY",
+        members_leader2Bio: "Partha, a management graduate with expertise in Telecom Infrastructure...",
+        members_image2: "",
+        members_leader3Name: "SANJOY DUTTA",
+        members_leader3Bio: "He heads the finance team at Naturecube while pursuing his passion...",
+        members_image3: "",
+        members_groupImage: ""
+      },
+      render: (props) => <AboutHorizontalScroll data={props} />
+    }
   }
 };

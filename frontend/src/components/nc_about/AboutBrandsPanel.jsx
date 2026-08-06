@@ -2,8 +2,13 @@ import React from 'react';
 import gulmoLogo from '../../assets/nc_logo/gulmo.png';
 import oaseLogo from '../../assets/nc_logo/oase_new.png';
 import twoHrLogo from '../../assets/nc_logo/2hr.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutBrandsPanel = ({ data }) => {
+  const image1 = data?.image1 ? resolveAssetUrl(data.image1) : twoHrLogo;
+  const image2 = data?.image2 ? resolveAssetUrl(data.image2) : gulmoLogo;
+  const image3 = data?.image3 ? resolveAssetUrl(data.image3) : oaseLogo;
+
   const year2017Title = data?.year2017Title || "2017";
   const terrariumHeading = data?.terrariumHeading || "TERRARIUM PRODUCTS INTRODUCED";
   const terrariumText = data?.terrariumText || "NATURE CUBE STARTS DEALING WITH PRESTIGIOUS TERRARIUM PRODUCTS FROM DOOA AND STATE OF THE ART IOT BASED BIOTOPES FROM BIOPOD.";
@@ -26,21 +31,19 @@ const AboutBrandsPanel = ({ data }) => {
         <h3 className="font-kanit font-bold text-base sm:text-lg lg:text-xl text-white tracking-tight uppercase mb-3 leading-snug">
           {terrariumHeading}
         </h3>
-        <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed uppercase tracking-wide">
+        <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed uppercase tracking-wide whitespace-pre-wrap">
           {terrariumText}
         </p>
       </div>
 
-      {/* Top-Center: The 2Hr Aquarist Logo (Warm Cream Background) */}
       <div className="p-6 flex items-center justify-center bg-[#f4efe6] border-l border-zinc-200/50 overflow-hidden">
         <img
-          src={twoHrLogo}
-          alt="The 2Hr Aquarist Logo"
+          src={image1}
+          alt="Brand Logo 1"
           className="max-h-[75%] max-w-[80%] object-contain transition-transform duration-500 hover:scale-105"
         />
       </div>
 
-      {/* Top-Right: 2025 Experience Centre (Green Background) */}
       <div className="p-6 sm:p-10 lg:p-12 flex flex-col justify-center bg-[#7BA641] text-white border-l border-green-600/30">
         <span className="font-kanit font-extrabold text-4xl sm:text-5xl lg:text-6xl text-white mb-2 tracking-tight">
           {year2025Title}
@@ -50,16 +53,14 @@ const AboutBrandsPanel = ({ data }) => {
         </h3>
       </div>
 
-      {/* Bottom-Left: Gulmo Concept Gardening Logo (White Background) */}
       <div className="p-6 sm:p-10 flex items-center justify-center bg-white border-t border-zinc-100 overflow-hidden">
         <img
-          src={gulmoLogo}
-          alt="Gulmo Concept Gardening"
+          src={image2}
+          alt="Brand Logo 2"
           className="max-h-[65%] max-w-[75%] object-contain transition-transform duration-500 hover:scale-105"
         />
       </div>
 
-      {/* Bottom-Center: 2020 Nature Cube Brings Text (White Background) */}
       <div className="p-6 sm:p-10 lg:p-12 flex flex-col justify-center bg-white border-t border-l border-zinc-100">
         <span className="font-kanit font-extrabold text-4xl sm:text-5xl lg:text-6xl text-[#1E293B] mb-2 tracking-tight">
           {year2020Title}
@@ -74,11 +75,10 @@ const AboutBrandsPanel = ({ data }) => {
         </div>
       </div>
 
-      {/* Bottom-Right: Oase Logo (White Background) */}
       <div className="p-6 sm:p-10 flex items-center justify-center bg-white border-t border-l border-zinc-100 overflow-hidden">
         <img
-          src={oaseLogo}
-          alt="OASE Living Water Logo"
+          src={image3}
+          alt="Brand Logo 3"
           className="h-14 sm:h-20 md:h-24 w-auto object-contain transition-transform duration-500 hover:scale-105"
         />
       </div>

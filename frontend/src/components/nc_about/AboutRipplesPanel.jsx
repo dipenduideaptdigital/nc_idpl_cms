@@ -1,6 +1,7 @@
 import React from 'react';
 import booksImg from '../../assets/nc_about/books.png';
 import ripplesLogo from '../../assets/nc_logo/ripples.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutRipplesPanel = ({ data }) => {
   const year2015Title = data?.year2015Title || "2015";
@@ -29,7 +30,7 @@ const AboutRipplesPanel = ({ data }) => {
       {/* Top-Right: ADA Aqua Journal Books Image (White Background) */}
       <div className="p-6 sm:p-10 flex items-center justify-center bg-white border-l border-zinc-100 overflow-hidden">
         <img
-          src={booksImg}
+          src={data?.image1 ? resolveAssetUrl(data.image1) : booksImg}
           alt="ADA Aqua Journal Books"
           className="max-h-[85%] max-w-[85%] object-contain drop-shadow-md transition-transform duration-500 hover:scale-105"
         />
@@ -38,7 +39,7 @@ const AboutRipplesPanel = ({ data }) => {
       {/* Bottom-Left: Ripples Aquatic Studio Logo (White Background) */}
       <div className="p-6 sm:p-10 flex items-center justify-center bg-white border-t border-zinc-100 overflow-hidden">
         <img
-          src={ripplesLogo}
+          src={data?.image2 ? resolveAssetUrl(data.image2) : ripplesLogo}
           alt="Ripples Aquatic Studio Logo"
           className="max-h-[60%] max-w-[70%] object-contain transition-transform duration-500 hover:scale-105"
         />

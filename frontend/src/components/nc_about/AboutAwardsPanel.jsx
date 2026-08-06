@@ -3,31 +3,25 @@ import gallery1 from '../../assets/nc_home/gallery1.png';
 import gallery2 from '../../assets/nc_home/gallery2.png';
 import gallery3 from '../../assets/nc_home/gallery3.png';
 import singleBush from '../../assets/nc_logo/brush2.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutAwardsPanel = ({ data }) => {
   const headingLine1 = data?.headingLine1 || "THE AWARDS WON";
   const headingLine2 = data?.headingLine2 || "BY OUR PROJECTS.";
   const subtext = data?.subtext || "Evolving from artificial decor to natural aquascaping, our journey was shaped by encounters with legendary aquarist Takashi Amano. Inspired by his vision, we founded NatureCube in 2010.";
 
-  const awardsList = data?.awards || [
-    {
-      id: 1,
-      image: gallery1,
-      title: "PRIMAL BURST",
-      subtitle: "IAPLC Rank 20, 2020"
-    },
-    {
-      id: 2,
-      image: gallery2,
-      title: "PRIMAL BURST",
-      subtitle: "IAPLC Rank 20, 2020"
-    },
-    {
-      id: 3,
-      image: gallery3,
-      title: "PRIMAL BURST",
-      subtitle: "IAPLC Rank 20, 2020"
-    }
+  const dynamicAwards = data?.awards?.length > 0 ? data.awards : null;
+  const fallbacks = [gallery1, gallery2, gallery3];
+  
+  const awardsList = dynamicAwards?.map((award, index) => ({
+    id: index + 1,
+    image: award.image ? resolveAssetUrl(award.image) : fallbacks[index % 3],
+    title: award.title,
+    subtitle: award.subtitle
+  })) || [
+    { id: 1, image: gallery1, title: "PRIMAL BURST", subtitle: "IAPLC Rank 20, 2020" },
+    { id: 2, image: gallery2, title: "PRIMAL BURST", subtitle: "IAPLC Rank 20, 2020" },
+    { id: 3, image: gallery3, title: "PRIMAL BURST", subtitle: "IAPLC Rank 20, 2020" }
   ];
 
   return (
@@ -51,9 +45,10 @@ const AboutAwardsPanel = ({ data }) => {
             <div>{headingLine1}</div>
             <div>{headingLine2}</div>
           </h2>
-          <p className="text-[#6A6A6A] font-medium text-xs sm:text-sm lg:text-base leading-relaxed pt-1 max-w-xl">
-            {subtext}
-          </p>
+          <div 
+            className="text-[#6A6A6A] font-medium text-xs sm:text-sm lg:text-base leading-relaxed pt-1 max-w-xl [&>p]:mb-0"
+            dangerouslySetInnerHTML={{ __html: subtext }}
+          />
         </div>
 
         {/* 3 Awards Cards Row */}

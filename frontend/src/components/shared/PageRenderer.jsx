@@ -33,6 +33,9 @@ import WorkshopHero from '../workshop/WorkshopHero';
 import WorkshopDetailsSection from '../workshop/WorkshopDetailsSection';
 import WorkshopGallerySection from '../workshop/WorkshopGallerySection';
 
+// ABOUT SECTION
+import AboutHorizontalScroll from '../nc_about/AboutHorizontalScroll';
+
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
   
@@ -90,6 +93,8 @@ const BlockMapper = memo(({ block, index }) => {
       return <WorkshopDetailsSection key={index} data={data} />;
     case 'workshopGallery':
       return <WorkshopGallerySection key={index} data={data} />;
+    case 'aboutHorizontalScroll':
+      return <AboutHorizontalScroll key={index} data={data} />;
       
     // Rich Text Block
     case 'richText':

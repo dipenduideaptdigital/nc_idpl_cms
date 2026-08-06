@@ -48,6 +48,9 @@ const workshopHeroBlockSchema = z.object({ type: z.literal("workshopHero"), data
 const workshopDetailsBlockSchema = z.object({ type: z.literal("workshopDetails"), data: z.record(z.any()).default({}) });
 const workshopGalleryBlockSchema = z.object({ type: z.literal("workshopGallery"), data: z.record(z.any()).default({}) });
 
+// ABOUT BLOCK
+const aboutHorizontalScrollBlockSchema = z.object({ type: z.literal("aboutHorizontalScroll"), data: z.record(z.any()).default({}) });
+
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
   data: z.object({
@@ -92,6 +95,9 @@ const blockSchema = z.discriminatedUnion("type", [
   workshopHeroBlockSchema,
   workshopDetailsBlockSchema,
   workshopGalleryBlockSchema,
+
+  // ABOUT BLOCK
+  aboutHorizontalScrollBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

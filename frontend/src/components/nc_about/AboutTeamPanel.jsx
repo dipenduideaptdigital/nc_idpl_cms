@@ -1,6 +1,7 @@
 import React from 'react';
 import team1Img from '../../assets/nc_about/team1.png';
 import singleBush from '../../assets/nc_logo/brush2.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutTeamPanel = ({ data }) => {
   const title = data?.title || "OUR TEAM";
@@ -8,11 +9,7 @@ const AboutTeamPanel = ({ data }) => {
   const name = data?.name || "GAUTAM GUPTA";
   const role = data?.role || "MENTOR";
 
-  const p1 = data?.p1 || "Gautam Gupta is a committed Nature Advocate, environmental steward, and lifelong aquascaping enthusiast, whose deep-rooted passion for ecological harmony continues to shape the vision and direction of Nature Cube.";
-  const p2 = data?.p2 || "As a core mentor to NatureCube, his guidance and vision play a pivotal role in driving the organisation's mission to introduce living, regenerative ecosystems into modern urban environments through Nature Aquariums, Terrariums, and Indoor Gardens.";
-  const p3 = data?.p3 || "Leveraging his expertise in aquatic ecology, ecosystem design, and sustainable habitat creation, he has been instrumental in establishing Kolkata's first Natural Aquarium gallery and in forging collaborations with global leaders such as Aqua Design Amano (Japan) and 2Hr Aquarist (Singapore).";
-  const p4 = data?.p4 || "Through outreach programs, workshops, his YouTube channel, he has built a vibrant community of students, hobbyists, and environmentally conscious individuals, inspiring them to appreciate, recreate, and responsibly care for natural ecosystems across diverse environments.";
-  const p5 = data?.p5 || "With 28+ years of corporate experience in IT consulting, he add immense values in terms of business, leadership and strategy.";
+  const description = data?.description || "<p>Gautam Gupta is a committed Nature Advocate, environmental steward, and lifelong aquascaping enthusiast, whose deep-rooted passion for ecological harmony continues to shape the vision and direction of Nature Cube.</p><p>As a core mentor to NatureCube, his guidance and vision play a pivotal role in driving the organisation's mission to introduce living, regenerative ecosystems into modern urban environments through Nature Aquariums, Terrariums, and Indoor Gardens.</p><p>Leveraging his expertise in aquatic ecology, ecosystem design, and sustainable habitat creation, he has been instrumental in establishing Kolkata's first Natural Aquarium gallery and in forging collaborations with global leaders such as Aqua Design Amano (Japan) and 2Hr Aquarist (Singapore).</p><p>Through outreach programs, workshops, his YouTube channel, he has built a vibrant community of students, hobbyists, and environmentally conscious individuals, inspiring them to appreciate, recreate, and responsibly care for natural ecosystems across diverse environments.</p><p>With 28+ years of corporate experience in IT consulting, he add immense values in terms of business, leadership and strategy.</p>";
 
   return (
     <div className="w-screen min-w-[100vw] h-full bg-white text-zinc-900 flex-shrink-0 relative flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-16 sm:py-20 select-none font-kanit overflow-hidden">
@@ -43,7 +40,7 @@ const AboutTeamPanel = ({ data }) => {
         <div className="lg:col-span-4 relative flex justify-center">
           <div className="relative w-full max-w-sm sm:max-w-md aspect-[3/4] overflow-visible shadow-xl rounded-sm">
             <img
-              src={team1Img}
+              src={data?.image ? resolveAssetUrl(data.image) : team1Img}
               alt="Gautam Gupta - Mentor"
               className="w-full h-full object-cover rounded-sm"
             />
@@ -60,13 +57,10 @@ const AboutTeamPanel = ({ data }) => {
         </div>
 
         {/* Right Column: Narrative Body Paragraphs */}
-        <div className="lg:col-span-4 space-y-3 sm:space-y-4 text-xs sm:text-[15px] text-zinc-600 leading-relaxed max-w-lg">
-          <p>{p1}</p>
-          <p>{p2}</p>
-          <p>{p3}</p>
-          <p>{p4}</p>
-          <p>{p5}</p>
-        </div>
+        <div 
+          className="lg:col-span-4 flex flex-col gap-3 sm:gap-4 text-xs sm:text-[15px] text-zinc-600 leading-relaxed max-w-lg [&>p]:mb-0"
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
 
       </div>
 

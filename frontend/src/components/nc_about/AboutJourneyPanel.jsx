@@ -1,5 +1,6 @@
 import React from 'react';
 import leafTexture from '../../assets/nc_logo/Leaf.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutJourneyPanel = ({ data }) => {
   const heading = data?.heading || "BORN FROM A CHILDHOOD FASCINATION WITH LOCAL WATERBODIES, NATURECUBE BEGAN AS A PASSION PROJECT ALMOST 40 YEARS AGO.";
@@ -13,7 +14,7 @@ const AboutJourneyPanel = ({ data }) => {
       <div 
         className="absolute inset-0 pointer-events-none opacity-20 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${leafTexture})`,
+          backgroundImage: `url(${data?.bgImage ? resolveAssetUrl(data.bgImage) : leafTexture})`,
           backgroundBlendMode: 'overlay'
         }}
       />
@@ -45,14 +46,16 @@ const AboutJourneyPanel = ({ data }) => {
         </h2>
 
         {/* Paragraph 1 */}
-        <p className="text-zinc-200 font-normal text-xs sm:text-sm lg:text-base leading-relaxed tracking-wide uppercase">
-          {paragraph1}
-        </p>
+        <div 
+          className="text-zinc-200 font-normal text-xs sm:text-sm lg:text-base leading-relaxed tracking-wide uppercase [&>p]:mb-0"
+          dangerouslySetInnerHTML={{ __html: paragraph1 }}
+        />
 
         {/* Paragraph 2 */}
-        <p className="text-zinc-200 font-normal text-xs sm:text-sm lg:text-base leading-relaxed tracking-wide uppercase">
-          {paragraph2}
-        </p>
+        <div 
+          className="text-zinc-200 font-normal text-xs sm:text-sm lg:text-base leading-relaxed tracking-wide uppercase [&>p]:mb-0"
+          dangerouslySetInnerHTML={{ __html: paragraph2 }}
+        />
 
       </div>
 

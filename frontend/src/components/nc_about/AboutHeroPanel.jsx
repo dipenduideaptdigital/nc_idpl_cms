@@ -24,9 +24,7 @@ const AboutHeroPanel = ({ data }) => {
   return (
     <div className="w-screen min-w-[100vw] h-full bg-white text-zinc-900 flex-shrink-0 relative flex flex-col justify-between pt-6 sm:pt-8 pb-12 sm:pb-16 px-6 sm:px-12 lg:px-20 z-10 select-none font-kanit">
 
-      {/* Navbar Section Exclusive to Hero Panel */}
       <div className="w-full flex items-center justify-between pt-2 pb-4 relative z-30">
-        {/* Logo */}
         <Link to="/" className="flex items-center group">
           <img
             src={naturecubeLogo}
@@ -35,7 +33,6 @@ const AboutHeroPanel = ({ data }) => {
           />
         </Link>
 
-        {/* Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center space-x-6 xl:space-x-12">
           {navLinks.map((link) => (
             link.href.startsWith('/') ? (
@@ -60,7 +57,6 @@ const AboutHeroPanel = ({ data }) => {
           ))}
         </nav>
 
-        {/* Mobile Hamburger Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="lg:hidden text-[#000000] p-2 focus:outline-none"
@@ -114,14 +110,14 @@ const AboutHeroPanel = ({ data }) => {
           </span>
         </h1>
 
-        <p className="text-[#6A6A6A] font-medium text-base sm:text-lg lg:text-xl max-w-xl leading-relaxed pt-2">
-          {subtext}
-        </p>
+        <div 
+          className="text-[#6A6A6A] font-medium text-base sm:text-lg lg:text-xl max-w-xl leading-relaxed pt-2 [&>p]:mb-0"
+          dangerouslySetInnerHTML={{ __html: subtext }}
+        />
       </div>
 
       {/* Bottom Left Badges */}
       <div className="flex items-center gap-6 sm:gap-10 mb-4 sm:mb-8">
-        {/* Green Experience Square */}
         <div className="bg-[#7BA641] text-white p-6 sm:p-8 w-44 sm:w-52 aspect-square flex flex-col justify-center shadow-lg flex-shrink-0">
           <span className="font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-none">
             {yearsExp}
@@ -134,7 +130,6 @@ const AboutHeroPanel = ({ data }) => {
           </span>
         </div>
 
-        {/* Since 2010 & Clients */}
         <div className="flex flex-col justify-center space-y-1">
           <span className="text-[#1E293B] font-bold text-lg sm:text-xl lg:text-2xl tracking-wide uppercase">
             {sinceYear}

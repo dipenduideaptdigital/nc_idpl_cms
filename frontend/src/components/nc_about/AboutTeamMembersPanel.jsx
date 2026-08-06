@@ -4,6 +4,7 @@ import team3Img from '../../assets/nc_about/team3.png';
 import team4Img from '../../assets/nc_about/team4.png';
 import team5Img from '../../assets/nc_about/team5.png';
 import topLeaf from '../../assets/nc_logo/bush3.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutTeamMembersPanel = ({ data }) => {
   const leader1Name = data?.leader1Name || "COL. BASUDEV MITRA";
@@ -36,7 +37,7 @@ const AboutTeamMembersPanel = ({ data }) => {
           {/* Member 1: Col. Basudev Mitra */}
           <div className="flex items-center space-x-4 sm:space-x-6">
             <img
-              src={team2Img}
+              src={data?.image1 ? resolveAssetUrl(data.image1) : team2Img}
               alt="Col. Basudev Mitra"
               className="w-20 sm:w-24 lg:w-28 h-20 sm:h-24 lg:h-28 rounded-sm object-cover flex-shrink-0 shadow-md border border-zinc-100"
             />
@@ -44,7 +45,7 @@ const AboutTeamMembersPanel = ({ data }) => {
               <h3 className="font-reem-fun font-bold text-base sm:text-lg lg:text-xl text-[#7BA641] tracking-wide uppercase mb-1">
                 {leader1Name}
               </h3>
-              <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed max-w-md font-normal">
+              <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed max-w-md font-normal whitespace-pre-wrap">
                 {leader1Bio}
               </p>
             </div>
@@ -53,7 +54,7 @@ const AboutTeamMembersPanel = ({ data }) => {
           {/* Member 2: Partha Chakraborty */}
           <div className="flex items-center space-x-4 sm:space-x-6">
             <img
-              src={team3Img}
+              src={data?.image2 ? resolveAssetUrl(data.image2) : team3Img}
               alt="Partha Chakraborty"
               className="w-20 sm:w-24 lg:w-28 h-20 sm:h-24 lg:h-28 rounded-sm object-cover flex-shrink-0 shadow-md border border-zinc-100"
             />
@@ -61,7 +62,7 @@ const AboutTeamMembersPanel = ({ data }) => {
               <h3 className="font-reem-fun font-bold text-base sm:text-lg lg:text-xl text-[#7BA641] tracking-wide uppercase mb-1">
                 {leader2Name}
               </h3>
-              <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed max-w-md font-normal">
+              <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed max-w-md font-normal whitespace-pre-wrap">
                 {leader2Bio}
               </p>
             </div>
@@ -70,7 +71,7 @@ const AboutTeamMembersPanel = ({ data }) => {
           {/* Member 3: Sanjoy Dutta */}
           <div className="flex items-center space-x-4 sm:space-x-6">
             <img
-              src={team4Img}
+              src={data?.image3 ? resolveAssetUrl(data.image3) : team4Img}
               alt="Sanjoy Dutta"
               className="w-20 sm:w-24 lg:w-28 h-20 sm:h-24 lg:h-28 rounded-sm object-cover flex-shrink-0 shadow-md border border-zinc-100"
             />
@@ -78,7 +79,7 @@ const AboutTeamMembersPanel = ({ data }) => {
               <h3 className="font-reem-fun font-bold text-base sm:text-lg lg:text-xl text-[#7BA641] tracking-wide uppercase mb-1">
                 {leader3Name}
               </h3>
-              <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed max-w-md font-normal">
+              <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed max-w-md font-normal whitespace-pre-wrap">
                 {leader3Bio}
               </p>
             </div>
@@ -90,7 +91,7 @@ const AboutTeamMembersPanel = ({ data }) => {
         <div className="lg:col-span-6 relative flex items-center justify-center h-full">
           <div className="relative w-full flex justify-center items-center">
             <img
-              src={team5Img}
+              src={data?.groupImage ? resolveAssetUrl(data.groupImage) : team5Img}
               alt="NatureCube Team Group"
               className="w-full h-[900px] max-h-[85vh] object-contain drop-shadow-xl"
             />
