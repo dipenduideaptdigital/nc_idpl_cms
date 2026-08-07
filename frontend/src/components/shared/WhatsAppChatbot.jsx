@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, RefreshCw, MessageCircle } from 'lucide-react';
-import SubhaakritiLogo from '../../assets/logos/Subhaakriti_Logo.svg';
+import SubhaakritiLogo from '../../assets/nc_logo/naturecube.png';
 
 const chatbotSteps = {
   welcome: {
-    text: "Hi there! 👋 Welcome to Subhaakritee. I'm your virtual assistant. How can I help you today?",
+    text: "Hi there! 👋 Welcome to Naturecube. I'm your virtual assistant. How can I help you today?",
     options: [
       { text: "🏠 Residential Design", nextStep: "residential" },
       { text: "🏢 Commercial Design", nextStep: "commercial" },
@@ -23,7 +23,7 @@ const chatbotSteps = {
   },
   res_full: {
     text: "Amazing! A full home design project is an exciting journey. Let's connect on WhatsApp with our residential designer to discuss your floor plan and ideas! 🛋️✨",
-    finalMessage: "Hi Subhaakritee, I'm interested in a Full House Interior Design. Please connect me with a designer.",
+    finalMessage: "Hi Naturecube, I'm interested in a Full House Interior Design. Please connect me with a designer.",
     options: [
       { text: "💬 Continue to WhatsApp", action: "whatsapp" },
       { text: "⬅️ Back to Menu", nextStep: "residential" }
@@ -31,7 +31,7 @@ const chatbotSteps = {
   },
   res_modular: {
     text: "Fabulous! Modular kitchens and smart wardrobes combine aesthetics and functionality. Let's discuss layouts and finishes on WhatsApp. 🍳🚪",
-    finalMessage: "Hi Subhaakritee, I'm looking for Modular Kitchen & Wardrobe design solutions. Please guide me.",
+    finalMessage: "Hi Naturecube, I'm looking for Modular Kitchen & Wardrobe design solutions. Please guide me.",
     options: [
       { text: "💬 Continue to WhatsApp", action: "whatsapp" },
       { text: "⬅️ Back to Menu", nextStep: "residential" }
@@ -39,7 +39,7 @@ const chatbotSteps = {
   },
   res_decor: {
     text: "Lovely! Accent pieces, lighting, and decor make all the difference. Let's discuss your styling requirements on WhatsApp. 🪴💡",
-    finalMessage: "Hi Subhaakritee, I'm looking for decoration services for my living/bedroom. Let's discuss details.",
+    finalMessage: "Hi Naturecube, I'm looking for decoration services for my living/bedroom. Let's discuss details.",
     options: [
       { text: "💬 Continue to WhatsApp", action: "whatsapp" },
       { text: "⬅️ Back to Menu", nextStep: "residential" }
@@ -56,7 +56,7 @@ const chatbotSteps = {
   },
   comm_office: {
     text: "Great! A productive workplace starts with smart ergonomics and layout. Let's connect on WhatsApp to discuss your office layout. 💻🏢",
-    finalMessage: "Hi Subhaakritee, I want to discuss interior design for my office space. Please get in touch.",
+    finalMessage: "Hi Naturecube, I want to discuss interior design for my office space. Please get in touch.",
     options: [
       { text: "💬 Continue to WhatsApp", action: "whatsapp" },
       { text: "⬅️ Back to Menu", nextStep: "commercial" }
@@ -64,7 +64,7 @@ const chatbotSteps = {
   },
   comm_retail: {
     text: "Wonderful! We'll help you design an inviting retail environment that showcases your products beautifully. Let's discuss on WhatsApp. 🛍️✨",
-    finalMessage: "Hi Subhaakritee, I'm interested in retail/showroom design services for my business.",
+    finalMessage: "Hi Naturecube, I'm interested in retail/showroom design services for my business.",
     options: [
       { text: "💬 Continue to WhatsApp", action: "whatsapp" },
       { text: "⬅️ Back to Menu", nextStep: "commercial" }
@@ -72,7 +72,7 @@ const chatbotSteps = {
   },
   comm_cafe: {
     text: "Delicious! A great cafe or restaurant design shapes the entire customer experience. Let's chat on WhatsApp to cook up some ideas. ☕🍕",
-    finalMessage: "Hi Subhaakritee, I'm planning to design/renovate a cafe/restaurant. Let's connect.",
+    finalMessage: "Hi Naturecube, I'm planning to design/renovate a cafe/restaurant. Let's connect.",
     options: [
       { text: "💬 Continue to WhatsApp", action: "whatsapp" },
       { text: "⬅️ Back to Menu", nextStep: "commercial" }
@@ -80,7 +80,7 @@ const chatbotSteps = {
   },
   consultation: {
     text: "Perfect! We offer a free initial design consultation to explore your style and budget. Let's connect on WhatsApp to book a slot. 📅🤝",
-    finalMessage: "Hi Subhaakritee, I'd like to book a free design consultation. Please share the available slots.",
+    finalMessage: "Hi Naturecube, I'd like to book a free design consultation. Please share the available slots.",
     options: [
       { text: "📅 Book via WhatsApp", action: "whatsapp" },
       { text: "⬅️ Back", nextStep: "welcome" }
@@ -88,7 +88,7 @@ const chatbotSteps = {
   },
   general: {
     text: "No problem! We're here to answer any questions you have about pricing, timelines, or our work. Let's chat on WhatsApp. 💬ℹ️",
-    finalMessage: "Hi Subhaakritee, I have a few questions about your design services. Could you please help?",
+    finalMessage: "Hi Naturecube, I have a few questions about your design services. Could you please help?",
     options: [
       { text: "💬 Ask on WhatsApp", action: "whatsapp" },
       { text: "⬅️ Back", nextStep: "welcome" }
@@ -106,7 +106,7 @@ const WhatsAppChatbot = ({ isOpen, onClose, configuredPhoneNumber, configuredDef
   // Format clean digits (e.g. "+91 9831-637-409" -> "919831637409")
   const rawNumber = (configuredPhoneNumber || '919831637409').replace(/[^0-9]/g, '');
   const phoneNumber = rawNumber || '919831637409';
-  const customMessage = configuredDefaultMessage || "Hi Subhaakritee, I am interested in your interior design services.";
+  const customMessage = configuredDefaultMessage || "Hi Naturecube, I am interested in your interior design services.";
   const defaultWhatsAppUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(customMessage)}`;
 
   // Helper to format current time
@@ -156,7 +156,7 @@ const WhatsAppChatbot = ({ isOpen, onClose, configuredPhoneNumber, configuredDef
     // 2. Perform actions or load next step
     if (option.action === 'whatsapp') {
       const stepData = chatbotSteps[currentStep];
-      const textMessage = stepData.finalMessage || 'Hi Subhaakritee, I would like to connect with a designer.';
+      const textMessage = stepData.finalMessage || 'Hi Naturecube, I would like to connect with a designer.';
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(textMessage)}`;
       window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
       return;
@@ -224,11 +224,11 @@ const WhatsAppChatbot = ({ isOpen, onClose, configuredPhoneNumber, configuredDef
       <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-4 py-3 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-inner overflow-hidden border border-emerald-500">
-            <img src={SubhaakritiLogo} alt="Subhaakritee Logo" className="w-8 h-8 object-contain" />
+            <img src={SubhaakritiLogo} alt="Nature Logo" className="w-8 h-8 object-contain" />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full animate-pulse"></span>
           </div>
           <div>
-            <h4 className="font-semibold text-sm leading-tight">Subhaakritee Support</h4>
+            <h4 className="font-semibold text-sm leading-tight">Naturecube Support</h4>
             <p className="text-xs text-emerald-100 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
               Online (Typically replies instantly)

@@ -5,7 +5,7 @@ import { resolveAssetUrl } from '../../utils/assetResolver';
 const SEOHead = ({ data, type = 'page' }) => {
   if (!data) return null;
 
-  const siteName = 'Subhaakritee';
+  const siteName = 'NatureCube';
 
   // Current page URL
   const currentUrl = window.location.href.split('?')[0];
@@ -18,7 +18,7 @@ const SEOHead = ({ data, type = 'page' }) => {
   const description =
     data.metaDescription ||
     data.excerpt ||
-    'Subhaakritee - The Design People. End-to-end interior design solutions.';
+    'NatureCube - The Design People. End-to-end interior design solutions.';
 
   // Robots Meta
   let robots = 'index, follow';

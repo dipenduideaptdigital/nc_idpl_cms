@@ -16,8 +16,8 @@ const getAssetUrl = (path) => {
 
 const GeneralSettings = () => {
   const [formData, setFormData] = useState({
-    websiteName: 'Subhaakritee',
-    supportEmail: 'support@subhaakritee.com',
+    websiteName: 'NatureCube',
+    supportEmail: 'support@naturecube.com',
     faviconImage: '',
     adminLoginLogo: '',
     errorPageImage: '',

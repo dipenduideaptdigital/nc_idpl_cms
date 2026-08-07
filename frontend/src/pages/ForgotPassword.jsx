@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowRight, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'; 
-import heroback from '../assets/homepage/banner_back.png';
-import logo from '../assets/logos/logo2.svg';
+import heroback from '../assets/nc_home/plant_hero.jpg';
+import logo from '../assets/nc_logo/naturecube.png';
 import apiClient from '../api/client';
 
 const ForgotPassword = () => {
@@ -41,27 +41,46 @@ const ForgotPassword = () => {
     }
   };
 
-  const activeColor = '#3B82F6';
-  const shadowColor = 'rgba(59,130,246,0.25)';
+  const activeColor = '#7BA641';
+  const shadowColor = 'rgba(123, 166, 65, 0.25)';
 
   return (
     <div 
       className="min-h-screen w-full flex items-center justify-center relative overflow-hidden font-sans bg-zinc-950 px-4 py-8"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(9, 9, 11, 0.75), rgba(9, 9, 11, 0.9)), url(${heroback})`,
-        backgroundSize: 'cover', backgroundPosition: 'center'
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
       }}
     >
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none" style={{ backgroundColor: activeColor, opacity: 0.15 }} />
-      
+      {/* Background Glowing Orbs - matches Login.jsx ambient glow */}
       <div 
-        className="relative w-full max-w-md backdrop-blur-2xl bg-zinc-950/45 border rounded-[2rem] p-8 text-white shadow-2xl flex flex-col items-center"
-        style={{ borderColor: 'rgba(255, 255, 255, 0.08)', boxShadow: `0 0 50px ${shadowColor}` }}
+        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none transition-all duration-1000"
+        style={{ backgroundColor: activeColor, opacity: 0.14 }}
+      />
+      <div 
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none transition-all duration-1000"
+        style={{ backgroundColor: activeColor, opacity: 0.09 }}
+      />
+
+      {/* Main Glassmorphism Card */}
+      <div 
+        className="relative w-full max-w-md backdrop-blur-2xl bg-zinc-950/70 border rounded-[2rem] p-8 text-white transition-all duration-500 shadow-2xl flex flex-col items-center"
+        style={{
+          borderColor: 'rgba(123, 166, 65, 0.15)',
+          boxShadow: `0 0 60px ${shadowColor}, 0 0 100px rgba(0,0,0,0.4), inset 0 0 20px rgba(255, 255, 255, 0.02)`,
+        }}
       >
+
+        {/* Logo Section - Blended, Premium (matches Login.jsx) */}
         <div className="flex flex-col items-center mb-8 cursor-pointer select-none">
-          <Link to="/" className="flex flex-col items-center">
-            <img src={logo} alt="Logo" className="h-10 md:h-12 w-auto object-contain mb-2" />
-            <div className="text-[9px] tracking-[0.22em] uppercase opacity-60">The Design People</div>
+          <Link to="/" className="flex items-center justify-center hover:opacity-90 transition-opacity">
+            <img 
+              src={logo} 
+              alt="NatureCube Logo" 
+              className="h-12 md:h-14 w-auto object-contain brightness-0 invert drop-shadow-[0_0_15px_rgba(123,166,65,0.35)]" 
+            />
           </Link>
         </div>
 
@@ -69,7 +88,7 @@ const ForgotPassword = () => {
         <p className="text-sm text-zinc-400 text-center mb-6">Enter your email and we'll send you instructions to reset your password.</p>
 
         {status.error && (
-          <div className="w-full flex items-start gap-3 bg-red-950/45 border border-red-500/30 text-red-200 text-sm p-4 rounded-2xl mb-6">
+          <div className="w-full flex items-start gap-3 bg-red-950/45 border border-red-500/30 text-red-200 text-sm p-4 rounded-2xl mb-6 animate-shake animate-duration-300">
             <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" /><span>{status.error}</span>
           </div>
         )}
@@ -84,25 +103,53 @@ const ForgotPassword = () => {
           <div className="space-y-2">
             <label className="text-xs font-semibold text-zinc-400 tracking-wider uppercase block">Email Address</label>
             <div className="relative group">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-white transition-colors" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-[#7BA641] transition-colors" />
               <input 
-                type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com"
-                className="w-full pl-12 pr-4 py-3.5 bg-zinc-900/60 border border-white/10 rounded-2xl text-white placeholder:text-zinc-600 focus:outline-none transition-all text-sm"
+                type="email" 
+                required 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                placeholder="you@example.com"
+                className="w-full pl-12 pr-4 py-3.5 bg-zinc-900/60 border border-white/10 rounded-2xl text-white placeholder:text-zinc-600 focus:outline-none transition-all duration-300 text-sm"
+                style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = activeColor;
+                  e.target.style.boxShadow = `0 0 12px ${shadowColor}`;
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
           </div>
 
           <button
-            type="submit" disabled={status.loading}
-            className="w-full py-4 px-6 rounded-2xl font-semibold text-sm tracking-wide transition-all flex items-center justify-center gap-2 group active:scale-[0.98] disabled:opacity-50 mt-6"
-            style={{ backgroundColor: activeColor, color: 'white', boxShadow: `0 4px 20px ${shadowColor}` }}
+            type="submit" 
+            disabled={status.loading}
+            className="w-full py-4 px-6 rounded-2xl font-semibold text-sm tracking-wide transition-all duration-300 flex items-center justify-center gap-2 group active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer mt-6"
+            style={{
+              backgroundColor: activeColor,
+              color: 'white',
+              boxShadow: `0 4px 30px rgba(123, 166, 65, 0.5)`,
+            }}
           >
-            {status.loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><span>Send Reset Link</span><ArrowRight className="w-4 h-4" /></>}
+            {status.loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <>
+                <span>Send Reset Link</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </>
+            )}
           </button>
         </form>
 
         <div className="mt-6 text-sm text-zinc-400">
-          Remember your password? <Link to="/login" className="text-blue-500 hover:text-blue-400 font-medium">Sign In</Link>
+          Remember your password?{' '}
+          <Link to="/login" className="text-[#7BA641] hover:text-[#6b9337] font-medium transition-colors">
+            Sign In
+          </Link>
         </div>
       </div>
     </div>

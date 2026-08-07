@@ -13,8 +13,11 @@ import OurBlogsSection from './OurBlogsSection';
 import WhatTheySaySection from './WhatTheySaySection';
 import GetStartedCtaSection from './GetStartedCtaSection';
 import NatureFooter from './NatureFooter';
+import WhatsAppButton from '../shared/WhatsAppButton';
+import GetInTouch from '../shared/GetInTouch';
 
 const NatureHome = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [heroData, setHeroData] = useState(null);
   const [mandalasData, setMandalasData] = useState(null);
   const [livingArtData, setLivingArtData] = useState(null);
@@ -27,6 +30,28 @@ const NatureHome = () => {
   const [ctaData, setCtaData] = useState(null);
   
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleOpenModal = () => setIsModalOpen(true);
+    const handleCloseModal = () => setIsModalOpen(false);
+    
+    window.addEventListener('open-consultation-modal', handleOpenModal);
+    window.addEventListener('close-consultation-modal', handleCloseModal);
+    const hasSeenModal = sessionStorage.getItem('nc_has_seen_modal');
+    let timer;
+    if (!hasSeenModal) {
+      timer = setTimeout(() => {
+        setIsModalOpen(true);
+        sessionStorage.setItem('nc_has_seen_modal', 'true');
+      }, 4000);
+    }
+
+    return () => {
+      window.removeEventListener('open-consultation-modal', handleOpenModal);
+      window.removeEventListener('close-consultation-modal', handleCloseModal);
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchHomeData = async () => {
@@ -79,7 +104,6 @@ const NatureHome = () => {
 
   return (
     <div className="w-full min-h-screen bg-zinc-50 dark:bg-[#070e06] text-zinc-900 dark:text-white font-sans antialiased transition-colors duration-300">
-      {/* Header Navigation */}
       <NatureNavbar />
 
       {/* Dynamic Sections */}
@@ -93,9 +117,21 @@ const NatureHome = () => {
       <OurBlogsSection data={blogsData} />
       <WhatTheySaySection data={whatTheySayData} />
       <GetStartedCtaSection data={ctaData} />
-
-      {/* Footer */}
       <NatureFooter />
+      
+      <WhatsAppButton />
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8 animate-fade-in">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
+            onClick={() => setIsModalOpen(false)}
+          ></div>
+          <div className="relative bg-white text-zinc-900 rounded-2xl shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto z-10 transition-transform duration-300 transform scale-100 flex flex-col">
+            <GetInTouch isModal={true} onClose={() => setIsModalOpen(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

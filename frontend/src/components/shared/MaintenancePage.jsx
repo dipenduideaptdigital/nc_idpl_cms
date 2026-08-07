@@ -1,6 +1,6 @@
 import React from 'react';
 import { Settings, Mail, Phone, Clock, Wrench } from 'lucide-react';
-import logo from '../../assets/logos/logo2.svg';
+import SubhaakritiLogo from '../../assets/nc_logo/naturecube.png';
 
 const getAssetUrl = (path) => {
   if (!path) return '';

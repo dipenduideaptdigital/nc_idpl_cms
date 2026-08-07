@@ -83,8 +83,8 @@ const ContactInfo = () => {
             <div className="flex flex-col text-left">
               <h4 className="text-[15px] font-bold text-gray-900 mb-3 md:mb-4">Support</h4>
               <p className="text-gray-900 font-bold text-[15px] mb-1">+91 9831-637-409</p>
-              <a href="mailto:Subhaakritee@Hotmail.Com" className="text-gray-600 text-[15px] hover:text-[#3B82F6] transition-colors">
-                Subhaakritee@Hotmail.Com
+              <a href="mailto:naturecube@Hotmail.Com" className="text-gray-600 text-[15px] hover:text-[#3B82F6] transition-colors">
+                naturecube@Hotmail.Com
               </a>
             </div>
           </div>

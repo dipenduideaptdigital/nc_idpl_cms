@@ -6,6 +6,7 @@ import useScrollAnimation from '../hooks/useScrollAnimation';
 import PageRenderer from '../components/shared/PageRenderer';
 import SEOHead from '../components/shared/SEOHead'; 
 import MainLayout from '../components/layout/MainLayout';
+import WhatsAppButton from '../components/shared/WhatsAppButton';
 
 const DynamicPage = () => {
   const location = useLocation();
@@ -72,6 +73,7 @@ const DynamicPage = () => {
       <>
         <SEOHead data={page} type="page" />
         <PageRenderer blocks={page.content?.blocks} template={page.template} />
+        <WhatsAppButton />
       </>
     );
   }

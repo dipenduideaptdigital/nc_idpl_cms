@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, X, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-import defaultGallery4 from '../../assets/homepage/gallery4.png'; 
+import defaultGallery4 from '../../assets/nc_home/plant_hero.jpg';
 import apiClient from '../../api/client';
 
 const getAssetUrl = (path) => {

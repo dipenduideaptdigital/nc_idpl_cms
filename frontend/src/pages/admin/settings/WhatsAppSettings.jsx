@@ -4,7 +4,7 @@ import apiClient from '../../../api/client';
 
 const WhatsAppSettings = () => {
   const [phoneNumber, setPhoneNumber] = useState('+91 9831-637-409');
-  const [defaultMessage, setDefaultMessage] = useState('Hi Subhaakritee, I am interested in your interior design services.');
+  const [defaultMessage, setDefaultMessage] = useState('Hi Naturecube, I am interested in your interior design services.');
   const [isActive, setIsActive] = useState(true);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +41,7 @@ const WhatsAppSettings = () => {
       const payload = {
         content: {
           phoneNumber: phoneNumber.trim() || '+91 9831-637-409',
-          defaultMessage: defaultMessage.trim() || 'Hi Subhaakritee, I am interested in your interior design services.',
+          defaultMessage: defaultMessage.trim() || 'Hi Naturecube, I am interested in your interior design services.',
           isActive: Boolean(isActive),
         },
       };
@@ -217,7 +217,7 @@ const WhatsAppSettings = () => {
                 rows={3}
                 value={defaultMessage}
                 onChange={(e) => setDefaultMessage(e.target.value)}
-                placeholder="e.g. Hi Subhaakritee, I am interested in your interior design services."
+                placeholder="e.g. Hi Naturecube, I am interested in your interior design services."
                 className="block w-full px-4 py-3 border border-zinc-200 dark:border-zinc-700 rounded-xl leading-5 bg-white dark:bg-zinc-950 placeholder-zinc-400 dark:placeholder-zinc-500 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 dark:focus:ring-emerald-500/20 focus:border-emerald-600 dark:focus:border-emerald-500 transition-colors sm:text-sm font-medium resize-none"
               />
               <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1.5">
