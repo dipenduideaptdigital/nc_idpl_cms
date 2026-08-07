@@ -38,6 +38,7 @@ import WorkshopGallerySection from '../components/workshop/WorkshopGallerySectio
 
 // ABOUT PAGE COMPONENTS
 import AboutHorizontalScroll from '../components/nc_about/AboutHorizontalScroll';
+import MandalaHorizontalScroll from '../components/nc_mandala/MandalaHorizontalScroll';
 
 const CollapsibleTiptap = ({ label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -864,6 +865,68 @@ export const ncPuckConfig = {
         members_groupImage: ""
       },
       render: (props) => <AboutHorizontalScroll data={props} />
+    },
+
+    // MANDALA HORIZONTAL SCROLL BLOCK
+    mandalaHorizontalScroll: {
+      fields: {
+        panoramic_image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // Panel 1
+        p1_title: { type: "text" },
+        p1_subLine1: { type: "text" },
+        p1_subLine2: { type: "text" },
+        p1_subItalic: { type: "text" },
+        p1_rightTitle: { type: "text" },
+        p1_rightDesc: { type: "custom", render: ({ value, onChange }) => <CollapsibleTiptap label="Panel 1 Right Description" value={value} onChange={onChange} /> },
+        p1_quote: { type: "textarea" },
+        p1_mandalaImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        p1_mountainImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // Panel 2
+        p2_titleLine1: { type: "text" },
+        p2_titleLine2: { type: "text" },
+        p2_desc1: { type: "custom", render: ({ value, onChange }) => <CollapsibleTiptap label="Panel 2 Description 1" value={value} onChange={onChange} /> },
+        p2_desc2: { type: "custom", render: ({ value, onChange }) => <CollapsibleTiptap label="Panel 2 Description 2" value={value} onChange={onChange} /> },
+        p2_patternImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        p2_branchImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+
+        // Panel 3
+        p3_title: { type: "text" },
+        p3_desc: { type: "custom", render: ({ value, onChange }) => <CollapsibleTiptap label="Panel 3 Description" value={value} onChange={onChange} /> },
+        p3_tagline1: { type: "text" },
+        p3_tagline2: { type: "text" },
+        p3_mandalaImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        p3_fishImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: {
+        panoramic_image: "",
+        
+        p1_title: "LIVING MANDALAS",
+        p1_subLine1: "A quest to",
+        p1_subLine2: "expose the principles of",
+        p1_subItalic: "mandala",
+        p1_rightTitle: "mandalas",
+        p1_rightDesc: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        p1_quote: "This eternal circle of life is playing constantly in and around us.",
+        p1_mandalaImage: "",
+        p1_mountainImage: "",
+
+        p2_titleLine1: "elements of",
+        p2_titleLine2: "balance",
+        p2_desc1: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        p2_desc2: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+        p2_patternImage: "",
+        p2_branchImage: "",
+
+        p3_title: "elements of balance",
+        p3_desc: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        p3_tagline1: "LIQUID LANDSCAPES MIRRORED IN MINDFUL ART,",
+        p3_tagline2: "A LIVING MANDALA'S HEART.",
+        p3_mandalaImage: "",
+        p3_fishImage: ""
+      },
+      render: (props) => <MandalaHorizontalScroll data={props} />
     }
   }
 };

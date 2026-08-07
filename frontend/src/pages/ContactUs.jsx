@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { pagesApi } from '../api/pages';
-import ContactBanner from '../components/contact/ContactBanner';
-import ContactInfo from '../components/contact/ContactInfo';
+import NcContactBanner from '../components/nc_contact/NcContactBanner';
+import NcContactInfo from '../components/nc_contact/NcContactInfo';
+import NcJoinAndMap from '../components/nc_contact/NcJoinAndMap';
 import PageRenderer from '../components/shared/PageRenderer';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 
@@ -18,10 +19,13 @@ const ContactUs = () => {
         
         if (data) {
           setPageData(data);
-          document.title = `${data.title || 'Contact Us'} | Subhaakritee`;
+          document.title = `${data.title || 'Contact Us'} | Naturecube`;
+        } else {
+          document.title = 'Contact Us | Naturecube';
         }
       } catch (error) {
         console.error("Failed to fetch contact page content. Showing static fallback.", error);
+        document.title = 'Contact Us | Naturecube';
       } finally {
         setLoading(false);
       }
@@ -33,20 +37,21 @@ const ContactUs = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-[#485b34]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white font-helvetica">
+    <div className="min-h-screen bg-white font-kanit">
       {pageData && pageData.content?.blocks?.length > 0 ? (
         <PageRenderer blocks={pageData.content.blocks} />
       ) : (
         <>
-          <ContactBanner />
-          <ContactInfo />
+          <NcContactBanner />
+          <NcContactInfo />
+          <NcJoinAndMap />
         </>
       )}
     </div>

@@ -1,10 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import defaultMandalaImg from '../../assets/nc_home/mandala.png';
 import brush1Img from '../../assets/nc_logo/brush1.png';
 import brush2Img from '../../assets/nc_logo/brush2.png';
 import ellipseBtnImg from '../../assets/nc_logo/Ellipse_plus_btn.png';
 
-// Helper to resolve the correct image URL from your backend
 const getAssetUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http') || path.startsWith('data:')) return path;
@@ -15,7 +15,6 @@ const getAssetUrl = (path) => {
 };
 
 const LivingMandalasSection = ({ data }) => {
-  // Use dynamic data from the database, or fallback to default values
   const tagline = data?.tagline || "what we believe";
   const mainTitle = data?.mainTitle || "LIVING MANDALAS";
   const headingLine1 = data?.headingLine1 || "A quest to";
@@ -29,7 +28,6 @@ const LivingMandalasSection = ({ data }) => {
   return (
     <section className="relative w-full bg-white pt-10 md:pt-25 pb-6 md:pb-15 px-4 sm:px-8 overflow-hidden select-none">
       
-      {/* SECTION-LEVEL BRUSH SPLASHES (z-0) - STRICTLY BEHIND MANDALA */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-8 -left-10 sm:-top-12 sm:-left-14 w-[340px] sm:w-[460px] md:w-[560px] lg:w-[620px] h-[260px] sm:h-[340px] md:h-[400px]">
           <img src={brush1Img} alt="" className="w-full h-full object-contain object-left-top filter contrast-125 brightness-95 opacity-90" />
@@ -41,12 +39,10 @@ const LivingMandalasSection = ({ data }) => {
 
       <div className="max-w-6xl mx-auto relative min-h-[460px] lg:min-h-[500px] flex items-center justify-center">
 
-        {/* LAYER 2: DEAD-CENTER MANDALA ARTWORK (z-20) */}
         <div className="relative z-20 w-[300px] sm:w-[400px] md:w-[480px] lg:w-[520px] aspect-square flex items-center justify-center my-6 lg:my-0">
           <img src={mandalaImage} alt="Living Mandala Artwork" className="w-full h-full object-contain filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.08)]" />
         </div>
 
-        {/* LAYER 3: TEXT & INTERACTIVE CONTENT (z-30) */}
         <div className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-between p-4 md:p-8">
           
           <div className="flex flex-col lg:flex-row justify-between items-start gap-6 pointer-events-auto">
@@ -79,7 +75,7 @@ const LivingMandalasSection = ({ data }) => {
                 <div>{descLine2}</div>
               </div>
 
-              <button onClick={() => { const elem = document.getElementById('mandala-details'); if (elem) elem.scrollIntoView({ behavior: 'smooth' }); }} className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#4B6B2E] transition-colors cursor-pointer">
+              <Link to="/mandala" className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#4B6B2E] transition-colors cursor-pointer">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center relative overflow-hidden">
                   <img src={ellipseBtnImg} alt="" className="absolute inset-0 w-full h-full object-cover rounded-full" />
                   <span className="relative z-10 text-lg font-light text-zinc-700 group-hover:text-[#4B6B2E]">+</span>
@@ -87,7 +83,7 @@ const LivingMandalasSection = ({ data }) => {
                 <span className="font-kanit text-sm font-normal tracking-wide lowercase text-zinc-700 group-hover:text-[#4B6B2E]">
                   {buttonText}
                 </span>
-              </button>
+              </Link>
             </div>
           </div>
 

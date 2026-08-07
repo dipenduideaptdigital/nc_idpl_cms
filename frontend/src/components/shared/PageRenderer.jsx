@@ -36,6 +36,9 @@ import WorkshopGallerySection from '../workshop/WorkshopGallerySection';
 // ABOUT SECTION
 import AboutHorizontalScroll from '../nc_about/AboutHorizontalScroll';
 
+// MANDALA SECTION
+import MandalaHorizontalScroll from '../nc_mandala/MandalaHorizontalScroll';
+
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
   
@@ -95,6 +98,8 @@ const BlockMapper = memo(({ block, index }) => {
       return <WorkshopGallerySection key={index} data={data} />;
     case 'aboutHorizontalScroll':
       return <AboutHorizontalScroll key={index} data={data} />;
+    case 'mandalaHorizontalScroll':
+      return <MandalaHorizontalScroll key={index} data={data} />;
       
     // Rich Text Block
     case 'richText':
@@ -114,7 +119,7 @@ const BlockMapper = memo(({ block, index }) => {
   }
 });
 
-const PageRenderer = memo(({ blocks }) => {
+const PageRenderer = memo(({ blocks, template }) => {
   if (!blocks || blocks.length === 0) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center bg-[#070e06]">
@@ -125,8 +130,24 @@ const PageRenderer = memo(({ blocks }) => {
     );
   }
 
+  let wrapperBg = "bg-[#070e06]";
+  
+  if (template === 'prakriti-page') {
+    wrapperBg = "bg-[#FAFAF7]";
+  } else if (template === 'gulmo-page') {
+    wrapperBg = "bg-white";
+  } else if (template === 'ripple-page') {
+    wrapperBg = "bg-white";
+  } else if (template === 'workshop-page') {
+    wrapperBg = "bg-[#FAFAF7]";
+  } else if (template === 'about-page') {
+    wrapperBg = "bg-black";
+  } else if (template === 'mandala-page') {
+    wrapperBg = "bg-white";
+  }
+
   return (
-    <div className="animate-in fade-in duration-700 bg-[#070e06] min-h-screen">
+    <div className={`animate-in fade-in duration-700 min-h-screen w-full ${wrapperBg}`}>
       {blocks.map((block, index) => (
         <BlockMapper key={block.id || index} block={block} index={index} />
       ))}

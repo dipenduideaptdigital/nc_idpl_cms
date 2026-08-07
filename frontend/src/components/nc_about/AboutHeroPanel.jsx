@@ -57,6 +57,17 @@ const AboutHeroPanel = ({ data }) => {
           ))}
         </nav>
 
+        {/* Store CTA Button */}
+        <div className="hidden lg:block">
+          <a
+            href="#store"
+            className="inline-flex items-center justify-center bg-[#7BA641] hover:bg-[#6b9337] text-white font-semibold text-xs tracking-[0.18em] px-7 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_4px_15px_rgba(123,166,65,0.4)] uppercase"
+          >
+            STORE
+          </a>
+        </div>
+
+        {/* Mobile Hamburger Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="lg:hidden text-[#000000] p-2 focus:outline-none"
@@ -111,7 +122,7 @@ const AboutHeroPanel = ({ data }) => {
         </h1>
 
         <div 
-          className="text-[#6A6A6A] font-medium text-base sm:text-lg lg:text-xl max-w-xl leading-relaxed pt-2 [&>p]:mb-0"
+          className="text-[#6A6A6A] font-medium text-base sm:text-lg lg:text-xl max-w-xl leading-relaxed pt-2 [&>p]:mb-0 tiptap-content"
           dangerouslySetInnerHTML={{ __html: subtext }}
         />
       </div>

@@ -163,7 +163,7 @@ const AboutCustomization = () => {
   const fetchAboutPage = async () => {
     try {
       setLoading(true);
-      const res = await pagesApi.getPublicPageBySlug('about-us');
+      const res = await pagesApi.getPublicPageBySlug('about');
       if (res.data && res.data.content?.blocks?.length > 0) {
         setPageId(res.data.id);
         const blockData = res.data.content.blocks.find(b => b.type === 'aboutHorizontalScroll');
@@ -213,7 +213,7 @@ const AboutCustomization = () => {
 
     const payload = {
       title: 'About Us',
-      slug: 'about-us',
+      slug: 'about',
       status: 'PUBLISHED',
       template: 'about-page',
       includeInSitemap: true,

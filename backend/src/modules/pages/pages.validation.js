@@ -13,7 +13,12 @@ export const ALLOWED_TEMPLATES = [
   "landing-page",
   "service-page",
   "contact-page",
-  "about-page"
+  "about-page",
+  "ripple-page",
+  "gulmo-page",
+  "mandala-page",
+  "prakriti-page",
+  "workshop-page"
 ];
 
 const richTextBlockSchema = z.object({ type: z.literal("richText"), data: z.record(z.any()).default({}) });
@@ -50,6 +55,9 @@ const workshopGalleryBlockSchema = z.object({ type: z.literal("workshopGallery")
 
 // ABOUT BLOCK
 const aboutHorizontalScrollBlockSchema = z.object({ type: z.literal("aboutHorizontalScroll"), data: z.record(z.any()).default({}) });
+
+// MANDALA BLOCK
+const mandalaHorizontalScrollBlockSchema = z.object({ type: z.literal("mandalaHorizontalScroll"), data: z.record(z.any()).default({}) });
 
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
@@ -98,6 +106,9 @@ const blockSchema = z.discriminatedUnion("type", [
 
   // ABOUT BLOCK
   aboutHorizontalScrollBlockSchema,
+
+  // MANDALA BLOCK
+  mandalaHorizontalScrollBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

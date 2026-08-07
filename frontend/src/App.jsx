@@ -31,6 +31,7 @@ const ServicePage = lazy(() => import('./pages/ServicePage'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const NcHomeCustomization = lazy(() => import('./pages/admin/NcHomeCustomization'));
 const AboutCustomization = lazy(() => import('./pages/admin/AboutCustomization'));
+const MandalaCustomization = lazy(() => import('./pages/admin/MandalaCustomization'));
 const PageList = lazy(() => import('./pages/admin/pages/PageList'));
 const PageEditor = lazy(() => import('./pages/admin/pages/PageEditor'));
 const ProjectList = lazy(() => import('./pages/admin/projects/ProjectList'));
@@ -99,6 +100,7 @@ function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="home-customization" element={<NcHomeCustomization />} />
               <Route path="about-customization" element={<AboutCustomization />} />
+              <Route path="mandala-customization" element={<MandalaCustomization />} />
               <Route path="pages" element={<PageList />} />
               <Route path="pages/create" element={<PageEditor />} />
               <Route path="pages/edit/:id" element={<PageEditor />} />
@@ -136,7 +138,7 @@ function App() {
 
             <Route path="/" element={<NatureHomePreview />} />
 
-            {/* Public Routes - Inner Pages & Previews (Uses standard MainLayout) */}
+            {/* Public Routes  */}
             <Route element={<MainLayout />}>
               <Route path="/preview/:token" element={<PreviewPage />} /> 
               <Route path="/contact" element={<ContactUs />} />
@@ -144,13 +146,11 @@ function App() {
               <Route path="/blog/:slug" element={<BlogDetail />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/projects/:slug" element={<ProjectDetail />} />
-              <Route path="/about" element={<AboutUs />} />
               <Route path="/services" element={<ServicePage />} />
               <Route path="/services/:slug" element={<ServicePage />} />
-              
-              {/* Dynamic Pages Catch-All */}
-              <Route path="/*" element={<DynamicPage />} />
             </Route>
+            
+            <Route path="/*" element={<DynamicPage />} />
             
           </Routes>
         </Suspense>
