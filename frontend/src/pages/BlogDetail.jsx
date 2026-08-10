@@ -56,7 +56,7 @@ const BlogDetail = () => {
   const { blog, sidebar, navigationSiblings } = data;
 
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-white font-kanit">
       <SEOHead data={blog} type="blog" />
 
       <BlogDetailHero post={blog} />
@@ -81,7 +81,7 @@ const BlogDetail = () => {
                 <span className="text-zinc-400 text-sm font-medium">• {blog.readingTime} min read</span>
               </div>
 
-              <h1 className="font-['Outfit'] text-[36px] md:text-[50px] font-bold text-zinc-900 leading-[1.1] tracking-tight mb-8">
+              <h1 className="font-kanit text-[36px] md:text-[50px] font-bold text-zinc-900 leading-[1.1] tracking-tight mb-8">
                 {blog.title}
               </h1>
 
@@ -97,7 +97,7 @@ const BlogDetail = () => {
                     <div className="flex items-center gap-2 text-zinc-400 font-bold text-[13px] tracking-widest uppercase mb-3 group-hover:text-[#3B82F6] transition-colors">
                       <span className="text-lg leading-none">&larr;</span> Previous Post
                     </div>
-                    <div className="font-['Outfit'] font-bold text-lg md:text-xl leading-snug text-zinc-900 group-hover:text-[#3B82F6] transition-colors pr-4">
+                    <div className="font-kanit font-bold text-lg md:text-xl leading-snug text-zinc-900 group-hover:text-[#3B82F6] transition-colors pr-4">
                       {navigationSiblings.prev.title}
                     </div>
                   </Link>
@@ -108,7 +108,7 @@ const BlogDetail = () => {
                     <div className="flex items-center gap-2 text-zinc-400 font-bold text-[13px] tracking-widest uppercase mb-3 group-hover:text-[#3B82F6] transition-colors">
                       Next Post <span className="text-lg leading-none">&rarr;</span>
                     </div>
-                    <div className="font-['Outfit'] font-bold text-lg md:text-xl leading-snug text-zinc-900 group-hover:text-[#3B82F6] transition-colors md:pl-4">
+                    <div className="font-kanit font-bold text-lg md:text-xl leading-snug text-zinc-900 group-hover:text-[#3B82F6] transition-colors md:pl-4">
                       {navigationSiblings.next.title}
                     </div>
                   </Link>

@@ -54,7 +54,7 @@ const BlockRendererNode = memo(({ block }) => {
     case 'heading':
       return (
         <h2 
-          className="font-['Outfit'] text-[28px] md:text-[34px] font-bold text-zinc-900 tracking-tight mb-6 mt-10 text-left"
+          className="font-kanit text-[28px] md:text-[34px] font-bold text-zinc-900 tracking-tight mb-6 mt-10 text-left"
           dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
         />
       );
@@ -101,7 +101,7 @@ const BlogBlockParser = ({ contentPayload }) => {
   }
 
   return (
-    <div className="w-full font-['Outfit']">
+    <div className="w-full font-kanit">
       {structuralBlocksArray.map((block, idx) => (
         <BlockRendererNode key={block.id || idx} block={block} />
       ))}

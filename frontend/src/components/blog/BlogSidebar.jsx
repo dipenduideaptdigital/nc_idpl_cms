@@ -20,9 +20,9 @@ const BlogSidebar = ({ sidebarData, onSearchSubmit, activeCategorySlug, onCatego
   const structuralPopularTagsList = sidebarData?.popularTags || [];
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 font-kanit">
       <div>
-        <h3 className="font-['Outfit'] text-[32px] md:text-[43px] font-semibold leading-none text-zinc-900 mb-6">Search</h3>
+        <h3 className="font-kanit text-[32px] md:text-[43px] font-semibold leading-none text-zinc-900 mb-6">Search</h3>
         <form onSubmit={handleSearchKeyPressFormSignal} className="relative">
           <input 
             type="text" 
@@ -40,7 +40,7 @@ const BlogSidebar = ({ sidebarData, onSearchSubmit, activeCategorySlug, onCatego
       {/* Dynamic Relational Categories Tracker */}
       {structuralCategoriesList.length > 0 && (
         <div>
-          <h3 className="font-['Outfit'] text-[32px] md:text-[43px] font-semibold leading-none text-zinc-900 mb-6">Categories</h3>
+          <h3 className="font-kanit text-[32px] md:text-[43px] font-semibold leading-none text-zinc-900 mb-6">Categories</h3>
           <ul className="flex flex-col border-t border-zinc-200">
             {structuralCategoriesList.map((category) => {
               const isSelectedNode = activeCategorySlug === category.slug;
@@ -48,7 +48,7 @@ const BlogSidebar = ({ sidebarData, onSearchSubmit, activeCategorySlug, onCatego
                 <li 
                   key={category.id} 
                   onClick={() => onCategorySelect && onCategorySelect(category.slug)}
-                  className={`font-['Montserrat'] text-[18px] md:text-[22px] font-semibold capitalize border-b border-zinc-200 py-4 flex justify-between items-center transition-colors cursor-pointer ${
+                  className={`font-kanit text-[18px] md:text-[22px] font-semibold capitalize border-b border-zinc-200 py-4 flex justify-between items-center transition-colors cursor-pointer ${
                     isSelectedNode ? 'text-[#3B82F6]' : 'text-zinc-600 hover:text-[#3B82F6]'
                   }`}
                 >
@@ -66,7 +66,7 @@ const BlogSidebar = ({ sidebarData, onSearchSubmit, activeCategorySlug, onCatego
       {/* Dynamic Recent Posts Timeline Feeds */}
       {structuralRecentPostsList.length > 0 && (
         <div className="space-y-6 pt-4">
-          <h3 className="font-['Outfit'] text-[28px] font-semibold leading-none text-zinc-900 mb-4">Recent Posts</h3>
+          <h3 className="font-kanit text-[28px] font-semibold leading-none text-zinc-900 mb-4">Recent Posts</h3>
           {structuralRecentPostsList.map((post) => {
             const computedThumbImgLink = resolveAssetUrl(post.featuredImage?.thumbnailUrl, defaultThumbnailPlaceholder);
             return (
@@ -102,7 +102,7 @@ const BlogSidebar = ({ sidebarData, onSearchSubmit, activeCategorySlug, onCatego
       {/* Dynamic Taxonomies Tags Matrix Cloud */}
       {structuralPopularTagsList.length > 0 && (
         <div>
-          <h3 className="font-['Outfit'] text-[32px] md:text-[43px] font-semibold leading-none text-zinc-900 mb-6 mt-6">Popular Tags</h3>
+          <h3 className="font-kanit text-[32px] md:text-[43px] font-semibold leading-none text-zinc-900 mb-6 mt-6">Popular Tags</h3>
           <div className="flex flex-wrap justify-center gap-2.5">
             {structuralPopularTagsList.map((tag) => (
               <span 

@@ -23,8 +23,8 @@ const reviews = [
 
 const BlogReviews = () => {
   return (
-    <div className="mt-16 pt-8">
-      <h3 className="font-['Outfit'] text-[32px] md:text-[36px] font-bold text-zinc-900 mb-10">
+    <div className="mt-16 pt-8 font-kanit">
+      <h3 className="font-kanit text-[32px] md:text-[36px] font-bold text-zinc-900 mb-10">
         Customer Reviews
       </h3>
       
@@ -43,13 +43,13 @@ const BlogReviews = () => {
             
             {/* Review Content */}
             <div className="flex-1">
-              <h4 className="font-['Outfit'] text-[20px] font-bold text-zinc-900 mb-1 leading-none">
+              <h4 className="font-kanit text-[20px] font-bold text-zinc-900 mb-1 leading-none">
                 {review.name}
               </h4>
               <p className="text-zinc-400 text-[13px] mb-4">
                 {review.date}
               </p>
-              <p className="font-['Montserrat'] text-zinc-500 leading-relaxed text-[15px]">
+              <p className="font-kanit text-zinc-500 leading-relaxed text-[15px]">
                 {review.content}
               </p>
             </div>

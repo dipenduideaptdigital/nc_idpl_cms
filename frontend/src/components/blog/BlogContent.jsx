@@ -71,7 +71,7 @@ const BlogContent = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 md:px-8 max-w-7xl mt-16 mb-24 min-h-[600px]">
+    <div className="container mx-auto px-4 md:px-8 max-w-7xl mt-16 mb-24 min-h-[600px] font-kanit">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         
         {/* Left Column: Blog Posts Engine */}
@@ -116,7 +116,7 @@ const BlogContent = () => {
                 </div>
 
                 <Link to={`/blog/${post.slug}`} className="block">
-                  <h2 className="font-['Outfit'] text-3xl sm:text-[43px] font-semibold leading-[1.1] text-zinc-900 mb-4 hover:text-[#3B82F6] transition-colors cursor-pointer line-clamp-2">
+                  <h2 className="font-kanit text-3xl sm:text-[43px] font-semibold leading-[1.1] text-zinc-900 mb-4 hover:text-[#3B82F6] transition-colors cursor-pointer line-clamp-2">
                     {post.title}
                   </h2>
                 </Link>

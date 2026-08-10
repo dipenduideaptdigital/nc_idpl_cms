@@ -23,7 +23,7 @@ const Blog = () => {
   }, [searchParams]);
 
   return (
-    <div className="min-h-screen bg-zinc-50 pb-24">
+    <div className="min-h-screen bg-zinc-50 pb-24 font-kanit">
       <BlogHero />
       <BlogContent />
       <CallToAction />
