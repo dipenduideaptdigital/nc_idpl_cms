@@ -16,10 +16,10 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
   const image = data?.image ? getAssetUrl(data.image) : defaultGallery4;
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     phone: '',
+    website: '',
     message: ''
   });
 
@@ -35,25 +35,19 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
     setStatus({ loading: true, success: false, error: null });
 
     try {
-      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
       const payload = {
-        name: fullName,
+        name: formData.name.trim(),
         email: formData.email,
         phone: formData.phone,
-        message: formData.message,
-        formId: data?.formId || "cmqzjpzfz0000t00s7pd31okk"
+        website: formData.website,
+        message: formData.message
       };
 
-      await apiClient.post('/contacts/submit', payload);
+      const response = await apiClient.post('/contacts/submit', payload);
+      const dynamicSuccessMessage = response.data?.data?.successMessage || "Message sent successfully!";
 
-      setStatus({ loading: false, success: true, error: null });
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        message: ''
-      });
+      setStatus({ loading: false, success: dynamicSuccessMessage, error: null });
+      setFormData({ name: '', email: '', phone: '', website: '', message: '' });
 
       if (isModal && onClose) {
         setTimeout(() => {
@@ -62,11 +56,26 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
       }
     } catch (err) {
       console.error('GetInTouch form submission failed:', err);
-      setStatus({ 
-        loading: false, 
-        success: false, 
-        error: err.response?.data?.message || 'Something went wrong. Please try again later.' 
-      });
+      
+      let cleanError = 'Something went wrong. Please try again later.';
+      if (err.response?.data?.message) {
+        try {
+          const parsed = JSON.parse(err.response.data.message);
+          if (Array.isArray(parsed) && parsed[0]?.message) {
+            cleanError = parsed[0].message;
+          } else {
+            cleanError = err.response.data.message;
+          }
+        } catch (e) {
+          cleanError = err.response.data.message;
+        }
+      }
+      
+      if (cleanError.includes("requires at least 10 description tracking tokens")) {
+        cleanError = "Your message must be at least 10 characters long.";
+      }
+
+      setStatus({ loading: false, success: false, error: cleanError });
     }
   };
 
@@ -99,7 +108,7 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
             {status.success && (
               <div className="bg-emerald-50 text-emerald-700 p-4 rounded-xl flex items-center gap-3 text-sm font-medium">
                 <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
-                <span>Message sent successfully!</span>
+                <span>{status.success}</span>
               </div>
             )}
             {status.error && (
@@ -109,64 +118,72 @@ const GetInTouch = ({ data, isModal = false, onClose }) => {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5">
+              
+              {/* Name */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">First Name</label>
+                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">Name*</label>
                 <input 
                   type="text" 
-                  name="firstName"
+                  name="name"
                   required
                   disabled={status.loading}
-                  value={formData.firstName}
+                  value={formData.name}
                   onChange={handleChange}
-                  placeholder="First Name" 
+                  placeholder="Full Name" 
                   className="w-full border border-zinc-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#7BA641]/50 transition-all bg-zinc-50/50 disabled:opacity-50" 
                 />
               </div>
+
+              {/* Email */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">Last Name</label>
+                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">Email*</label>
+                <input 
+                  type="email" 
+                  name="email"
+                  required
+                  disabled={status.loading}
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="you@company.com" 
+                  className="w-full border border-zinc-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#7BA641]/50 transition-all bg-zinc-50/50 disabled:opacity-50" 
+                />
+              </div>
+
+              {/* Phone No */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">Phone No.*</label>
+                <div className="flex border border-zinc-200 rounded-md overflow-hidden bg-zinc-50/50 focus-within:ring-2 focus-within:ring-[#7BA641]/50 transition-all">
+                  <div className="flex items-center px-3 border-r border-zinc-200 bg-white">
+                    <span className="text-sm text-zinc-600 mr-1">IN</span>
+                  </div>
+                  <input 
+                    type="tel" 
+                    name="phone"
+                    required
+                    disabled={status.loading}
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+91 98316 37409" 
+                    className="w-full px-4 py-3 text-sm focus:outline-none bg-transparent disabled:opacity-50" 
+                  />
+                </div>
+              </div>
+
+              {/* Website */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">Website</label>
                 <input 
                   type="text" 
-                  name="lastName"
+                  name="website"
                   disabled={status.loading}
-                  value={formData.lastName}
+                  value={formData.website}
                   onChange={handleChange}
-                  placeholder="Last Name" 
+                  placeholder="e.g. www.naturecube.in" 
                   className="w-full border border-zinc-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#7BA641]/50 transition-all bg-zinc-50/50 disabled:opacity-50" 
                 />
               </div>
-            </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">Email</label>
-              <input 
-                type="email" 
-                name="email"
-                required
-                disabled={status.loading}
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="you@company.com" 
-                className="w-full border border-zinc-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#7BA641]/50 transition-all bg-zinc-50/50 disabled:opacity-50" 
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">Phone Number</label>
-              <div className="flex border border-zinc-200 rounded-md overflow-hidden bg-zinc-50/50 focus-within:ring-2 focus-within:ring-[#7BA641]/50 transition-all">
-                <div className="flex items-center px-3 border-r border-zinc-200 bg-white">
-                  <span className="text-sm text-zinc-600 mr-1">IN</span>
-                </div>
-                <input 
-                  type="tel" 
-                  name="phone"
-                  disabled={status.loading}
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+91 98316 37409" 
-                  className="w-full px-4 py-3 text-sm focus:outline-none bg-transparent disabled:opacity-50" 
-                />
-              </div>
             </div>
 
             <div className="flex flex-col gap-1.5">

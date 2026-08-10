@@ -1,11 +1,13 @@
-import { 
+import {   
   // ---- GLOBAL SETTINGS SCHEMAS ----
   generalSettingsSchema,
   cmsSettingsSchema,
   whatsappSettingsSchema,
   globalGeneralSettingsSchema,
   footerSchema,
-  
+  contactRoutingSettingsSchema,
+  ncContactPageSchema,
+
   // ---- NATURE CUBE SCHEMAS ----
   ncHeroSchema,
   ncMandalasSchema,
@@ -35,6 +37,8 @@ export const CMS_REGISTRY = {
   "cms_settings": cmsSettingsSchema,
   "whatsapp_settings": whatsappSettingsSchema,
   "global_general_settings": globalGeneralSettingsSchema,
+  "contact_routing_settings": contactRoutingSettingsSchema,
+  "nc_contact_page": ncContactPageSchema,
   
   // NATURE CUBE SECTIONS
   "nc_homepage_hero": ncHeroSchema,

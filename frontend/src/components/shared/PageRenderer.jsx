@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import ContactFormBlock from '../blocks/ContactFormBlock';
 
 //Ripples
 import RipplesHero from '../ripples/RipplesHero';
@@ -43,9 +42,6 @@ const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
   
   switch (type) {
-    // Generic Blocks
-    case 'contactForm': 
-      return <ContactFormBlock key={index} data={data} />;
       
     // Ripples Page Blocks
     case 'ripplesHero': 

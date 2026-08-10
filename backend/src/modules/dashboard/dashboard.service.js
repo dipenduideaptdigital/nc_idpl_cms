@@ -148,6 +148,7 @@ export const exportLeadsToCSV = async () => {
       name: true,
       email: true,
       phone: true,
+      website: true,
       subject: true,
       message: true,
       sourcePage: true,
@@ -159,7 +160,7 @@ export const exportLeadsToCSV = async () => {
   });
 
   const headers = [
-    "Name", "Email", "Phone", "Subject", "Message", 
+    "Name", "Email", "Phone", "Website", "Subject", "Message",
     "Source Page", "Status", "Spam Score", "Date Submitted", "IP Address"
   ];
 
@@ -167,6 +168,7 @@ export const exportLeadsToCSV = async () => {
     lead.name,
     lead.email,
     lead.phone || "N/A",
+    lead.website || "N/A",
     lead.subject || "N/A",
     lead.message || "N/A",
     lead.sourcePage || "N/A",

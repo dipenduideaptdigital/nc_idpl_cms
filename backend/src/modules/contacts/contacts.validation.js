@@ -33,7 +33,12 @@ export const submitContactSchema = z.object({
     .regex(/^[+]?[0-9\s.\-()]{7,20}$/, "Invalid structural telephone framework entry mapping validation failed")
     .optional()
     .nullable(),
-    
+       
+  website: z.string().trim()
+    .max(250, "Website URL tracking string boundary breached max limit")
+    .optional()
+    .nullable(),
+
   subject: z.string().trim()
     .max(200, "Subject header tracking matrix validation size boundary exceeded limit threshold")
     .optional()
@@ -42,9 +47,6 @@ export const submitContactSchema = z.object({
   message: z.string().trim()
     .min(10, "Message content context configuration requires at least 10 description tracking tokens")
     .max(5000, "Payload input data buffer maximum threshold verification parameters alert triggers block"),
-  
-  // STRUCTURAL FORM SYSTEM LIFECYCLE SEPARATION KEY IDENTIFIER
-  formId: z.string().cuid("Target operational Headless Form identity structural formatting verification error parameters mismatch constraint"),
     
   sourcePage: z.string().trim()
     .max(500, "Source URL path identifier string context is too long")
@@ -83,8 +85,7 @@ export const contactQuerySchema = z.object({
   limit: z.coerce.number().int().min(1, "Pagination capacity constraint limit metrics parameter must be at least 1").max(100, "Maximum pagination buffer capacity allowed is 100 elements tracking bounds").default(10),
   search: z.string().trim().optional(),
   status: z.enum(ALLOWED_CONTACT_STATUSES).optional(),
-  
-  formId: z.string().cuid("Invalid layout filter matching target constraint identifier structural check mapping loops").optional(),
+
   
   startDate: z.string().datetime({ message: "Telemetry historical query timeline parameter filter requires a strictly compliant ISO-8601 datetime format snapshot data token" }).optional(),
   endDate: z.string().datetime({ message: "Telemetry historical query timeline parameter filter requires a strictly compliant ISO-8601 datetime format snapshot data token" }).optional(),

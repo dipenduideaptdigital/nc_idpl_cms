@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../shared/errors/AppError.js";
 import { verifyRecaptchaToken } from "../../shared/services/recaptcha.service.js";
 import { queueAdminNotificationEmail } from "../../shared/services/notification.service.js";
-import * as formRepo from "../contactForms/contactForms.repository.js";
+import { prisma } from "../../config/db.js";
 import * as repo from "./contacts.repository.js";
 import xss from "xss";
 
@@ -15,23 +15,20 @@ export const executeContactSubmissionLifecycle = async (payload, clientIp, reque
     );
   }
 
-  const targetedActiveFormInstance = await formRepo.findFormById(payload.formId);
-  if (!targetedActiveFormInstance || !targetedActiveFormInstance.isActive) {
-    throw new AppError(
-      "The targeted content ingestion intake contact form structure map reference is either disabled or non-existent inside system caches.", 
-      StatusCodes.NOT_FOUND
-    );
-  }
+  const routingSetting = await prisma.setting.findUnique({ where: { key: "contact_routing_settings" } });
+  const notifyEmails = routingSetting?.value?.content?.notifyEmails || ["sales@naturecube.in"];
+  const successMessage = routingSetting?.value?.content?.successMessage || "Thank you! Your submission has been successfully processed.";
+  const redirectUrl = routingSetting?.value?.content?.redirectUrl || null;
 
   const rawEmail = payload.email.toLowerCase().trim();
   const rawMessage = payload.message.trim();
-  
   const normalizedPhoneString = payload.phone ? payload.phone.replace(/[^0-9+]/g, "") : null;
+  const rawWebsite = payload.website ? xss(payload.website.trim()) : null;
 
-  const isDuplicateActive = await repo.checkExactDuplicateSubmissionByHash(rawEmail, rawMessage, payload.formId);
+  const isDuplicateActive = await repo.checkExactDuplicateSubmissionByHash(rawEmail, rawMessage);
   if (isDuplicateActive) {
     throw new AppError(
-      "Duplicate submission blocked: An identical message pattern has already been processed within this specific form engine configuration during the past hour.", 
+      "Duplicate submission blocked: An identical message pattern has already been processed within the past hour.", 
       StatusCodes.CONFLICT
     );
   }
@@ -44,6 +41,7 @@ export const executeContactSubmissionLifecycle = async (payload, clientIp, reque
     name: xss(payload.name.trim()),
     email: rawEmail,
     phone: normalizedPhoneString,
+    website: rawWebsite,
     subject: payload.subject ? xss(payload.subject.trim()) : null,
     message: xss(rawMessage),
     sourcePage: payload.sourcePage || null, 
@@ -51,21 +49,18 @@ export const executeContactSubmissionLifecycle = async (payload, clientIp, reque
     userAgent: payload.userAgent || "unknown-agent",
     fingerprint: requestFingerprint,
     status: "NEW",
-    isViewed: false,
-    formId: targetedActiveFormInstance.id 
+    isViewed: false
   };
 
   const savedSubmission = await repo.persistSubmissionRecord(cleanPayloadMappingRecord, rawMessage);
   
-  const routingRecipientInboxList = targetedActiveFormInstance.notifyEmails || [];
-
-  await queueAdminNotificationEmail(savedSubmission, routingRecipientInboxList);
+  await queueAdminNotificationEmail(savedSubmission, notifyEmails);
 
   return { 
     id: savedSubmission.id, 
     status: savedSubmission.status,
-    successMessage: targetedActiveFormInstance.successMessage,
-    redirectUrl: targetedActiveFormInstance.redirectUrl
+    successMessage: successMessage,
+    redirectUrl: redirectUrl
   };
 };
 

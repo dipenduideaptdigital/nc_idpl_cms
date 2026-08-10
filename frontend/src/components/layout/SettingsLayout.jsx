@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, Navigate, useLocation } from 'react-router-dom';
-import { Settings, Users, Shield, SlidersHorizontal, Layout, MessageSquare, ShieldAlert } from 'lucide-react';
+import { Settings, Users, Shield, SlidersHorizontal, Layout, MessageSquare, ShieldAlert, Send } from 'lucide-react';
 import { usePermission } from '../../hooks/usePermission';
 import { useAuth } from '../../context/AuthContext';
 
@@ -15,6 +15,7 @@ const SettingsLayout = () => {
     { name: 'Access Roles', path: '/admin/settings/roles', icon: Shield, permission: 'role.view' },
     { name: 'CMS Settings', path: '/admin/settings/cms', icon: Layout, permission: 'settings.manage' },
     { name: 'WhatsApp Settings', path: '/admin/settings/whatsapp', icon: MessageSquare, permission: 'settings.manage' },
+    { name: 'Lead Routing', path: '/admin/settings/contact-routing', icon: Send, permission: 'settings.manage' },
     { name: 'Maintenance Mode', path: '/admin/settings/system', icon: ShieldAlert, superAdminOnly: true },
   ];
 

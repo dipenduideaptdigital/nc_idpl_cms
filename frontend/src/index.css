@@ -17,6 +17,15 @@
   --color-secondary: #f97316;
 }
 
+
+.font-kanit {
+  font-family: 'Kanit', sans-serif;
+}
+
+.font-larken {
+  font-family: 'Larken-Medium', 'Larken-MediumItalic', 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', serif;
+}
+
 .font-reem-fun {
   font-family: 'Reem Kufi Fun', sans-serif;
 }

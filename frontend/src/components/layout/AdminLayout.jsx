@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Sun, Moon,
+  LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Sun, Moon, MapPin,
   Globe, Inbox, Menu, X, BookOpen, Layers, Briefcase, Wrench, ChevronDown, FolderOpen, AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext'; 
@@ -145,7 +145,7 @@ const AdminLayout = () => {
       permission: 'contact.view',
       children: [
         { name: 'Inbox', path: '/admin/contacts/inbox', permission: 'contact.view' },
-        { name: 'Forms', path: '/admin/contact-forms', permission: 'contact.view' }, 
+        { name: 'Page Settings', path: '/admin/contact-customization', permission: 'page.edit' }, 
       ]
     },
     { name: 'Projects', icon: Briefcase, path: '/admin/projects', permission: 'project.view' },

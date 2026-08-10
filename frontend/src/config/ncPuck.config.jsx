@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Edit2, ChevronUp, ChevronDown } from 'lucide-react';
 import TipTapEditor from '../components/admin/TipTapEditor';
-import ContactFormBlock from '../components/blocks/ContactFormBlock';
 import ImageField from '../components/admin/ImageField';
 
 // Ripple Components
@@ -112,16 +111,6 @@ export const ncPuckConfig = {
       )
     },
 
-    contactForm: {
-      fields: {
-        formId: { type: "text" },
-        formTitle: { type: "text" },
-        submitButtonText: { type: "text" },
-        redirectPath: { type: "text" }
-      },
-      defaultProps: { formId: '', formTitle: 'Get in Touch', submitButtonText: 'Submit Inquiry', redirectPath: '' },
-      render: (props) => <ContactFormBlock data={props} />
-    },
 
     getStartedCta: {
       fields: {

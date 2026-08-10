@@ -12,7 +12,7 @@ export const checkRateLimitThreshold = async (fingerprint, timeWindowMs = 10 * 6
 };
 
 
-export const checkExactDuplicateSubmissionByHash = async (email, rawMessageContent, formId, timeWindowMs = 60 * 60 * 1000) => {
+export const checkExactDuplicateSubmissionByHash = async (email, rawMessageContent, timeWindowMs = 60 * 60 * 1000) => {
   const boundary = new Date(Date.now() - timeWindowMs);
   const messageHash = crypto.createHash("sha256").update(rawMessageContent).digest("hex");
 
@@ -20,7 +20,6 @@ export const checkExactDuplicateSubmissionByHash = async (email, rawMessageConte
     where: {
       email,
       messageHash,
-      formId, 
       createdAt: { gte: boundary },
       deletedAt: null
     },
@@ -143,7 +142,6 @@ export const findSubmissionDetailsById = async (id) => {
   return await prisma.contactSubmission.findFirst({
     where: { id, ...activeCondition },
     include: {
-      form: { select: { id: true, name: true, slug: true, successMessage: true, redirectUrl: true } },
       auditLogs: { orderBy: { createdAt: "desc" }, include: { actor: { select: { name: true } } } },
       internalNotes: { orderBy: { createdAt: "desc" }, include: { author: { select: { name: true, avatar: true } } } }
     }
@@ -157,11 +155,10 @@ export const updateViewedReadStatusState = async (id, isViewedValue = true) => {
   });
 };
 
-export const findSubmissionsPaginatedMatrix = async ({ skip, take, search, status, formId, startDate, endDate, sortBy, sortOrder }) => {
+export const findSubmissionsPaginatedMatrix = async ({ skip, take, search, status, startDate, endDate, sortBy, sortOrder }) => {
   const where = { ...activeCondition };
 
   if (status) where.status = status;
-  if (formId) where.formId = formId;
   
   if (startDate || endDate) {
     where.createdAt = {};
@@ -182,8 +179,7 @@ export const findSubmissionsPaginatedMatrix = async ({ skip, take, search, statu
       where,
       skip,
       take,
-      orderBy: { [sortBy]: sortOrder },
-      include: { form: { select: { id: true, name: true, slug: true } } }
+      orderBy: { [sortBy]: sortOrder }
     }),
     prisma.contactSubmission.count({ where })
   ]);
@@ -192,9 +188,8 @@ export const findSubmissionsPaginatedMatrix = async ({ skip, take, search, statu
 };
 
 
-export const computeAdvancedDashboardTelemetryAggregations = async (formId = undefined) => {
+export const computeAdvancedDashboardTelemetryAggregations = async () => {
   const baseCondition = { deletedAt: null };
-  if (formId) baseCondition.formId = formId;
 
   const todayStartBoundary = new Date();
   todayStartBoundary.setHours(0,0,0,0);

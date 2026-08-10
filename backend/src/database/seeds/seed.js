@@ -54,11 +54,6 @@ const PERMISSIONS = [
   { name: "Delete Role", slug: "role.delete", module: "ROLES" },
   { name: "Delete User", slug: "user.delete", module: "USERS" },
 
-  // CONTACT-FORMS
-  { name: "View Contact Forms", slug: "contact_form.view", module: "CONTACT_FORMS" },
-  { name: "Create Contact Form", slug: "contact_form.create", module: "CONTACT_FORMS" },
-  { name: "Edit Contact Form", slug: "contact_form.edit", module: "CONTACT_FORMS" },
-  { name: "Delete Contact Form", slug: "contact_form.delete", module: "CONTACT_FORMS" },
 
   //  PROJECTS PERMISSIONS
   { name: "View Projects", slug: "project.view", module: "PROJECTS" },
@@ -124,22 +119,6 @@ async function main() {
   } else {
     console.log("Super admin already exists");
   }
-
-  const defaultContactFormId = "cmqzjpzfz0000t00s7pd31okk"; 
-  
-  const defaultForm = await prisma.contactForm.upsert({
-    where: { slug: "main-contact" },
-    update: {},
-    create: {
-      id: defaultContactFormId,
-      name: "Main Contact Page",
-      slug: "main-contact",
-      successMessage: "Thank you! Your submission has been successfully processed. We will get back to you soon.",
-      notifyEmails: ["dipendu.ideaptdigital@gmail.com"], 
-      isActive: true,
-    }
-  });
-  console.log(`Default Contact Form seeded with ID: ${defaultForm.id}`);
 
   console.log("Seeding completely finished.");
 }

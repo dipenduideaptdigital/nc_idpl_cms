@@ -12,10 +12,9 @@ const AboutJourneyPanel = ({ data }) => {
       
       {/* Dark Tropical Leaf Background Texture Overlay */}
       <div 
-        className="absolute inset-0 pointer-events-none opacity-20 bg-cover bg-center"
+        className="absolute inset-0 pointer-events-none opacity-50 bg-cover bg-center" 
         style={{
           backgroundImage: `url(${data?.bgImage ? resolveAssetUrl(data.bgImage) : leafTexture})`,
-          backgroundBlendMode: 'overlay'
         }}
       />
 

@@ -32,6 +32,8 @@ const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const NcHomeCustomization = lazy(() => import('./pages/admin/NcHomeCustomization'));
 const AboutCustomization = lazy(() => import('./pages/admin/AboutCustomization'));
 const MandalaCustomization = lazy(() => import('./pages/admin/MandalaCustomization'));
+const ContactPageCustomization = lazy(() => import('./pages/admin/ContactPageCustomization'));
+const ContactRoutingSettings = lazy(() => import('./pages/admin/settings/ContactRoutingSettings'));
 const PageList = lazy(() => import('./pages/admin/pages/PageList'));
 const PageEditor = lazy(() => import('./pages/admin/pages/PageEditor'));
 const ProjectList = lazy(() => import('./pages/admin/projects/ProjectList'));
@@ -101,6 +103,7 @@ function App() {
               <Route path="home-customization" element={<NcHomeCustomization />} />
               <Route path="about-customization" element={<AboutCustomization />} />
               <Route path="mandala-customization" element={<MandalaCustomization />} />
+              <Route path="contact-customization" element={<ContactPageCustomization />} />
               <Route path="pages" element={<PageList />} />
               <Route path="pages/create" element={<PageEditor />} />
               <Route path="pages/edit/:id" element={<PageEditor />} />
@@ -133,6 +136,7 @@ function App() {
                 <Route path="cms" element={<CmsSettings />} />
                 <Route path="whatsapp" element={<WhatsAppSettings />} />
                 <Route path="system" element={<SystemStateSettings />} />
+                <Route path="contact-routing" element={<ContactRoutingSettings />} />
               </Route>
             </Route>
 

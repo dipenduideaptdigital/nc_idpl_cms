@@ -307,3 +307,26 @@ export const gulmoConceptSchema = z.object({
     ).optional()
   })
 });
+
+export const contactRoutingSettingsSchema = z.object({
+  content: z.object({
+    successMessage: z.string().max(500).optional(),
+    redirectUrl: z.string().max(500).optional().nullable(),
+    notifyEmails: z.array(z.string().email()).optional(),
+  })
+});
+
+export const ncContactPageSchema = z.object({
+  content: z.object({
+    bannerTitle: z.string().optional(),
+    bannerImage: z.string().optional(),
+    contactHeading: z.string().optional(),
+    contactSubtext: z.string().optional(),
+    address: z.string().optional(),
+    email: z.string().optional(),
+    phone1: z.string().optional(),
+    phone2: z.string().optional(),
+    teamBannerImage: z.string().optional(),
+    mapEmbedCode: z.string().max(3000).optional()
+  })
+});

@@ -462,28 +462,13 @@ model BlogSlugHistory {
   @@map("blog_slug_histories")
 }
 
-model ContactForm {
-  id             String              @id @default(cuid())
-  name           String
-  slug           String              @unique
-  successMessage String?             @default("Thank you! Your submission has been successfully processed.")
-  redirectUrl    String?             
-  notifyEmails   Json?               
-  isActive       Boolean             @default(true)
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
-
-  submissions    ContactSubmission[]
-
-  @@index([isActive])
-  @@map("contact_forms")
-}
 
 model ContactSubmission {
   id             String               @id @default(cuid())
   name           String
   email          String
   phone          String?
+  website        String?              
   subject        String?
   message        String?              @db.Text 
   messageHash    String?              @db.VarChar(64) 
@@ -491,9 +476,6 @@ model ContactSubmission {
   status         ContactStatus        @default(NEW)
   sourcePage     String?              
   isViewed       Boolean              @default(false)   
-
-  formId         String
-  form           ContactForm          @relation(fields: [formId], references: [id], onDelete: Restrict) 
 
   assignedToId   String?
   assignedTo     User?                @relation("LeadAssignment", fields: [assignedToId], references: [id], onDelete: SetNull)
@@ -511,7 +493,6 @@ model ContactSubmission {
   auditLogs      ContactSubmissionLog[]
   internalNotes  ContactInternalNote[]
 
-  @@index([formId]) 
   @@index([status])
   @@index([createdAt])
   @@index([email])

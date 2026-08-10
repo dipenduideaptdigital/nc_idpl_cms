@@ -231,6 +231,12 @@ const ContactInbox = () => {
                           <Phone className="w-3.5 h-3.5" /> {selectedLead.phone}
                         </a>
                       )}
+                      {selectedLead.website && (
+                        <a href={selectedLead.website.startsWith('http') ? selectedLead.website : `https://${selectedLead.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
+                          <span className="w-3.5 h-3.5 flex items-center justify-center border border-current rounded-full text-[8px] font-bold">W</span> 
+                          {selectedLead.website}
+                        </a>
+                      )}
                     </div>
                   </div>
                   <div className="text-left sm:text-right flex-shrink-0">

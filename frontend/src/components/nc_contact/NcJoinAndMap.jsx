@@ -1,19 +1,22 @@
 import React from 'react';
 import teamBanner from '../../assets/nc_contact/team_banner.png';
-import mapImg from '../../assets/nc_contact/map.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
-const NcJoinAndMap = () => {
+const NcJoinAndMap = ({ data }) => {
+  const teamImg = data?.teamBannerImage ? resolveAssetUrl(data.teamBannerImage) : teamBanner;
+  
+  const defaultMapEmbed = `<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117996.95037632997!2d88.26363953503943!3d22.455246413280048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0277f3e8c07659%3A0x6b4458fcc3df8131!2sDhakuria%2C%20Kolkata%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1710000000000!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  
+  const mapEmbedCode = data?.mapEmbedCode || defaultMapEmbed;
+
   return (
     <div className="w-full font-kanit">
       
-      {/* Join Our Team Banner */}
       <section className="relative w-full h-[360px] sm:h-[420px] md:h-[460px] flex items-center overflow-hidden">
-        {/* Background Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${teamBanner})` }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
+          style={{ backgroundImage: `url(${teamImg})` }}
         >
-          {/* Soft dark overlay for text contrast */}
           <div className="absolute inset-0 bg-black/35" />
         </div>
 
@@ -36,12 +39,10 @@ const NcJoinAndMap = () => {
         </div>
       </section>
 
-      {/* Map Section */}
       <section className="w-full h-[350px] sm:h-[450px] md:h-[520px] relative overflow-hidden bg-zinc-100">
-        <img 
-          src={mapImg} 
-          alt="Location Map" 
-          className="w-full h-full object-cover object-center"
+        <div 
+          className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
+          dangerouslySetInnerHTML={{ __html: mapEmbedCode }}
         />
       </section>
 

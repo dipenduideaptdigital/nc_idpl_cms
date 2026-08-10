@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import apiClient from '../../api/client';
 
-// Assets from nc_mandala, nc_contact, and nc_logo
 import fishImg from '../../assets/nc_mandala/fish.png';
 import callIcon from '../../assets/nc_contact/call.png';
 import call2Icon from '../../assets/nc_contact/call2.png';
@@ -10,7 +9,17 @@ import expIcon from '../../assets/nc_contact/experience.png';
 import locIcon from '../../assets/nc_contact/location.png';
 import bushBg from '../../assets/nc_logo/bush3.png';
 
-const NcContactInfo = () => {
+const NcContactInfo = ({ data }) => {
+  const heading = data?.contactHeading || "Our Contacts";
+  const subtext = data?.contactSubtext || "Ensuring the best return on investment for your bespoke SEO campaign requirement.";
+  const address = data?.address || "30 B/3 Sarat Ghosh Garden Road.\nDhakuria, Kolkata, India. Pin 700031";
+  const emailAddress = data?.email || "sales@naturecube.in";
+  const phone1 = data?.phone1 || "+ 91-9830009691";
+  const phone2 = data?.phone2 || "+ 91-9830086975";
+
+  const cleanPhone1 = phone1.replace(/[^0-9+]/g, '');
+  const cleanPhone2 = phone2 ? phone2.replace(/[^0-9+]/g, '') : '';
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -35,22 +44,41 @@ const NcContactInfo = () => {
         email: formData.email,
         phone: formData.phone,
         website: formData.website,
-        message: formData.message,
-        formId: "nc_contact_form"
+        message: formData.message
       };
 
-      await apiClient.post('/contacts/submit', payload);
+      const response = await apiClient.post('/contacts/submit', payload);
+      
+      const dynamicSuccessMessage = response.data?.data?.successMessage || "Thank you! Your message has been sent successfully.";
 
-      setStatus({ loading: false, success: true, error: null });
+      setStatus({ loading: false, success: dynamicSuccessMessage, error: null });
       setFormData({ name: '', email: '', phone: '', website: '', message: '' });
 
       setTimeout(() => setStatus(prev => ({ ...prev, success: false })), 6000);
     } catch (err) {
       console.error('Form submission failed:', err);
+      let cleanError = 'Something went wrong. Please try again later.';
+      if (err.response?.data?.message) {
+        try {
+          const parsed = JSON.parse(err.response.data.message);
+          if (Array.isArray(parsed) && parsed[0]?.message) {
+            cleanError = parsed[0].message;
+          } else {
+            cleanError = err.response.data.message;
+          }
+        } catch (e) {
+          cleanError = err.response.data.message;
+        }
+      }
+
+      if (cleanError.includes("requires at least 10 description tracking tokens")) {
+        cleanError = "Your message must be at least 10 characters long.";
+      }
+
       setStatus({
         loading: false,
         success: false,
-        error: err.response?.data?.message || 'Something went wrong. Please try again later.'
+        error: cleanError
       });
     }
   };
@@ -74,10 +102,10 @@ const NcContactInfo = () => {
 
           <div className="max-w-md pt-2 relative z-10">
             <h2 className="font-reem-fun text-3xl sm:text-4xl lg:text-[42px] font-bold text-zinc-900 tracking-tight leading-tight mb-4">
-              Our Contacts
+              {heading}
             </h2>
-            <p className="text-zinc-500 font-normal text-sm sm:text-base leading-relaxed max-w-sm">
-              Ensuring the best return on investment for your bespoke SEO campaign requirement.
+            <p className="text-zinc-500 font-normal text-sm sm:text-base leading-relaxed max-w-sm whitespace-pre-line">
+              {subtext}
             </p>
           </div>
 
@@ -121,7 +149,7 @@ const NcContactInfo = () => {
                 {status.success && (
                   <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl flex items-center gap-3 text-sm font-medium border border-emerald-200">
                     <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
-                    Thank you! Your message has been sent successfully.
+                    {status.success}
                   </div>
                 )}
                 {status.error && (
@@ -236,7 +264,7 @@ const NcContactInfo = () => {
               </form>
             </div>
 
-            {/* Right Card Panel (Questions? We have answers.) */}
+            {/* Right Card Panel */}
             <div className="lg:col-span-5 flex flex-col justify-center pl-0 lg:pl-6 py-4 relative z-10">
               <h3 className="font-reem-fun text-3xl sm:text-4xl font-bold text-zinc-900 tracking-tight leading-tight">
                 Questions?
@@ -252,10 +280,10 @@ const NcContactInfo = () => {
               </p>
               
               <a 
-                href="tel:+919830086975" 
+                href={`tel:${cleanPhone1}`} 
                 className="text-zinc-900 font-bold text-lg sm:text-xl md:text-2xl tracking-tight hover:text-emerald-700 transition-colors inline-block"
               >
-                + 91-9830086975
+                {phone1}
               </a>
             </div>
 
@@ -274,8 +302,8 @@ const NcContactInfo = () => {
               <div className="w-12 h-12 rounded-full bg-[#edf5e6] flex items-center justify-center shrink-0">
                 <img src={expIcon} alt="Email" className="w-5 h-5 object-contain" />
               </div>
-              <a href="mailto:sales@naturecube.in" className="text-xs sm:text-sm font-medium text-zinc-800 hover:text-emerald-700 transition-colors">
-                sales@naturecube.in
+              <a href={`mailto:${emailAddress}`} className="text-xs sm:text-sm font-medium text-zinc-800 hover:text-emerald-700 transition-colors">
+                {emailAddress}
               </a>
             </div>
 
@@ -284,9 +312,8 @@ const NcContactInfo = () => {
               <div className="w-12 h-12 rounded-full bg-[#edf5e6] flex items-center justify-center shrink-0">
                 <img src={locIcon} alt="Location" className="w-5 h-5 object-contain" />
               </div>
-              <p className="text-xs sm:text-sm font-medium text-zinc-800 leading-snug">
-                30 B/3 Sarat Ghosh Garden Road.<br />
-                Dhakuria, Kolkata, India. Pin 700031
+              <p className="text-xs sm:text-sm font-medium text-zinc-800 leading-snug whitespace-pre-line">
+                {address}
               </p>
             </div>
 
@@ -296,8 +323,8 @@ const NcContactInfo = () => {
                 <img src={call2Icon} alt="Phone" className="w-5 h-5 object-contain" />
               </div>
               <div className="flex flex-col text-xs sm:text-sm font-medium text-zinc-800">
-                <a href="tel:+919830009691" className="hover:text-emerald-700 transition-colors">+ 91-9830009691</a>
-                <a href="tel:+919830086975" className="hover:text-emerald-700 transition-colors">+ 91-9830086975</a>
+                <a href={`tel:${cleanPhone1}`} className="hover:text-emerald-700 transition-colors">{phone1}</a>
+                {phone2 && <a href={`tel:${cleanPhone2}`} className="hover:text-emerald-700 transition-colors">{phone2}</a>}
               </div>
             </div>
 
@@ -311,14 +338,13 @@ const NcContactInfo = () => {
               <h4 className="text-base sm:text-lg font-bold text-zinc-900 mb-2">
                 Experience Centre
               </h4>
-              <p className="text-zinc-500 font-light text-xs sm:text-sm leading-relaxed mb-4">
-                30 B/3 Sarat Ghosh Garden Road.<br />
-                Dhakuria, Kolkata, India. Pin 700031
+              <p className="text-zinc-500 font-light text-xs sm:text-sm leading-relaxed mb-4 whitespace-pre-line">
+                {address}
               </p>
               <div className="flex items-center gap-2">
                 <img src={callIcon} alt="Phone Icon" className="w-4 h-4 object-contain" />
-                <a href="tel:+919830086975" className="font-bold text-sm text-zinc-900 hover:text-emerald-700 transition-colors">
-                  + 91-9830086975
+                <a href={`tel:${cleanPhone1}`} className="font-bold text-sm text-zinc-900 hover:text-emerald-700 transition-colors">
+                  {phone1}
                 </a>
               </div>
             </div>
@@ -328,14 +354,13 @@ const NcContactInfo = () => {
               <h4 className="text-base sm:text-lg font-bold text-zinc-900 mb-2">
                 Corporate
               </h4>
-              <p className="text-zinc-500 font-light text-xs sm:text-sm leading-relaxed mb-4">
-                30 B/3 Sarat Ghosh Garden Road.<br />
-                Dhakuria, Kolkata, India. Pin 700031
+              <p className="text-zinc-500 font-light text-xs sm:text-sm leading-relaxed mb-4 whitespace-pre-line">
+                {address}
               </p>
               <div className="flex items-center gap-2">
                 <img src={callIcon} alt="Phone Icon" className="w-4 h-4 object-contain" />
-                <a href="tel:+919830086975" className="font-bold text-sm text-zinc-900 hover:text-emerald-700 transition-colors">
-                  + 91-9830086975
+                <a href={`tel:${cleanPhone1}`} className="font-bold text-sm text-zinc-900 hover:text-emerald-700 transition-colors">
+                  {phone1}
                 </a>
               </div>
             </div>
