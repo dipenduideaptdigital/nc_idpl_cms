@@ -1,83 +1,50 @@
-import React, { useRef, useState, useEffect } from 'react';
-import apiClient from '../../api/client';
+import React, { useState } from 'react';
 import { Type, Trash, Plus, ChevronDown, ChevronUp, Edit2 } from 'lucide-react';
 import TipTapEditor from './TipTapEditor';
 import ImageField from './ImageField';
 
-const getAssetUrl = (path) => {
-  if (!path) return '';
-  if (path.startsWith('http')) return path;
-  const baseUrl = import.meta.env.VITE_API_URL 
-    ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
-    : 'http://localhost:5000';
-  return `${baseUrl}${path}`;
-};
+const CollapsibleTiptap = ({ value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
- // Collapsible Tiptap Wrapper Component
-  const CollapsibleTiptap = ({ value, onChange }) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const getPreviewText = (html) => {
-      if (!html) return 'No content added...';
-      const temp = document.createElement('div');
-      temp.innerHTML = html;
-      const text = temp.textContent || temp.innerText || '';
-      return text.length > 60 ? text.substring(0, 60) + '...' : text || 'No content added...';
-    };
-
-    return (
-      <div className="border border-zinc-200 rounded-xl overflow-hidden bg-white shadow-sm transition-all duration-200">
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50/50 hover:bg-zinc-100 transition-colors outline-none"
-        >
-          <div className="flex items-center gap-3 overflow-hidden">
-            <Edit2 className="w-4 h-4 text-zinc-500 shrink-0" />
-            <span className="text-sm font-medium text-zinc-700 truncate">
-              {isOpen ? 'Close Text Editor' : getPreviewText(value)}
-            </span>
-          </div>
-          {isOpen ? (
-            <ChevronUp className="w-4 h-4 text-zinc-500 shrink-0" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0" />
-          )}
-        </button>
-        
-        {isOpen && (
-          <div className="p-4 border-t border-zinc-200 bg-white">
-            <TipTapEditor value={value} onChange={onChange} />
-          </div>
-        )}
-      </div>
-    );
+  const getPreviewText = (html) => {
+    if (!html) return 'No content added...';
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    const text = temp.textContent || temp.innerText || '';
+    return text.length > 60 ? text.substring(0, 60) + '...' : text || 'No content added...';
   };
+
+  return (
+    <div className="border border-zinc-200 rounded-xl overflow-hidden bg-white shadow-sm transition-all duration-200">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50/50 hover:bg-zinc-100 transition-colors outline-none"
+      >
+        <div className="flex items-center gap-3 overflow-hidden">
+          <Edit2 className="w-4 h-4 text-zinc-500 shrink-0" />
+          <span className="text-sm font-medium text-zinc-700 truncate">
+            {isOpen ? 'Close Text Editor' : getPreviewText(value)}
+          </span>
+        </div>
+        {isOpen ? (
+          <ChevronUp className="w-4 h-4 text-zinc-500 shrink-0" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0" />
+        )}
+      </button>
+      
+      {isOpen && (
+        <div className="p-4 border-t border-zinc-200 bg-white">
+          <TipTapEditor value={value} onChange={onChange} />
+        </div>
+      )}
+    </div>
+  );
+};
   
 const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
   const { type, data } = block;
-
-  const [availableForms, setAvailableForms] = useState([]);
-  const [loadingForms, setLoadingForms] = useState(false);
-
-  useEffect(() => {
-    if (type === 'contactForm') {
-      const fetchForms = async () => {
-        try {
-          setLoadingForms(true);
-          const res = await apiClient.get('/admin/contact-forms');
-          if (res.data?.success && res.data?.data) {
-            setAvailableForms(res.data.data);
-          }
-        } catch (err) {
-          console.error('Failed to fetch contact forms:', err);
-        } finally {
-          setLoadingForms(false);
-        }
-      };
-      fetchForms();
-    }
-  }, [type]);
 
   // Generic change handler for simple inputs
   const handleChange = (e) => {
@@ -102,7 +69,6 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
     newArray[itemIndex] = value;
     updateBlockData(index, arrayField, newArray);
   };
-
 
   const renderGenericFields = (fieldsConfig) => (
     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
@@ -279,84 +245,10 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
         </div>
       );
 
-    case 'contactForm':
-      return (
-        <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
-          <div className="px-8 py-4 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50/50">
-            <Type className="w-5 h-5 text-zinc-700" />
-            <h2 className="text-lg font-semibold text-zinc-800">Contact Form Module</h2>
-          </div>
-          <div className="p-8 space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-2">Target Form *</label>
-              {loadingForms ? (
-                <div className="w-full px-4 py-3 border border-zinc-200 rounded-xl bg-zinc-50 text-sm text-zinc-500 animate-pulse">
-                  Loading available forms from database...
-                </div>
-              ) : (
-                <select
-                  value={data.formId || ''}
-                  onChange={(e) => updateBlockData(index, 'formId', e.target.value)}
-                  className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm cursor-pointer"
-                >
-                  <option value="" disabled>-- Select a Contact Form --</option>
-                  {availableForms.map((form) => (
-                    <option key={form.id} value={form.id}>
-                      {form.name} ({form.slug}) - {form.isActive ? 'Active' : 'Inactive'}
-                    </option>
-                  ))}
-                </select>
-              )}
-              <p className="text-xs text-zinc-400 mt-1.5">
-                Select the form you want to display. You can create new forms from the Contact Forms module.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-zinc-100">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2">Form Override Title</label>
-                <input 
-                  type="text" 
-                  value={data.formTitle || ''} 
-                  onChange={(e) => updateBlockData(index, 'formTitle', e.target.value)}
-                  placeholder="e.g. Reach Out Today"
-                  className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2">Submit Button Text</label>
-                <input 
-                  type="text" 
-                  value={data.submitButtonText || ''} 
-                  onChange={(e) => updateBlockData(index, 'submitButtonText', e.target.value)}
-                  placeholder="e.g. Send Application"
-                  className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-2">Redirect Path *</label>
-              <input 
-                type="text" 
-                value={data.redirectPath || ''} 
-                onChange={(e) => updateBlockData(index, 'redirectPath', e.target.value)}
-                placeholder="e.g. /thank-you"
-                className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-colors bg-zinc-50/50 text-sm"
-              />
-              <p className="text-xs text-zinc-400 mt-1.5">
-                Leave blank to stay on the same page. Must start with a forward slash (/).
-              </p>
-            </div>
-
-          </div>
-        </div>
-      );
-      case 'heading':
-        return renderGenericFields([
-          { name: 'content', type: 'tiptap', placeholder: 'Enter your section heading here...' }
-        ]);
+    case 'heading':
+      return renderGenericFields([
+        { name: 'content', type: 'tiptap', placeholder: 'Enter your section heading here...' }
+      ]);
       
     case 'paragraph':
       return renderGenericFields([
@@ -396,7 +288,7 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
           <div className="w-full h-px bg-zinc-200 my-4"></div>
           <p className="text-sm text-zinc-500 font-medium">Line Divider (No settings required)</p>
         </div>
-        );
+      );
         
     case 'serviceBanner':
       return renderGenericFields([
@@ -443,127 +335,27 @@ const DynamicBlockEditor = ({ block, index, updateBlockData }) => {
         }
       ]);
 
-    case 'ctaSection':
+    case 'getStartedCta':
       return renderGenericFields([
-        { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH' },
-        { name: 'title', type: 'textarea', defaultValue: 'Have A Project In [Mind? Let\'s]\n[Make] It Happen' },
-        { name: 'buttonText', type: 'text', defaultValue: 'BOOK A FREE CONSULTATION' }
-      ]);
-
-    case 'contactBanner':
-      return renderGenericFields([
-        { name: 'title', type: 'text', defaultValue: 'Contact Us' },
-        { name: 'breadcrumbText', type: 'text', defaultValue: 'Contact Us' },
-        { name: 'backgroundImage', type: 'image' }
-      ]);
-
-    case 'contactInfo':
-      return renderGenericFields([
-        { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH' },
-        { name: 'title', type: 'textarea', defaultValue: 'Have a Project In [Mind? Let\'s]\n[Make] It Happen.' },
-        { name: 'addressTitle', type: 'text', defaultValue: 'Address:' },
-        { name: 'addressText', type: 'textarea', defaultValue: 'Office: AG 40 , Sector II, Salt Lake\nCity, Kolkata: 700091' },
-        { name: 'supportTitle', type: 'text', defaultValue: 'Support' },
-        { name: 'supportPhone', type: 'text', defaultValue: '+91 9831-637-409' },
-        { name: 'supportEmail', type: 'text', defaultValue: 'Subhaakritee@Hotmail.Com' },
-        { name: 'mapIframeUrl', type: 'textarea', defaultValue: 'https://www.google.com/maps/embed?pb=...' },
-        { name: 'workspaceImage', type: 'image' },
-      ]);
-
-    case 'aboutBanner':
-      return renderGenericFields([
-        { name: 'title', type: 'text', defaultValue: 'About Us' },
-        { name: 'breadcrumbText', type: 'text', defaultValue: 'About Us' },
-        { name: 'backgroundImage', type: 'image' }
-      ]);
-
-    case 'aboutExperience':
-      return renderGenericFields([
-        { name: 'badgeText', type: 'text', defaultValue: 'Started in 1989' },
-        { name: 'title', type: 'textarea', defaultValue: 'We Shape [Interior Designs,]\n[Crafting Timeless] And Inspiring\nSpaces' },
-        { name: 'yearsOfExperience', type: 'text', defaultValue: '26' },
-        { name: 'experienceTitle', type: 'textarea', defaultValue: 'Years Of\nExperience' },
-        { name: 'paragraph', type: 'tiptap', defaultValue: '<p>We believe that every space has the power to inspire...</p>' },
-        { name: 'buttonText', type: 'text', defaultValue: 'Learn More' },
-        { name: 'buttonLink', type: 'text', defaultValue: '#' },
-        { name: 'image1', type: 'image' },
-        { name: 'image2', type: 'image' }
-      ]);
-
-    case 'aboutProcess':
-      return renderGenericFields([
-        { name: 'backgroundImage', type: 'image' },
-        { 
-          name: 'steps', type: 'array', defaultItem: { number: '', title: '', desc: '' },
-          defaultArray: [
-            { number: '01', title: 'Concept Design', desc: 'Initial ideation and space planning.' }
-          ],
-          itemFields: [
-            { name: 'number', type: 'text', placeholder: '01' },
-            { name: 'title', type: 'text', placeholder: 'Step Title' },
-            { name: 'desc', type: 'tiptap', placeholder: 'Step Description' }
-          ]
-        }
-      ]);
-
-    case 'timeline':
-      return renderGenericFields([
-        { name: 'badgeText', type: 'text', defaultValue: 'GET IN TOUCH' },
-        { name: 'title', type: 'textarea', defaultValue: 'Our History [Is Full Of]\n[Interesting] Stages And\nEvents.' },
-        { 
-          name: 'items', type: 'array', defaultItem: { year: '', description: '', image: '' },
-          defaultArray: [
-            { year: '1990', description: 'A business house born out of passion for fish keeping.', image: '' }
-          ],
-          itemFields: [
-            { name: 'year', type: 'text', placeholder: 'Year' },
-            { name: 'description', type: 'tiptap', placeholder: 'Description' },
-            { name: 'image', type: 'image' }
-          ]
-        }
-      ]);
-
-    case 'aboutAwards':
-      return renderGenericFields([
-        { name: 'badgeText', type: 'text', defaultValue: 'AWARD & ACHIEVEMENT' },
-        { name: 'title', type: 'textarea', defaultValue: 'Design That [Speaks Our]\n[Industry] Awards' },
-        { name: 'mainImage', type: 'image' },
-        { 
-          name: 'awards', type: 'array', defaultItem: { year: '', title: '' },
-          defaultArray: [{ year: '2020', title: 'Residential Interior Design' }],
-          itemFields: [
-            { name: 'year', type: 'text', placeholder: 'Year' },
-            { name: 'title', type: 'text', placeholder: 'Award Title' }
-          ]
-        }
-      ]);
-
-    case 'aboutGallery':
-      return renderGenericFields([
-        { name: 'badgeText', type: 'text', defaultValue: 'OUR GALLERY' },
-        { name: 'title', type: 'textarea', defaultValue: 'Interior \n Design' },
-        { name: 'description', type: 'tiptap', defaultValue: '<p>Lorem ipsum dolor sit amet consectetur...</p>' },
-        { name: 'backgroundImage', type: 'image' },
-        { 
-          name: 'galleryItems', type: 'array', defaultItem: { title: '', image: '' },
-          defaultArray: [{ title: 'Project 1', image: '' }],
-          itemFields: [
-            { name: 'title', type: 'text', placeholder: 'Project Title' },
-            { name: 'image', type: 'image' }
-          ]
-        }
+        { name: 'titlePart1', type: 'text', defaultValue: 'LIVING', placeholder: 'First part of title' },
+        { name: 'titlePart2', type: 'text', defaultValue: 'art', placeholder: 'Italicized part of title' },
+        { name: 'headline', type: 'tiptap', defaultValue: 'It is a long established fact that a reader will be distracted.', placeholder: 'Main headline' },
+        { name: 'subtext', type: 'textarea', defaultValue: 'It is a long established fact that a reader will be distracted.', placeholder: 'Subtext description' },
+        { name: 'buttonText', type: 'text', defaultValue: "LET'S GET STARTED", placeholder: 'Button Label' },
+        { name: 'buttonLink', type: 'text', defaultValue: '#contact', placeholder: 'Button Link URL' }
       ]);
 
     case 'projectsBanner':
       return renderGenericFields([
-        { name: 'title', type: 'text', defaultValue: 'Projects' },
+        { name: 'title', type: 'textarea', defaultValue: 'It is a long established fact that a reader\nwill be distracted.' }, // 🛡️ Changed to textarea
         { name: 'backgroundImage', type: 'image' }
       ]);
 
     default:
       return (
         <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-yellow-800 text-sm">
-          Unknown block type: {type}
+          No visual editor configured for block type: <strong>{type}</strong>. 
+          <br/>This block may be intended to be edited directly via the Puck Visual Editor instead.
         </div>
       );
   }

@@ -217,6 +217,7 @@ model Media {
   featuredInPages Page[]    
   featuredInBlogs Blog[]    
   featuredInProjects Project[] @relation("ProjectFeaturedImage")
+  heroInProjects     Project[] @relation("ProjectHeroImage")
 
   ogImageForPages Page[]    @relation("PageOgImage")
   ogImageForBlogs Blog[]    @relation("BlogOgImage")
@@ -547,14 +548,15 @@ model Project {
   location        String?
   description     String?    @db.Text
   details         String?    @db.Text
-  client          String?
-  area            String?
-  
-  bulletPoints    Json?      
-  spaces          Json?
+  subtitle        String?    @db.Text
+  specifications  String?    
+  galleryImages   Json?
 
   featuredImageId String?
   featuredImage   Media?     @relation("ProjectFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
+
+  heroImageId     String?
+  heroImage       Media?     @relation("ProjectHeroImage", fields: [heroImageId], references: [id], onDelete: SetNull)
 
   metaTitle       String?
   metaDescription String?    @db.Text

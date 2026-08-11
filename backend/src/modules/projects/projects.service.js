@@ -36,6 +36,7 @@ export const createProject = async (data) => {
   }
   
   data.featuredImageId = await resolveImageId(data.featuredImageId);
+  data.heroImageId = await resolveImageId(data.heroImageId);
   
   return repository.create({ ...data, slug });
 };
@@ -88,6 +89,7 @@ export const updateProject = async (id, data) => {
   }
 
   data.featuredImageId = await resolveImageId(data.featuredImageId);
+  data.heroImageId = await resolveImageId(data.heroImageId);
 
   return repository.update(id, data);
 };

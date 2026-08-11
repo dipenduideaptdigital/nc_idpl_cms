@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BlogHero from '../components/blog/BlogHero';
 import BlogContent from '../components/blog/BlogContent';
-import CallToAction from '../components/shared/CallToAction';
+import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
+import apiClient from '../api/client';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 
 const Blog = () => {
   const [searchParams] = useSearchParams();
+  const [ctaData, setCtaData] = useState(null);
   useScrollAnimation();
 
   useEffect(() => {
@@ -20,13 +22,17 @@ const Blog = () => {
 
     document.title = title;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    apiClient.get('/cms/section/nc_homepage_cta')
+      .then(res => setCtaData(res.data?.data?.content))
+      .catch(console.error);
   }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-zinc-50 pb-24 font-kanit">
       <BlogHero />
       <BlogContent />
-      <CallToAction />
+      <GetStartedCtaSection data={ctaData} />
     </div>
   );
 };

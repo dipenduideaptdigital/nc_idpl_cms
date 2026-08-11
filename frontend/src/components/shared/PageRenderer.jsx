@@ -38,6 +38,8 @@ import AboutHorizontalScroll from '../nc_about/AboutHorizontalScroll';
 // MANDALA SECTION
 import MandalaHorizontalScroll from '../nc_mandala/MandalaHorizontalScroll';
 
+import NcProjectsHero from '../nc_projects/NcProjectsHero';
+
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
   
@@ -96,6 +98,8 @@ const BlockMapper = memo(({ block, index }) => {
       return <AboutHorizontalScroll key={index} data={data} />;
     case 'mandalaHorizontalScroll':
       return <MandalaHorizontalScroll key={index} data={data} />;
+    case 'projectsBanner':
+      return <NcProjectsHero key={index} data={data} />;
       
     // Rich Text Block
     case 'richText':

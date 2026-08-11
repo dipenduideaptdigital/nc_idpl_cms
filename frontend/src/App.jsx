@@ -24,7 +24,6 @@ const Blog = lazy(() => import('./pages/Blog'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
 const Projects = lazy(() => import('./pages/Projects'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
-const AboutUs = lazy(() => import('./pages/AboutUs'));
 const ServicePage = lazy(() => import('./pages/ServicePage'));
 
 // Admin Pages
@@ -38,8 +37,6 @@ const PageList = lazy(() => import('./pages/admin/pages/PageList'));
 const PageEditor = lazy(() => import('./pages/admin/pages/PageEditor'));
 const ProjectList = lazy(() => import('./pages/admin/projects/ProjectList'));
 const ProjectEditor = lazy(() => import('./pages/admin/projects/ProjectEditor'));
-const ContactFormList = lazy(() => import('./pages/admin/contact-forms/ContactFormList'));
-const ContactFormEditor = lazy(() => import('./pages/admin/contact-forms/ContactFormEditor'));
 const ContactInbox = lazy(() => import('./pages/admin/contacts/ContactInbox'));
 const BlogList = lazy(() => import('./pages/admin/blogs/BlogList'));
 const BlogEditor = lazy(() => import('./pages/admin/blogs/BlogEditor'));
@@ -66,10 +63,10 @@ function App() {
   useEffect(() => {
     const handleMaintenance = (e) => {
       const currentPath = window.location.pathname;
-      
+
       if (
-        !currentPath.startsWith('/admin') && 
-        !currentPath.startsWith('/login') && 
+        !currentPath.startsWith('/admin') &&
+        !currentPath.startsWith('/login') &&
         !currentPath.startsWith('/admin-setup')
       ) {
         setMaintenanceData(e.detail?.meta);
@@ -95,7 +92,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/admin-setup" element={<AdminSetup />} />
-            
+
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
@@ -113,20 +110,17 @@ function App() {
               <Route path="services" element={<PageList />} />
               <Route path="services/create" element={<PageEditor />} />
               <Route path="services/edit/:id" element={<PageEditor />} />
-              
+
               <Route path="projects" element={<ProjectList />} />
               <Route path="projects/create" element={<ProjectEditor />} />
               <Route path="projects/edit/:id" element={<ProjectEditor />} />
-              <Route path="contact-forms" element={<ContactFormList />} />
-              <Route path="contact-forms/create" element={<ContactFormEditor />} />
-              <Route path="contact-forms/edit/:id" element={<ContactFormEditor />} />
               <Route path="contacts/inbox" element={<ContactInbox />} />
               <Route path="blogs" element={<BlogList />} />
               <Route path="blogs/create" element={<BlogEditor />} />
               <Route path="blogs/edit/:id" element={<BlogEditor />} />
               <Route path="blogs/taxonomies" element={<TaxonomyManager />} />
               <Route path="media" element={<MediaLibrary />} />
-              
+
               <Route path="settings" element={<SettingsLayout />}>
                 <Route path="general" element={<GeneralSettings />} />
                 <Route path="users" element={<UsersList />} />
@@ -141,21 +135,24 @@ function App() {
             </Route>
 
             <Route path="/" element={<NatureHomePreview />} />
+            
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/project-detail" element={<ProjectDetail />} />
+            <Route path="/projects/:slug" element={<ProjectDetail />} />
 
-            {/* Public Routes  */}
+            {/* Public Routes INSIDE MainLayout */}
             <Route element={<MainLayout />}>
-              <Route path="/preview/:token" element={<PreviewPage />} /> 
+              <Route path="/preview/:token" element={<PreviewPage />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogDetail />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/projects/:slug" element={<ProjectDetail />} />
               <Route path="/services" element={<ServicePage />} />
               <Route path="/services/:slug" element={<ServicePage />} />
             </Route>
-            
+
+            {/* Dynamic Catch-All Route (Controls its own layout inside) */}
             <Route path="/*" element={<DynamicPage />} />
-            
+
           </Routes>
         </Suspense>
       </BrowserRouter>

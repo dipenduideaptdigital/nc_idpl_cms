@@ -38,6 +38,7 @@ import WorkshopGallerySection from '../components/workshop/WorkshopGallerySectio
 // ABOUT PAGE COMPONENTS
 import AboutHorizontalScroll from '../components/nc_about/AboutHorizontalScroll';
 import MandalaHorizontalScroll from '../components/nc_mandala/MandalaHorizontalScroll';
+import NcProjectsHero from '../components/nc_projects/NcProjectsHero';
 
 const CollapsibleTiptap = ({ label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -916,6 +917,18 @@ export const ncPuckConfig = {
         p3_fishImage: ""
       },
       render: (props) => <MandalaHorizontalScroll data={props} />
+    },
+
+    projectsBanner: {
+      fields: {
+        title: { type: "textarea" },
+        backgroundImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: {
+        title: "Projects",
+        backgroundImage: ""
+      },
+      render: (props) => <NcProjectsHero data={props} />
     }
   }
 };

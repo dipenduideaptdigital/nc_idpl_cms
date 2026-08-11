@@ -59,6 +59,9 @@ const aboutHorizontalScrollBlockSchema = z.object({ type: z.literal("aboutHorizo
 // MANDALA BLOCK
 const mandalaHorizontalScrollBlockSchema = z.object({ type: z.literal("mandalaHorizontalScroll"), data: z.record(z.any()).default({}) });
 
+// PROJECTS BANNER BLOCK
+const projectsBannerBlockSchema = z.object({ type: z.literal("projectsBanner"), data: z.record(z.any()).default({}) });
+
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
   data: z.object({
@@ -109,6 +112,8 @@ const blockSchema = z.discriminatedUnion("type", [
 
   // MANDALA BLOCK
   mandalaHorizontalScrollBlockSchema,
+  // PROJECTS BANNER BLOCK
+  projectsBannerBlockSchema,
 ]);
 
 const pageContentSchema = z.object({

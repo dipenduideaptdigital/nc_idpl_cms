@@ -24,7 +24,7 @@ const CollapsibleTiptap = ({ label, value, onChange }) => {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50 hover:bg-zinc-100 transition-colors outline-none"
+          className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50 hover:bg-zinc-100 transition-colors outline-none cursor-pointer"
         >
           <div className="flex items-center gap-3 overflow-hidden">
             <Edit2 className="w-4 h-4 text-zinc-500 shrink-0" />
@@ -32,13 +32,8 @@ const CollapsibleTiptap = ({ label, value, onChange }) => {
               {isOpen ? 'Close Editor' : getPreviewText(value)}
             </span>
           </div>
-          {isOpen ? (
-            <ChevronUp className="w-4 h-4 text-zinc-500 shrink-0" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0" />
-          )}
+          {isOpen ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
         </button>
-        
         {isOpen && (
           <div className="p-4 border-t border-gray-200 bg-white">
             <TipTapEditor value={value || ''} onChange={onChange} />
@@ -55,10 +50,9 @@ const ProjectEditor = () => {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
-    title: '', category: 'Residential', year: '', location: '', client: '', area: '', 
-    description: '', details: '', status: 'PUBLISHED', featuredImageId: '',
-    bulletPoints: [''], 
-    spaces: [{ size: '', label: '' }] 
+    title: '', category: 'AQUASCAPE ARCHITECTURE', year: '', location: '', 
+    subtitle: '', specifications: '', details: '', status: 'PUBLISHED', 
+    featuredImageId: '', heroImageId: '', galleryImages: ['']
   });
   const [saving, setSaving] = useState(false);
 
@@ -67,10 +61,12 @@ const ProjectEditor = () => {
       projectsApi.getProjectById(id).then(res => {
         const data = res.data;
         
-        if (!data.bulletPoints || data.bulletPoints.length === 0) data.bulletPoints = [''];
-        if (!data.spaces || data.spaces.length === 0) data.spaces = [{ size: '', label: '' }];
+        if (!data.galleryImages || !Array.isArray(data.galleryImages) || data.galleryImages.length === 0) {
+            data.galleryImages = [''];
+        }
         
         data.featuredImageId = data.featuredImage?.url || data.featuredImageId || '';
+        data.heroImageId = data.heroImage?.url || data.heroImageId || '';
         
         setFormData(data);
       }).catch(console.error);
@@ -79,21 +75,14 @@ const ProjectEditor = () => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleBulletChange = (index, value) => {
-    const newBullets = [...formData.bulletPoints];
-    newBullets[index] = value;
-    setFormData({ ...formData, bulletPoints: newBullets });
+  // Gallery Array Handlers
+  const handleGalleryChange = (index, value) => {
+    const newGallery = [...formData.galleryImages];
+    newGallery[index] = value;
+    setFormData({ ...formData, galleryImages: newGallery });
   };
-  const addBullet = () => setFormData({ ...formData, bulletPoints: [...formData.bulletPoints, ''] });
-  const removeBullet = (index) => setFormData({ ...formData, bulletPoints: formData.bulletPoints.filter((_, i) => i !== index) });
-
-  const handleSpaceChange = (index, field, value) => {
-    const newSpaces = [...formData.spaces];
-    newSpaces[index][field] = value;
-    setFormData({ ...formData, spaces: newSpaces });
-  };
-  const addSpace = () => setFormData({ ...formData, spaces: [...formData.spaces, { size: '', label: '' }] });
-  const removeSpace = (index) => setFormData({ ...formData, spaces: formData.spaces.filter((_, i) => i !== index) });
+  const addGalleryImage = () => setFormData({ ...formData, galleryImages: [...formData.galleryImages, ''] });
+  const removeGalleryImage = (index) => setFormData({ ...formData, galleryImages: formData.galleryImages.filter((_, i) => i !== index) });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,17 +90,13 @@ const ProjectEditor = () => {
     try {
       const payload = { ...formData };
       
-      payload.bulletPoints = payload.bulletPoints.filter(b => b.trim() !== '');
-      payload.spaces = payload.spaces.filter(s => s.size.trim() !== '' && s.label.trim() !== '');
+      payload.galleryImages = payload.galleryImages.filter(img => img && img.trim() !== '');
 
-      if (!payload.featuredImageId || payload.featuredImageId.trim() === '') {
-        payload.featuredImageId = null; 
-      }
+      if (!payload.featuredImageId || payload.featuredImageId.trim() === '') payload.featuredImageId = null;
+      if (!payload.heroImageId || payload.heroImageId.trim() === '') payload.heroImageId = null;
 
-      delete payload.id;
-      delete payload.createdAt;
-      delete payload.updatedAt;
-      delete payload.featuredImage;
+      delete payload.id; delete payload.createdAt; delete payload.updatedAt;
+      delete payload.featuredImage; delete payload.heroImage;
 
       if (isEditMode) await projectsApi.updateProject(id, payload);
       else await projectsApi.createProject(payload);
@@ -126,103 +111,94 @@ const ProjectEditor = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 pb-20">
-      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm">
+      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
         <div className="flex items-center gap-4">
-          <Link to="/admin/projects" className="p-2 hover:bg-zinc-100 rounded-full"><ArrowLeft className="w-5 h-5"/></Link>
+          <Link to="/admin/projects" className="p-2 hover:bg-zinc-100 rounded-full transition-colors"><ArrowLeft className="w-5 h-5"/></Link>
           <h1 className="text-2xl font-bold">{isEditMode ? 'Edit Project' : 'Add New Project'}</h1>
         </div>
         <Can permission={isEditMode ? 'project.edit' : 'project.create'}>
-          <button type="submit" disabled={saving} className="px-6 py-2.5 bg-zinc-900 text-white rounded-xl flex items-center gap-2">
-            <Save className="w-4 h-4" /> Save
+          <button type="submit" disabled={saving} className="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 transition-colors text-white rounded-xl flex items-center gap-2">
+            <Save className="w-4 h-4" /> Save Project
           </button>
         </Can>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm space-y-4">
-            <h2 className="font-semibold text-lg border-b pb-2">Basic Details</h2>
-            <div><label className="text-sm font-medium">Title *</label><input required name="title" value={formData.title} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl" /></div>
+          
+          {/* Basic Details */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm space-y-4 border border-zinc-100">
+            <h2 className="font-semibold text-lg border-b pb-3 mb-4">Project Information</h2>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div><label className="text-sm font-bold text-zinc-600">Title *</label><input required name="title" value={formData.title} onChange={handleChange} className="w-full mt-1.5 p-3 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 outline-none" /></div>
+            <div><label className="text-sm font-bold text-zinc-600">Tagline / Subtitle</label><input name="subtitle" value={formData.subtitle || ''} onChange={handleChange} className="w-full mt-1.5 p-3 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 outline-none" placeholder="LIVING ART UNDER WATER" /></div>
+            
+            <div className="grid grid-cols-2 gap-4 mt-2">
               <div>
-                <label className="text-sm font-medium">Category</label>
-                <select name="category" value={formData.category} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl">
-                  <option>Residential</option><option>Commercial</option><option>Landscape</option><option>Interior</option>
-                </select>
+                <label className="text-sm font-bold text-zinc-600">Category</label>
+                <input name="category" value={formData.category} onChange={handleChange} className="w-full mt-1.5 p-3 border border-zinc-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. AQUASCAPE ARCHITECTURE" />
               </div>
-              <div><label className="text-sm font-medium">Status</label>
-                <select name="status" value={formData.status} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl">
+              <div>
+                <label className="text-sm font-bold text-zinc-600">Status</label>
+                <select name="status" value={formData.status} onChange={handleChange} className="w-full mt-1.5 p-3 border border-zinc-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 bg-white">
                   <option value="PUBLISHED">Published</option><option value="DRAFT">Draft</option>
                 </select>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div><label className="text-sm font-medium">Year</label><input name="year" value={formData.year} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl" /></div>
-              <div><label className="text-sm font-medium">Location</label><input name="location" value={formData.location} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl" /></div>
-              <div><label className="text-sm font-medium">Client</label><input name="client" value={formData.client} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl" /></div>
-              <div><label className="text-sm font-medium">Area (sq.ft)</label><input name="area" value={formData.area} onChange={handleChange} className="w-full mt-1 p-2 border rounded-xl" /></div>
+              <div><label className="text-sm font-bold text-zinc-600">Year</label><input name="year" value={formData.year} onChange={handleChange} className="w-full mt-1.5 p-3 border border-zinc-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20" /></div>
+              <div><label className="text-sm font-bold text-zinc-600">Location</label><input name="location" value={formData.location} onChange={handleChange} className="w-full mt-1.5 p-3 border border-zinc-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20" /></div>
+              <div><label className="text-sm font-bold text-zinc-600">Dimensions / Specifications</label><input name="specifications" value={formData.specifications || ''} onChange={handleChange} className="w-full mt-1.5 p-3 border border-zinc-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. 60X90X60" /></div>
             </div>
-            <CollapsibleTiptap
-              label="Short Description (List View)"
-              value={formData.description}
-              onChange={(val) => setFormData({ ...formData, description: val })}
-            />
-
-            <CollapsibleTiptap
-              label="Full Details (Project Page)"
-              value={formData.details}
-              onChange={(val) => setFormData({ ...formData, details: val })}
-            />
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl shadow-sm space-y-6">
-            <div>
-              <div className="flex justify-between items-center border-b pb-2 mb-4">
-                <h2 className="font-semibold text-lg">Highlight Bullet Points</h2>
-                <button type="button" onClick={addBullet} className="text-sm text-blue-600 flex items-center gap-1"><Plus className="w-4 h-4"/> Add Point</button>
-              </div>
-              {formData.bulletPoints.map((bullet, index) => (
-                <div key={index} className="flex items-center gap-2 mb-2">
-                  <input value={bullet} onChange={(e) => handleBulletChange(index, e.target.value)} placeholder="e.g., Experienced engineers..." className="w-full p-2 border rounded-xl" />
-                  <button type="button" onClick={() => removeBullet(index)} className="p-2 text-red-500 hover:bg-red-50 rounded-xl"><Trash2 className="w-4 h-4"/></button>
-                </div>
-              ))}
-            </div>
-
-            <div>
-              <div className="flex justify-between items-center border-b pb-2 mb-4">
-                <h2 className="font-semibold text-lg">Spaces Breakdown</h2>
-                <button type="button" onClick={addSpace} className="text-sm text-blue-600 flex items-center gap-1"><Plus className="w-4 h-4"/> Add Space</button>
-              </div>
-              {formData.spaces.map((space, index) => (
-                <div key={index} className="flex items-center gap-2 mb-2">
-                  <input value={space.size} onChange={(e) => handleSpaceChange(index, 'size', e.target.value)} placeholder="e.g., (30M2)" className="w-1/3 p-2 border rounded-xl" />
-                  <input value={space.label} onChange={(e) => handleSpaceChange(index, 'label', e.target.value)} placeholder="e.g., Bedroom" className="w-full p-2 border rounded-xl" />
-                  <button type="button" onClick={() => removeSpace(index)} className="p-2 text-red-500 hover:bg-red-50 rounded-xl"><Trash2 className="w-4 h-4"/></button>
-                </div>
-              ))}
+            
+            <div className="pt-4">
+              <CollapsibleTiptap label="Project Overview Description" value={formData.details} onChange={(val) => setFormData({ ...formData, details: val })} />
             </div>
           </div>
+
+          {/* Stack Frames Gallery */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
+            <div className="flex justify-between items-center border-b pb-3 mb-6">
+              <h2 className="font-semibold text-lg">Stack Frames Gallery</h2>
+              <button type="button" onClick={addGalleryImage} className="text-sm font-bold text-blue-600 flex items-center gap-1 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer"><Plus className="w-4 h-4"/> Add Image</button>
+            </div>
+            <p className="text-xs text-zinc-500 mb-6">These images will appear in the stacked shifting animation at the bottom of the project page.</p>
+            
+            <div className="space-y-4">
+                {formData.galleryImages.map((img, index) => (
+                <div key={index} className="flex gap-4 p-5 border border-zinc-200 bg-zinc-50/50 rounded-xl relative">
+                    <button type="button" onClick={() => removeGalleryImage(index)} className="absolute right-3 top-3 p-1.5 text-red-500 bg-red-100 rounded-lg hover:bg-red-200 transition-colors cursor-pointer"><Trash2 className="w-4 h-4"/></button>
+                    <div className="w-full pr-8">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-2 block">Image {index + 1}</label>
+                    <ImageField value={img} onChange={(val) => handleGalleryChange(index, val)} />
+                    </div>
+                </div>
+                ))}
+            </div>
+          </div>
+
         </div>
 
+        {/* Sidebar Image Area */}
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm">
-            <h2 className="font-semibold text-lg border-b pb-2 mb-4">Featured Image</h2>
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
+            <h2 className="font-semibold text-lg border-b pb-3 mb-4">Main Hero Background</h2>
+            <p className="text-xs text-zinc-500 mb-4">Appears at the very top of the project detail page.</p>
+            <ImageField value={formData.heroImageId} onChange={(val) => setFormData({...formData, heroImageId: val})} />
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
+            <h2 className="font-semibold text-lg border-b pb-3 mb-4">Featured Thumbnail</h2>
+            <p className="text-xs text-zinc-500 mb-4">Appears on the main projects listing grid.</p>
             <ImageField value={formData.featuredImageId} onChange={(val) => setFormData({...formData, featuredImageId: val})} />
           </div>
         </div>
       </div>
+      
       <div className="flex justify-start mt-8 pt-4">
         <Can permission={isEditMode ? 'project.edit' : 'project.create'}>
-          <button 
-            type="submit" 
-            disabled={saving} 
-            className="px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-zinc-900/20 disabled:opacity-70 text-sm"
-          >
-            <Save className="w-5 h-5" /> 
-            {saving ? 'Saving...' : 'Save Project'}
+          <button type="submit" disabled={saving} className="px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl flex items-center gap-2 transition-all shadow-md cursor-pointer">
+            <Save className="w-5 h-5" /> {saving ? 'Saving...' : 'Save Project'}
           </button>
         </Can>
       </div>

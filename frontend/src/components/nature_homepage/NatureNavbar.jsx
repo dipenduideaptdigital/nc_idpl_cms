@@ -6,7 +6,7 @@ import leaveIcon from '../../assets/nc_logo/leave.png';
 import OfferingsMegaMenu from '../layout/OfferingsMegaMenu';
 import apiClient from '../../api/client';
 
-const NatureNavbar = () => {
+const NatureNavbar = ({ forceDark = false }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isOfferingsOpen, setIsOfferingsOpen] = useState(false);
   const location = useLocation();
@@ -48,8 +48,8 @@ const NatureNavbar = () => {
     }, 150);
   };
 
-  const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas', '/contact', '/services', '/projects', '/blog'];
-  const isLightPage = lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p));
+  const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas', '/contact', '/services'];
+  const isLightPage = !forceDark && (lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p)));
 
   const navLinks = [
     { name: 'PHILOSOPHY', href: '#philosophy' },

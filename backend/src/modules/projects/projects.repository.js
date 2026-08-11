@@ -11,7 +11,7 @@ export const findAll = async ({ skip, take, where, orderBy }) => {
       take,
       where,
       orderBy,
-      include: { featuredImage: true }
+      include: { featuredImage: true, heroImage: true }
     }),
     prisma.project.count({ where })
   ]);
@@ -21,14 +21,14 @@ export const findAll = async ({ skip, take, where, orderBy }) => {
 export const findById = async (id) => {
   return prisma.project.findUnique({
     where: { id },
-    include: { featuredImage: true }
+    include: { featuredImage: true, heroImage: true }
   });
 };
 
 export const findBySlug = async (slug) => {
   return prisma.project.findUnique({
     where: { slug },
-    include: { featuredImage: true }
+    include: { featuredImage: true, heroImage: true }
   });
 };
 

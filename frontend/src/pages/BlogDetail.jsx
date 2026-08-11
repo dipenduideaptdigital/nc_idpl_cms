@@ -6,13 +6,15 @@ import BlogDetailHero from '../components/blog/BlogDetailHero';
 import BlogBlockParser from '../components/blog/BlogBlockParser';
 import BlogSidebar from '../components/blog/BlogSidebar';
 import BlogReviews from '../components/blog/BlogReviews';
-import CallToAction from '../components/shared/CallToAction';
+import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
+import apiClient from '../api/client';
 import SEOHead from '../components/shared/SEOHead';
 
 const BlogDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
+  const [ctaData, setCtaData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useScrollAnimation();
@@ -24,6 +26,11 @@ const BlogDetail = () => {
         const response = await blogsApi.getPublicBlogBySlug(slug);
         setData(response.data);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        apiClient.get('/cms/section/nc_homepage_cta')
+          .then(res => setCtaData(res.data?.data?.content))
+          .catch(console.error);
+
       } catch (error) {
         console.error("Error fetching blog post:", error);
         
@@ -128,11 +135,10 @@ const BlogDetail = () => {
               onCategorySelect={(slug) => navigate(`/blog?categorySlug=${slug}`)}
               onTagSelect={(slug) => navigate(`/blog?tagSlug=${slug}`)}
             />
-          </div>
-
+            </div>
         </div>
       </div>
-      <CallToAction />
+      <GetStartedCtaSection data={ctaData} />
     </div>
   );
 };

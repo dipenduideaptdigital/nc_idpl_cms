@@ -73,6 +73,7 @@ const PageEditor = () => {
     { type: 'workshopHero', label: 'Workshop: Hero Section' },
     { type: 'workshopDetails', label: 'Workshop: Details & Pricing' },
     { type: 'workshopGallery', label: 'Workshop: Photo Gallery' },
+    { type: 'projectsBanner', label: 'Projects: Hero Banner' },
   ];
 
   const [formData, setFormData] = useState({
@@ -88,7 +89,6 @@ const PageEditor = () => {
   });
 
   useEffect(() => {
-    // Scroll the admin layout container to top when entering this page
     const adminScrollContainer = document.querySelector('main > div.overflow-auto');
     if (adminScrollContainer) {
       adminScrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
@@ -220,7 +220,6 @@ const PageEditor = () => {
     
     if (isServicesMode) {
       if (payload.slug && !payload.slug.startsWith('services/')) {
-        // We prepend 'services/' so the backend builds fullPath as '/services/slug'
         payload.slug = `services/${payload.slug}`;
       } else if (!payload.slug && payload.title) {
          payload.slug = `services/${payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
@@ -285,11 +284,9 @@ const PageEditor = () => {
 
       const updatedContent = { ...formData.content, blocks };
 
-      // Update local UI immediately and exit Puck mode
       setFormData(prev => ({ ...prev, content: updatedContent }));
       setIsPuckMode(false);
 
-      // Auto-Save to backend
       const payload = { ...formData, content: updatedContent };
 
       if (isServicesMode) {

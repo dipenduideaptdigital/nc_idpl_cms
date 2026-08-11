@@ -10,22 +10,14 @@ export const createProjectSchema = z.object({
   location: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   details: z.string().optional().nullable(),
-  client: z.string().optional().nullable(),
-  area: z.string().optional().nullable(),
-  
-  featuredImageId: z.union([
-    z.string().min(5, "Invalid Image ID"), 
-    z.literal("")
-  ])
-  .optional()
-  .nullable()
-  .transform(val => val === "" ? null : val),
-
+  subtitle: z.string().optional().nullable(),
+  specifications: z.string().optional().nullable(),
+  galleryImages: z.array(z.string()).optional().nullable(),
+  featuredImageId: z.union([z.string().min(5, "Invalid Image ID"), z.literal("")]).optional().nullable().transform(val => val === "" ? null : val),
+  heroImageId: z.union([z.string().min(5, "Invalid Image ID"), z.literal("")]).optional().nullable().transform(val => val === "" ? null : val),
   metaTitle: z.string().max(100).optional().nullable(),
   metaDescription: z.string().max(500).optional().nullable(),
   status: z.enum(PROJECT_STATUS).default("PUBLISHED").optional(),
-  bulletPoints: z.array(z.string()).optional().nullable(),
-  spaces: z.array(z.object({ size: z.string(), label: z.string() })).optional().nullable(),
 }).strict();
 
 export const updateProjectSchema = createProjectSchema.partial();
