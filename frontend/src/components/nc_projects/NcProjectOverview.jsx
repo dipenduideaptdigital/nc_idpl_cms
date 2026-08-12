@@ -6,7 +6,7 @@ const NcProjectOverview = ({ project }) => {
   const location = project?.location || "KOLKATA";
   
   const detailsTitle = project?.subtitle || "PROJECT DETAILS";
-  const detailsDescription = project?.details || "<p>Explore the intricate details of this beautiful aquascape and living art project.</p>";
+  const detailsDescription = project?.details || project?.description || "<p>Explore the intricate details of this beautiful aquascape and living art project.</p>";
   
   const specificationsTitle = "SPECIFICATIONS";
   const specifications = project?.specifications || "Not Specified";

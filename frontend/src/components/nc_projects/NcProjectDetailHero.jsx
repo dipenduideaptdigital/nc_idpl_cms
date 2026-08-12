@@ -4,12 +4,14 @@ import branchImg from '../../assets/nc_home/branch.png';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const NcProjectDetailHero = ({ project, backgroundImage }) => {
-  const bgImageUrl = project?.heroImage || project?.image || backgroundImage
-    ? resolveAssetUrl(project?.heroImage || project?.image || backgroundImage)
+  const rawImage = project?.heroImage?.url || project?.heroImage || project?.image?.url || project?.image || backgroundImage;
+
+  const bgImageUrl = rawImage 
+    ? resolveAssetUrl(rawImage) 
     : branchImg;
 
   return (
-    <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] bg-zinc-950 overflow-hidden font-kanit">
+    <div className="relative w-full min-h-[500px] md:min-h-[650px] lg:h-screen -mt-24 bg-zinc-950 overflow-hidden font-kanit select-none">
       <NatureNavbar forceDark={true} />
       
       <div
