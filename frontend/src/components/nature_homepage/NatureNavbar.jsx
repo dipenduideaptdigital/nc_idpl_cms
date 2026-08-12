@@ -1,6 +1,6 @@
 import React, { useState,useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
 import leaveIcon from '../../assets/nc_logo/leave.png';
 import OfferingsMegaMenu from '../layout/OfferingsMegaMenu';
@@ -52,7 +52,7 @@ const NatureNavbar = ({ forceDark = false }) => {
   const isLightPage = !forceDark && (lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p)));
 
   const navLinks = [
-    { name: 'PHILOSOPHY', href: '#philosophy' },
+    { name: 'PHILOSOPHY', href: dynamicPaths.mandala },
     { name: 'OFFERINGS', href: '#offerings', isMega: true },
     { name: 'PROJECTS', href: '/projects' },
     { name: 'WHO WE ARE', href: dynamicPaths.about },
@@ -76,7 +76,7 @@ const NatureNavbar = ({ forceDark = false }) => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-10">
+          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8 font-kanit">
             {navLinks.map((link) => {
               if (link.isMega) {
                 return (
@@ -88,7 +88,7 @@ const NatureNavbar = ({ forceDark = false }) => {
                   >
                     <button
                       onClick={() => setIsOfferingsOpen(!isOfferingsOpen)}
-                      className="text-xs font-bold tracking-[0.18em] text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer"
+                      className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer"
                     >
                       <span>{link.name}</span>
                       <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-[#7BA641]' : ''}`} />
@@ -106,7 +106,7 @@ const NatureNavbar = ({ forceDark = false }) => {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-xs font-bold tracking-[0.18em] text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
+                  className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
                 >
                   {link.name}
                   <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
@@ -115,7 +115,7 @@ const NatureNavbar = ({ forceDark = false }) => {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-xs font-bold tracking-[0.18em] text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
+                  className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
                 >
                   {link.name}
                   <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
@@ -128,62 +128,81 @@ const NatureNavbar = ({ forceDark = false }) => {
           <div className="hidden lg:block">
             <a
               href="#store"
-              className="inline-flex items-center justify-center bg-[#7BA641] hover:bg-[#6b9337] text-white font-semibold text-xs tracking-[0.18em] px-7 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_4px_15px_rgba(123,166,65,0.4)] uppercase"
+              className="font-kanit inline-flex items-center justify-center bg-[#7BA641] hover:bg-[#6b9337] text-white font-medium text-xs tracking-wider px-7 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_4px_15px_rgba(123,166,65,0.4)] uppercase"
             >
               STORE
             </a>
           </div>
 
-          {/* Mobile Hamburger Button */}
+          {/* Mobile Hamburger / Close Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden text-[#000000] p-2 focus:outline-none"
+            className="lg:hidden text-[#000000] p-2 focus:outline-none cursor-pointer transition-transform duration-300 transform active:scale-90"
             aria-label="Toggle Menu"
           >
-            <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
-              {mobileMenuOpen ? (
-                <path fillRule="evenodd" clipRule="evenodd" d="M18.278 16.864a1 1 0 01-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 01-1.414-1.414l4.828-4.828a1 1 0 01-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 011.414-1.414l4.829 4.828 4.828-4.828a1 1 0 111.414 1.414l-4.828 4.829 4.828 4.828z" />
-              ) : (
-                <path fillRule="evenodd" d="M4 5h16a1 1 0 010 2H4a1 1 0 110-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z" />
-              )}
-            </svg>
+            <div className="relative w-6 h-6 flex items-center justify-center">
+              <Menu
+                className={`w-6 h-6 absolute inset-0 transition-all duration-300 ease-out transform ${
+                  mobileMenuOpen ? 'opacity-0 rotate-90 scale-75' : 'opacity-100 rotate-0 scale-100'
+                }`}
+              />
+              <X
+                className={`w-6 h-6 absolute inset-0 transition-all duration-300 ease-out transform ${
+                  mobileMenuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-75'
+                }`}
+              />
+            </div>
           </button>
 
         </div>
 
-        {/* Mobile Menu Dropdown */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden mt-4 bg-white/95 backdrop-blur-md rounded-lg p-6 border border-zinc-200 shadow-xl space-y-4 font-kanit">
-            {navLinks.map((link) => (
-              link.href.startsWith('/') ? (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-sm font-bold tracking-widest text-[#000000] hover:text-[#7BA641] transition-colors uppercase"
-                >
-                  {link.name}
-                </Link>
-              ) : (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-sm font-bold tracking-widest text-[#000000] hover:text-[#7BA641] transition-colors uppercase"
-                >
-                  {link.name}
-                </a>
-              )
-            ))}
-            <a
-              href="#store"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-center bg-[#7BA641] text-white font-semibold text-xs tracking-widest px-6 py-3 rounded-sm uppercase mt-4"
+        {/* Mobile Menu Dropdown Slider */}
+        <div
+          className={`lg:hidden grid transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            mobileMenuOpen
+              ? 'grid-rows-[1fr] opacity-100 mt-4 pointer-events-auto'
+              : 'grid-rows-[0fr] opacity-0 mt-0 pointer-events-none'
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div
+              className={`transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                mobileMenuOpen ? 'translate-y-0 scale-100' : '-translate-y-4 scale-95'
+              } bg-white/75 backdrop-blur-2xl rounded-2xl p-6 border border-white/60 shadow-[0_8px_32px_0_rgba(0,0,0,0.12),inset_0_1px_0_0_rgba(255,255,255,0.8)] space-y-2 font-kanit`}
             >
-              STORE
-            </a>
+              {navLinks.map((link, idx) => (
+                link.href.startsWith('/') ? (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] hover:bg-black/5 px-4 py-3 rounded-xl border border-transparent hover:border-black/5 transition-all duration-200 uppercase"
+                    style={{ transitionDelay: `${idx * 30}ms` }}
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] hover:bg-black/5 px-4 py-3 rounded-xl border border-transparent hover:border-black/5 transition-all duration-200 uppercase"
+                    style={{ transitionDelay: `${idx * 30}ms` }}
+                  >
+                    {link.name}
+                  </a>
+                )
+              ))}
+              <a
+                href="#store"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-center bg-[#7BA641]/90 hover:bg-[#7BA641] text-white font-medium text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-[0_4px_15px_rgba(123,166,65,0.4)] backdrop-blur-md transition-all duration-300 uppercase mt-4"
+              >
+                STORE
+              </a>
+            </div>
           </div>
-        )}
+        </div>
       </header>
     );
   }
@@ -212,7 +231,7 @@ const NatureNavbar = ({ forceDark = false }) => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-8 xl:space-x-10">
+        <nav className="hidden lg:flex items-center space-x-8 xl:space-x-10 font-kanit">
           {navLinks.map((link) => {
             if (link.isMega) {
               return (
@@ -224,7 +243,7 @@ const NatureNavbar = ({ forceDark = false }) => {
                 >
                   <button
                     onClick={() => setIsOfferingsOpen(!isOfferingsOpen)}
-                    className="font-kanit text-xs font-normal tracking-[0.18em] text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer"
+                    className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer"
                   >
                     <span>{link.name}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-emerald-400' : ''}`} />
@@ -242,7 +261,7 @@ const NatureNavbar = ({ forceDark = false }) => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="font-kanit text-xs font-normal tracking-[0.18em] text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group"
+                className="font-kanit text-sm font-medium  tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group"
               >
                 {link.name}
                 <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
@@ -251,7 +270,7 @@ const NatureNavbar = ({ forceDark = false }) => {
               <a
                 key={link.name}
                 href={link.href}
-                className="font-kanit text-xs font-normal tracking-[0.18em] text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group"
+                className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group"
               >
                 {link.name}
                 <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
@@ -264,61 +283,80 @@ const NatureNavbar = ({ forceDark = false }) => {
         <div className="hidden lg:block">
           <a
             href="#store"
-            className="font-kanit inline-flex items-center justify-center bg-[#7BA641] hover:bg-[#6b9337] text-white font-medium text-xs tracking-[0.18em] px-6 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_0_15px_rgba(123,166,65,0.4)] uppercase"
+            className="font-kanit inline-flex items-center justify-center bg-[#7BA641] hover:bg-[#6b9337] text-white font-medium text-xs tracking-wider px-6 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_0_15px_rgba(123,166,65,0.4)] uppercase"
           >
             STORE
           </a>
         </div>
 
-        {/* Mobile Hamburger Button */}
+        {/* Mobile Hamburger / Close Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden text-white p-2 focus:outline-none"
+          className="lg:hidden text-white p-2 focus:outline-none cursor-pointer transition-transform duration-300 transform active:scale-90"
           aria-label="Toggle Menu"
         >
-          <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
-            {mobileMenuOpen ? (
-              <path fillRule="evenodd" clipRule="evenodd" d="M18.278 16.864a1 1 0 01-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 01-1.414-1.414l4.828-4.828a1 1 0 01-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 011.414-1.414l4.829 4.828 4.828-4.828a1 1 0 111.414 1.414l-4.828 4.829 4.828 4.828z" />
-            ) : (
-              <path fillRule="evenodd" d="M4 5h16a1 1 0 010 2H4a1 1 0 110-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z" />
-            )}
-          </svg>
+          <div className="relative w-6 h-6 flex items-center justify-center">
+            <Menu
+              className={`w-6 h-6 absolute inset-0 transition-all duration-300 ease-out transform ${
+                mobileMenuOpen ? 'opacity-0 rotate-90 scale-75' : 'opacity-100 rotate-0 scale-100'
+              }`}
+            />
+            <X
+              className={`w-6 h-6 absolute inset-0 transition-all duration-300 ease-out transform ${
+                mobileMenuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-75'
+              }`}
+            />
+          </div>
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden mt-4 bg-zinc-950/95 backdrop-blur-md rounded-lg p-6 border border-zinc-800 space-y-4 font-kanit">
-          {navLinks.map((link) => (
-            link.href.startsWith('/') ? (
-              <Link
-                key={link.name}
-                to={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="block text-sm font-normal tracking-widest text-zinc-200 hover:text-emerald-400 transition-colors uppercase"
-              >
-                {link.name}
-              </Link>
-            ) : (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="block text-sm font-normal tracking-widest text-zinc-200 hover:text-emerald-400 transition-colors uppercase"
-              >
-                {link.name}
-              </a>
-            )
-          ))}
-          <a
-            href="#store"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-center bg-[#7BA641] text-white font-medium text-xs tracking-widest px-6 py-3 rounded-sm uppercase mt-4 font-kanit"
+      {/* Mobile Menu Dropdown Slider */}
+      <div
+        className={`lg:hidden grid transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          mobileMenuOpen
+            ? 'grid-rows-[1fr] opacity-100 mt-4 pointer-events-auto'
+            : 'grid-rows-[0fr] opacity-0 mt-0 pointer-events-none'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div
+            className={`transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              mobileMenuOpen ? 'translate-y-0 scale-100' : '-translate-y-4 scale-95'
+            } bg-[#070e06]/75 backdrop-blur-2xl rounded-2xl p-6 border border-emerald-500/25 shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.15)] space-y-2 font-kanit`}
           >
-            STORE
-          </a>
+            {navLinks.map((link, idx) => (
+              link.href.startsWith('/') ? (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 hover:bg-white/10 px-4 py-3 rounded-xl border border-transparent hover:border-emerald-500/20 transition-all duration-200 uppercase"
+                  style={{ transitionDelay: `${idx * 30}ms` }}
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 hover:bg-white/10 px-4 py-3 rounded-xl border border-transparent hover:border-emerald-500/20 transition-all duration-200 uppercase"
+                  style={{ transitionDelay: `${idx * 30}ms` }}
+                >
+                  {link.name}
+                </a>
+              )
+            ))}
+            <a
+              href="#store"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-center bg-[#7BA641]/90 hover:bg-[#7BA641] text-white font-medium text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-[0_4px_20px_rgba(123,166,65,0.4)] backdrop-blur-md transition-all duration-300 border border-emerald-400/30 uppercase mt-4 font-kanit"
+            >
+              STORE
+            </a>
+          </div>
         </div>
-      )}
+      </div>
     </header>
   );
 };

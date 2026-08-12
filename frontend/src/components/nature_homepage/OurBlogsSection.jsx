@@ -1,6 +1,4 @@
 import React from 'react';
-
-// Fallback Default Images
 import card1Img from '../../assets/nc_home/card1.png';
 import card2Img from '../../assets/nc_home/card2.png';
 import card3Img from '../../assets/nc_home/card3.png';
@@ -23,7 +21,6 @@ const defaultCards = [
   { title: '04. Project Handover', description: 'We Begin By Understanding Your Vision, Goals, And Needs, Followed Antra.', image: card4Img },
 ];
 
-// Keep the step classes static for the UI structure
 const stepClasses = ['lg:mt-36', 'lg:mt-24', 'lg:mt-12', 'lg:mt-0'];
 
 const OurBlogsSection = ({ data }) => {
@@ -34,12 +31,10 @@ const OurBlogsSection = ({ data }) => {
   const italicTitle = data?.italicTitle || "blogs";
   const subText = data?.subText || "It is a long established fact that a reader will be distracted.";
   const headline = data?.headline || "It is a long established fact that a reader will be distracted.";
-  
-  // Use admin cards if available, otherwise use default
   const cardsToRender = (data?.cards && data.cards.length > 0) ? data.cards : defaultCards;
 
   return (
-    <section className="relative w-full bg-white py-20 sm:py-28 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
+    <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
       <div className="max-w-[1440px] mx-auto">
         
         {/* Header Block */}
@@ -71,21 +66,18 @@ const OurBlogsSection = ({ data }) => {
             </span>
           </div>
 
-          {/* Light Subtext */}
           <div 
             className="font-kanit font-light text-lg sm:text-2xl text-[#6A6A6A] leading-relaxed mb-6 pt-4 [&>p]:m-0"
             dangerouslySetInnerHTML={{ __html: subText }}
           />
 
-          {/* Bold Headline */}
           <div 
             className="font-kanit font-bold text-2xl sm:text-3xl lg:text-[36px] text-zinc-900 leading-snug [&>p]:m-0"
             dangerouslySetInnerHTML={{ __html: headline }}
           />
         </div>
 
-        {/* Stepped Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 items-start">
           {cardsToRender.map((card, index) => {
             const cardImg = card.image?.startsWith('http') || card.image?.startsWith('/') 
               ? getAssetUrl(card.image) 
@@ -94,26 +86,22 @@ const OurBlogsSection = ({ data }) => {
             return (
               <div
                 key={index}
-                className={`bg-white rounded-[10px] p-3.5 sm:p-4 border border-zinc-100 shadow-[4px_4px_14.5px_-3px_#00000026] flex flex-col transition-transform duration-300 hover:-translate-y-1 ${stepClasses[index] || 'lg:mt-0'}`}
-                style={{ boxShadow: '4px 4px 14.5px -3px #00000026' }}
+                className={`bg-white rounded-2xl p-5 sm:p-6 border border-zinc-100/90 shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_36px_rgba(0,0,0,0.12)] ${stepClasses[index] || 'lg:mt-0'}`}
               >
-                {/* Card Image */}
-                <div className="w-full h-[150px] sm:h-[170px] rounded-[6px] overflow-hidden mb-4 bg-zinc-100">
+                <div className="w-full h-[200px] sm:h-[220px] lg:h-[230px] rounded-xl overflow-hidden mb-5 bg-zinc-100">
                   <img
                     src={cardImg}
                     alt={card.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
                 </div>
 
-                {/* Card Title */}
-                <h3 className="font-kanit font-bold text-base sm:text-lg text-zinc-900 mb-2">
+                <h3 className="font-kanit font-bold text-lg sm:text-xl text-zinc-900 mb-2.5">
                   {card.title}
                 </h3>
 
-                {/* Card Description */}
                 <div 
-                  className="font-kanit font-light text-xs sm:text-sm text-zinc-500 leading-relaxed [&>p]:m-0"
+                  className="font-kanit font-light text-sm sm:text-base text-zinc-600 leading-relaxed [&>p]:m-0"
                   dangerouslySetInnerHTML={{ __html: card.description }}
                 />
               </div>

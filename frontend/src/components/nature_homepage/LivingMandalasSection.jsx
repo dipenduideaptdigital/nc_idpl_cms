@@ -26,68 +26,83 @@ const LivingMandalasSection = ({ data }) => {
   const mandalaImage = data?.mandalaImage ? getAssetUrl(data.mandalaImage) : defaultMandalaImg;
 
   return (
-    <section className="relative w-full bg-white pt-10 md:pt-25 pb-6 md:pb-15 px-4 sm:px-8 overflow-hidden select-none">
+    <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 md:px-12 lg:px-16 overflow-hidden select-none font-kanit">
       
+      {/* Background Brush Textures */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-8 -left-10 sm:-top-12 sm:-left-14 w-[340px] sm:w-[460px] md:w-[560px] lg:w-[620px] h-[260px] sm:h-[340px] md:h-[400px]">
-          <img src={brush1Img} alt="" className="w-full h-full object-contain object-left-top filter contrast-125 brightness-95 opacity-90" />
+        <div className="absolute -top-8 -left-10 sm:-top-12 sm:-left-14 w-[280px] xs:w-[340px] sm:w-[460px] md:w-[560px] lg:w-[620px] h-[220px] sm:h-[340px] md:h-[400px]">
+          <img src={brush1Img} alt="" className="w-full h-full object-contain object-left-top filter contrast-125 brightness-95 opacity-80" />
         </div>
-        <div className="absolute bottom-20 right-1 sm:right-8 md:right-10 lg:right-100 w-60 sm:w-[260px] md:w-[310px] h-48 sm:h-[210px] md:h-[250px]">
-          <img src={brush2Img} alt="" className="w-full h-full object-contain object-right-bottom filter contrast-125 brightness-95 opacity-85" />
+        <div className="absolute -bottom-8 -right-4 sm:bottom-6 sm:right-6 md:right-16 lg:right-24 w-[220px] sm:w-[280px] md:w-[320px] h-[180px] sm:h-[220px] md:h-[260px]">
+          <img src={brush2Img} alt="" className="w-full h-full object-contain object-right-bottom filter contrast-125 brightness-95 opacity-80" />
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto relative min-h-[460px] lg:min-h-[500px] flex items-center justify-center">
-
-        <div className="relative z-20 w-[300px] sm:w-[400px] md:w-[480px] lg:w-[520px] aspect-square flex items-center justify-center my-6 lg:my-0">
-          <img src={mandalaImage} alt="Living Mandala Artwork" className="w-full h-full object-contain filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.08)]" />
+      <div className="max-w-7xl 2xl:max-w-[1536px] mx-auto relative z-10 min-h-[460px] lg:min-h-[540px] flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-0">
+        
+        {/* Left Block (Top-left on Desktop) */}
+        <div className="w-full lg:w-1/3 text-center lg:text-left z-20 space-y-1.5 order-1 lg:order-1 self-center lg:self-start lg:pt-6">
+          <span className="font-kanit text-sm sm:text-base font-semibold text-[#7BA641] tracking-wide block uppercase">
+            {tagline}
+          </span>
+          <h2 className="font-reem text-2xl xs:text-3xl sm:text-4xl lg:text-[34px] xl:text-[38px] font-normal text-black tracking-wider uppercase leading-tight">
+            {mainTitle}
+          </h2>
         </div>
 
-        <div className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-between p-4 md:p-8">
-          
-          <div className="flex flex-col lg:flex-row justify-between items-start gap-6 pointer-events-auto">
-            <div className="space-y-1">
-              <span className="font-kanit text-sm md:text-base font-semibold text-[#7BA641] tracking-wide block">
-                {tagline}
+        {/* Central Mandala Artwork */}
+        <div className="w-[260px] xs:w-[320px] sm:w-[400px] md:w-[460px] lg:w-[420px] xl:w-[480px] 2xl:w-[520px] aspect-square flex-shrink-0 flex items-center justify-center z-10 order-2 lg:order-2 my-4 lg:my-0 mx-auto">
+          <img
+            src={mandalaImage}
+            alt="Living Mandala Artwork"
+            className="w-full h-full object-contain filter drop-shadow-[0_12px_30px_rgba(0,0,0,0.08)] transition-transform duration-700 hover:scale-105"
+          />
+        </div>
+
+        {/* Right Block (Top-right & Bottom-right on Desktop) */}
+        <div className="w-full lg:w-1/3 text-center lg:text-left z-20 flex flex-col justify-between space-y-8 lg:space-y-16 order-3 lg:order-3 self-center lg:self-stretch lg:py-4">
+          {/* Top Right Quote */}
+          <div className="space-y-0.5 max-w-sm mx-auto lg:mx-0">
+            <h3 className="font-kanit text-xl sm:text-2xl lg:text-3xl font-bold text-[#4B6B2E] tracking-tight leading-tight">
+              {headingLine1}
+            </h3>
+            <h3 className="font-kanit text-xl sm:text-2xl lg:text-3xl font-bold text-[#4B6B2E] tracking-tight leading-tight">
+              {headingLine2}
+            </h3>
+            <div className="font-larken text-4xl sm:text-5xl lg:text-6xl text-[#4B6B2E] font-normal italic tracking-normal transform -translate-y-1">
+              {italicWord}
+            </div>
+          </div>
+
+          {/* Bottom Right Description & CTA */}
+          <div className="space-y-4 max-w-sm mx-auto lg:mx-0 pt-2 lg:pt-0">
+            <div className="font-kanit text-xs sm:text-sm font-semibold tracking-wider text-zinc-800 uppercase leading-relaxed space-y-0.5">
+              <div>{descLine1}</div>
+              <div>{descLine2}</div>
+            </div>
+
+            <Link
+              to="/mandala"
+              className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#4B6B2E] transition-colors cursor-pointer pt-1"
+            >
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-zinc-200/80 group-hover:bg-[#4B6B2E] text-zinc-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_0_14px_rgba(75,107,46,0.45)] group-active:scale-95">
+                <svg 
+                  className="w-4 h-4 transition-transform duration-300 group-hover:rotate-90" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+              </div>
+              <span className="font-kanit text-sm sm:text-base font-normal tracking-wide lowercase text-zinc-700 group-hover:text-[#4B6B2E] transition-colors">
+                {buttonText}
               </span>
-              <h2 className="font-reem text-xl sm:text-3xl md:text-3xl lg:text-[35px] font-normal text-black tracking-wider uppercase leading-none">
-                {mainTitle}
-              </h2>
-            </div>
-
-            <div className="text-left space-y-0.5 max-w-xs md:max-w-sm lg:mt-4">
-              <h3 className="font-kanit text-xl sm:text-2xl md:text-3xl font-bold text-[#4B6B2E] tracking-tight leading-tight">
-                {headingLine1}
-              </h3>
-              <h3 className="font-kanit text-xl sm:text-2xl md:text-3xl font-bold text-[#4B6B2E] tracking-tight leading-tight">
-                {headingLine2}
-              </h3>
-              <div className="font-larken text-4xl sm:text-5xl text-[#4B6B2E] font-normal italic tracking-normal transform -translate-y-1">
-                {italicWord}
-              </div>
-            </div>
+            </Link>
           </div>
-
-          <div className="flex justify-end items-end pointer-events-auto">
-            <div className="max-w-xs md:max-w-sm space-y-4 text-left">
-              <div className="font-kanit text-[11px] sm:text-xs md:text-[13px] font-bold tracking-wider text-zinc-800 uppercase leading-snug space-y-0.5">
-                <div>{descLine1}</div>
-                <div>{descLine2}</div>
-              </div>
-
-              <Link to="/mandala" className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#4B6B2E] transition-colors cursor-pointer">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center relative overflow-hidden">
-                  <img src={ellipseBtnImg} alt="" className="absolute inset-0 w-full h-full object-cover rounded-full" />
-                  <span className="relative z-10 text-lg font-light text-zinc-700 group-hover:text-[#4B6B2E]">+</span>
-                </div>
-                <span className="font-kanit text-sm font-normal tracking-wide lowercase text-zinc-700 group-hover:text-[#4B6B2E]">
-                  {buttonText}
-                </span>
-              </Link>
-            </div>
-          </div>
-
         </div>
+
       </div>
     </section>
   );

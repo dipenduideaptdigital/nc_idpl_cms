@@ -30,7 +30,7 @@ const MandalaHeader = ({ data }) => {
   };
 
   const navLinks = [
-    { name: 'PHILOSOPHY', href: '#philosophy' },
+    { name: 'PHILOSOPHY', href: '/mandala' },
     { name: 'OFFERINGS', href: '#offerings', isMega: true },
     { name: 'PROJECTS', href: '/projects' },
     { name: 'WHO WE ARE', href: '/about' },

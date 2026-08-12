@@ -76,7 +76,7 @@ const TaxonomyManager = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto text-zinc-900 dark:text-zinc-100 font-sans space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-6xl mx-auto text-zinc-900 dark:text-zinc-100 font-sans space-y-8">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800">

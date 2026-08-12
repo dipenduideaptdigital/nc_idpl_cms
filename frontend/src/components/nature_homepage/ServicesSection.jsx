@@ -2,7 +2,6 @@ import React from 'react';
 import brush2Img from '../../assets/nc_logo/bush3.png';
 import defaultConsultationImg from '../../assets/nc_home/consultation.png';
 
-// Helper to resolve the correct image URL from your backend
 const getAssetUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http') || path.startsWith('data:')) return path;
@@ -29,22 +28,20 @@ const ServicesSection = ({ data }) => {
   const servicesToRender = (data?.services && data.services.length > 0) ? data.services : defaultServices;
 
   return (
-    <section className="relative w-full pl-5 bg-white py-20 sm:py-28 px-4 sm:px-8 lg:px-12 overflow-hidden select-none">
+    <section className="relative w-full pl-5 bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-12 overflow-hidden select-none">
       
-      {/* Background Soft Paint Splash Pinned to Top-Right */}
       <div className="absolute top-0 right-0 w-[350px] sm:w-[500px] lg:w-[500px] h-auto pointer-events-none z-0 opacity-59">
         <img src={brush2Img} alt="" className="w-full h-auto object-contain object-right-top" />
       </div>
 
       <div className="max-w-[1340px] mx-auto relative z-10 ml-5">
         
-        {/* Header Block */}
         <div className="max-w-[820px] space-y-6 mb-16 sm:mb-20">
           <span className="font-kanit text-[20px] sm:text-[30px] font-medium text-[#7BA641] leading-[100%] tracking-[0%] align-middle block lowercase" style={{ fontWeight: 500, verticalAlign: 'middle' }}>
             {tagline}
           </span>
           <div 
-            className="font-kanit text-xl sm:text-4xl lg:text-[37px] font-light text-zinc-900 leading-[38px] sm:leading-[48px] lg:leading-[55px] tracking-[0%] align-middle max-w-4xl [&>p]:m-0" 
+            className="font-kanit text-xl sm:text-4xl lg:text-[30px] font-light text-zinc-900 leading-[38px] sm:leading-[48px] lg:leading-[55px] tracking-[0%] align-middle max-w-4xl [&>p]:m-0" 
             style={{ fontWeight: 300, verticalAlign: 'middle' }}
             dangerouslySetInnerHTML={{ __html: headline }}
           />
@@ -63,7 +60,6 @@ const ServicesSection = ({ data }) => {
               {/* Main Card */}
               <div className="relative rounded-xs overflow-hidden shadow-2xl bg-[#08171d] min-h-[440px] sm:min-h-[500px] lg:min-h-[560px] grid grid-cols-1 lg:grid-cols-12 items-stretch">
                 
-                {/* Left Image Side (8 Columns) */}
                 <div className="lg:col-span-8 relative min-h-[320px] lg:min-h-full">
                   <img
                     src={svc.image ? getAssetUrl(svc.image) : defaultConsultationImg}
@@ -88,18 +84,12 @@ const ServicesSection = ({ data }) => {
                     dangerouslySetInnerHTML={{ __html: svc.description }}
                   />
                 </div>
-
               </div>
-
-              {/* Stacked Shadow Bar 1 */}
               <div className="h-4 bg-[#23353d] mx-6 rounded-b-sm shadow-md" />
-              {/* Stacked Shadow Bar 2 */}
               <div className="h-4 bg-[#142329] mx-12 rounded-b-sm shadow-sm" />
-
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

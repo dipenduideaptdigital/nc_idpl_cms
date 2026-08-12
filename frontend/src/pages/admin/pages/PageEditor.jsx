@@ -394,7 +394,7 @@ const PageEditor = () => {
             ) : (
               <Save className="w-4 h-4" />
             )}
-            Save Page
+            Save
           </button>
         </div>
       </div>
@@ -638,7 +638,7 @@ const PageEditor = () => {
           ) : (
             <Save className="w-5 h-5" />
           )}
-          {saving ? 'Saving...' : 'Save Page'}
+          {saving ? 'Saving...' : 'Save'}
         </button>
       </div>
     </form>

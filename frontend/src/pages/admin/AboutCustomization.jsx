@@ -309,7 +309,7 @@ const AboutCustomization = () => {
           </button>
           <button onClick={handleFormSubmit} disabled={saving} className="px-6 py-2.5 bg-zinc-900 dark:bg-emerald-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-zinc-800 dark:hover:bg-emerald-500 transition-colors shadow-sm disabled:opacity-70">
             {saving ? <Loader2 className="w-4 h-4 animate-spin"/> : <Save className="w-4 h-4"/>} 
-            {saving ? 'Saving...' : 'Save Changes'}
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>

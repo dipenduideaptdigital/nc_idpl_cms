@@ -6,7 +6,7 @@ const NatureFooter = () => {
   const col1Links = [
     { name: 'OFFERINGS', href: '#offerings' },
     { name: 'PROJECTS', href: '/projects' },
-    { name: 'PHILOSOPHY', href: '#philosophy' },
+    { name: 'PHILOSOPHY', href: '/mandala' },
     { name: 'WHO WE ARE', href: '/about' },
     { name: 'KNOWLEDGE', href: '#knowledge' },
     { name: 'CONTACT US', href: '/contact' },
@@ -28,9 +28,7 @@ const NatureFooter = () => {
   ];
 
   return (
-    <footer className="relative w-full bg-[#08171d] text-white pt-20 pb-10 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
-      
-      {/* Soft Green Watercolor Splash Bottom-Left */}
+    <footer className="relative w-full bg-[#08171d] text-white pt-12 sm:pt-16 lg:pt-20 pb-10 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
       <div className="absolute -bottom-15 -left-35 w-[380px] sm:w-[520px] lg:w-[400px] h-auto pointer-events-none z-0 opacity-25">
         <img
           src={bushBg}
@@ -40,11 +38,8 @@ const NatureFooter = () => {
       </div>
 
       <div className="max-w-[1440px] mx-auto relative z-10">
-        
-        {/* Main Footer Navigation Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start pb-16">
-          
-          {/* Brand Info (4 Columns) */}
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-start pb-12 sm:pb-16">
           <div className="lg:col-span-4 flex flex-col items-start pr-0 lg:pr-6">
             
             {/* NatureCube Logo */}
@@ -55,7 +50,7 @@ const NatureFooter = () => {
                 <img
                   src={leaveIcon}
                   alt="NatureCube Leaf"
-                  className="w-5 h-5 sm:w-6 sm:h-6 object-contain inline-block mx-0.5 filter brightness-110 contrast-125"
+                  className="w-5 h-5 sm:w-6 sm:h-6 object-contain inline-block mx-0.5 filter brightness-110 contrast-125 transition-transform duration-300 group-hover:rotate-12"
                 />
                 <span className="text-2xl sm:text-3xl font-normal">BE</span>
               </div>
@@ -66,69 +61,111 @@ const NatureFooter = () => {
 
             {/* Description */}
             <p 
-              className="font-reem font-normal text-sm sm:text-base text-[#E5EEE8] leading-[123%] tracking-[0%] align-middle max-w-[400px]"
-              style={{ fontWeight: 400, lineHeight: '123%', letterSpacing: '0%', verticalAlign: 'middle', color: '#E5EEE8' }}
+              className="font-reem font-normal text-sm sm:text-base text-[#E5EEE8] leading-[135%] tracking-[0%] align-middle max-w-[400px]"
             >
               It is a long established fact that a reader will be distracted. It is a long established fact that a reader will be distracted.
             </p>
 
           </div>
 
-          {/* Nav Links & Store Button (8 Columns) */}
-          <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-10">
-            
-            {/* Column 1 */}
-            <div className="flex flex-col space-y-4">
-              {col1Links.map((link, idx) => (
-                <a
-                  key={idx}
-                  href={link.href}
-                  className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
+          <div className="lg:col-span-8 flex flex-col space-y-6 sm:space-y-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 items-start">
+              <div className="flex flex-col space-y-6 sm:space-y-8">
+                <div className="flex flex-col space-y-3.5 sm:space-y-4">
+                  {col1Links.map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.href}
+                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
 
-            {/* Column 2 */}
-            <div className="flex flex-col space-y-4">
-              {col2Links.map((link, idx) => (
-                <a
-                  key={idx}
-                  href={link.href}
-                  className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
+                {/* Social Links Part 1  */}
+                <div className="flex flex-col space-y-3.5 sm:space-y-4 lg:hidden pt-1">
+                  {col3Links.slice(0, 2).map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
 
-            {/* Column 3 & Store Button */}
-            <div className="flex flex-col justify-between">
-              <div className="flex flex-col space-y-4 mb-8">
-                {col3Links.map((link, idx) => (
+              {/* Right Grid Column (Col 2 on Mobile & Desktop) */}
+              <div className="flex flex-col space-y-6 sm:space-y-8">
+                {/* Col 2 Links */}
+                <div className="flex flex-col space-y-3.5 sm:space-y-4">
+                  {col2Links.map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.href}
+                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
+
+                {/* Social Links Part 2  */}
+                <div className="flex flex-col space-y-3.5 sm:space-y-4 lg:hidden pt-1">
+                  {col3Links.slice(2, 4).map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              {/* Column 3 (Desktop Only - Col 3) */}
+              <div className="hidden lg:flex lg:flex-col lg:justify-between h-full">
+                <div className="flex flex-col space-y-4 mb-8">
+                  {col3Links.map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
+
+                {/* Store Button on Desktop */}
+                <div className="pt-2">
                   <a
-                    key={idx}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
+                    href="#store"
+                    className="w-[175px] h-[52px] bg-[#6CA844] hover:bg-[#5f973a] text-white font-kanit font-normal text-2xl uppercase rounded-md transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    {link.name}
+                    STORE
                   </a>
-                ))}
+                </div>
               </div>
 
-              {/* Store Button */}
-              <div className="pt-2">
-                <a
-                  href="#store"
-                  className="w-full    sm:w-[175px] h-[52px] bg-[#6CA844] hover:bg-[#5f973a] text-white font-kanit font-normal text-xl sm:text-2xl leading-[100%] tracking-[0%] uppercase align-middle rounded-md transition-colors flex items-center justify-center shadow-md opacity-100"
-                  style={{ fontWeight: 400, lineHeight: '100%', letterSpacing: '0%', verticalAlign: 'middle' }}
-                >
-                  STORE
-                </a>
-              </div>
+            </div>
+
+            <div className="lg:hidden flex justify-center pt-2 sm:pt-4">
+              <a
+                href="#store"
+                className="w-full sm:w-[220px] max-w-[280px] h-[48px] sm:h-[52px] bg-[#6CA844] hover:bg-[#5f973a] text-white font-kanit font-normal text-lg sm:text-xl uppercase rounded-md transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              >
+                STORE
+              </a>
             </div>
 
           </div>
@@ -137,7 +174,7 @@ const NatureFooter = () => {
 
         {/* Bottom Legal / Copyright Bar */}
         <div className="border-t border-zinc-800/80 pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs sm:text-sm text-zinc-400 font-kanit font-light">
-          
+
           {/* Left Copyright */}
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-center sm:text-left">
             <span>&copy; NATURECUBE 2026. ALL RIGHTS RESERVED.</span>
@@ -148,7 +185,7 @@ const NatureFooter = () => {
                 href="https://ideaptdigital.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:text-white transition-colors"
+                className="hover:text-white transition-colors"
               >
                 IDEAPTDIGITAL
               </a>

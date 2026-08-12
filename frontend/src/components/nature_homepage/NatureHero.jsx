@@ -20,40 +20,34 @@ const NatureHero = ({ data }) => {
   const italicWord = data?.italicWord || "answer";
 
   return (
-    <section className="relative min-h-screen w-full flex flex-col justify-between bg-black text-white overflow-hidden pt-28 md:pt-36">
-      {/* Background Image with Dark Vignette Overlay */}
+    <section className="relative min-h-screen min-h-[100dvh] w-full flex flex-col justify-between bg-[#060e05] text-white overflow-hidden pt-24 xs:pt-28 md:pt-36 lg:pt-40">
       <div className="absolute inset-0 z-0">
         <img
           src={bgImage}
           alt="NatureCube Aquascape"
-          className="w-full h-full object-cover object-center scale-105 filter brightness-95 contrast-105"
+          className="w-full h-full object-cover object-[center_35%] md:object-center scale-100 sm:scale-102 md:scale-105 filter brightness-95 contrast-105 transition-all duration-700"
         />
-        {/* Dark radial and linear gradients for contrast and atmosphere */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/20 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060e05] via-transparent to-black/35" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 sm:from-black/65 sm:via-black/25 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060e05] via-[#060e05]/35 to-black/40" />
       </div>
 
       {/* Main Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full my-auto py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Column: Typography */}
-        <div className="lg:col-span-7 space-y-3 md:space-y-4">
-          <h1 className="font-reem text-3xl sm:text-5xl lg:text-6xl tracking-[0.08em] leading-[1.15] text-white uppercase font-light drop-shadow-lg">
-            <div>{titleLine1}</div>
-            <div>{titleLine2}</div>
+      <div className="relative z-10 max-w-7xl 2xl:max-w-[1536px] mx-auto px-4 xs:px-6 sm:px-8 md:px-12 lg:px-16 2xl:px-20 w-full my-auto py-8 sm:py-12 md:py-16">
+        <div className="max-w-full lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl space-y-4 sm:space-y-6">
+          <h1 className="font-reem text-[1.4rem] xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[3.2rem] 2xl:text-[5.25rem] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-lg space-y-1 sm:space-y-2.5">
+            <div className="sm:whitespace-nowrap">{titleLine1}</div>
+            <div className="sm:whitespace-nowrap">{titleLine2}</div>
           </h1>
 
-          <div className="pt-4 md:pt-6 space-y-1">
-            <h2 className="font-reem text-2xl sm:text-4xl lg:text-5xl tracking-[0.08em] leading-[1.15] text-white uppercase font-light">
+          <div className="pt-2 sm:pt-4 md:pt-6">
+            <h2 className="font-reem text-lg xs:text-xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-md sm:whitespace-nowrap">
               {subHeadline}
             </h2>
-            <div className="font-larken text-5xl sm:text-7xl lg:text-8xl text-zinc-100 font-normal italic tracking-normal transform -translate-y-2 select-none">
+            <div className="font-larken text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-[10rem] text-zinc-100 font-normal italic tracking-normal mt-1 sm:mt-2 md:mt-3 select-none leading-none drop-shadow-lg">
               {italicWord}
             </div>
           </div>
         </div>
-
-        {/* Right Column: Empty space */}
-        <div className="hidden lg:block lg:col-span-5" />
       </div>
 
       {/* Bottom Features Highlight Bar */}

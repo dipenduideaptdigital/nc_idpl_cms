@@ -10,7 +10,7 @@ const GetStartedCtaSection = ({ data }) => {
   const buttonLink = data?.buttonLink || "#contact";
 
   return (
-    <section className="relative w-full bg-white py-24 sm:py-32 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
+    <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
       <div className="max-w-[1440px] mx-auto text-center flex flex-col items-center">
         
         {/* Section Title */}

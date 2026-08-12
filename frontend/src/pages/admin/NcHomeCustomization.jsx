@@ -364,7 +364,7 @@ const NcHomeCustomization = () => {
         </div>
         <button onClick={handleSave} disabled={saving} className="bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg dark:shadow-none text-sm w-full sm:w-auto">
           {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-          {saving ? 'Saving...' : 'Save Changes'}
+          {saving ? 'Saving...' : 'Save'}
         </button>
       </div>
 

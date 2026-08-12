@@ -10,12 +10,11 @@ import card2Img from '../../assets/nc_home/card2.png';
 import card3Img from '../../assets/nc_home/card3.png';
 import card4Img from '../../assets/nc_home/card4.png';
 
-// Helper to resolve the correct image URL from your backend
 const getAssetUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http') || path.startsWith('data:')) return path;
-  const baseUrl = import.meta.env.VITE_API_URL 
-    ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
+  const baseUrl = import.meta.env.VITE_API_URL
+    ? import.meta.env.VITE_API_URL.replace('/api/v1', '')
     : 'http://localhost:5000';
   return `${baseUrl}${path}`;
 };
@@ -40,25 +39,21 @@ const LivingArtSection = ({ data }) => {
   const footerTagline = data?.footerTagline || "what we do";
   const footerQuote = data?.footerQuote || "Nature showed it to us twice – once in the Ripples on water and once in the flowers of the Gulmohar";
   const videoUrl = data?.videoUrl || "";
-  
-  // Use admin tabs if available, otherwise use default
   const tabsToRender = (data?.tabs && data.tabs.length > 0) ? data.tabs : defaultTabData;
-  
-  // Find current tab data safely
   const currentTab = tabsToRender.find((tab) => tab.id === activeTab) || tabsToRender[0];
-  const currentTabImage = currentTab?.image?.startsWith('http') || currentTab?.image?.startsWith('/') 
-    ? getAssetUrl(currentTab.image) 
+  const currentTabImage = currentTab?.image?.startsWith('http') || currentTab?.image?.startsWith('/')
+    ? getAssetUrl(currentTab.image)
     : currentTab?.image;
 
   return (
-    <section className="relative w-full bg-white pt-8 md:pt-8 lg:pt-14 pb-16 md:pb-24 px-4 sm:px-8 lg:px-12  overflow-hidden select-none">
+    <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-12 overflow-hidden select-none">
       <div className="max-w-[1440px] mx-auto">
-        
+
         {/* Main Content Grid: Left Info & Right Large Dark Card */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start relative">
-          
-          {/* Left Column (5 cols): "what we do", "LIVING art", description & play button */}
-          <div className="lg:col-span-5 flex flex-col justify-between pt-4 ml-8 mt-5">
+
+          {/* Left Column (5 cols):*/}
+          <div className="lg:col-span-5 flex flex-col justify-between pt-4 ml-0 sm:ml-4 lg:ml-8 mt-2 lg:mt-5">
             <div>
               <span className="font-kanit text-sm sm:text-base font-semibold text-[#7BA641] tracking-wide block mb-3 lowercase">
                 {tagline}
@@ -79,7 +74,7 @@ const LivingArtSection = ({ data }) => {
 
             {/* Play Button */}
             <div className="mt-2 sm:mt-4 pb-2">
-              <button 
+              <button
                 onClick={() => setIsPlaying(true)}
                 className="group relative inline-flex items-center justify-center focus:outline-none cursor-pointer"
                 aria-label="Play video"
@@ -97,10 +92,10 @@ const LivingArtSection = ({ data }) => {
 
           {/* Right Column (7 cols): Dark Card */}
           <div className="lg:col-span-7 relative mt-4 lg:mt-0">
-            
-            {/* Top Right Floating Tabs attached to dark card */}
-            <div className="flex justify-end gap-2 sm:gap-2 mb-2 relative z-30 pr-2">
-              {tabsToRender.map((tab) => (
+
+            {/* Top Right Floating Tabs attached to dark card  */}
+            <div className="flex justify-end gap-2 sm:gap-2 mb-0.8 relative z-20 pr-2">
+              {[...tabsToRender].reverse().map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
@@ -115,9 +110,9 @@ const LivingArtSection = ({ data }) => {
               ))}
             </div>
 
-            {/* Main Dark Card Container */}
-            <div className="relative bg-[#0e2129] rounded-xs p-8 sm:p-10 lg:p-12 text-white shadow-2xl overflow-visible min-h-[420px] sm:min-h-[460px] lg:min-h-[500px] flex flex-col justify-between">
-              
+            {/* Main Dark Card Container  */}
+            <div className="relative bg-[#0e2129] rounded-xs p-6 sm:p-10 lg:p-12 text-white shadow-2xl overflow-visible min-h-[420px] sm:min-h-[460px] lg:min-h-[500px] flex flex-col justify-between">
+
               <div className="max-w-xs sm:max-w-sm lg:max-w-md relative z-20 space-y-6 lg:space-y-5">
                 <h3 className="font-larken text-4xl sm:text-5xl lg:text-6xl xl:text-7xl italic font-normal text-white tracking-wide leading-tight">
                   {currentTab?.title}
@@ -133,22 +128,26 @@ const LivingArtSection = ({ data }) => {
 
                 <div className="pt-4">
                   <button className="group inline-flex items-center gap-4 text-zinc-300 hover:text-white transition-colors cursor-pointer">
-                    <div className="w-10 h-10 rounded-full bg-[#2a3d45] flex items-center justify-center group-hover:bg-[#7BA641] transition-colors shadow-sm">
-                      <img
-                        src={ellipseBtnImg}
-                        alt="+"
-                        className="w-full h-full object-cover rounded-full"
-                      />
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#2a3d45] group-hover:bg-[#7BA641] text-zinc-200 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_0_15px_rgba(123,166,65,0.5)] group-active:scale-95">
+                      <svg 
+                        className="w-4.5 h-4.5 transition-transform duration-300 group-hover:rotate-90" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                      </svg>
                     </div>
-                    <span className="font-reem text-sm sm:text-base tracking-wide lowercase">
+                    <span className="font-reem text-sm sm:text-base tracking-wide lowercase text-zinc-300 group-hover:text-[#7BA641] transition-colors">
                       explore the art
                     </span>
                   </button>
                 </div>
               </div>
 
-              {/* Background Paint Splash (bush3) behind the Terrarium Box */}
-              <div className="absolute bottom-19 sm:-bottom-38 right-4 sm:right-10 lg:right-55 w-[280px] sm:w-[340px] lg:w-[250px] h-[250px] sm:h-[300px] lg:h-[300px] pointer-events-none z-10 opacity-100 transform rotate-180">
+              {/* Background Paint Splash (bush3) */}
+              <div className="absolute bottom-4 sm:bottom-8 lg:bottom-[-50px] xl:bottom-[-70px] right-2 sm:right-6 lg:right-10 w-[220px] sm:w-[280px] lg:w-[250px] h-[220px] sm:h-[280px] lg:h-[300px] pointer-events-none z-10 opacity-100 transform rotate-180">
                 <img
                   src={bush3Img}
                   alt=""
@@ -156,12 +155,12 @@ const LivingArtSection = ({ data }) => {
                 />
               </div>
 
-              {/* Responsive Terrarium / Paludarium Box Image */}
-              <div className="absolute right-[-20px] sm:right-[-35px] md:right-[-50px] lg:right-[-75px] xl:right-[10px] bottom-[-25px] sm:bottom-[-35px] md:bottom-[-45px] lg:bottom-[-180px] z-20 w-[280px] sm:w-[380px] md:w-[460px] lg:w-[480px] xl:w-[350px] 2xl:w-[620px] pointer-events-none transform transition-transform duration-500 ease-out hover:scale-102">
+              {/* Terrarium / Paludarium Box Image */}
+              <div className="relative lg:absolute self-end lg:self-auto mt-6 lg:mt-0 right-0 sm:right-2 lg:right-[-75px] xl:right-[10px] bottom-0 lg:bottom-[-180px] z-20 w-[240px] xs:w-[280px] sm:w-[380px] md:w-[460px] lg:w-[480px] xl:w-[540px] 2xl:w-[620px] pointer-events-none transform transition-transform duration-500 ease-out hover:scale-102">
                 <img
                   src={currentTabImage}
                   alt={currentTab?.title}
-                  className="w-full h-auto object-contain filter "
+                  className="w-full h-auto object-contain filter"
                 />
               </div>
 
@@ -195,10 +194,10 @@ const LivingArtSection = ({ data }) => {
               &times;
             </button>
             {videoUrl ? (
-              <iframe 
-                src={videoUrl} 
+              <iframe
+                src={videoUrl}
                 className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 title="NatureCube Video"
               ></iframe>

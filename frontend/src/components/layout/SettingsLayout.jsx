@@ -38,8 +38,8 @@ const SettingsLayout = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-10 max-w-6xl mx-auto text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
       {/* Settings Navigation Sidebar */}
-      <div className="lg:w-60 flex-shrink-0">
-        <div className="sticky top-6 border-r border-zinc-200 dark:border-zinc-800 lg:pr-6 transition-colors duration-300">
+      <div className="lg:w-60 flex-shrink-0 border-r border-zinc-200 dark:border-zinc-800 lg:pr-6">
+        <div className="sticky top-6 transition-colors duration-300">
           <div className="border-b border-zinc-200 dark:border-zinc-800 pb-4 mb-6 transition-colors duration-300">
             <p className="text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400 font-bold mb-1">Workspace</p>
             <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
@@ -70,7 +70,7 @@ const SettingsLayout = () => {
       </div>
 
       {/* Settings Content Area */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 min-h-[70vh]">
         <Outlet />
       </div>
     </div>
