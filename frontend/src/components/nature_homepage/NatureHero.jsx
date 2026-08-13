@@ -5,11 +5,22 @@ import NatureFeaturesBar from './NatureFeaturesBar';
 // Helper to resolve the correct image URL from your backend
 const getAssetUrl = (path) => {
   if (!path) return '';
-  if (path.startsWith('http') || path.startsWith('data:')) return path;
+  if (typeof path === 'object' && path.url) return getAssetUrl(path.url);
+  const pathStr = String(path);
+  if (
+    pathStr.startsWith('http') || 
+    pathStr.startsWith('data:') || 
+    pathStr.startsWith('blob:') || 
+    pathStr.startsWith('/src/') || 
+    pathStr.startsWith('/assets/') ||
+    pathStr.startsWith('/@fs/')
+  ) {
+    return pathStr;
+  }
   const baseUrl = import.meta.env.VITE_API_URL 
     ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
     : 'http://localhost:5000';
-  return `${baseUrl}${path}`;
+  return `${baseUrl}${pathStr.startsWith('/') ? pathStr : `/${pathStr}`}`;
 };
 
 const NatureHero = ({ data }) => {
@@ -32,18 +43,18 @@ const NatureHero = ({ data }) => {
       </div>
 
       {/* Main Hero Content */}
-      <div className="relative z-10 max-w-7xl 2xl:max-w-[1536px] mx-auto px-4 xs:px-6 sm:px-8 md:px-12 lg:px-16 2xl:px-20 w-full my-auto py-8 sm:py-12 md:py-16">
-        <div className="max-w-full lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl space-y-4 sm:space-y-6">
-          <h1 className="font-reem text-[1.4rem] xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[3.2rem] 2xl:text-[5.25rem] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-lg space-y-1 sm:space-y-2.5">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 xs:px-6 sm:px-8 md:px-12 lg:px-16 w-full my-auto py-8 sm:py-12 md:py-16">
+        <div className="max-w-full lg:max-w-4xl xl:max-w-5xl space-y-4 sm:space-y-6">
+          <h1 className="font-reem text-[1.4rem] xs:text-2xl sm:text-4xl md:text-5xl lg:text-[3.2rem] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-lg space-y-1 sm:space-y-2.5">
             <div className="sm:whitespace-nowrap">{titleLine1}</div>
             <div className="sm:whitespace-nowrap">{titleLine2}</div>
           </h1>
 
           <div className="pt-2 sm:pt-4 md:pt-6">
-            <h2 className="font-reem text-lg xs:text-xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-md sm:whitespace-nowrap">
+            <h2 className="font-reem text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-md sm:whitespace-nowrap">
               {subHeadline}
             </h2>
-            <div className="font-larken text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-[10rem] text-zinc-100 font-normal italic tracking-normal mt-1 sm:mt-2 md:mt-3 select-none leading-none drop-shadow-lg">
+            <div className="font-larken text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] text-zinc-100 font-normal italic tracking-normal mt-1 sm:mt-2 md:mt-3 select-none leading-none drop-shadow-lg">
               {italicWord}
             </div>
           </div>

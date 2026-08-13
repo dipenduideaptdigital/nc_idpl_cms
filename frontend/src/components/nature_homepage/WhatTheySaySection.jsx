@@ -6,11 +6,22 @@ import brushBg from '../../assets/nc_logo/bush3.png';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
-  if (path.startsWith('http') || path.startsWith('data:')) return path;
+  if (typeof path === 'object' && path.url) return getAssetUrl(path.url);
+  const pathStr = String(path);
+  if (
+    pathStr.startsWith('http') || 
+    pathStr.startsWith('data:') || 
+    pathStr.startsWith('blob:') || 
+    pathStr.startsWith('/src/') || 
+    pathStr.startsWith('/assets/') ||
+    pathStr.startsWith('/@fs/')
+  ) {
+    return pathStr;
+  }
   const baseUrl = import.meta.env.VITE_API_URL 
     ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
     : 'http://localhost:5000';
-  return `${baseUrl}${path}`;
+  return `${baseUrl}${pathStr.startsWith('/') ? pathStr : `/${pathStr}`}`;
 };
 
 const defaultTestimonials = [
@@ -27,10 +38,13 @@ const WhatTheySaySection = ({ data }) => {
   const italicTitle = data?.italicTitle || "partners";
   const headline = data?.headline || "Real people with<br />life-changing results";
   
-  // Use admin testimonials if available, otherwise default
-  const testimonials = (data?.testimonials && data.testimonials.length > 0) 
+  let testimonials = (data?.testimonials && Array.isArray(data.testimonials) && data.testimonials.length > 0) 
     ? data.testimonials 
     : defaultTestimonials;
+
+  if (testimonials.length === 1 && defaultTestimonials.length > 1) {
+    testimonials = [...testimonials, defaultTestimonials[1]];
+  }
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
@@ -40,12 +54,13 @@ const WhatTheySaySection = ({ data }) => {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const activeItem = testimonials[currentIndex];
-  const secondaryItem = testimonials[(currentIndex + 1) % testimonials.length];
+  const activeItem = testimonials[currentIndex] || testimonials[0];
+  const secondaryItem = testimonials[(currentIndex + 1) % testimonials.length] || testimonials[0];
 
-  const getImageUrl = (img) => img?.startsWith('http') || img?.startsWith('/') ? getAssetUrl(img) : img;
-
-  if (testimonials.length === 0) return null;
+  const getImageUrl = (img) => {
+    if (!img) return partner1Img;
+    return getAssetUrl(img);
+  };
 
   return (
     <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 overflow-hidden select-none">
@@ -56,6 +71,7 @@ const WhatTheySaySection = ({ data }) => {
 
       <div className="max-w-[1440px] mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         
+        {/* Left Column */}
         <div className="lg:col-span-5 flex flex-col items-start pt-0 lg:pt-4">
           <span className="font-kanit text-[18px] sm:text-[20px] font-medium text-[#7BA641] tracking-wide block lowercase mb-3">
             {tagline}
@@ -74,14 +90,15 @@ const WhatTheySaySection = ({ data }) => {
           </div>
 
           <h2 
-            className="font-kanit font-bold text-2xl sm:text-4xl lg:text-[40px] text-zinc-900 leading-[1.2] max-w-sm mb-6 lg:mb-12"
+            className="font-kanit font-bold text-2xl sm:text-4xl lg:text-[40px] text-zinc-900 leading-[1.2] max-w-sm mb-4 lg:mb-12"
             dangerouslySetInnerHTML={{ __html: headline }}
           />
 
+          {/* Secondary Card Container - Hidden on smaller screens (`lg:block`) */}
           {testimonials.length > 1 && (
-            <div className="hidden lg:block w-full max-w-[360px] relative rounded-xs overflow-hidden shadow-lg group mt-16 lg:mt-24">
+            <div className="hidden lg:block w-full max-w-[360px] relative rounded-xs overflow-hidden shadow-lg group mt-24">
               <div className="aspect-[4/4.5] w-full relative">
-                <img src={getImageUrl(secondaryItem.image)} alt={secondaryItem.name} className="w-full h-full object-cover object-left" />
+                <img src={getImageUrl(secondaryItem.image)} alt={secondaryItem.name || 'Testimonial'} className="w-full h-full object-cover object-left" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent p-6 flex flex-col justify-end text-white">
                   <h4 className="font-kanit font-bold text-base sm:text-lg mb-0.5">{secondaryItem.name}</h4>
                   <p className="font-kanit text-xs text-zinc-300 mb-3">{secondaryItem.location}</p>
@@ -91,8 +108,9 @@ const WhatTheySaySection = ({ data }) => {
             </div>
           )}
 
+          {/* Desktop Navigation Buttons */}
           {testimonials.length > 1 && (
-            <div className="hidden lg:flex items-center justify-center gap-3 mt-6 w-full max-w-[360px]">
+            <div className="hidden lg:flex items-center justify-end gap-3 mt-6 w-full max-w-[360px]">
               <button 
                 onClick={handlePrev} 
                 className="w-10 h-10 rounded-full bg-[#f0f4ec] hover:bg-[#7BA641] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group" 
@@ -111,11 +129,11 @@ const WhatTheySaySection = ({ data }) => {
           )}
         </div>
 
-        {/* Right Column: Featured Large Card */}
-        <div className="lg:col-span-7 flex flex-col items-center lg:items-start w-full">
-          <div className="w-full max-w-[600px] relative rounded-xs overflow-hidden shadow-2xl mt-4 lg:mt-48 ml-0 lg:ml-10 mx-auto lg:mx-0">
-            <div className="w-full aspect-[4/5] sm:aspect-[768/850] min-h-[380px] sm:min-h-[500px] lg:min-h-[640px] relative">
-              <img src={getImageUrl(activeItem.image)} alt={activeItem.name} className="w-full h-full object-cover object-left" />
+        {/* Right Column: Featured Single Primary Card for Mobile/Tablet & Desktop */}
+        <div className="lg:col-span-7 flex flex-col items-center lg:items-start w-full mt-4 lg:mt-10">
+          <div className="w-full max-w-[600px] relative rounded-xs overflow-hidden shadow-2xl mt-0 lg:mt-48 ml-0 lg:ml-10 mx-auto lg:mx-0">
+            <div className="w-full aspect-[4/5] sm:aspect-[768/850] min-h-[360px] xs:min-h-[420px] sm:min-h-[500px] lg:min-h-[640px] relative">
+              <img src={getImageUrl(activeItem.image)} alt={activeItem.name || 'Testimonial'} className="w-full h-full object-cover object-left" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-55% to-transparent p-6 sm:p-10 flex flex-col justify-end text-white">
                 <h3 className="font-kanit font-bold text-xl sm:text-2xl mb-1">{activeItem.name}</h3>
                 <p className="font-kanit text-sm text-zinc-300 mb-3 font-medium">{activeItem.location}</p>
@@ -124,22 +142,25 @@ const WhatTheySaySection = ({ data }) => {
             </div>
           </div>
 
-          {/* Mobile / Tablet Arrow Controls */}
+          {/* Mobile & Tablet Navigation Controls */}
           {testimonials.length > 1 && (
-            <div className="flex lg:hidden items-center justify-center gap-4 mt-6">
+            <div className="flex lg:hidden items-center justify-center gap-3 mt-5 w-full max-w-[600px]">
               <button 
                 onClick={handlePrev} 
-                className="w-10 h-10 rounded-full bg-[#f0f4ec] hover:bg-[#7BA641] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm cursor-pointer group" 
+                className="w-10 h-10 rounded-full bg-[#f0f4ec] active:scale-95 hover:bg-[#7BA641] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm cursor-pointer" 
                 aria-label="Previous testimonial"
               >
-                <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
+                <ChevronLeft className="w-5 h-5" />
               </button>
+              <span className="font-kanit text-xs text-zinc-500 font-medium px-2">
+                {currentIndex + 1} / {testimonials.length}
+              </span>
               <button 
                 onClick={handleNext} 
-                className="w-10 h-10 rounded-full bg-[#f0f4ec] hover:bg-[#7BA641] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm cursor-pointer group" 
+                className="w-10 h-10 rounded-full bg-[#f0f4ec] active:scale-95 hover:bg-[#7BA641] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm cursor-pointer" 
                 aria-label="Next testimonial"
               >
-                <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
+                <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           )}
