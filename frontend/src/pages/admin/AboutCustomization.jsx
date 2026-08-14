@@ -68,6 +68,14 @@ const AboutCustomization = () => {
   ];
 
   const [formData, setFormData] = useState({
+    hero_isVisible: true,
+    journey_isVisible: true,
+    awards_isVisible: true,
+    history_isVisible: true,
+    seminars_isVisible: true,
+    ripples_isVisible: true,
+    brands_isVisible: true,
+    team_isVisible: true,
     hero_headlineLine1: "LOOK DEEP INTO NATURE, AND THEN YOU WILL",
     hero_headlineLine2: "UNDERSTAND EVERYTHING BETTER",
     hero_subtext: "We are evolving the landscape of how nature and science bringing peace in your inner world.",
@@ -178,6 +186,18 @@ const AboutCustomization = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getVisibilityState = () => {
+    return formData[`${activeTab}_isVisible`] !== false;
+  };
+
+  const handleVisibilityToggle = (e) => {
+    const isVisible = e.target.checked;
+    setFormData(prev => ({
+      ...prev,
+      [`${activeTab}_isVisible`]: isVisible
+    }));
   };
 
   const handleInputChange = (e) => {
@@ -335,6 +355,20 @@ const AboutCustomization = () => {
         <div className="lg:col-span-9">
           <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 p-6 sm:p-8">
             
+            {/* Visibility Toggle */}
+            <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 p-4 rounded-xl mb-8">
+              <div>
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Show {TABS.find(t => t.id === activeTab)?.label} Panel</h3>
+              </div>
+              <label className="flex items-center cursor-pointer">
+                <div className="relative">
+                  <input type="checkbox" checked={getVisibilityState()} onChange={handleVisibilityToggle} className="sr-only" />
+                  <div className={`block w-10 h-6 rounded-full transition-colors duration-300 ${getVisibilityState() ? 'bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
+                  <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ${getVisibilityState() ? 'transform translate-x-4' : ''}`}></div>
+                </div>
+              </label>
+            </div>
+
             {/* HERO PANEL */}
             {activeTab === 'hero' && (
               <div className="space-y-4">

@@ -66,6 +66,9 @@ const MandalaCustomization = () => {
   ];
 
   const [formData, setFormData] = useState({
+    p1_isVisible: true,
+    p2_isVisible: true,
+    p3_isVisible: true,
     panoramic_image: "",
     p1_title: "LIVING MANDALAS",
     p1_subLine1: "A quest to",
@@ -121,6 +124,21 @@ const MandalaCustomization = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getVisibilityState = () => {
+    const fieldPrefix = activeTab === 'panel1' ? 'p1' : activeTab === 'panel2' ? 'p2' : 'p3';
+    return formData[`${fieldPrefix}_isVisible`] !== false;
+  };
+
+  const handleVisibilityToggle = (e) => {
+    const isVisible = e.target.checked;
+    const fieldPrefix = activeTab === 'panel1' ? 'p1' : activeTab === 'panel2' ? 'p2' : 'p3';
+    
+    setFormData(prev => ({
+      ...prev,
+      [`${fieldPrefix}_isVisible`]: isVisible
+    }));
   };
 
   const handleInputChange = (e) => {
@@ -248,6 +266,20 @@ const MandalaCustomization = () => {
         <div className="lg:col-span-9">
           <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 p-6 sm:p-8">
             
+            <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 p-4 rounded-xl mb-8">
+              <div>
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Show {TABS.find(t => t.id === activeTab)?.label}</h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Toggle visibility of this specific panel on the website</p>
+              </div>
+              <label className="flex items-center cursor-pointer">
+                <div className="relative">
+                  <input type="checkbox" checked={getVisibilityState()} onChange={handleVisibilityToggle} className="sr-only" />
+                  <div className={`block w-10 h-6 rounded-full transition-colors duration-300 ${getVisibilityState() ? 'bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
+                  <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ${getVisibilityState() ? 'transform translate-x-4' : ''}`}></div>
+                </div>
+              </label>
+            </div>
+
             {activeTab === 'panel1' && (
               <div className="space-y-4">
                 <h2 className="text-lg font-bold border-b border-zinc-200 dark:border-zinc-700 pb-2 mb-4 text-zinc-900 dark:text-zinc-100">Hero & Global Panoramic Image</h2>

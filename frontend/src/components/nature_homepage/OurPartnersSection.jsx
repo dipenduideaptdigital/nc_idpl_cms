@@ -46,7 +46,7 @@ const OurPartnersSection = ({ data }) => {
   // Split into 2 columns (0,1,2 for Col 1 and 3,4,5 for Col 2)
   const column1Partners = [getLogo(0), getLogo(1), getLogo(2)];
   const column2Partners = [getLogo(3), getLogo(4), getLogo(5)];
-
+  if (data?.isVisible === false) return null;
   return (
     <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 overflow-hidden select-none">
       

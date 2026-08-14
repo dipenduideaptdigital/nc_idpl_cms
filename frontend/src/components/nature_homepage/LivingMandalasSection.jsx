@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import defaultMandalaImg from '../../assets/nc_home/mandala.png';
 import brush1Img from '../../assets/nc_logo/brush1.png';
 import brush2Img from '../../assets/nc_logo/brush2.png';
-import ellipseBtnImg from '../../assets/nc_logo/Ellipse_plus_btn.png';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
@@ -25,6 +24,8 @@ const LivingMandalasSection = ({ data }) => {
   const buttonText = data?.buttonText || "explore the mandala";
   const mandalaImage = data?.mandalaImage ? getAssetUrl(data.mandalaImage) : defaultMandalaImg;
 
+  if (data?.isVisible === false) return null;
+  
   return (
     <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 md:px-12 lg:px-16 overflow-hidden select-none font-kanit">
       

@@ -13,9 +13,15 @@ const MandalaHorizontalScroll = ({ data }) => {
   const isMouseDownRef = useRef(false);
   const startXRef = useRef(0);
   const scrollLeftRef = useRef(0);
-  const totalPanels = 3;
 
   const flatData = data || {};
+
+  // Dynamically calculate total visible panels based on admin toggles
+  const totalPanels = [
+    flatData.p1_isVisible !== false ? 1 : 0,
+    flatData.p2_isVisible !== false ? 1 : 0,
+    flatData.p3_isVisible !== false ? 1 : 0,
+  ].reduce((a, b) => a + b, 0);
   
   const structuredData = {
     panoramicImage: flatData.panoramic_image,
@@ -109,7 +115,7 @@ const MandalaHorizontalScroll = ({ data }) => {
     const el = containerRef.current;
     if (!el) return;
     const x = e.pageX - el.offsetLeft;
-    const walk = (x - startXRef.current) * 1.8; // scroll sensitivity
+    const walk = (x - startXRef.current) * 1.8;
     el.scrollLeft = scrollLeftRef.current - walk;
   };
 
@@ -130,19 +136,19 @@ const MandalaHorizontalScroll = ({ data }) => {
         className="w-full h-full flex flex-row overflow-x-auto overflow-y-hidden scrollbar-none relative cursor-grab active:cursor-grabbing"
         style={{ scrollBehavior: 'smooth' }}
       >
-        {/* Pass mapped data to individual panels */}
-        <MandalaPanel1 data={structuredData.panel1} />
-        <MandalaPanel2 data={structuredData.panel2} />
-        <MandalaPanel3 data={structuredData.panel3} />
 
-        {/* PANORAMIC OVERLAY IMAGE: Dynamic Grass spanning across Panel 1 and Panel 2 seam */}
-        <div className="absolute bottom-0 left-[100vw] -translate-x-[45%] z-20 pointer-events-none w-[220px] sm:w-[320px] md:w-[420px] lg:w-[500px] xl:w-[560px] max-h-[80vh]">
-          <img
-            src={structuredData.panoramicImage ? resolveAssetUrl(structuredData.panoramicImage) : grassImg}
-            alt="Tall Grass Plants Artwork"
-            className="w-full h-auto object-contain object-bottom filter drop-shadow-md"
-          />
-        </div>
+        {flatData.p1_isVisible !== false && <MandalaPanel1 data={structuredData.panel1} />}
+        {flatData.p2_isVisible !== false && <MandalaPanel2 data={structuredData.panel2} />}
+        {flatData.p3_isVisible !== false && <MandalaPanel3 data={structuredData.panel3} />}
+        {flatData.p1_isVisible !== false && (
+          <div className="absolute bottom-0 left-[100vw] -translate-x-[45%] z-20 pointer-events-none w-[220px] sm:w-[320px] md:w-[420px] lg:w-[500px] xl:w-[560px] max-h-[80vh]">
+            <img
+              src={structuredData.panoramicImage ? resolveAssetUrl(structuredData.panoramicImage) : grassImg}
+              alt="Tall Grass Plants Artwork"
+              className="w-full h-auto object-contain object-bottom filter drop-shadow-md"
+            />
+          </div>
+        )}
       </div>
 
       {/* Left Scroll Navigation Arrow */}

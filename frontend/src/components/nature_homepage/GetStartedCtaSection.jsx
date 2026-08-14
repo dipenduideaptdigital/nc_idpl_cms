@@ -8,7 +8,7 @@ const GetStartedCtaSection = ({ data }) => {
   const subtext = data?.subtext || "It is a long established fact that a reader will be distracted.";
   const buttonText = data?.buttonText || "LET'S GET STARTED";
   const buttonLink = data?.buttonLink || "#contact";
-
+  if (data?.isVisible === false) return null;
   return (
     <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
       <div className="max-w-[1440px] mx-auto text-center flex flex-col items-center">

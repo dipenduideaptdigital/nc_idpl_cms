@@ -103,7 +103,7 @@ const ServicesSection = ({ data }) => {
 
   const safeIndex = currentIndex % Math.max(1, servicesToRender.length);
   const currentService = servicesToRender[safeIndex] || servicesToRender[0];
-
+  if (data?.isVisible === false) return null;
   return (
     <section className="relative w-full pl-5 bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-12 overflow-hidden select-none">
       

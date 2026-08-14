@@ -12,7 +12,7 @@ const getAssetUrl = (path) => {
 
 const PlantDisplaySection = ({ data }) => {
   const plantImage = data?.plantImage ? getAssetUrl(data.plantImage) : defaultPlantHeroImg;
-
+  if (data?.isVisible === false) return null;
   return (
     <section className="relative w-full bg-black overflow-hidden select-none">
       <div className="relative w-full h-[400px] sm:h-[550px] md:h-[680px] lg:h-[800px]">

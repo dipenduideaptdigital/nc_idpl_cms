@@ -16,9 +16,20 @@ import { resolveAssetUrl } from '../../utils/assetResolver';
 const AboutHorizontalScroll = ({ data }) => {
   const containerRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
-  const totalPanels = 10;
 
   const flatData = data || {};
+
+  // Dynamically calculate total visible panels based on admin toggles
+  const totalPanels = [
+    flatData.hero_isVisible !== false ? 1 : 0,
+    flatData.journey_isVisible !== false ? 1 : 0,
+    flatData.awards_isVisible !== false ? 1 : 0,
+    flatData.history_isVisible !== false ? 1 : 0,
+    flatData.seminars_isVisible !== false ? 1 : 0,
+    flatData.ripples_isVisible !== false ? 1 : 0,
+    flatData.brands_isVisible !== false ? 2 : 0,
+    flatData.team_isVisible !== false ? 2 : 0, 
+  ].reduce((a, b) => a + b, 0);
   
   const structuredData = {
     panoramicImage: flatData.panoramic_image,
@@ -151,25 +162,37 @@ const AboutHorizontalScroll = ({ data }) => {
         className="w-full h-full flex flex-row overflow-x-auto overflow-y-hidden scrollbar-none relative"
         style={{ scrollBehavior: 'smooth' }}
       >
-        <AboutHeroPanel data={structuredData.heroPanel} />
-        <AboutJourneyPanel data={structuredData.journeyPanel} />
-        <AboutAwardsPanel data={structuredData.awardsPanel} />
-        <AboutHistoryPanel data={structuredData.historyPanel} />
-        <AboutSeminarsPanel data={structuredData.seminarsPanel} />
-        <AboutRipplesPanel data={structuredData.ripplesPanel} />
-        <AboutBrandsPanel data={structuredData.brandsPanel} />
-        <AboutMainImagePanel data={structuredData.mainImagePanel} />
-        <AboutTeamPanel data={structuredData.teamPanel} />
-        <AboutTeamMembersPanel data={structuredData.teamMembersPanel} />
+        {flatData.hero_isVisible !== false && <AboutHeroPanel data={structuredData.heroPanel} />}
+        {flatData.journey_isVisible !== false && <AboutJourneyPanel data={structuredData.journeyPanel} />}
+        {flatData.awards_isVisible !== false && <AboutAwardsPanel data={structuredData.awardsPanel} />}
+        {flatData.history_isVisible !== false && <AboutHistoryPanel data={structuredData.historyPanel} />}
+        {flatData.seminars_isVisible !== false && <AboutSeminarsPanel data={structuredData.seminarsPanel} />}
+        {flatData.ripples_isVisible !== false && <AboutRipplesPanel data={structuredData.ripplesPanel} />}
+        
+        {flatData.brands_isVisible !== false && (
+          <>
+            <AboutBrandsPanel data={structuredData.brandsPanel} />
+            <AboutMainImagePanel data={structuredData.mainImagePanel} />
+          </>
+        )}
+        
+        {flatData.team_isVisible !== false && (
+          <>
+            <AboutTeamPanel data={structuredData.teamPanel} />
+            <AboutTeamMembersPanel data={structuredData.teamMembersPanel} />
+          </>
+        )}
 
-        {/* PANORAMIC OVERLAY IMAGE */}
-        <div className="absolute top-[32%] sm:top-[28%] lg:top-[28%] left-[95vw] -translate-x-[56%] z-20 pointer-events-none w-[90vw] sm:w-[70vw] md:w-[58vw] lg:w-[48vw] xl:w-[44vw]">
-          <img
-            src={structuredData.panoramicImage ? resolveAssetUrl(structuredData.panoramicImage) : tankImg}
-            alt="Naturecube Aquarium Tank"
-            className="w-full h-auto object-contain"
-          />
-        </div>
+        {/* PANORAMIC OVERLAY IMAGE - Shown only if Hero is visible */}
+        {flatData.hero_isVisible !== false && (
+          <div className="absolute top-[32%] sm:top-[28%] lg:top-[28%] left-[95vw] -translate-x-[56%] z-20 pointer-events-none w-[90vw] sm:w-[70vw] md:w-[58vw] lg:w-[48vw] xl:w-[44vw]">
+            <img
+              src={structuredData.panoramicImage ? resolveAssetUrl(structuredData.panoramicImage) : tankImg}
+              alt="Naturecube Aquarium Tank"
+              className="w-full h-auto object-contain"
+            />
+          </div>
+        )}
       </div>
 
       {/* Left Scroll Navigation Arrow */}

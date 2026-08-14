@@ -75,16 +75,24 @@ export const globalGeneralSettingsSchema = z.object({
 
 export const ncHeroSchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     titleLine1: z.string().max(150).optional(),
     titleLine2: z.string().max(150).optional(),
     subHeadline: z.string().max(200).optional(),
     italicWord: z.string().max(50).optional(),
     backgroundImage: z.string().optional(),
+    features: z.array(z.object({
+      icon: z.string().optional(),
+      title: z.string().max(100).optional(),
+      subtitle: z.string().max(100).optional(),
+      titleBold: z.boolean().default(true).optional(),
+    })).max(4).optional()
   })
 });
 
 export const ncMandalasSchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     tagline: z.string().max(100).optional(),
     mainTitle: z.string().max(150).optional(),
     headingLine1: z.string().max(150).optional(),
@@ -99,6 +107,7 @@ export const ncMandalasSchema = z.object({
 
 export const ncLivingArtSchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     tagline: z.string().max(100).optional(),
     mainTitle: z.string().max(100).optional(),
     italicTitle: z.string().max(50).optional(),
@@ -121,6 +130,7 @@ export const ncLivingArtSchema = z.object({
 
 export const ncShowcaseSchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     row1Logo: z.string().optional(),
     row1Desc: z.string().max(1000).optional(),
     galleryImages: z.array(z.string()).max(3).optional(),
@@ -139,12 +149,14 @@ export const ncShowcaseSchema = z.object({
 
 export const ncPlantDisplaySchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     plantImage: z.string().optional()
   })
 });
 
 export const ncServicesSchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     tagline: z.string().optional(),
     headline: z.string().max(1000).optional(),
     subtext: z.string().max(1000).optional(),
@@ -159,6 +171,7 @@ export const ncServicesSchema = z.object({
 
 export const ncPartnersSchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     mainTitle1: z.string().optional(),
     italicTitle: z.string().optional(),
     headline: z.string().max(1000).optional(),
@@ -171,6 +184,7 @@ export const ncPartnersSchema = z.object({
 
 export const ncBlogsSchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     tagline: z.string().optional(),
     mainTitle: z.string().optional(),
     italicTitle: z.string().optional(),
@@ -188,6 +202,7 @@ export const ncBlogsSchema = z.object({
 
 export const ncWhatTheySaySchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     tagline: z.string().max(100).optional(),
     titlePrefix: z.string().max(100).optional(),
     italicTitle: z.string().max(100).optional(),
@@ -205,6 +220,7 @@ export const ncWhatTheySaySchema = z.object({
 
 export const ncCtaSchema = z.object({
   content: z.object({
+    isVisible: z.boolean().optional(),
     titlePart1: z.string().optional(),
     titlePart2: z.string().optional(),
     headline: z.string().max(1000).optional(),

@@ -30,6 +30,8 @@ const NatureHero = ({ data }) => {
   const subHeadline = data?.subHeadline || "WE SIMPLY HELP YOU";
   const italicWord = data?.italicWord || "answer";
 
+  if (data?.isVisible === false) return null;
+  
   return (
     <section className="relative min-h-screen min-h-[100dvh] w-full flex flex-col justify-between bg-[#060e05] text-white overflow-hidden pt-24 xs:pt-28 md:pt-36 lg:pt-40">
       <div className="absolute inset-0 z-0">
@@ -63,7 +65,7 @@ const NatureHero = ({ data }) => {
 
       {/* Bottom Features Highlight Bar */}
       <div className="relative z-20 w-full mt-auto">
-        <NatureFeaturesBar />
+        <NatureFeaturesBar featuresData={data?.features} />
       </div>
     </section>
   );

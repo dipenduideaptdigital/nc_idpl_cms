@@ -58,6 +58,77 @@ const HeroCustomization = ({ data, onChange }) => {
           />
         </div>
       </div>
+
+      {/* ---------------- Features Bar Section ---------------- */}
+      <div className="pt-8 mt-8 border-t border-zinc-200 dark:border-zinc-800">
+        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-4">Bottom Features Bar</h3>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">Customize the 4 highlight blocks that appear at the bottom of the hero section.</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {(data.features || []).map((feature, index) => (
+            <div key={index} className="p-5 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50/50 dark:bg-zinc-800/50 space-y-4">
+              <h4 className="font-semibold text-sm text-zinc-700 dark:text-zinc-300 border-b border-zinc-200 dark:border-zinc-700 pb-2">Feature Block {index + 1}</h4>
+              
+              {/* 🛡️ Replaced raw input with ImageField */}
+              <div className="mb-4">
+                <label className="block text-xs font-bold text-zinc-500 uppercase mb-2">Feature Icon</label>
+                <ImageField 
+                  value={feature.icon || ''} 
+                  onChange={(url) => {
+                    const newFeatures = [...data.features];
+                    newFeatures[index].icon = url;
+                    onChange('features', newFeatures);
+                  }} 
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">Top Line</label>
+                  <input 
+                    type="text" 
+                    value={feature.title || ''} 
+                    onChange={e => {
+                      const newFeatures = [...data.features];
+                      newFeatures[index].title = e.target.value;
+                      onChange('features', newFeatures);
+                    }} 
+                    className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">Bottom Line</label>
+                  <input 
+                    type="text" 
+                    value={feature.subtitle || ''} 
+                    onChange={e => {
+                      const newFeatures = [...data.features];
+                      newFeatures[index].subtitle = e.target.value;
+                      onChange('features', newFeatures);
+                    }} 
+                    className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                  />
+                </div>
+              </div>
+
+              <label className="flex items-center gap-2 cursor-pointer mt-2 pt-2">
+                <input 
+                  type="checkbox" 
+                  checked={feature.titleBold || false} 
+                  onChange={e => {
+                    const newFeatures = [...data.features];
+                    newFeatures[index].titleBold = e.target.checked;
+                    onChange('features', newFeatures);
+                  }} 
+                  className="w-4 h-4 rounded text-blue-500 focus:ring-blue-500 bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-600" 
+                />
+                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Make Top Line Bold (Instead of Bottom Line)</span>
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 };

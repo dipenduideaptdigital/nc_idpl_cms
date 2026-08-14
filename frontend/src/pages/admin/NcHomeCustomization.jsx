@@ -53,7 +53,13 @@ const NcHomeCustomization = () => {
     titleLine2: 'ALWAYS BEEN CALLING.',
     subHeadline: 'WE SIMPLY HELP YOU',
     italicWord: 'answer',
-    backgroundImage: ''
+    backgroundImage: '',
+    features: [
+      { icon: '', title: '40+ Years', subtitle: 'of Experience', titleBold: true },
+      { icon: '', title: 'Sustainable', subtitle: 'Solutions', titleBold: true },
+      { icon: '', title: 'Focus on', subtitle: 'Quality', titleBold: false },
+      { icon: '', title: 'Expert', subtitle: 'Guidance', titleBold: false }
+    ]
   });
 
   // --- NC Mandalas State ---
@@ -167,7 +173,19 @@ const NcHomeCustomization = () => {
       ]);
 
       if (heroRes.status === 'fulfilled' && heroRes.value.data?.data?.content) {
-        if (Object.keys(heroRes.value.data.data.content).length > 0) setNcHeroData(heroRes.value.data.data.content);
+        if (Object.keys(heroRes.value.data.data.content).length > 0) {
+          const fetchedContent = heroRes.value.data.data.content;
+          
+          if (!fetchedContent.features || fetchedContent.features.length === 0) {
+            fetchedContent.features = [
+              { icon: '', title: '40+ Years', subtitle: 'of Experience', titleBold: true },
+              { icon: '', title: 'Sustainable', subtitle: 'Solutions', titleBold: true },
+              { icon: '', title: 'Focus on', subtitle: 'Quality', titleBold: false },
+              { icon: '', title: 'Expert', subtitle: 'Guidance', titleBold: false }
+            ];
+          }
+          setNcHeroData(fetchedContent);
+        }
       }
       if (mandalasRes.status === 'fulfilled' && mandalasRes.value.data?.data?.content) {
         if (Object.keys(mandalasRes.value.data.data.content).length > 0) setNcMandalasData(mandalasRes.value.data.data.content);
@@ -216,6 +234,38 @@ const NcHomeCustomization = () => {
       ...prev,
       [field]: value
     }));
+  };
+
+  const getVisibilityState = () => {
+    switch (activeTab) {
+      case 'nc_hero': return ncHeroData.isVisible !== false;
+      case 'nc_mandalas': return ncMandalasData.isVisible !== false;
+      case 'nc_living_art': return ncLivingArtData.isVisible !== false;
+      case 'nc_showcase': return ncShowcaseData.isVisible !== false;
+      case 'nc_plant_display': return ncPlantDisplayData.isVisible !== false;
+      case 'nc_services': return ncServicesData.isVisible !== false;
+      case 'nc_partners': return ncPartnersData.isVisible !== false;
+      case 'nc_blogs': return ncBlogsData.isVisible !== false;
+      case 'nc_what_they_say': return ncWhatTheySayData.isVisible !== false;
+      case 'nc_cta': return ncCtaData.isVisible !== false;
+      default: return true;
+    }
+  };
+
+  const handleVisibilityToggle = (e) => {
+    const isVisible = e.target.checked;
+    switch (activeTab) {
+      case 'nc_hero': setNcHeroData(p => ({...p, isVisible})); break;
+      case 'nc_mandalas': setNcMandalasData(p => ({...p, isVisible})); break;
+      case 'nc_living_art': setNcLivingArtData(p => ({...p, isVisible})); break;
+      case 'nc_showcase': setNcShowcaseData(p => ({...p, isVisible})); break;
+      case 'nc_plant_display': setNcPlantDisplayData(p => ({...p, isVisible})); break;
+      case 'nc_services': setNcServicesData(p => ({...p, isVisible})); break;
+      case 'nc_partners': setNcPartnersData(p => ({...p, isVisible})); break;
+      case 'nc_blogs': setNcBlogsData(p => ({...p, isVisible})); break;
+      case 'nc_what_they_say': setNcWhatTheySayData(p => ({...p, isVisible})); break;
+      case 'nc_cta': setNcCtaData(p => ({...p, isVisible})); break;
+    }
   };
 
   const handleSave = async () => {
@@ -289,6 +339,13 @@ const NcHomeCustomization = () => {
         
         if (section === 'nc_hero') {
           setNcHeroData(prev => ({ ...prev, backgroundImage: url }));
+        } else if (section === 'nc_hero_feature_icon') {
+          setNcHeroData(prev => {
+            const newFeatures = [...(prev.features || [])];
+            if (!newFeatures[tabIndex]) newFeatures[tabIndex] = {};
+            newFeatures[tabIndex].icon = url;
+            return { ...prev, features: newFeatures };
+          });
         } else if (section === 'nc_mandalas') {
           setNcMandalasData(prev => ({ ...prev, mandalaImage: url }));
         } else if (section === 'nc_living_art_tab') {
@@ -400,9 +457,28 @@ const NcHomeCustomization = () => {
         )}
       </div>
 
+      {/* Section Visibility Toggle */}
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 p-6 flex items-center justify-between mb-6 transition-colors duration-300">
+        <div>
+          <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Show on Homepage</h3>
+        </div>
+        <label className="flex items-center cursor-pointer">
+          <div className="relative">
+            <input 
+              type="checkbox" 
+              checked={getVisibilityState()} 
+              onChange={handleVisibilityToggle} 
+              className="sr-only" 
+            />
+            <div className={`block w-12 h-7 rounded-full transition-colors duration-300 ${getVisibilityState() ? 'bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
+            <div className={`absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-transform duration-300 ${getVisibilityState() ? 'transform translate-x-5' : ''}`}></div>
+          </div>
+        </label>
+      </div>
+
       <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 p-6 transition-colors duration-300">
         
-        {/* 1. HERO FORM */}
+        {/* HERO FORM */}
         {activeTab === 'nc_hero' && (
           <HeroCustomization 
             data={ncHeroData} 

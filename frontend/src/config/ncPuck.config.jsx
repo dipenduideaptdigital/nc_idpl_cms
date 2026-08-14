@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Edit2, ChevronUp, ChevronDown, Eye, EyeOff } from 'lucide-react';
 import TipTapEditor from '../components/admin/TipTapEditor';
 import ImageField from '../components/admin/ImageField';
 
@@ -83,6 +83,33 @@ const CollapsibleTiptap = ({ label, value, onChange }) => {
   );
 };
 
+// Puck Custom Visibility Toggle
+const VisibilityToggle = ({ value, onChange }) => {
+  const isVisible = value !== false;
+  return (
+    <div className={`mb-4 p-2.5 rounded-lg border transition-colors duration-300 flex items-center justify-between ${isVisible ? 'bg-blue-50/50 border-blue-200/60' : 'bg-zinc-50 border-zinc-200/60'}`}>
+      <div className="flex items-center gap-2.5">
+        <div className={`p-1.5 rounded-md transition-colors duration-300 ${isVisible ? 'bg-blue-100 text-blue-600' : 'bg-zinc-200 text-zinc-500'}`}>
+          {isVisible ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+        </div>
+        <span className={`text-sm font-semibold transition-colors duration-300 ${isVisible ? 'text-blue-900' : 'text-zinc-500'}`}>
+          Visible on Website
+        </span>
+      </div>
+      <label className="flex items-center cursor-pointer relative shrink-0 mr-1">
+        <input 
+          type="checkbox" 
+          checked={isVisible} 
+          onChange={(e) => onChange(e.target.checked)} 
+          className="sr-only" 
+        />
+        <div className={`w-9 h-5 rounded-full transition-colors duration-300 shadow-inner ${isVisible ? 'bg-blue-500' : 'bg-zinc-300'}`}></div>
+        <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-300 ${isVisible ? 'transform translate-x-4' : 'transform translate-x-0'}`}></div>
+      </label>
+    </div>
+  );
+};
+
 export const ncPuckConfig = {
   components: {
 
@@ -115,28 +142,32 @@ export const ncPuckConfig = {
 
     getStartedCta: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         title: { type: "textarea" },
         buttonText: { type: "text" }
       },
       defaultProps: {
+        isVisible: true,
         title: 'Ready to build your dream aquarium?',
         buttonText: 'Get Started'
       },
-      render: (props) => <GetStartedCtaSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: CTA Section</div> : <GetStartedCtaSection data={props} />
     },
 
 
     // RIPPLES PAGE BLOCKS
     ripplesHero: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         backgroundImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
-      defaultProps: { backgroundImage: '' },
-      render: (props) => <RipplesHero data={props} />
+      defaultProps: { isVisible: true, backgroundImage: '' },
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Ripples Hero</div> : <RipplesHero data={props} />
     },
 
     ripplesIntro: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         mainTitle: { type: "textarea" },
         subTitle: { type: "textarea" },
         description: { 
@@ -148,6 +179,7 @@ export const ncPuckConfig = {
         authorName: { type: "text" }
       },
       defaultProps: {
+        isVisible: true,
         mainTitle: 'It is a long established fact that a reader will be distracted.',
         subTitle: 'It is a long established fact that a reader will be distracted.',
         description: 'Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India. Specializing in setting up Nature Aquariums and Biotopes that mimic actual fish habitats, we offer international quality brands and exceptional customer service, helping you build and maintain your dream aquarium.',
@@ -155,11 +187,12 @@ export const ncPuckConfig = {
         quote: '“To know Mother Nature is to love her smallest creations.”',
         authorName: '–Takashi Amano'
       },
-      render: (props) => <RipplesIntroSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Ripples Intro</div> : <RipplesIntroSection data={props} />
     },
 
     ripplesNatureAquarium: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         section1Title: { type: "text" },
         card1Image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         card1Title: { type: "textarea" },
@@ -170,6 +203,7 @@ export const ncPuckConfig = {
         card2Caption: { type: "textarea" }
       },
       defaultProps: {
+        isVisible: true,
         section1Title: 'What is Nature Aquarium?',
         card1Image: '',
         card1Title: 'It is a long established fact that a reader will be distracted.',
@@ -179,11 +213,12 @@ export const ncPuckConfig = {
         card2Image: '',
         card2Caption: 'It is a long established fact that a reader will be distracted.'
       },
-      render: (props) => <RipplesNatureAquariumSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Nature Aquarium</div> : <RipplesNatureAquariumSection data={props} />
     },
 
     ripplesLetsBegin: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         heading: { type: "text" },
         introText: { type: "textarea" },
         bottomImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
@@ -199,6 +234,7 @@ export const ncPuckConfig = {
         }
       },
       defaultProps: {
+        isVisible: true,
         heading: "Let's begin",
         introText: 'Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.',
         bottomImage: '',
@@ -209,11 +245,12 @@ export const ncPuckConfig = {
           { num: '04', title: 'Maintenance', description: 'Founded in 2014 with a vision...', img: '' }
         ]
       },
-      render: (props) => <RipplesLetsBeginSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Ripples Let's Begin</div> : <RipplesLetsBeginSection data={props} />
     },
 
     ripplesAquascape: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         subtitle: { type: "text" },
         title: { type: "text" },
         description: { type: "textarea" },
@@ -239,6 +276,7 @@ export const ncPuckConfig = {
         }
       },
       defaultProps: {
+        isVisible: true,
         subtitle: 'RIPPLES AQUATIC STUDIO',
         title: 'LIVING ART UNDER WATER',
         description: 'At Ripples Aquatic Studio, we engineer pristine underwater ecosystems that bring tranquility, life, and architectural grandeur into your space.',
@@ -253,21 +291,23 @@ export const ncPuckConfig = {
           { img: '', caption: 'High Precision CO2 Plant System' }
         ]
       },
-      render: (props) => <RipplesAquascapeSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Ripples Aquascape</div> : <RipplesAquascapeSection data={props} />
     },
 
 
     // GULMO PAGE BLOCKS
     gulmoHero: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         backgroundImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
-      defaultProps: { backgroundImage: '' },
-      render: (props) => <GulmoHero data={props} />
+      defaultProps: { isVisible: true, backgroundImage: '' },
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Gulmo Hero</div> : <GulmoHero data={props} />
     },
 
     gulmoTerrarium: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         mainJarImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         cat1Title: { type: "text" }, cat1Desc: { type: "textarea" }, cat1Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         cat2Title: { type: "text" }, cat2Desc: { type: "textarea" }, cat2Icon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
@@ -278,6 +318,7 @@ export const ncPuckConfig = {
         bottomJar4: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
       },
       defaultProps: {
+        isVisible: true,
         cat1Title: 'Terrariums',
         cat1Desc: 'Elevate your indoor spaces with lush, green gardens...',
         cat2Title: 'Paludariums',
@@ -285,25 +326,28 @@ export const ncPuckConfig = {
         cat3Title: 'Indoor Gardens',
         cat3Desc: 'Transform any space with our custom-designed aquariums...'
       },
-      render: (props) => <GulmoTerrariumSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Gulmo Terrarium</div> : <GulmoTerrariumSection data={props} />
     },
 
     gulmoQuote: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         bgImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         quoteIcon: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         quoteText: { type: "textarea" },
         quoteAuthor: { type: "text" }
       },
       defaultProps: {
+        isVisible: true,
         quoteText: "The forest is a peculiar organism of unlimited kindness and benevolence that makes no demands for its sustenance...",
         quoteAuthor: "Gautama Buddha"
       },
-      render: (props) => <GulmoQuoteSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Gulmo Quote</div> : <GulmoQuoteSection data={props} />
     },
 
     gulmoForestOrganism: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         mainTitle: { type: "text" },
         brushImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         jarImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
@@ -315,6 +359,7 @@ export const ncPuckConfig = {
         f6Label: { type: "text" }, f6Sub: { type: "text" }, f6Title: { type: "text" }, f6Desc: { type: "textarea" },
       },
       defaultProps: {
+        isVisible: true,
         mainTitle: "The Forest Is A Peculiar Organism",
         f1Label: "GLASS", f1Title: "GLASS: TOP CASE", f1Desc: "A tall glass cover...",
         f2Label: "LIGHTING", f2Title: "LIGHTING SYSTEM", f2Desc: "High-spectrum LED...",
@@ -323,11 +368,12 @@ export const ncPuckConfig = {
         f5Label: "SUBSTRATE", f5Title: "SUBSTRATE & SOIL", f5Desc: "Multi-layered nutrient...",
         f6Label: "TOOL", f6Sub: "MAINTENANCE", f6Title: "LAYOUT TOOL", f6Desc: "Precision tools..."
       },
-      render: (props) => <GulmoForestOrganismSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Gulmo Forest Organism</div> : <GulmoForestOrganismSection data={props} />
     },
 
     gulmoOurProjects: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         title: { type: "text" },
         description: { type: "textarea" },
         bgSplash: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
@@ -335,14 +381,16 @@ export const ncPuckConfig = {
         imageRight: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
       defaultProps: {
+        isVisible: true,
         title: "OUR PROJECTS",
         description: "Founded in 2014 with a vision of promoting ethical fish keeping..."
       },
-      render: (props) => <GulmoOurProjectsSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Gulmo Our Projects</div> : <GulmoOurProjectsSection data={props} />
     },
 
     gulmoLetsBegin: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         title: { type: "text" },
         description: { type: "textarea" },
         storeUrl: { type: "text" },
@@ -352,17 +400,19 @@ export const ncPuckConfig = {
         imageOverlay: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
       defaultProps: {
+        isVisible: true,
         title: "Let's begin",
         description: "Founded in 2014 with a vision...",
         storeUrl: "https://naturecube.store",
         storeUrlText: "naturecube.store",
         btnText: "STORE"
       },
-      render: (props) => <GulmoLetsBeginSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Gulmo Let's Begin</div> : <GulmoLetsBeginSection data={props} />
     },
 
     gulmoConcept: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         studioName: { type: "text" },
         mainTitle: { type: "text" },
         description: { type: "textarea" },
@@ -390,6 +440,7 @@ export const ncPuckConfig = {
         }
       },
       defaultProps: {
+        isVisible: true,
         studioName: "GULMO BOTANICAL STUDIO",
         mainTitle: "MINIATURE NATURE IN GLASS",
         description: "Gulmo Concept Gardening reimagines indoor greenery...",
@@ -398,13 +449,14 @@ export const ncPuckConfig = {
         categories: [],
         galleryJars: []
       },
-      render: (props) => <GulmoConceptSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Gulmo Concept</div> : <GulmoConceptSection data={props} />
     },
 
 
     // PRAKRITI LAB BLOCKS
     prakritiHero: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         headlineLines: {
           type: "array",
           arrayFields: { line: { type: "text" } },
@@ -413,6 +465,7 @@ export const ncPuckConfig = {
         brushImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
       defaultProps: {
+        isVisible: true,
         headlineLines: [
           { line: "It is a long" },
           { line: "established" },
@@ -421,11 +474,12 @@ export const ncPuckConfig = {
           { line: "distracted." }
         ]
       },
-      render: (props) => <PrakritiHero data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Hero</div> : <PrakritiHero data={props} />
     },
 
     prakritiIntro: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         brandName: { type: "text" },
         title: { type: "text" },
         description: { 
@@ -443,16 +497,18 @@ export const ncPuckConfig = {
         }
       },
       defaultProps: {
+        isVisible: true,
         brandName: "Prakriti Lab Research",
         title: "Cultivating the Science of Living Ecosystems.",
         description: "Prakriti Lab is NatureCube s experimental sanctuary...",
         features: []
       },
-      render: (props) => <PrakritiIntroSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Intro</div> : <PrakritiIntroSection data={props} />
     },
 
     prakritiEducation: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         headline: { type: "text" },
         description: { 
           type: "custom", 
@@ -470,15 +526,17 @@ export const ncPuckConfig = {
         brushBottomImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
       defaultProps: {
+        isVisible: true,
         headline: "It is a long established fact that a reader will be distracted.",
         description: "At Naturecube, we take students from schools and colleges...",
         cards: []
       },
-      render: (props) => <PrakritiEducationSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Education</div> : <PrakritiEducationSection data={props} />
     },
 
     prakritiUpcomingWorkshops: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         heading: { type: "text" },
         subtext: { 
           type: "custom", 
@@ -496,16 +554,18 @@ export const ncPuckConfig = {
         }
       },
       defaultProps: {
+        isVisible: true,
         heading: "UPCOMING WORKSHOPS",
         subtext: "It is a long\nestablished fact\nthat a reader will\nbe distracted.",
         buttonText: "Reserve Your Seat",
         workshops: []
       },
-      render: (props) => <PrakritiUpcomingWorkshopsSection data={props} {...props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Workshops</div> : <PrakritiUpcomingWorkshopsSection data={props} {...props} />
     },
 
     prakritiLabExperience: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         title: { type: "text" },
         galleryImages: {
           type: "array",
@@ -533,15 +593,17 @@ export const ncPuckConfig = {
         }
       },
       defaultProps: {
+        isVisible: true,
         title: "PRAKRITI LAB EXPERIENCE",
         galleryImages: [],
         testimonials: []
       },
-      render: (props) => <PrakritiLabExperienceSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Lab Experience</div> : <PrakritiLabExperienceSection data={props} />
     },
 
     prakritiLabShowcase: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         tagline: { type: "text" },
         title: { type: "text" },
         description: { 
@@ -560,16 +622,18 @@ export const ncPuckConfig = {
         }
       },
       defaultProps: {
+        isVisible: true,
         tagline: "Laboratory Portfolio",
         title: "Prakriti Lab Experiments",
         description: "Each creation is a meticulously engineered natural ecosystem designed for aesthetic tranquility and low-maintenance longevity.",
         showcaseItems: []
       },
-      render: (props) => <PrakritiLabShowcaseSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Lab Showcase</div> : <PrakritiLabShowcaseSection data={props} />
     },
 
     prakritiGetInTouch: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         badgeText: { type: "text" },
         phone: { type: "text" },
@@ -580,16 +644,18 @@ export const ncPuckConfig = {
         }
       },
       defaultProps: {
+        isVisible: true,
         badgeText: "Our dedicated team is ready to assist you.",
         phone: "+ 91-9830086975",
         heading: "Get in touch.",
         subtext: "Reach out to us today to schedule your personalized design consultation and start bringing your vision of nature to life."
       },
-      render: (props) => <PrakritiGetInTouchSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Get In Touch</div> : <PrakritiGetInTouchSection data={props} />
     },
 
     prakritiLetsBegin: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         title: { type: "text" },
         description: { 
           type: "custom", 
@@ -602,26 +668,29 @@ export const ncPuckConfig = {
         imageOverlay: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
       defaultProps: {
+        isVisible: true,
         title: "Let's begin",
         description: "Transform your indoor spaces with living art. Explore our curated collections of botanical aquascapes, terrariums, and custom biomes built by Prakriti Lab.",
         storeUrl: "https://naturecube.store",
         storeUrlText: "naturecube.store",
         btnText: "STORE"
       },
-      render: (props) => <PrakritiLetsBeginSection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Let's Begin</div> : <PrakritiLetsBeginSection data={props} />
     },
 
     // WORKSHOP PAGE BLOCKS
     workshopHero: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         backgroundImage: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
       },
-      defaultProps: { backgroundImage: '' },
-      render: (props) => <WorkshopHero data={props} />
+      defaultProps: { isVisible: true, backgroundImage: '' },
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Workshop Hero</div> : <WorkshopHero data={props} />
     },
 
     workshopDetails: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         title: { type: "text" },
         mentor: { type: "text" },
         date: { type: "text" },
@@ -647,6 +716,7 @@ export const ncPuckConfig = {
         }
       },
       defaultProps: {
+        isVisible: true,
         title: "TERRARIUM WORKSHOP",
         mentor: "GAUTAM GUPTA",
         date: "22nd March, 2026",
@@ -661,6 +731,9 @@ export const ncPuckConfig = {
         option2Items: [{ item: "EXTRA CLEAR CUSTOM TANK" }, { item: "PLANTS & MOSS" }]
       },
       render: (props) => {
+        if (props.isVisible === false) {
+          return <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Workshop Details</div>;
+        }
         const normalizedProps = {
           ...props,
           option1Items: props.option1Items?.map(obj => typeof obj === 'string' ? obj : obj.item) || [],
@@ -672,6 +745,7 @@ export const ncPuckConfig = {
 
     workshopGallery: {
       fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
         image1: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         image2: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
         image3: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
@@ -679,9 +753,10 @@ export const ncPuckConfig = {
         image5: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
       },
       defaultProps: {
+        isVisible: true,
         image1: '', image2: '', image3: '', image4: '', image5: ''
       },
-      render: (props) => <WorkshopGallerySection data={props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Workshop Gallery</div> : <WorkshopGallerySection data={props} />
     },
 
     // ABOUT HORIZONTAL SCROLL BLOCK

@@ -32,7 +32,7 @@ const OurBlogsSection = ({ data }) => {
   const subText = data?.subText || "It is a long established fact that a reader will be distracted.";
   const headline = data?.headline || "It is a long established fact that a reader will be distracted.";
   const cardsToRender = (data?.cards && data.cards.length > 0) ? data.cards : defaultCards;
-
+  if (data?.isVisible === false) return null;
   return (
     <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
       <div className="max-w-[1440px] mx-auto">

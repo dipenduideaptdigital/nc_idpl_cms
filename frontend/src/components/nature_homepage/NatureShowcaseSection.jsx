@@ -42,7 +42,7 @@ const NatureShowcaseSection = ({ data }) => {
   const row3Desc = data?.row3Desc || 'Their Impact Is Crucial. We <b>Offer State-Of-The-Art Semi-Aquatic And Terrestrial Terrarium Technologies</b> To Bring A Miniature Rainforest Into Your Living Room.';
   const row3BtnText = data?.row3BtnText || "explore";
   const row3FloatingImg = data?.row3FloatingImg ? getAssetUrl(data.row3FloatingImg) : defaultPlantBoxImg;
-
+  if (data?.isVisible === false) return null;
   return (
     <section className="relative w-full bg-[#fcfdfc] py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 overflow-hidden select-none">
       

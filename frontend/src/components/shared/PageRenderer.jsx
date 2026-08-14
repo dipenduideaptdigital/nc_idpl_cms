@@ -42,7 +42,8 @@ import NcProjectsHero from '../nc_projects/NcProjectsHero';
 
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
-  
+  if (data?.isVisible === false) return null;
+
   switch (type) {
       
     // Ripples Page Blocks
