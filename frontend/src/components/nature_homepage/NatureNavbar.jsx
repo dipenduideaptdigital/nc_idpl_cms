@@ -56,7 +56,7 @@ const NatureNavbar = ({ forceDark = false }) => {
     { name: 'OFFERINGS', href: '#offerings', isMega: true },
     { name: 'PROJECTS', href: '/projects' },
     { name: 'WHO WE ARE', href: dynamicPaths.about },
-    { name: 'KNOWLEDGE', href: '#knowledge' },
+    { name: 'KNOWLEDGE', href: '/blog' },
     { name: 'CONTACT US', href: '/contact' },
   ];
 

@@ -47,11 +47,11 @@ const PrakritiGetInTouchSection = ({ data }) => {
   const imageSrc = data?.image ? getAssetUrl(data.image) : trunk;
 
   return (
-    <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-20 sm:py-28 lg:py-36 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+    <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-16 sm:py-24 md:py-28 lg:py-36 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-16 items-center">
         
         {/* Left Column: Image with Assistance Floating Pill */}
-        <div className="lg:col-span-5 relative flex justify-center lg:justify-start">
+        <div className="md:col-span-5 relative flex justify-center md:justify-start">
           <div className="relative w-full max-w-[460px] aspect-[3/4] sm:aspect-[4/5] rounded-lg overflow-hidden shadow-2xl border border-zinc-200/80 bg-zinc-100">
             <img
               src={imageSrc}
@@ -79,7 +79,7 @@ const PrakritiGetInTouchSection = ({ data }) => {
         </div>
 
         {/* Right Column: Contact Form */}
-        <div className="lg:col-span-7 flex flex-col justify-center space-y-6 max-w-2xl">
+        <div className="md:col-span-7 flex flex-col justify-center space-y-6 max-w-2xl">
           <div className="space-y-3">
             <h2 className="font-kanit font-bold text-4xl sm:text-5xl lg:text-[50px] text-[#2D1E18] tracking-tight leading-tight">
               {heading}
@@ -177,12 +177,12 @@ const PrakritiGetInTouchSection = ({ data }) => {
               </div>
 
               {/* Submit Button */}
-              <div className="pt-2 w-full">
+              <div className="pt-2 sm:w-[300px] xl:w-full sm:ml-10 xl:ml-0">
                 <button
                   type="submit"
                   className="w-full bg-[#7CA64E] hover:bg-[#6C9343] text-white font-sans font-bold py-3 px-5 sm:px-6 rounded-2xl flex items-center justify-between transition-all duration-300 shadow-xs hover:shadow-md cursor-pointer group"
                 >
-                  <span className="text-lg font-extrabold tracking-wide pl-2">Submit</span>
+                  <span className="text-lg font-extrabold  tracking-wide pl-2">Submit</span>
                   <div className="w-10 h-10 rounded-xl bg-white text-zinc-900 flex items-center justify-center font-bold text-base shadow-xs transform group-hover:translate-x-1 transition-transform">
                     <svg className="w-4 h-4 text-zinc-900" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

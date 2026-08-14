@@ -22,12 +22,12 @@ const PrakritiLetsBeginSection = ({ data }) => {
   const imageOverlaySrc = data?.imageOverlay ? getAssetUrl(data.imageOverlay) : gallery2;
 
   return (
-    <section className="w-full bg-white text-[#1f2937] py-20 sm:py-28 px-6 sm:px-10 lg:px-16 overflow-hidden select-none font-kanit border-t border-zinc-100">
+    <section className="w-full bg-white text-[#1f2937] py-16 sm:py-24 md:py-28 px-6 sm:px-10 lg:px-16 overflow-hidden select-none font-kanit border-t border-zinc-100">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 items-center">
           
           {/* Left Column: Heading, Intro & Store CTA */}
-          <div className="lg:col-span-6 space-y-6 sm:space-y-8">
+          <div className="md:col-span-6 space-y-6 sm:space-y-8">
             <span className="text-xs font-semibold tracking-[0.2em] text-[#7BA641] uppercase block">
               Prakriti Lab Studio
             </span>
@@ -57,11 +57,11 @@ const PrakritiLetsBeginSection = ({ data }) => {
           </div>
 
           {/* Right Column: 2 Overlapping Gallery Image Frames */}
-          <div className="lg:col-span-6 relative w-full max-w-[500px] lg:max-w-none mx-auto lg:ml-0 pt-6 lg:pt-0">
-            <div className="relative flex justify-start lg:justify-end pb-12 sm:pb-30 pr-6 sm:pr-12">
+          <div className="md:col-span-6 relative w-full max-w-[360px] xs:max-w-[420px] sm:max-w-[500px] md:max-w-none mx-auto md:ml-0 pt-4 md:pt-0">
+            <div className="relative flex justify-start md:justify-end pb-12 sm:pb-24 md:pb-28 pr-4 sm:pr-8 md:pr-10">
               
               {/* Primary Main Image Frame */}
-              <div className="w-[260px] sm:w-[340px] md:w-[380px] h-[320px] sm:h-[400px] md:h-[450px] rounded-sm overflow-hidden shadow-xl bg-zinc-100 transition-transform duration-500 hover:scale-[1.01] mr-10">
+              <div className="w-[66%] sm:w-[300px] md:w-[320px] lg:w-[380px] h-[230px] xs:h-[280px] sm:h-[370px] md:h-[390px] lg:h-[450px] rounded-sm overflow-hidden shadow-xl bg-zinc-100 transition-transform duration-500 hover:scale-[1.01]">
                 <img
                   src={imageMainSrc}
                   alt="Prakriti Lab Showcase 1"
@@ -70,7 +70,7 @@ const PrakritiLetsBeginSection = ({ data }) => {
               </div>
 
               {/* Secondary Overlapping Image Frame */}
-              <div className="absolute -bottom-2 sm:bottom-0 right-0 sm:right-2 w-[190px] sm:w-[250px] md:w-[280px] h-[210px] sm:h-[270px] md:h-[300px] rounded-sm overflow-hidden shadow-2xl bg-zinc-100 z-10 border-4 border-white transition-transform duration-500 hover:scale-[1.02]">
+              <div className="absolute bottom-0 right-0 sm:right-2 w-[54%] sm:w-[220px] md:w-[240px] lg:w-[280px] h-[170px] xs:h-[210px] sm:h-[250px] md:h-[270px] lg:h-[300px] rounded-sm overflow-hidden shadow-2xl bg-zinc-100 z-10 border-4 border-white transition-transform duration-500 hover:scale-[1.02]">
                 <img
                   src={imageOverlaySrc}
                   alt="Prakriti Lab Showcase 2"

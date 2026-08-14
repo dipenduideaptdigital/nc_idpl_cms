@@ -8,7 +8,7 @@ const NatureFooter = () => {
     { name: 'PROJECTS', href: '/projects' },
     { name: 'PHILOSOPHY', href: '/mandala' },
     { name: 'WHO WE ARE', href: '/about' },
-    { name: 'KNOWLEDGE', href: '#knowledge' },
+    { name: 'KNOWLEDGE', href: '/blog' },
     { name: 'CONTACT US', href: '/contact' },
   ];
 
@@ -20,7 +20,7 @@ const NatureFooter = () => {
     { name: 'FAQS', href: '#faqs' },
   ];
 
-  const col3Links = [
+  const socialLinks = [
     { name: 'INSTAGRAM', href: 'https://instagram.com' },
     { name: 'FACEBOOK', href: 'https://facebook.com' },
     { name: 'YOUTUBE', href: 'https://youtube.com' },
@@ -68,89 +68,40 @@ const NatureFooter = () => {
 
           </div>
 
-          <div className="lg:col-span-8 flex flex-col space-y-6 sm:space-y-8">
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 items-start">
-              <div className="flex flex-col space-y-6 sm:space-y-8">
-                <div className="flex flex-col space-y-3.5 sm:space-y-4">
-                  {col1Links.map((link, idx) => (
-                    <a
-                      key={idx}
-                      href={link.href}
-                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
-                    >
-                      {link.name}
-                    </a>
-                  ))}
-                </div>
-
-                {/* Social Links Part 1  */}
-                <div className="flex flex-col space-y-3.5 sm:space-y-4 lg:hidden pt-1">
-                  {col3Links.slice(0, 2).map((link, idx) => (
-                    <a
-                      key={idx}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
-                    >
-                      {link.name}
-                    </a>
-                  ))}
-                </div>
+          <div className="lg:col-span-8 flex flex-col space-y-8 sm:space-y-10">
+            {/* Nav Links Grid */}
+            <div className="grid grid-cols-2 gap-8 sm:gap-12 items-start">
+              
+              {/* Column 1 */}
+              <div className="flex flex-col space-y-3.5 sm:space-y-4">
+                {col1Links.map((link, idx) => (
+                  <a
+                    key={idx}
+                    href={link.href}
+                    className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
+                  >
+                    {link.name}
+                  </a>
+                ))}
               </div>
 
-              {/* Right Grid Column (Col 2 on Mobile & Desktop) */}
-              <div className="flex flex-col space-y-6 sm:space-y-8">
-                {/* Col 2 Links */}
-                <div className="flex flex-col space-y-3.5 sm:space-y-4">
-                  {col2Links.map((link, idx) => (
-                    <a
-                      key={idx}
-                      href={link.href}
-                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
-                    >
-                      {link.name}
-                    </a>
-                  ))}
-                </div>
+              {/* Column 2 */}
+              <div className="flex flex-col space-y-3.5 sm:space-y-4">
+                {col2Links.map((link, idx) => (
+                  <a
+                    key={idx}
+                    href={link.href}
+                    className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
+                  >
+                    {link.name}
+                  </a>
+                ))}
 
-                {/* Social Links Part 2  */}
-                <div className="flex flex-col space-y-3.5 sm:space-y-4 lg:hidden pt-1">
-                  {col3Links.slice(2, 4).map((link, idx) => (
-                    <a
-                      key={idx}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
-                    >
-                      {link.name}
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* Column 3 (Desktop Only - Col 3) */}
-              <div className="hidden lg:flex lg:flex-col lg:justify-between h-full">
-                <div className="flex flex-col space-y-4 mb-8">
-                  {col3Links.map((link, idx) => (
-                    <a
-                      key={idx}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
-                    >
-                      {link.name}
-                    </a>
-                  ))}
-                </div>
-
-                {/* Store Button on Desktop */}
-                <div className="pt-2">
+                {/* Store Button below FAQS */}
+                <div className="pt-2 sm:pt-3">
                   <a
                     href="#store"
-                    className="w-[175px] h-[52px] bg-[#6CA844] hover:bg-[#5f973a] text-white font-kanit font-normal text-2xl uppercase rounded-md transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-[130px] sm:w-[145px] h-[38px] sm:h-[42px] bg-[#6CA844] hover:bg-[#5f973a] text-white font-kanit font-normal text-base sm:text-lg uppercase rounded-md transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
                   >
                     STORE
                   </a>
@@ -159,13 +110,19 @@ const NatureFooter = () => {
 
             </div>
 
-            <div className="lg:hidden flex justify-center pt-2 sm:pt-4">
-              <a
-                href="#store"
-                className="w-full sm:w-[220px] max-w-[280px] h-[48px] sm:h-[52px] bg-[#6CA844] hover:bg-[#5f973a] text-white font-kanit font-normal text-lg sm:text-xl uppercase rounded-md transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
-              >
-                STORE
-              </a>
+            {/* Social Media Links in Same Row */}
+            <div className="flex flex-wrap items-center gap-6 sm:gap-10 pt-2 sm:pt-4">
+              {socialLinks.map((link, idx) => (
+                <a
+                  key={idx}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors"
+                >
+                  {link.name}
+                </a>
+              ))}
             </div>
 
           </div>

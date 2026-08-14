@@ -7,28 +7,28 @@ import card3 from '../../assets/nc_home/card3.png';
 // Upgraded getAssetUrl: Handles deeper Puck ImageField objects & string paths flawlessly
 const getAssetUrl = (path) => {
   if (!path) return '';
-  
+
   let urlPath = path;
-  
+
   if (typeof path === 'object') {
     urlPath = path.url || path.src || path.path || '';
   }
-  
+
   if (typeof urlPath !== 'string' || !urlPath) return '';
-  
+
   if (urlPath.startsWith('http') || urlPath.startsWith('data:')) return urlPath;
-  
+
   if (urlPath.startsWith('/src/') || urlPath.startsWith('/assets/') || urlPath.startsWith('/@fs/')) {
     return urlPath;
   }
 
-  const baseUrl = import.meta.env.VITE_API_URL 
-    ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
+  const baseUrl = import.meta.env.VITE_API_URL
+    ? import.meta.env.VITE_API_URL.replace('/api/v1', '')
     : 'http://localhost:5000';
-    
+
   const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
   const cleanPath = urlPath.startsWith('/') ? urlPath : `/${urlPath}`;
-  
+
   return `${cleanBaseUrl}${cleanPath}`;
 };
 
@@ -46,7 +46,7 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
   const heading = blockData.heading || "UPCOMING WORKSHOPS";
   const subtext = blockData.subtext || "It is a long\nestablished fact\nthat a reader will\nbe distracted.";
   const buttonText = blockData.buttonText || "Reserve Your Seat";
-  
+
   // Array Fallbacks for Workshops
   const dynamicWorkshops = blockData.workshops || blockData.cards || blockData.items || [];
   const workshops = dynamicWorkshops.length > 0 ? dynamicWorkshops : defaultWorkshops;
@@ -62,10 +62,10 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
   };
 
   return (
-    <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-20 sm:py-28 lg:py-36 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
+    <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-16 sm:py-28 lg:py-36 px-4 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
       
       {/* Top-Left Paint Splash */}
-      <div className="absolute -top-20 -left-20 sm:-top-28 sm:-left-24 md:-top-32 md:-left-28 w-[420px] sm:w-[520px] md:w-[620px] aspect-square pointer-events-none z-0">
+      <div className="absolute -top-20 -left-20 sm:-top-28 sm:-left-24 md:-top-32 md:-left-28 w-[320px] sm:w-[520px] md:w-[620px] aspect-square pointer-events-none z-0">
         <img
           src={bush3}
           alt="Paint Splash Accent"
@@ -76,7 +76,7 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
       <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
         
         {/* Left Column */}
-        <div className="lg:col-span-5 flex flex-col items-start space-y-10 pr-0 lg:pr-4">
+        <div className="lg:col-span-5 flex flex-col items-start space-y-6 sm:space-y-10 pr-0 lg:pr-4">
           <h2 className="font-kanit font-bold text-3xl sm:text-4xl lg:text-[40px] xl:text-[42px] text-[#1E293B] tracking-tight uppercase leading-tight">
             {heading}
           </h2>
@@ -86,7 +86,7 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
             dangerouslySetInnerHTML={{ __html: subtext }}
           />
 
-          <div className="pt-6 sm:pt-10">
+          <div className="pt-4 sm:pt-10">
             <button
               onClick={handleReserve}
               className="font-kanit font-semibold text-lg text-[#7BA641] pb-1 border-b-2 border-[#7BA641] hover:opacity-80 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer group"
@@ -97,7 +97,7 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
         </div>
 
         {/* Right Column: Dynamic Stacked Cards Loop */}
-        <div className="lg:col-span-5 relative w-full flex items-center justify-center lg:justify-end pt-10 lg:pt-30">
+        <div className="lg:col-span-5 relative w-full flex flex-col items-center sm:items-stretch lg:items-end justify-center pt-6 lg:pt-30">
           <div className="relative w-full max-w-[500px] xl:max-w-[540px] aspect-[4/3] sm:aspect-[1.25/1]">
             
             {workshops.map((ws, index) => {
@@ -134,8 +134,8 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
               );
             })}
 
-            {/* Attached Dark Overlay Box */}
-            <div className="absolute -right-4 sm:-right-60 bottom-8 sm:bottom-12 z-40 bg-[#0C1A22] text-white p-5 sm:p-6 w-[210px] sm:w-[245px] rounded-xs shadow-2xl flex flex-col justify-between border border-zinc-800/80 min-h-[175px] sm:min-h-[195px]">
+            {/* Exact Original Desktop Attached Dark Overlay Box (Hidden on mobile < sm) */}
+            <div className="hidden sm:flex absolute -right-4 sm:-right-60 bottom-8 sm:bottom-12 z-40 bg-[#0C1A22] text-white p-5 sm:p-6 w-[210px] sm:w-[245px] rounded-xs shadow-2xl flex-col justify-between border border-zinc-800/80 min-h-[175px] sm:min-h-[195px]">
               <div className="mb-4">
                 <h3 className="font-kanit font-bold text-lg sm:text-xl tracking-wide uppercase text-white leading-tight transition-all duration-500">
                   {currentWorkshop?.title}
@@ -158,9 +158,36 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
             </div>
             
           </div>
+
+          {/* Mobile Black Card (Rendered below the image stack on small screens < sm with 100% visible image cards) */}
+          <div className="sm:hidden w-full max-w-[400px] mt-6 z-40 bg-[#0C1A22] text-white p-4.5 rounded-xl shadow-xl flex flex-col justify-between border border-zinc-800/80">
+            <div className="mb-3">
+              <h3 className="font-kanit font-bold text-base tracking-wide uppercase text-white leading-tight">
+                {currentWorkshop?.title}
+              </h3>
+            </div>
+
+            {/* Pagination Counter & Navigation Button */}
+            <div className="flex items-center justify-between pt-3 border-t border-zinc-700/60 font-kanit">
+              <span className="text-sm font-medium tracking-widest text-zinc-200">
+                {currentIndex + 1}/{workshops.length}
+              </span>
+              <button
+                onClick={handleNext}
+                aria-label="Next Workshop"
+                className="text-[#ffffff] hover:text-[#7BA641] transition-all duration-300 text-lg font-bold p-1 cursor-pointer flex items-center gap-2 group active:scale-95"
+              >
+                <span className="text-xs uppercase font-semibold tracking-wider text-[#7BA641]">Next</span>
+                <span className="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
+
+
   );
 };
 

@@ -78,13 +78,13 @@ const PrakritiEducationSection = ({ data }) => {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 xl:gap-24 items-start mb-20 sm:mb-24 lg:mb-28">
-          <div className="lg:col-span-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 lg:gap-16 xl:gap-24 items-start mb-16 sm:mb-24 lg:mb-28">
+          <div className="md:col-span-6">
             <h2 className="font-kanit font-bold text-3xl sm:text-4xl lg:text-[42px] xl:text-[40px] text-[#6A6A6A] leading-[1.18] tracking-tight max-w-xl">
               {headlineText}
             </h2>
           </div>
-          <div className="lg:col-span-6 lg:pt-2 ml-0 lg:ml-10">
+          <div className="md:col-span-6 md:pt-2 ml-0 md:ml-4 lg:ml-10">
             <div 
               className="font-sans text-sm sm:text-base lg:text-[18px] text-[#6A6A6A] font-normal leading-[1.8] max-w-[420px] tiptap-content"
               dangerouslySetInnerHTML={{ __html: descriptionText }}
@@ -93,7 +93,7 @@ const PrakritiEducationSection = ({ data }) => {
         </div>
 
         {/* Bottom 3 Cards Grid - Staggered Heights */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-start">
           {cardsToRender.map((card, index) => {
             const cardHeight = card.heightClass || heightClasses[index % heightClasses.length];
             const imgSrc = card.image ? getAssetUrl(card.image) : '';
