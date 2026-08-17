@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
 
 const AboutHeroPanel = ({ data }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   const headlineLine1 = data?.headlineLine1 || "LOOK DEEP INTO NATURE, AND THEN YOU WILL";
   const headlineLine2 = data?.headlineLine2 || "UNDERSTAND EVERYTHING BETTER";
@@ -11,6 +12,12 @@ const AboutHeroPanel = ({ data }) => {
   const yearsExp = data?.yearsExp || "25+";
   const sinceYear = data?.sinceYear || "SINCE 2010";
   const clientCount = data?.clientCount || "+100K SATISFIED CLIENTS";
+
+  const isLinkActive = (href) => {
+    if (!href || href.startsWith('#')) return false;
+    if (href === '/') return location.pathname === '/';
+    return location.pathname === href || (href !== '/' && location.pathname.startsWith(href));
+  };
 
   const navLinks = [
     { name: 'PHILOSOPHY', href: '#philosophy' },
@@ -33,35 +40,40 @@ const AboutHeroPanel = ({ data }) => {
           />
         </Link>
 
-        <nav className="hidden lg:flex items-center space-x-6 xl:space-x-12">
-          {navLinks.map((link) => (
-            link.href.startsWith('/') ? (
+        <nav className="hidden lg:flex items-center space-x-6 xl:space-x-12 font-kanit">
+          {navLinks.map((link) => {
+            const isActive = isLinkActive(link.href);
+            return link.href.startsWith('/') ? (
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-xs font-bold tracking-[0.18em] text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
+                className={`font-kanit text-sm tracking-wide transition-colors uppercase py-1 relative group ${
+                  isActive ? 'text-[#6CA844] font-semibold' : 'text-[#000000] hover:text-[#6CA844] font-medium'
+                }`}
               >
                 {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
+                <span className={`absolute bottom-0 left-0 h-[1.5px] bg-[#6CA844] transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </Link>
             ) : (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-xs font-bold tracking-[0.18em] text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
+                className={`font-kanit text-sm tracking-wide transition-colors uppercase py-1 relative group ${
+                  isActive ? 'text-[#6CA844] font-semibold' : 'text-[#000000] hover:text-[#6CA844] font-medium'
+                }`}
               >
                 {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
+                <span className={`absolute bottom-0 left-0 h-[1.5px] bg-[#6CA844] transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </a>
-            )
-          ))}
+            );
+          })}
         </nav>
 
         {/* Store CTA Button */}
         <div className="hidden lg:block">
           <a
             href="#store"
-            className="inline-flex items-center justify-center bg-[#7BA641] hover:bg-[#6b9337] text-white font-semibold text-xs tracking-[0.18em] px-7 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_4px_15px_rgba(123,166,65,0.4)] uppercase"
+            className="font-kanit inline-flex items-center justify-center bg-[#6CA844] hover:bg-[#5f973a] text-white font-medium text-xs tracking-wider px-7 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_4px_15px_rgba(108,168,68,0.4)] uppercase"
           >
             STORE
           </a>
@@ -86,13 +98,16 @@ const AboutHeroPanel = ({ data }) => {
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="lg:hidden absolute top-20 left-6 right-6 bg-white/98 text-zinc-900 p-6 rounded-lg border border-zinc-200 shadow-xl space-y-4 font-kanit z-50">
-          {navLinks.map((link) => (
-            link.href.startsWith('/') ? (
+          {navLinks.map((link) => {
+            const isActive = isLinkActive(link.href);
+            return link.href.startsWith('/') ? (
               <Link
                 key={link.name}
                 to={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-sm font-bold tracking-widest text-[#000000] hover:text-[#7BA641] uppercase"
+                className={`block text-sm tracking-widest uppercase ${
+                  isActive ? 'text-[#6CA844] font-extrabold' : 'text-[#000000] hover:text-[#6CA844] font-bold'
+                }`}
               >
                 {link.name}
               </Link>
@@ -101,12 +116,14 @@ const AboutHeroPanel = ({ data }) => {
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-sm font-bold tracking-widest text-[#000000] hover:text-[#7BA641] uppercase"
+                className={`block text-sm tracking-widest uppercase ${
+                  isActive ? 'text-[#6CA844] font-extrabold' : 'text-[#000000] hover:text-[#6CA844] font-bold'
+                }`}
               >
                 {link.name}
               </a>
-            )
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -129,7 +146,7 @@ const AboutHeroPanel = ({ data }) => {
 
       {/* Bottom Left Badges */}
       <div className="flex items-center gap-6 sm:gap-10 mb-4 sm:mb-8">
-        <div className="bg-[#7BA641] text-white p-6 sm:p-8 w-44 sm:w-52 aspect-square flex flex-col justify-center shadow-lg flex-shrink-0">
+        <div className="bg-[#6CA844] text-white p-6 sm:p-8 w-44 sm:w-52 aspect-square flex flex-col justify-center shadow-lg flex-shrink-0">
           <span className="font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-none">
             {yearsExp}
           </span>
@@ -145,7 +162,7 @@ const AboutHeroPanel = ({ data }) => {
           <span className="text-[#1E293B] font-bold text-lg sm:text-xl lg:text-2xl tracking-wide uppercase">
             {sinceYear}
           </span>
-          <span className="text-[#7BA641] font-bold text-base sm:text-lg lg:text-xl tracking-wide uppercase">
+          <span className="text-[#6CA844] font-bold text-base sm:text-lg lg:text-xl tracking-wide uppercase">
             {clientCount}
           </span>
         </div>

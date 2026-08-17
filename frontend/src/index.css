@@ -1,11 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Architects+Daughter&family=Patrick+Hand&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi+Fun:wght@400;500;600;700&family=Reem+Kufi+Ink&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Instrument+Serif:ital@1&family=Kanit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Reem+Kufi+Fun:wght@400;500;600;700&family=Reem+Kufi+Ink&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Instrument+Serif:ital@1&family=Kanit:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: 'Outfit', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
   --font-reem: 'Reem Kufi Ink', sans-serif;
   --font-reem-fun: 'Reem Kufi Fun', sans-serif;
   --font-kanit: 'Kanit', sans-serif;
@@ -17,6 +18,9 @@
   --color-secondary: #f97316;
 }
 
+.font-outfit {
+  font-family: 'Outfit', sans-serif;
+}
 
 .font-kanit {
   font-family: 'Kanit', sans-serif;
@@ -24,6 +28,11 @@
 
 .font-larken {
   font-family: 'Larken-Medium', 'Larken-MediumItalic', 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', serif;
+}
+
+.font-larken-medium {
+  font-family: 'Larken-Medium', 'Larken', 'Cormorant Garamond', serif;
+  font-weight: 400;
 }
 
 .font-reem-fun {

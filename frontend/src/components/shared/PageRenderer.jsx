@@ -148,7 +148,7 @@ const PageRenderer = memo(({ blocks, template }) => {
   }
 
   return (
-    <div className={`animate-in fade-in duration-700 min-h-screen w-full ${wrapperBg}`}>
+    <div className={`animate-in fade-in duration-700 w-full ${wrapperBg}`}>
       {blocks.map((block, index) => (
         <BlockMapper key={block.id || index} block={block} index={index} />
       ))}

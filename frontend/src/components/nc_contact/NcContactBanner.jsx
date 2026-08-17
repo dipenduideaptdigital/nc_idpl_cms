@@ -13,14 +13,14 @@ const NcContactBanner = ({ data }) => {
         alt="NatureCube Banner"
         className="absolute inset-0 w-full h-full object-cover object-center filter brightness-90 contrast-105 scale-105"
       />
-      
+
       <div className="absolute inset-0 bg-black/40" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
-      <div className="relative z-10 text-center px-6 pt-12 sm:pt-16">
+      <div className="relative z-10 text-center px-4 sm:px-6 pt-8 xs:pt-12 sm:pt-16">
         <h1 
-          className="font-larken font-normal text-4xl sm:text-5xl md:text-6xl text-white tracking-wide drop-shadow-md"
-          style={{ fontFamily: "'Larken-Medium', 'Larken-MediumItalic', 'Cormorant Garamond', serif" }}
+          className="font-larken-medium font-normal text-3xl xs:text-4xl sm:text-5xl md:text-6xl text-white tracking-wide drop-shadow-md"
+          style={{ fontFamily: "'Larken-Medium', 'Larken', 'Cormorant Garamond', serif", fontWeight: 400 }}
         >
           {title}
         </h1>

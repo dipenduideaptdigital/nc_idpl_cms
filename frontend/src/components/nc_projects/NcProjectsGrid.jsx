@@ -17,15 +17,15 @@ const NcProjectsGrid = ({ projects = [] }) => {
   }
 
   return (
-    <section className="w-full bg-white pb-20 pt-4 px-6 sm:px-12 md:px-16 font-kanit">
-      <div className="max-w-[1728px] mx-auto space-y-4 sm:space-y-6">
+    <section className="w-full bg-white pb-12 sm:pb-20 pt-2 sm:pt-4 px-4 sm:px-8 md:px-16 font-kanit">
+      <div className="max-w-[1728px] mx-auto space-y-3 sm:space-y-6">
         {chunks.map((chunk, chunkIndex) => (
           <React.Fragment key={chunkIndex}>
             
             {chunk[0] && (
               <Link 
                 to={`/projects/${chunk[0].slug}`} 
-                className="block relative w-full h-[340px] sm:h-[440px] md:h-[540px] lg:h-[620px] overflow-hidden group shadow-sm bg-zinc-100 cursor-pointer"
+                className="block relative w-full h-[220px] xs:h-[280px] sm:h-[400px] md:h-[540px] lg:h-[620px] overflow-hidden group shadow-sm bg-zinc-100 cursor-pointer"
               >
                 <img 
                   src={resolveAssetUrl(chunk[0].featuredImage?.url || chunk[0].featuredImageId, '/default-project.png')} 
@@ -37,11 +37,11 @@ const NcProjectsGrid = ({ projects = [] }) => {
             )}
 
             {(chunk[1] || chunk[2]) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
                 {chunk[1] && (
                   <Link 
                     to={`/projects/${chunk[1].slug}`} 
-                    className="block relative w-full h-[280px] sm:h-[360px] md:h-[440px] lg:h-[500px] overflow-hidden group shadow-sm bg-zinc-100 cursor-pointer"
+                    className="block relative w-full h-[200px] xs:h-[250px] sm:h-[340px] md:h-[440px] lg:h-[500px] overflow-hidden group shadow-sm bg-zinc-100 cursor-pointer"
                   >
                     <img 
                       src={resolveAssetUrl(chunk[1].featuredImage?.url || chunk[1].featuredImageId, '/default-project.png')} 
@@ -54,7 +54,7 @@ const NcProjectsGrid = ({ projects = [] }) => {
                 {chunk[2] && (
                   <Link 
                     to={`/projects/${chunk[2].slug}`} 
-                    className="block relative w-full h-[280px] sm:h-[360px] md:h-[440px] lg:h-[500px] overflow-hidden group shadow-sm bg-zinc-100 cursor-pointer"
+                    className="block relative w-full h-[200px] xs:h-[250px] sm:h-[340px] md:h-[440px] lg:h-[500px] overflow-hidden group shadow-sm bg-zinc-100 cursor-pointer"
                   >
                     <img 
                       src={resolveAssetUrl(chunk[2].featuredImage?.url || chunk[2].featuredImageId, '/default-project.png')} 
@@ -70,7 +70,7 @@ const NcProjectsGrid = ({ projects = [] }) => {
             {chunk[3] && (
               <Link 
                 to={`/projects/${chunk[3].slug}`} 
-                className="block relative w-full h-[340px] sm:h-[440px] md:h-[540px] lg:h-[620px] overflow-hidden group shadow-sm bg-zinc-100 cursor-pointer"
+                className="block relative w-full h-[220px] xs:h-[280px] sm:h-[400px] md:h-[540px] lg:h-[620px] overflow-hidden group shadow-sm bg-zinc-100 cursor-pointer"
               >
                 <img 
                   src={resolveAssetUrl(chunk[3].featuredImage?.url || chunk[3].featuredImageId, '/default-project.png')} 

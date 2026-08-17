@@ -48,8 +48,14 @@ const NatureNavbar = ({ forceDark = false }) => {
     }, 150);
   };
 
-  const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas', '/contact', '/services'];
+  const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas', '/services'];
   const isLightPage = !forceDark && (lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p)));
+
+  const isLinkActive = (href) => {
+    if (!href || href.startsWith('#')) return false;
+    if (href === '/') return location.pathname === '/';
+    return location.pathname === href || (href !== '/' && location.pathname.startsWith(href));
+  };
 
   const navLinks = [
     { name: 'PHILOSOPHY', href: dynamicPaths.mandala },
@@ -88,11 +94,11 @@ const NatureNavbar = ({ forceDark = false }) => {
                   >
                     <button
                       onClick={() => setIsOfferingsOpen(!isOfferingsOpen)}
-                      className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer"
+                      className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#6CA844] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer"
                     >
                       <span>{link.name}</span>
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-[#7BA641]' : ''}`} />
-                      <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
+                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-[#6CA844]' : ''}`} />
+                      <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#6CA844] transition-all duration-300 group-hover:w-full" />
                     </button>
 
                     {isOfferingsOpen && (
@@ -102,23 +108,29 @@ const NatureNavbar = ({ forceDark = false }) => {
                 );
               }
 
+              const isActive = isLinkActive(link.href);
+
               return link.href.startsWith('/') ? (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
+                  className={`font-kanit text-sm tracking-wide transition-colors uppercase py-1 relative group ${
+                    isActive ? 'text-[#6CA844] font-semibold' : 'text-[#000000] hover:text-[#6CA844] font-medium'
+                  }`}
                 >
                   {link.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
+                  <span className={`absolute bottom-0 left-0 h-[1.5px] bg-[#6CA844] transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                 </Link>
               ) : (
                 <a
                   key={link.name}
                   href={link.href}
-                  className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group"
+                  className={`font-kanit text-sm tracking-wide transition-colors uppercase py-1 relative group ${
+                    isActive ? 'text-[#6CA844] font-semibold' : 'text-[#000000] hover:text-[#6CA844] font-medium'
+                  }`}
                 >
                   {link.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
+                  <span className={`absolute bottom-0 left-0 h-[1.5px] bg-[#6CA844] transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                 </a>
               );
             })}
@@ -128,7 +140,7 @@ const NatureNavbar = ({ forceDark = false }) => {
           <div className="hidden lg:block">
             <a
               href="#store"
-              className="font-kanit inline-flex items-center justify-center bg-[#7BA641] hover:bg-[#6b9337] text-white font-medium text-xs tracking-wider px-7 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_4px_15px_rgba(123,166,65,0.4)] uppercase"
+              className="font-kanit inline-flex items-center justify-center bg-[#6CA844] hover:bg-[#5f973a] text-white font-medium text-xs tracking-wider px-7 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_4px_15px_rgba(108,168,68,0.4)] uppercase"
             >
               STORE
             </a>
@@ -170,13 +182,16 @@ const NatureNavbar = ({ forceDark = false }) => {
                 mobileMenuOpen ? 'translate-y-0 scale-100' : '-translate-y-4 scale-95'
               } bg-white/75 backdrop-blur-2xl rounded-2xl p-6 border border-white/60 shadow-[0_8px_32px_0_rgba(0,0,0,0.12),inset_0_1px_0_0_rgba(255,255,255,0.8)] space-y-2 font-kanit`}
             >
-              {navLinks.map((link, idx) => (
-                link.href.startsWith('/') ? (
+              {navLinks.map((link, idx) => {
+                const isActive = isLinkActive(link.href);
+                return link.href.startsWith('/') ? (
                   <Link
                     key={link.name}
                     to={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] hover:bg-black/5 px-4 py-3 rounded-xl border border-transparent hover:border-black/5 transition-all duration-200 uppercase"
+                    className={`block text-sm tracking-wide px-4 py-3 rounded-xl border border-transparent hover:border-black/5 transition-all duration-200 uppercase ${
+                      isActive ? 'text-[#6CA844] font-semibold bg-black/5' : 'text-[#000000] hover:text-[#6CA844] hover:bg-black/5 font-medium'
+                    }`}
                     style={{ transitionDelay: `${idx * 30}ms` }}
                   >
                     {link.name}
@@ -186,17 +201,19 @@ const NatureNavbar = ({ forceDark = false }) => {
                     key={link.name}
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] hover:bg-black/5 px-4 py-3 rounded-xl border border-transparent hover:border-black/5 transition-all duration-200 uppercase"
+                    className={`block text-sm tracking-wide px-4 py-3 rounded-xl border border-transparent hover:border-black/5 transition-all duration-200 uppercase ${
+                      isActive ? 'text-[#6CA844] font-semibold bg-black/5' : 'text-[#000000] hover:text-[#6CA844] hover:bg-black/5 font-medium'
+                    }`}
                     style={{ transitionDelay: `${idx * 30}ms` }}
                   >
                     {link.name}
                   </a>
-                )
-              ))}
+                );
+              })}
               <a
                 href="#store"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-center bg-[#7BA641]/90 hover:bg-[#7BA641] text-white font-medium text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-[0_4px_15px_rgba(123,166,65,0.4)] backdrop-blur-md transition-all duration-300 uppercase mt-4"
+                className="block text-center bg-[#6CA844] hover:bg-[#5f973a] text-white font-medium text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-[0_4px_15px_rgba(108,168,68,0.4)] backdrop-blur-md transition-all duration-300 uppercase mt-4"
               >
                 STORE
               </a>
@@ -243,11 +260,11 @@ const NatureNavbar = ({ forceDark = false }) => {
                 >
                   <button
                     onClick={() => setIsOfferingsOpen(!isOfferingsOpen)}
-                    className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer"
+                    className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-[#6CA844] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer"
                   >
                     <span>{link.name}</span>
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-emerald-400' : ''}`} />
-                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-[#6CA844]' : ''}`} />
+                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#6CA844] transition-all duration-300 group-hover:w-full" />
                   </button>
 
                   {isOfferingsOpen && (
@@ -257,23 +274,29 @@ const NatureNavbar = ({ forceDark = false }) => {
               );
             }
 
+            const isActive = isLinkActive(link.href);
+
             return link.href.startsWith('/') ? (
               <Link
                 key={link.name}
                 to={link.href}
-                className="font-kanit text-sm font-medium  tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group"
+                className={`font-kanit text-sm tracking-wide transition-colors uppercase py-1 relative group ${
+                  isActive ? 'text-[#6CA844] font-semibold' : 'text-zinc-100 hover:text-[#6CA844] font-medium'
+                }`}
               >
                 {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
+                <span className={`absolute bottom-0 left-0 h-[1.5px] bg-[#6CA844] transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </Link>
             ) : (
               <a
                 key={link.name}
                 href={link.href}
-                className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group"
+                className={`font-kanit text-sm tracking-wide transition-colors uppercase py-1 relative group ${
+                  isActive ? 'text-[#6CA844] font-semibold' : 'text-zinc-100 hover:text-[#6CA844] font-medium'
+                }`}
               >
                 {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
+                <span className={`absolute bottom-0 left-0 h-[1.5px] bg-[#6CA844] transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </a>
             );
           })}
@@ -283,7 +306,7 @@ const NatureNavbar = ({ forceDark = false }) => {
         <div className="hidden lg:block">
           <a
             href="#store"
-            className="font-kanit inline-flex items-center justify-center bg-[#7BA641] hover:bg-[#6b9337] text-white font-medium text-xs tracking-wider px-6 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_0_15px_rgba(123,166,65,0.4)] uppercase"
+            className="font-kanit inline-flex items-center justify-center bg-[#6CA844] hover:bg-[#5f973a] text-white font-medium text-xs tracking-wider px-6 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_0_15px_rgba(108,168,68,0.4)] uppercase"
           >
             STORE
           </a>
@@ -322,15 +345,18 @@ const NatureNavbar = ({ forceDark = false }) => {
           <div
             className={`transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               mobileMenuOpen ? 'translate-y-0 scale-100' : '-translate-y-4 scale-95'
-            } bg-[#070e06]/75 backdrop-blur-2xl rounded-2xl p-6 border border-emerald-500/25 shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.15)] space-y-2 font-kanit`}
+            } bg-[#070e06]/75 backdrop-blur-2xl rounded-2xl p-6 border border-[#6CA844]/30 shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.15)] space-y-2 font-kanit`}
           >
-            {navLinks.map((link, idx) => (
-              link.href.startsWith('/') ? (
+            {navLinks.map((link, idx) => {
+              const isActive = isLinkActive(link.href);
+              return link.href.startsWith('/') ? (
                 <Link
                   key={link.name}
                   to={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 hover:bg-white/10 px-4 py-3 rounded-xl border border-transparent hover:border-emerald-500/20 transition-all duration-200 uppercase"
+                  className={`block text-sm tracking-wide px-4 py-3 rounded-xl border border-transparent transition-all duration-200 uppercase ${
+                    isActive ? 'text-[#6CA844] font-semibold bg-white/10 border-[#6CA844]/30' : 'text-zinc-100 hover:text-[#6CA844] hover:bg-white/10 font-medium'
+                  }`}
                   style={{ transitionDelay: `${idx * 30}ms` }}
                 >
                   {link.name}
@@ -340,17 +366,19 @@ const NatureNavbar = ({ forceDark = false }) => {
                   key={link.name}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 hover:bg-white/10 px-4 py-3 rounded-xl border border-transparent hover:border-emerald-500/20 transition-all duration-200 uppercase"
+                  className={`block text-sm tracking-wide px-4 py-3 rounded-xl border border-transparent transition-all duration-200 uppercase ${
+                    isActive ? 'text-[#6CA844] font-semibold bg-white/10 border-[#6CA844]/30' : 'text-zinc-100 hover:text-[#6CA844] hover:bg-white/10 font-medium'
+                  }`}
                   style={{ transitionDelay: `${idx * 30}ms` }}
                 >
                   {link.name}
                 </a>
-              )
-            ))}
+              );
+            })}
             <a
               href="#store"
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-center bg-[#7BA641]/90 hover:bg-[#7BA641] text-white font-medium text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-[0_4px_20px_rgba(123,166,65,0.4)] backdrop-blur-md transition-all duration-300 border border-emerald-400/30 uppercase mt-4 font-kanit"
+              className="block text-center bg-[#6CA844] hover:bg-[#5f973a] text-white font-medium text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-[0_4px_20px_rgba(108,168,68,0.4)] backdrop-blur-md transition-all duration-300 border border-[#6CA844]/40 uppercase mt-4 font-kanit"
             >
               STORE
             </a>
