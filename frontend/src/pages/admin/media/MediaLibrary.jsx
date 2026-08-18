@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { mediaApi } from '../../../api/media';
 import { resolveAssetUrl } from '../../../utils/assetResolver';
-import { 
-  Upload, Search, Copy, Trash2, X, Image as ImageIcon, 
+import {
+  Upload, Search, Copy, Trash2, X, Image as ImageIcon,
   CheckCircle, Loader2, ArrowLeft, ArrowRight
 } from 'lucide-react';
 import { Can } from '../../../components/shared/Can';
@@ -40,30 +40,30 @@ const MediaLibrary = () => {
   }, [searchTerm, fetchMedia]);
 
   // admin/media/MediaLibrary.jsx
-const handleUpload = async (e) => {
-  const files = e.target.files;
-  if (!files || files.length === 0) return;
+  const handleUpload = async (e) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-  try {
-    setUploading(true);
+    try {
+      setUploading(true);
 
-    const uploadPromises = Array.from(files).map(file => {
-      const formData = new FormData();
-      formData.append('image', file);
-      return mediaApi.uploadImage(formData); 
-    });
+      const uploadPromises = Array.from(files).map(file => {
+        const formData = new FormData();
+        formData.append('image', file);
+        return mediaApi.uploadImage(formData);
+      });
 
-    await Promise.allSettled(uploadPromises);
+      await Promise.allSettled(uploadPromises);
 
-    setPage(1);
-    fetchMedia(searchTerm, 1);
-  } catch (err) {
-    alert('Some uploads might have failed. Please check the library.');
-  } finally {
-    setUploading(false);
-    e.target.value = null; 
-  }
-};
+      setPage(1);
+      fetchMedia(searchTerm, 1);
+    } catch (err) {
+      alert('Some uploads might have failed. Please check the library.');
+    } finally {
+      setUploading(false);
+      e.target.value = null;
+    }
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to permanently delete this media?")) return;
@@ -111,19 +111,19 @@ const handleUpload = async (e) => {
             )}
           </p>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500" />
-            <input 
-              type="text" 
-              placeholder="Search files..." 
+            <input
+              type="text"
+              placeholder="Search files..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9 pr-4 py-2 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 transition-colors"
             />
           </div>
-          
+
           <Can permission="media.upload">
             <label className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 dark:hover:bg-blue-500 transition-colors shadow-sm cursor-pointer disabled:opacity-50">
               {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
@@ -150,14 +150,14 @@ const handleUpload = async (e) => {
             ) : (
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
                 {mediaList.map((media) => (
-                  <div 
-                    key={media.id} 
+                  <div
+                    key={media.id}
                     onClick={() => setSelectedMedia(media)}
                     className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all group ${selectedMedia?.id === media.id ? 'border-blue-500 dark:border-blue-400 shadow-md ring-2 ring-blue-500/20 dark:ring-blue-400/20' : 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-500'}`}
                   >
-                    <img 
-                      src={resolveAssetUrl(media.thumbnailUrl || media.url)} 
-                      alt={media.originalName} 
+                    <img
+                      src={resolveAssetUrl(media.thumbnailUrl || media.url)}
+                      alt={media.originalName}
                       className="w-full h-full object-cover bg-zinc-50 dark:bg-zinc-800"
                       loading="lazy"
                     />
@@ -179,7 +179,7 @@ const handleUpload = async (e) => {
                 Page {page} of {meta.totalPages}
               </span>
               <div className="flex gap-2">
-                <button 
+                <button
                   onClick={() => {
                     const prevPage = Math.max(1, page - 1);
                     setPage(prevPage);
@@ -190,7 +190,7 @@ const handleUpload = async (e) => {
                 >
                   <ArrowLeft className="w-4 h-4" /> Prev
                 </button>
-                <button 
+                <button
                   onClick={() => {
                     const nextPage = Math.min(meta.totalPages, page + 1);
                     setPage(nextPage);
@@ -211,9 +211,9 @@ const handleUpload = async (e) => {
           <div className="w-1/3 bg-zinc-50 dark:bg-zinc-950 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-y-auto hidden md:flex flex-col animate-in slide-in-from-right-4 duration-300 transition-colors">
             <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-zinc-900 sticky top-0 z-10 transition-colors">
               <h2 className="font-bold text-zinc-800 dark:text-zinc-100">Attachment Details</h2>
-              <button onClick={() => setSelectedMedia(null)} className="p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full text-zinc-500 dark:text-zinc-400 transition-colors"><X className="w-5 h-5"/></button>
+              <button onClick={() => setSelectedMedia(null)} className="p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full text-zinc-500 dark:text-zinc-400 transition-colors"><X className="w-5 h-5" /></button>
             </div>
-            
+
             <div className="p-6">
               <div className="w-full aspect-video rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 mb-6 shadow-sm">
                 <img src={resolveAssetUrl(selectedMedia.url)} alt={selectedMedia.originalName} className="w-full h-full object-contain" />
@@ -230,14 +230,14 @@ const handleUpload = async (e) => {
               <div className="space-y-3">
                 <label className="block text-sm font-bold text-zinc-800 dark:text-zinc-200">File URL:</label>
                 <div className="flex gap-2">
-                  <input 
-                    type="text" 
-                    readOnly 
-                    value={resolveAssetUrl(selectedMedia.url)} 
+                  <input
+                    type="text"
+                    readOnly
+                    value={resolveAssetUrl(selectedMedia.url)}
                     className="flex-1 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-lg text-xs text-zinc-600 dark:text-zinc-300 focus:outline-none transition-colors"
                   />
                 </div>
-                <button 
+                <button
                   onClick={() => copyToClipboard(selectedMedia.url)}
                   className="w-full py-2.5 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors"
                 >
@@ -248,7 +248,7 @@ const handleUpload = async (e) => {
 
               <Can permission="media.delete">
                 <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-800">
-                  <button 
+                  <button
                     onClick={() => handleDelete(selectedMedia.id)}
                     className="text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 text-sm font-medium flex items-center gap-2 hover:underline transition-colors"
                   >

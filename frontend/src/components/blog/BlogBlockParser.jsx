@@ -7,7 +7,7 @@ const BlockRendererNode = memo(({ block }) => {
   switch (type) {
     case 'image':
       return (
-        <figure className="my-10 w-full rounded-2xl overflow-hidden shadow-sm">
+        <figure className="my-10 w-full rounded-none overflow-hidden shadow-sm">
           <img 
             src={resolveAssetUrl(data?.url)} 
             alt={data?.caption || "Blog Image"} 
@@ -27,7 +27,7 @@ const BlockRendererNode = memo(({ block }) => {
         : `https://www.youtube.com/embed/${data?.videoId}`;
         
       return (
-        <div className="my-10 w-full aspect-video rounded-2xl overflow-hidden shadow-lg border border-zinc-100">
+        <div className="my-10 w-full aspect-video rounded-none overflow-hidden shadow-lg border border-zinc-100">
           <iframe 
             src={embedUrl}
             title="Video Player"
@@ -45,7 +45,7 @@ const BlockRendererNode = memo(({ block }) => {
       return (
         <div className="my-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {imagesArray.map((imgUrl, idx) => (
-            <div key={idx} className="w-full h-[250px] rounded-xl overflow-hidden shadow-sm border border-zinc-100">
+            <div key={idx} className="w-full h-[250px] rounded-none overflow-hidden shadow-sm border border-zinc-100">
               <img src={resolveAssetUrl(imgUrl)} alt="Gallery Item" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
             </div>
           ))}
@@ -54,21 +54,21 @@ const BlockRendererNode = memo(({ block }) => {
     case 'heading':
       return (
         <h2 
-          className="font-kanit text-[28px] md:text-[34px] font-bold text-zinc-900 tracking-tight mb-6 mt-10 text-left"
+          className="font-kanit text-[28px] md:text-[34px] font-medium text-zinc-900 tracking-tight mb-6 mt-10 text-left"
           dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
         />
       );
     case 'paragraph':
       return (
         <div 
-          className="mb-6 text-[16px] md:text-[19px] text-zinc-500 leading-relaxed font-normal text-left prose prose-zinc max-w-none prose-a:text-blue-600 hover:prose-a:text-blue-800"
+          className="font-kanit font-normal mb-6 text-[16px] md:text-[19px] text-zinc-500 leading-relaxed text-left prose prose-zinc max-w-none prose-headings:font-kanit prose-headings:font-medium prose-p:font-kanit prose-p:font-normal prose-li:font-kanit prose-li:font-normal prose-a:text-blue-600 hover:prose-a:text-blue-800"
           dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
         />
       );
     case 'richText':
       return (
         <div 
-          className="prose prose-zinc max-w-none text-left mb-6 text-zinc-500 text-[16px] md:text-[19px] leading-relaxed prose-headings:text-zinc-900 prose-headings:font-bold prose-a:text-blue-600"
+          className="font-kanit font-normal prose prose-zinc max-w-none text-left mb-6 text-zinc-500 text-[16px] md:text-[19px] leading-relaxed prose-headings:text-zinc-900 prose-headings:font-kanit prose-headings:font-medium prose-p:font-kanit prose-p:font-normal prose-ul:font-kanit prose-ol:font-kanit prose-li:font-kanit prose-li:font-normal prose-a:text-blue-600"
           dangerouslySetInnerHTML={{ __html: data?.content || '' }}
         />
       );

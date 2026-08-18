@@ -143,7 +143,7 @@ const PreviewPage = () => {
                 <article className="bg-transparent">
                   <div className="flex flex-wrap items-center gap-4 mb-6">
                     {data.blogData.categories?.map(cat => (
-                      <span key={cat.id || cat.name} className="px-4 py-1.5 bg-[#3B82F6] text-white text-xs font-bold rounded-full uppercase tracking-widest">
+                      <span key={cat.id || cat.name} className="px-4 py-1.5 bg-[#6CA844] text-white text-xs font-bold rounded-full uppercase tracking-widest">
                         {cat.name}
                       </span>
                     ))}
@@ -151,7 +151,7 @@ const PreviewPage = () => {
                       {data.blogData.publishedAt ? new Date(data.blogData.publishedAt).toLocaleDateString() : 'Draft Mode'}
                     </span>
                   </div>
-                  <h1 className="font-['Outfit'] text-[36px] md:text-[50px] font-bold text-zinc-900 leading-[1.1] tracking-tight mb-8">
+                  <h1 className="font-kanit text-[36px] md:text-[50px] font-medium text-zinc-900 leading-[1.1] tracking-tight mb-8">
                     {data.blogData.title}
                   </h1>
                   <div className="blog-content-wrapper">

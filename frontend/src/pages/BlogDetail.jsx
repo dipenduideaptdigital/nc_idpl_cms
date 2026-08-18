@@ -78,7 +78,7 @@ const BlogDetail = () => {
               {/* Header Badges */}
               <div className="flex flex-wrap items-center gap-4 mb-6">
                 {blog.categories?.map(cat => (
-                  <span key={cat.id} className="px-4 py-1.5 bg-[#3B82F6] text-white text-xs font-bold rounded-full uppercase tracking-widest">
+                  <span key={cat.id} className="px-4 py-1.5 bg-[#6CA844] text-white text-xs font-bold rounded-full uppercase tracking-widest">
                     {cat.name}
                   </span>
                 ))}
@@ -88,7 +88,7 @@ const BlogDetail = () => {
                 <span className="text-zinc-400 text-sm font-medium">• {blog.readingTime} min read</span>
               </div>
 
-              <h1 className="font-kanit text-[36px] md:text-[50px] font-bold text-zinc-900 leading-[1.1] tracking-tight mb-8">
+              <h1 className="font-kanit text-[36px] md:text-[50px] font-medium text-zinc-900 leading-[1.1] tracking-tight mb-8">
                 {blog.title}
               </h1>
 

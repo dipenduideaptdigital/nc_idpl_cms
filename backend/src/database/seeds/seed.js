@@ -28,12 +28,12 @@ const PERMISSIONS = [
   // MEDIA
   { name: "View Media", slug: "media.view", module: "MEDIA" },
   { name: "Upload Media", slug: "media.upload", module: "MEDIA" },
-  { name: "Edit Media", slug: "media.edit", module: "MEDIA" }, 
+  { name: "Edit Media", slug: "media.edit", module: "MEDIA" },
   { name: "Delete Media", slug: "media.delete", module: "MEDIA" },
 
   // CONTACTS
   { name: "View Contacts", slug: "contact.view", module: "CONTACTS" },
-  { name: "Assign Contacts", slug: "contact.assign", module: "CONTACTS" }, 
+  { name: "Assign Contacts", slug: "contact.assign", module: "CONTACTS" },
   { name: "Resolve Contacts", slug: "contact.resolve", module: "CONTACTS" },
   { name: "Delete Contacts", slug: "contact.delete", module: "CONTACTS" },
 

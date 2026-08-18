@@ -96,13 +96,13 @@ const WhatTheySaySection = ({ data }) => {
 
           {/* Secondary Card Container - Hidden on smaller screens (`lg:block`) */}
           {testimonials.length > 1 && (
-            <div className="hidden lg:block w-full max-w-[360px] relative rounded-xs overflow-hidden shadow-lg group mt-24">
+            <div className="hidden lg:block w-full max-w-[370px] relative rounded-xs overflow-hidden shadow-lg group mt-8 sm:mt-12 ml-25">
               <div className="aspect-[4/4.5] w-full relative">
                 <img src={getImageUrl(secondaryItem.image)} alt={secondaryItem.name || 'Testimonial'} className="w-full h-full object-cover object-left" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent p-6 flex flex-col justify-end text-white">
-                  <h4 className="font-kanit font-bold text-base sm:text-lg mb-0.5">{secondaryItem.name}</h4>
-                  <p className="font-kanit text-xs text-zinc-300 mb-3">{secondaryItem.location}</p>
-                  <p className="font-kanit font-light text-xs leading-relaxed text-zinc-200/90 line-clamp-3">{secondaryItem.comment}</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-40% to-transparent p-5 sm:p-6 flex flex-col justify-end text-white">
+                  <h4 className="font-kanit font-medium text-base sm:text-lg text-white mb-0.5">{secondaryItem.name}</h4>
+                  <p className="font-kanit font-medium text-xs sm:text-sm text-white/90 mb-2">{secondaryItem.location}</p>
+                  <p className="font-kanit font-light text-xs sm:text-[13px] leading-relaxed text-white/95 line-clamp-4">{secondaryItem.comment}</p>
                 </div>
               </div>
             </div>
@@ -110,7 +110,7 @@ const WhatTheySaySection = ({ data }) => {
 
           {/* Desktop Navigation Buttons */}
           {testimonials.length > 1 && (
-            <div className="hidden lg:flex items-center justify-end gap-3 mt-6 w-full max-w-[360px]">
+            <div className="hidden lg:flex items-center justify-end gap-5 mt-6 w-full max-w-[360px] ml-20">
               <button 
                 onClick={handlePrev} 
                 className="w-10 h-10 rounded-full bg-[#f0f4ec] hover:bg-[#7BA641] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group" 
@@ -130,14 +130,14 @@ const WhatTheySaySection = ({ data }) => {
         </div>
 
         {/* Right Column: Featured Single Primary Card for Mobile/Tablet & Desktop */}
-        <div className="lg:col-span-7 flex flex-col items-center lg:items-start w-full mt-4 lg:mt-10">
-          <div className="w-full max-w-[600px] relative rounded-xs overflow-hidden shadow-2xl mt-0 lg:mt-48 ml-0 lg:ml-10 mx-auto lg:mx-0">
-            <div className="w-full aspect-[4/5] sm:aspect-[768/850] min-h-[360px] xs:min-h-[420px] sm:min-h-[500px] lg:min-h-[640px] relative">
+        <div className="lg:col-span-6 flex flex-col items-center lg:items-start w-full mt-4 lg:mt-60">
+          <div className="w-full max-w-[620px] relative rounded-xs overflow-hidden shadow-2xl mt-0 ml-0 lg:ml-6 mx-auto lg:mx-0">
+            <div className="w-full aspect-[4/5] sm:aspect-[768/850] min-h-[360px] xs:min-h-[420px] sm:min-h-[500px] lg:min-h-[580px] relative">
               <img src={getImageUrl(activeItem.image)} alt={activeItem.name || 'Testimonial'} className="w-full h-full object-cover object-left" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-55% to-transparent p-6 sm:p-10 flex flex-col justify-end text-white">
-                <h3 className="font-kanit font-bold text-xl sm:text-2xl mb-1">{activeItem.name}</h3>
-                <p className="font-kanit text-sm text-zinc-300 mb-3 font-medium">{activeItem.location}</p>
-                <p className="font-kanit font-light text-xs sm:text-sm leading-relaxed text-zinc-200/90 max-w-lg">{activeItem.comment}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-40% to-transparent p-6 sm:p-8 lg:p-10 flex flex-col justify-end text-white">
+                <h3 className="font-kanit font-medium text-2xl sm:text-3xl lg:text-[32px] text-white mb-1 tracking-tight">{activeItem.name}</h3>
+                <p className="font-kanit font-medium text-sm sm:text-base lg:text-[17px] text-white mb-3 sm:mb-5">{activeItem.location}</p>
+                <p className="font-kanit font-light text-base sm:text-lg lg:text-[19px] leading-snug sm:leading-normal lg:leading-[1.4] text-white/95 max-w-xl">{activeItem.comment}</p>
               </div>
             </div>
           </div>

@@ -68,7 +68,7 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
 
   const handleConfirmSelection = () => {
     if (selectedMedia) {
-      onSelect(selectedMedia.url, selectedMedia.id); 
+      onSelect(selectedMedia.url, selectedMedia.id);
       onClose();
     }
   };
@@ -78,7 +78,7 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-zinc-950/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       <div className="bg-white dark:bg-zinc-900 rounded-2xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl dark:shadow-black/50 overflow-hidden font-sans transition-colors duration-300">
-        
+
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/50 shrink-0 transition-colors duration-300">
           <div className="flex items-center gap-3">
@@ -99,9 +99,9 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
         <div className="px-6 py-3 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between shrink-0 transition-colors duration-300">
           <div className="relative w-64">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500" />
-            <input 
-              type="text" 
-              placeholder="Search images..." 
+            <input
+              type="text"
+              placeholder="Search images..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
@@ -127,16 +127,15 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
               {mediaList.map((media) => (
-                <div 
-                  key={media.id} 
+                <div
+                  key={media.id}
                   onClick={() => setSelectedMedia(media)}
-                  className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${
-                    selectedMedia?.id === media.id ? 'border-blue-600 dark:border-blue-500 shadow-md dark:shadow-black/50 scale-[0.98]' : 'border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/30'
-                  }`}
+                  className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedMedia?.id === media.id ? 'border-blue-600 dark:border-blue-500 shadow-md dark:shadow-black/50 scale-[0.98]' : 'border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/30'
+                    }`}
                 >
-                  <img 
-                    src={resolveAssetUrl(media.thumbnailUrl || media.url)} 
-                    alt={media.originalName} 
+                  <img
+                    src={resolveAssetUrl(media.thumbnailUrl || media.url)}
+                    alt={media.originalName}
                     className="w-full h-full object-cover bg-white dark:bg-zinc-800"
                     loading="lazy"
                   />
@@ -157,7 +156,7 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
           <div className="flex items-center gap-3">
             {meta?.totalPages > 1 && (
               <>
-                <button 
+                <button
                   onClick={() => {
                     const prevPage = Math.max(1, page - 1);
                     setPage(prevPage);
@@ -171,7 +170,7 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
                 <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 transition-colors duration-300">
                   {page} / {meta.totalPages}
                 </span>
-                <button 
+                <button
                   onClick={() => {
                     const nextPage = Math.min(meta.totalPages, page + 1);
                     setPage(nextPage);
@@ -185,12 +184,12 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect }) => {
               </>
             )}
           </div>
-          
+
           <div className="flex gap-3">
             <button onClick={onClose} className="px-5 py-2.5 text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">
               Cancel
             </button>
-            <button 
+            <button
               onClick={handleConfirmSelection}
               disabled={!selectedMedia}
               className="px-6 py-2.5 bg-blue-600 dark:bg-blue-500 text-white text-sm font-bold rounded-xl hover:bg-blue-700 dark:hover:bg-blue-400 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
