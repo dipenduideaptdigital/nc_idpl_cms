@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import personImg from '../../assets/nc_home/person.png';
 
 const getAssetUrl = (path) => {
@@ -21,11 +22,16 @@ const getAssetUrl = (path) => {
   return `${baseUrl}${pathStr.startsWith('/') ? pathStr : `/${pathStr}`}`;
 };
 
-const RipplesIntroSection = ({ data }) => {
+const RipplesIntroSection = ({ data, showQuoteBanner }) => {
+  const location = useLocation();
+  const isGulmoPage = location?.pathname?.toLowerCase().includes('gulmo') || 
+                      (typeof window !== 'undefined' && window.location.pathname.toLowerCase().includes('gulmo'));
+
   const personImageSrc = data?.personImage ? getAssetUrl(data.personImage) : personImg;
+  const shouldShowQuote = !isGulmoPage && showQuoteBanner !== false && data?.showQuoteBanner !== false && data?.hideQuoteBanner !== true;
 
   return (
-    <section className="w-full bg-white select-none font-kanit pb-16 sm:pb-20 md:pb-28 overflow-hidden">
+    <section className={`w-full bg-white select-none font-kanit ${shouldShowQuote ? 'pb-16 sm:pb-20 md:pb-28' : 'pb-8 sm:pb-12 md:pb-16'} overflow-hidden`}>
       {/* Top Intro Section */}
       <div className="max-w-7xl mx-auto pt-10 sm:pt-16 md:pt-24 lg:pt-28 pb-2 px-5 sm:px-8 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 md:gap-16 items-start">
@@ -78,34 +84,36 @@ const RipplesIntroSection = ({ data }) => {
       </div>
 
       {/* Bottom Navy Banner: Prominent Overlapping Image & Spacious Quote */}
-      <div className="w-full bg-[#0e222b] mt-20 xs:mt-24 sm:mt-32 md:mt-40 mb-12 sm:mb-16 md:mb-20 py-8 sm:py-10 md:py-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-20 relative">
-          <div className="grid grid-cols-12 gap-4 xs:gap-6 sm:gap-10 md:gap-12 items-center">
-            
-            {/* Person Image (Left Side - Symmetrical Overlap across ALL screens) */}
-            <div className="col-span-5 sm:col-span-5 md:col-span-6 relative z-10 flex justify-start -my-10 xs:-my-12 sm:-my-18 md:-my-28 lg:-my-32">
-              <div className="w-full max-w-[200px] xs:max-w-[250px] sm:max-w-[340px] md:max-w-[440px] lg:max-w-[500px] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.4)] rounded-xs border border-white/15">
-                <img
-                  src={personImageSrc}
-                  alt={data?.authorName || "Takashi Amano"}
-                  className="w-full h-auto object-cover block"
-                />
+      {shouldShowQuote && (
+        <div className="w-full bg-[#0e222b] mt-20 xs:mt-24 sm:mt-32 md:mt-40 mb-12 sm:mb-16 md:mb-20 py-8 sm:py-10 md:py-14">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-20 relative">
+            <div className="grid grid-cols-12 gap-4 xs:gap-6 sm:gap-10 md:gap-12 items-center">
+              
+              {/* Person Image (Left Side - Symmetrical Overlap across ALL screens) */}
+              <div className="col-span-5 sm:col-span-5 md:col-span-6 relative z-10 flex justify-start -my-10 xs:-my-12 sm:-my-18 md:-my-28 lg:-my-32">
+                <div className="w-full max-w-[200px] xs:max-w-[250px] sm:max-w-[340px] md:max-w-[440px] lg:max-w-[500px] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.4)] rounded-xs border border-white/15">
+                  <img
+                    src={personImageSrc}
+                    alt={data?.authorName || "Takashi Amano"}
+                    className="w-full h-auto object-cover block"
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Quote & Author Signature (Right Side - Elegant Typography) */}
-            <div className="col-span-7 sm:col-span-7 md:col-span-6 space-y-2 xs:space-y-3 sm:space-y-4 py-2 sm:py-6 md:py-10 pl-1 sm:pl-4 text-left text-white">
-              <blockquote className="font-kanit text-sm xs:text-base sm:text-2xl md:text-3xl lg:text-[34px] font-normal leading-snug sm:leading-tight tracking-wide whitespace-pre-line">
-                {data?.quote || '“To know Mother Nature is to love her smallest creations.”'}
-              </blockquote>
-              <p className="font-kanit text-xs xs:text-sm sm:text-xl md:text-2xl font-normal italic tracking-wide text-[#8CB84D] sm:text-zinc-200 whitespace-pre-line pt-1">
-                {data?.authorName || '–Takashi Amano'}
-              </p>
-            </div>
+              {/* Quote & Author Signature (Right Side - Elegant Typography) */}
+              <div className="col-span-7 sm:col-span-7 md:col-span-6 space-y-2 xs:space-y-3 sm:space-y-4 py-2 sm:py-6 md:py-10 pl-1 sm:pl-4 text-left text-white">
+                <blockquote className="font-kanit text-sm xs:text-base sm:text-2xl md:text-3xl lg:text-[34px] font-normal leading-snug sm:leading-tight tracking-wide whitespace-pre-line">
+                  {data?.quote || '“To know Mother Nature is to love her smallest creations.”'}
+                </blockquote>
+                <p className="font-kanit text-xs xs:text-sm sm:text-xl md:text-2xl font-normal italic tracking-wide text-[#8CB84D] sm:text-zinc-200 whitespace-pre-line pt-1">
+                  {data?.authorName || '–Takashi Amano'}
+                </p>
+              </div>
 
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };

@@ -20,8 +20,8 @@ const GulmoPage = () => {
       {/* Hero Section */}
       <GulmoHero />
 
-      {/* Intro & Takashi Amano Quote Section */}
-      <RipplesIntroSection />
+      {/* Intro Section (Takashi Amano quote banner hidden on Gulmo page) */}
+      <RipplesIntroSection showQuoteBanner={false} />
 
       {/* Terrariums, Paludariums & Indoor Gardens Showcase */}
       <GulmoTerrariumSection />

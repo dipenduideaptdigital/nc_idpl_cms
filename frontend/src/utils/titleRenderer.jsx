@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const renderTitle = (titleText, highlightClass = "text-[#3b82f6] transition-colors duration-300 hover:text-blue-400") => {
+export const renderTitle = (titleText, highlightClass = "text-[#6CA844] transition-colors duration-300 hover:text-[#568a35]") => {
   if (!titleText) return null;
   
   // Split by newline first to support manual line breaks

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Default Partner Logos from nc_logo
 import juwelLogo from '../../assets/nc_logo/juwel.png';
@@ -27,6 +27,9 @@ const defaultPartnerLogos = [
 ];
 
 const OurPartnersSection = ({ data }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+
   // Fallbacks for Text
   const mainTitle1 = data?.mainTitle1 || "OUR";
   const italicTitle = data?.italicTitle || "partners";
@@ -43,9 +46,34 @@ const OurPartnersSection = ({ data }) => {
     return defaultPartnerLogos[index];
   };
 
-  // Split into 2 columns (0,1,2 for Col 1 and 3,4,5 for Col 2)
+  // Split into 2 columns for Desktop
   const column1Partners = [getLogo(0), getLogo(1), getLogo(2)];
   const column2Partners = [getLogo(3), getLogo(4), getLogo(5)];
+
+  // All 6 partner logos formatted into pairs for Mobile / Tablet Carousel
+  const allPartners = [
+    getLogo(0), getLogo(3), // Slide 1: JUWEL & NTLABS
+    getLogo(1), getLogo(4), // Slide 2: Oase & ADA
+    getLogo(2), getLogo(5), // Slide 3: Still Water & Chihiros
+  ];
+
+  // Auto-slide every 4 seconds leftwards on smaller screens
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsTransitioning(true);
+      setCurrentIndex((prev) => prev + 1);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleTransitionEnd = () => {
+    if (currentIndex >= 3) {
+      setIsTransitioning(false);
+      setCurrentIndex(0);
+    }
+  };
+
   if (data?.isVisible === false) return null;
   return (
     <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 overflow-hidden select-none">
@@ -110,31 +138,83 @@ const OurPartnersSection = ({ data }) => {
 
         </div>
 
-        {/* Right Column: Staggered Partner Logos Grid */}
-        <div className="lg:col-span-7 grid grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-start">
+        {/* Right Column: Desktop Staggered Grid vs Mobile Auto-Sliding Carousel */}
+        <div className="lg:col-span-7 w-full">
           
-          {/* Left Column of Logos */}
-          <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8">
-            {column1Partners.map((logoUrl, index) => (
-              <div
-                key={`col1-${index}`}
-                className="bg-white rounded-[10px] p-4 sm:p-8 lg:p-10 flex items-center justify-center h-[130px] sm:h-[180px] lg:h-[220px] shadow-[4px_4px_14.5px_-3px_#00000026] transition-all duration-300 hover:scale-[1.02]"
-              >
-                {logoUrl && <img src={logoUrl} alt="Partner" className="max-h-12 sm:max-h-16 lg:max-h-20 w-auto max-w-[85%] object-contain" />}
-              </div>
-            ))}
+          {/* Desktop View (Staggered 2-column Grid) */}
+          <div className="hidden lg:grid grid-cols-2 gap-8 items-start">
+            {/* Left Column of Logos */}
+            <div className="flex flex-col gap-8">
+              {column1Partners.map((logoUrl, index) => (
+                <div
+                  key={`col1-${index}`}
+                  className="bg-white rounded-[10px] p-10 flex items-center justify-center h-[220px] shadow-[4px_4px_14.5px_-3px_#00000026] transition-all duration-300 hover:scale-[1.02]"
+                >
+                  {logoUrl && <img src={logoUrl} alt="Partner" className="max-h-20 w-auto max-w-[85%] object-contain" />}
+                </div>
+              ))}
+            </div>
+
+            {/* Right Column of Logos (Staggered vertical offset) */}
+            <div className="flex flex-col gap-8 mt-16">
+              {column2Partners.map((logoUrl, index) => (
+                <div
+                  key={`col2-${index}`}
+                  className="bg-white rounded-[10px] p-10 flex items-center justify-center h-[220px] shadow-[4px_4px_14.5px_-3px_#00000026] transition-all duration-300 hover:scale-[1.02]"
+                >
+                  {logoUrl && <img src={logoUrl} alt="Partner" className="max-h-20 w-auto max-w-[85%] object-contain" />}
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Right Column of Logos (Staggered / Offset vertically on desktop) */}
-          <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8 mt-6 sm:mt-12 lg:mt-16">
-            {column2Partners.map((logoUrl, index) => (
-              <div
-                key={`col2-${index}`}
-                className="bg-white rounded-[10px] p-4 sm:p-8 lg:p-10 flex items-center justify-center h-[130px] sm:h-[180px] lg:h-[220px] shadow-[4px_4px_14.5px_-3px_#00000026] transition-all duration-300 hover:scale-[1.02]"
-              >
-                {logoUrl && <img src={logoUrl} alt="Partner" className="max-h-12 sm:max-h-16 lg:max-h-20 w-auto max-w-[85%] object-contain" />}
+          {/* Mobile / Tablet View (Auto-sliding 2 partner logos per view leftwards every 4s) */}
+          <div className="block lg:hidden w-full overflow-hidden relative">
+            <div 
+              className={`flex w-[400%] ${isTransitioning ? 'transition-transform duration-700 ease-in-out' : 'transition-none'}`}
+              style={{ transform: `translateX(-${currentIndex * 25}%)` }}
+              onTransitionEnd={handleTransitionEnd}
+            >
+              {/* Slide 1: JUWEL & NTLABS */}
+              <div className="w-1/4 grid grid-cols-2 gap-3 sm:gap-4 px-1">
+                <div className="bg-white rounded-[10px] p-4 sm:p-6 flex items-center justify-center h-[130px] sm:h-[160px] shadow-[4px_4px_14.5px_-3px_#00000026]">
+                  {allPartners[0] && <img src={allPartners[0]} alt="Partner" className="max-h-12 sm:max-h-16 w-auto max-w-[85%] object-contain" />}
+                </div>
+                <div className="bg-white rounded-[10px] p-4 sm:p-6 flex items-center justify-center h-[130px] sm:h-[160px] shadow-[4px_4px_14.5px_-3px_#00000026]">
+                  {allPartners[1] && <img src={allPartners[1]} alt="Partner" className="max-h-12 sm:max-h-16 w-auto max-w-[85%] object-contain" />}
+                </div>
               </div>
-            ))}
+
+              {/* Slide 2: Oase & ADA */}
+              <div className="w-1/4 grid grid-cols-2 gap-3 sm:gap-4 px-1">
+                <div className="bg-white rounded-[10px] p-4 sm:p-6 flex items-center justify-center h-[130px] sm:h-[160px] shadow-[4px_4px_14.5px_-3px_#00000026]">
+                  {allPartners[2] && <img src={allPartners[2]} alt="Partner" className="max-h-12 sm:max-h-16 w-auto max-w-[85%] object-contain" />}
+                </div>
+                <div className="bg-white rounded-[10px] p-4 sm:p-6 flex items-center justify-center h-[130px] sm:h-[160px] shadow-[4px_4px_14.5px_-3px_#00000026]">
+                  {allPartners[3] && <img src={allPartners[3]} alt="Partner" className="max-h-12 sm:max-h-16 w-auto max-w-[85%] object-contain" />}
+                </div>
+              </div>
+
+              {/* Slide 3: Still Water & Chihiros */}
+              <div className="w-1/4 grid grid-cols-2 gap-3 sm:gap-4 px-1">
+                <div className="bg-white rounded-[10px] p-4 sm:p-6 flex items-center justify-center h-[130px] sm:h-[160px] shadow-[4px_4px_14.5px_-3px_#00000026]">
+                  {allPartners[4] && <img src={allPartners[4]} alt="Partner" className="max-h-12 sm:max-h-16 w-auto max-w-[85%] object-contain" />}
+                </div>
+                <div className="bg-white rounded-[10px] p-4 sm:p-6 flex items-center justify-center h-[130px] sm:h-[160px] shadow-[4px_4px_14.5px_-3px_#00000026]">
+                  {allPartners[5] && <img src={allPartners[5]} alt="Partner" className="max-h-12 sm:max-h-16 w-auto max-w-[85%] object-contain" />}
+                </div>
+              </div>
+
+              {/* Slide 4 (Clone of Slide 1 for infinite continuous left loop): JUWEL & NTLABS */}
+              <div className="w-1/4 grid grid-cols-2 gap-3 sm:gap-4 px-1">
+                <div className="bg-white rounded-[10px] p-4 sm:p-6 flex items-center justify-center h-[130px] sm:h-[160px] shadow-[4px_4px_14.5px_-3px_#00000026]">
+                  {allPartners[0] && <img src={allPartners[0]} alt="Partner" className="max-h-12 sm:max-h-16 w-auto max-w-[85%] object-contain" />}
+                </div>
+                <div className="bg-white rounded-[10px] p-4 sm:p-6 flex items-center justify-center h-[130px] sm:h-[160px] shadow-[4px_4px_14.5px_-3px_#00000026]">
+                  {allPartners[1] && <img src={allPartners[1]} alt="Partner" className="max-h-12 sm:max-h-16 w-auto max-w-[85%] object-contain" />}
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>

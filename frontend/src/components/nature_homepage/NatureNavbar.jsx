@@ -48,8 +48,12 @@ const NatureNavbar = ({ forceDark = false }) => {
     }, 150);
   };
 
-  const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas', '/services'];
-  const isLightPage = !forceDark && (lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p)));
+  const currentPath = location.pathname.toLowerCase();
+  const isAboutPage = currentPath.includes('about');
+  const isMandalaPage = currentPath.includes('mandala');
+  const isServicesPage = currentPath.includes('services');
+
+  const isLightPage = !forceDark && (isAboutPage || isMandalaPage || isServicesPage);
 
   const isLinkActive = (href) => {
     if (!href || href.startsWith('#')) return false;
@@ -73,12 +77,22 @@ const NatureNavbar = ({ forceDark = false }) => {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center group">
-            <img
-              src={naturecubeLogo}
-              alt="NatureCube"
-              className="h-10 sm:h-12 w-auto object-contain"
-            />
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="flex flex-col">
+              <div className="flex items-center tracking-[0.12em] text-[#000000] uppercase font-kanit">
+                <span className="text-2xl md:text-3xl font-light">NATURE</span>
+                <span className="text-2xl md:text-3xl font-normal ml-0.5">C</span>
+                <img
+                  src={leaveIcon}
+                  alt="NatureCube Leaf"
+                  className="w-5 h-5 md:w-6 md:h-6 object-contain inline-block mx-0.5 filter brightness-90 contrast-125"
+                />
+                <span className="text-2xl md:text-3xl font-normal">BE</span>
+              </div>
+              <span className="font-kanit text-[8px] md:text-[9.5px] tracking-[0.26em] text-zinc-600 font-light uppercase mt-0.5 text-center">
+                LIVING ART UNDER WATER
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation Links */}

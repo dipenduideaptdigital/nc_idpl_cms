@@ -8,10 +8,10 @@ const BlockRendererNode = memo(({ block }) => {
     case 'image':
       return (
         <figure className="my-10 w-full rounded-none overflow-hidden shadow-sm">
-          <img 
-            src={resolveAssetUrl(data?.url)} 
-            alt={data?.caption || "Blog Image"} 
-            className="w-full h-auto object-cover" 
+          <img
+            src={resolveAssetUrl(data?.url)}
+            alt={data?.caption || "Blog Image"}
+            className="w-full h-auto object-cover"
           />
           {data?.caption && (
             <figcaption className="text-center text-sm text-zinc-500 italic mt-3">
@@ -22,13 +22,13 @@ const BlockRendererNode = memo(({ block }) => {
       );
     case 'video':
       const isVimeo = data?.platform === 'vimeo';
-      const embedUrl = isVimeo 
+      const embedUrl = isVimeo
         ? `https://player.vimeo.com/video/${data?.videoId}`
         : `https://www.youtube.com/embed/${data?.videoId}`;
-        
+
       return (
         <div className="my-10 w-full aspect-video rounded-none overflow-hidden shadow-lg border border-zinc-100">
-          <iframe 
+          <iframe
             src={embedUrl}
             title="Video Player"
             className="w-full h-full"
@@ -53,33 +53,33 @@ const BlockRendererNode = memo(({ block }) => {
       );
     case 'heading':
       return (
-        <h2 
+        <h2
           className="font-kanit text-[28px] md:text-[34px] font-medium text-zinc-900 tracking-tight mb-6 mt-10 text-left"
           dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
         />
       );
     case 'paragraph':
       return (
-        <div 
-          className="font-kanit font-normal mb-6 text-[16px] md:text-[19px] text-zinc-500 leading-relaxed text-left prose prose-zinc max-w-none prose-headings:font-kanit prose-headings:font-medium prose-p:font-kanit prose-p:font-normal prose-li:font-kanit prose-li:font-normal prose-a:text-blue-600 hover:prose-a:text-blue-800"
+        <div
+          className="font-kanit font-normal mb-6 text-[16px] md:text-[19px] text-zinc-500 leading-relaxed text-left prose prose-zinc max-w-none prose-headings:font-kanit prose-headings:font-medium prose-p:font-kanit prose-p:font-normal prose-li:font-kanit prose-li:font-normal prose-a:text-[#6CA844] hover:prose-a:text-[#568a35]"
           dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
         />
       );
     case 'richText':
       return (
-        <div 
-          className="font-kanit font-normal prose prose-zinc max-w-none text-left mb-6 text-zinc-500 text-[16px] md:text-[19px] leading-relaxed prose-headings:text-zinc-900 prose-headings:font-kanit prose-headings:font-medium prose-p:font-kanit prose-p:font-normal prose-ul:font-kanit prose-ol:font-kanit prose-li:font-kanit prose-li:font-normal prose-a:text-blue-600"
+        <div
+          className="font-kanit font-normal prose prose-zinc max-w-none text-left mb-6 text-zinc-500 text-[16px] md:text-[19px] leading-relaxed prose-headings:text-zinc-900 prose-headings:font-kanit prose-headings:font-medium prose-p:font-kanit prose-p:font-normal prose-ul:font-kanit prose-ol:font-kanit prose-li:font-kanit prose-li:font-normal prose-a:text-[#6CA844] hover:prose-a:text-[#568a35]"
           dangerouslySetInnerHTML={{ __html: data?.content || '' }}
         />
       );
     case 'quote':
       return (
-        <div className="bg-[#EBF5FF] rounded-3xl p-8 md:p-12 relative mt-8 mb-8 overflow-hidden flex flex-col items-center justify-center text-center min-h-[200px]">
-          <div className="absolute top-2 opacity-20 left-1/2 -translate-x-1/2 font-serif text-[150px] leading-none text-[#3B82F6] select-none pointer-events-none">
+        <div className="bg-[#F4F9F0] rounded-3xl p-8 md:p-12 relative mt-8 mb-8 overflow-hidden flex flex-col items-center justify-center text-center min-h-[200px]">
+          <div className="absolute top-2 opacity-20 left-1/2 -translate-x-1/2 font-serif text-[150px] leading-none text-[#6CA844] select-none pointer-events-none">
             &ldquo;
           </div>
           <div className="relative z-10 pt-4">
-            <div 
+            <div
               className="text-lg md:text-2xl font-bold text-zinc-900 leading-snug mb-4 max-w-2xl mx-auto italic prose prose-lg prose-zinc max-w-none prose-p:my-0"
               dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
             />

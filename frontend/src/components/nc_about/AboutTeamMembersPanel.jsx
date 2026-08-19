@@ -87,13 +87,13 @@ const AboutTeamMembersPanel = ({ data }) => {
 
         </div>
 
-        {/* Right Column: Wide Cut-Out Team Group Photo */}
-        <div className="lg:col-span-6 relative flex items-center justify-center h-full">
+        {/* Right Column: Wide Cut-Out Team Group Photo (Increased size) */}
+        <div className="lg:col-span-6 relative flex items-center justify-center h-full z-10">
           <div className="relative w-full flex justify-center items-center">
             <img
               src={data?.groupImage ? resolveAssetUrl(data.groupImage) : team5Img}
               alt="NatureCube Team Group"
-              className="w-full h-[900px] max-h-[85vh] object-contain drop-shadow-xl"
+              className="w-full sm:w-[115%] lg:w-[120%] ml-10 max-w-none h-auto max-h-[92vh] object-contain drop-shadow-2xl scale-105 sm:scale-115 lg:scale-125 transition-transform duration-300 origin-center lg:origin-right"
             />
           </div>
         </div>

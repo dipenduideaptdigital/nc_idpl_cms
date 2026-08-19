@@ -57,7 +57,7 @@ const OfferingsMegaMenu = ({ onClose }) => {
               />
             </div>
             <div className="flex-1 flex items-center justify-center px-4">
-              <span className="font-kanit font-normal text-base sm:text-lg text-zinc-800 group-hover:text-[#7BA641] transition-colors">
+              <span className="font-kanit font-normal text-base sm:text-lg text-zinc-800 group-hover:text-[#6CA844] transition-colors">
                 Ripple
               </span>
             </div>
@@ -77,7 +77,7 @@ const OfferingsMegaMenu = ({ onClose }) => {
               />
             </div>
             <div className="flex-1 flex items-center justify-center px-4">
-              <span className="font-kanit font-normal text-base sm:text-lg text-zinc-800 group-hover:text-[#7BA641] transition-colors">
+              <span className="font-kanit font-normal text-base sm:text-lg text-zinc-800 group-hover:text-[#6CA844] transition-colors">
                 Gulmo
               </span>
             </div>
@@ -93,7 +93,7 @@ const OfferingsMegaMenu = ({ onClose }) => {
             <Link
               to={dynamicLinks.prakriti}
               onClick={onClose}
-              className="block font-kanit font-normal text-base sm:text-lg text-zinc-800 hover:text-[#7BA641] transition-colors"
+              className="block font-kanit font-normal text-base sm:text-lg text-zinc-800 hover:text-[#6CA844] transition-colors"
             >
               Prakriti LAB
             </Link>
@@ -102,7 +102,7 @@ const OfferingsMegaMenu = ({ onClose }) => {
             <Link
               to={dynamicLinks.workshop}
               onClick={onClose}
-              className="block font-kanit font-normal text-base sm:text-lg text-zinc-800 hover:text-[#7BA641] transition-colors"
+              className="block font-kanit font-normal text-base sm:text-lg text-zinc-800 hover:text-[#6CA844] transition-colors"
             >
               Workshop
             </Link>
