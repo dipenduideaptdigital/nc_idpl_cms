@@ -18,7 +18,6 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
     if (id) fetchStatus();
   }, [id, entityType]);
 
-  // Click outside to close
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setIsOpen(false);
@@ -44,11 +43,9 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
     try {
       setGenerating(true);
       const res = await api.generatePreviewLink(id);
-      const generatedUrl = res.data.previewUrl;
-      const finalUrl = generatedUrl;
       setStatus({ 
         isActive: true, 
-        url: finalUrl, 
+        url: res.data.previewUrl, 
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() 
       });
       setIsOpen(true);
@@ -61,7 +58,7 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
 
   const handleRevoke = async (e) => {
     if (e) e.preventDefault();
-    if (!window.confirm("Revoke this link? Clients won't be able to view it anymore.")) return;
+    if (!window.confirm("Revoke this link? Clients won't be able to view the preview anymore.")) return;
     try {
       setLoading(true);
       await api.revokePreviewLink(id);
@@ -85,13 +82,13 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
 
   if (!id) {
     return (
-      <button type="button" disabled className="px-4 py-2.5 bg-zinc-100 text-zinc-400 rounded-xl text-sm font-medium border border-zinc-200 cursor-not-allowed flex items-center gap-2">
+      <button type="button" disabled className="h-[42px] px-4 bg-zinc-100 dark:bg-zinc-800/50 text-zinc-400 dark:text-zinc-500 rounded-xl text-sm font-medium border border-zinc-200 dark:border-zinc-700/50 cursor-not-allowed flex items-center gap-2 transition-colors">
         <Eye className="w-4 h-4" /> Save to Preview
       </button>
     );
   }
 
-  if (loading) return <div className="w-32 h-10 animate-pulse bg-zinc-200 rounded-xl"></div>;
+  if (loading) return <div className="w-32 h-[42px] animate-pulse bg-zinc-200 dark:bg-zinc-800 rounded-xl"></div>;
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -101,40 +98,49 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
         onClick={(e) => {
           e.preventDefault();
           if (status?.isActive) {
-            setIsOpen(!isOpen); // Toggle dropdown if active
+            setIsOpen(!isOpen);
           } else {
-            handleGenerate(e); // Generate if not active
+            handleGenerate(e);
           }
         }}
-        className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all flex items-center gap-2 shadow-sm outline-none focus:ring-2 focus:ring-amber-500/20 ${
+        className={`h-[42px] px-4 rounded-xl text-sm font-medium border transition-all duration-300 flex items-center gap-2 shadow-sm outline-none focus:ring-2 focus:ring-amber-500/20 ${
           status?.isActive 
-            ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100' 
-            : 'bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50'
+            ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-500/30 hover:bg-amber-100 dark:hover:bg-amber-500/20' 
+            : 'bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800'
         }`}
       >
-        {generating ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Eye className="w-4 h-4" />}
-        {status?.isActive ? 'Preview Active' : 'Generate Preview'}
+        {generating ? (
+          <RefreshCw className="w-4 h-4 animate-spin" />
+        ) : status?.isActive ? (
+          <span className="relative flex h-2.5 w-2.5 mr-0.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+        ) : (
+          <Eye className="w-4 h-4" />
+        )}
+        
+        {status?.isActive ? 'Preview Live' : 'Generate Preview'}
         {status?.isActive && <ChevronDown className={`w-4 h-4 opacity-70 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />}
       </button>
 
       {/* Controlled Dropdown Menu */}
       {status?.isActive && isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-2xl shadow-xl border border-zinc-200 p-4 z-50 animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl dark:shadow-black/50 border border-zinc-200 dark:border-zinc-800 p-4 z-50 animate-in fade-in zoom-in-95 duration-200 transition-colors">
           <div className="flex flex-col gap-3">
-            <div className="text-xs font-bold tracking-wider text-zinc-400 uppercase flex items-center gap-1.5">
+            <div className="text-xs font-bold tracking-wider text-zinc-400 dark:text-zinc-500 uppercase flex items-center gap-1.5 border-b border-zinc-100 dark:border-zinc-800 pb-2">
               <Eye className="w-3.5 h-3.5" /> Preview Controls
             </div>
             
-            {/* Logic: Show URL if freshly generated, else show Regenerate option */}
             {status.url ? (
               <>
                 <button 
                   type="button" 
                   onClick={copyToClipboard}
-                  className="flex items-center justify-between w-full p-2.5 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-lg transition-colors text-sm text-zinc-700 font-mono overflow-hidden group/copy"
+                  className="flex items-center justify-between w-full p-2.5 bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg transition-colors text-sm text-zinc-700 dark:text-zinc-300 font-mono overflow-hidden group/copy"
                 >
                   <span className="truncate mr-2 opacity-80 group-hover/copy:opacity-100">{status.url}</span>
-                  {copied ? <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" /> : <Copy className="w-4 h-4 text-zinc-400 shrink-0 group-hover/copy:text-zinc-600" />}
+                  {copied ? <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" /> : <Copy className="w-4 h-4 text-zinc-400 dark:text-zinc-500 shrink-0 group-hover/copy:text-zinc-300" />}
                 </button>
 
                 <div className="flex gap-2 mt-1">
@@ -142,7 +148,7 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
                     href={status.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-medium transition-colors shadow-sm"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/20 rounded-lg text-xs font-bold transition-colors shadow-sm"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> View
                   </a>
@@ -150,7 +156,7 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
                   <button 
                     type="button" 
                     onClick={handleRevoke}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-medium transition-colors border border-red-100"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-lg text-xs font-bold transition-colors border border-red-100 dark:border-red-500/20"
                   >
                     <Trash2 className="w-3.5 h-3.5" /> Revoke
                   </button>
@@ -158,16 +164,16 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
               </>
             ) : (
               <>
-                <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg text-xs text-blue-800 flex items-start gap-2 leading-relaxed">
-                  <ShieldAlert className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-                  <p>Please regenerate to copy the URL again.</p>
+                <div className="p-3 bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 rounded-lg text-xs text-blue-800 dark:text-blue-300 flex items-start gap-2 leading-relaxed transition-colors">
+                  <ShieldAlert className="w-4 h-4 text-blue-500 dark:text-blue-400 shrink-0 mt-0.5" />
+                  <p>URL is hidden for security. Please regenerate to copy the URL again.</p>
                 </div>
                 
                 <div className="flex gap-2 mt-1">
                   <button 
                     type="button" 
                     onClick={handleGenerate}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-medium transition-colors shadow-sm"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 rounded-lg text-xs font-bold transition-colors shadow-sm"
                   >
                     <RefreshCw className="w-3.5 h-3.5" /> Regenerate
                   </button>
@@ -175,7 +181,7 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
                   <button 
                     type="button" 
                     onClick={handleRevoke}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-medium transition-colors border border-red-100"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-lg text-xs font-bold transition-colors border border-red-100 dark:border-red-500/20"
                   >
                     <Trash2 className="w-3.5 h-3.5" /> Revoke
                   </button>
@@ -183,8 +189,8 @@ const PreviewManager = ({ id, entityType = 'page' }) => {
               </>
             )}
             
-            <div className="text-[10px] text-zinc-500 text-center font-medium mt-1 bg-zinc-50 py-1.5 rounded-md border border-zinc-100">
-              Expires: {status.expiresAt ? new Date(status.expiresAt).toLocaleString() : '24 hours from now'}
+            <div className="text-[10px] text-zinc-500 dark:text-zinc-400 text-center font-medium mt-1 bg-zinc-50 dark:bg-zinc-800/50 py-2 rounded-lg border border-zinc-100 dark:border-zinc-800 transition-colors">
+              Expires: {status.expiresAt ? new Date(status.expiresAt).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '24 hours from now'}
             </div>
           </div>
         </div>

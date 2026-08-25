@@ -10,7 +10,9 @@ import {
   Plus,
   Trash2,
   Settings,
-  ChevronDown
+  ChevronDown,
+  CalendarClock,
+  TimerOff
 } from 'lucide-react';
 import DynamicBlockEditor from '../../../components/admin/DynamicBlockEditor';
 import PreviewManager from '../../../components/admin/PreviewManager';
@@ -18,6 +20,11 @@ import { Puck } from '@measured/puck';
 import '@measured/puck/puck.css';
 import { ncPuckConfig } from '../../../config/ncPuck.config';
 import Can from '../../../components/shared/Can';
+
+// ==== NEW TEMPLATE ENGINE IMPORTS ====
+import { TemplatePicker } from '../../../components/admin/templates/TemplatePicker';
+import { TemplateEditor } from '../../../components/admin/editor/TemplateEditor';
+import { generateDefaultContent } from '../../../templates/shared/utils/contentGenerator';
 
 const PageEditor = () => {
   const { id } = useParams();
@@ -34,6 +41,10 @@ const PageEditor = () => {
   const [error, setError] = useState(null);
   const [showBlockMenu, setShowBlockMenu] = useState(false);
   const [isPuckMode, setIsPuckMode] = useState(false);
+  const [isScheduling, setIsScheduling] = useState(false);
+
+  //TEMPLATE ENGINE STATE 
+  const [showTemplatePicker, setShowTemplatePicker] = useState(!isEditMode);
 
   useEffect(() => {
     if (isPuckMode) {
@@ -81,11 +92,14 @@ const PageEditor = () => {
     slug: '',
     excerpt: '',
     status: 'DRAFT',
-    template: isServicesMode && !isEditMode ? 'service-page' : 'default', 
+    templateKey: '',
+    templateVersion: 1,
+    template: isServicesMode && !isEditMode ? 'service-page' : 'default',
     content: { blocks: [] },
     metaTitle: '', metaDescription: '', metaKeywords: '',
     includeInSitemap: true, noIndex: false, noFollow: false,
-    canonicalUrl: '', ogTitle: '', ogDescription: '', ogImageId: null
+    canonicalUrl: '', ogTitle: '', ogDescription: '', ogImageId: null,
+    scheduledUpdateAt: ''
   });
 
   useEffect(() => {
@@ -113,7 +127,6 @@ const PageEditor = () => {
       setLoading(true);
       const data = await pagesApi.getPageById(id);
 
-      // Extract raw slug if the page path is like /services/residential
       let displaySlug = data.data.slug || '';
       if (isServicesMode && data.data.fullPath?.startsWith('/services/')) {
         displaySlug = data.data.fullPath.replace('/services/', '');
@@ -124,6 +137,8 @@ const PageEditor = () => {
         slug: displaySlug,
         excerpt: data.data.excerpt || '',
         status: data.data.status || 'DRAFT',
+        templateKey: data.data.templateKey || '',
+        templateVersion: data.data.templateVersion || 1,
         template: data.data.template || 'default',
         content: data.data.content || { blocks: [] },
         metaTitle: data.data.metaTitle || '',
@@ -135,8 +150,12 @@ const PageEditor = () => {
         canonicalUrl: data.data.canonicalUrl || '',
         ogTitle: data.data.ogTitle || '',
         ogDescription: data.data.ogDescription || '',
-        ogImageId: data.data.ogImageId || null
+        ogImageId: data.data.ogImageId || null,
+        scheduledUpdateAt: data.data.scheduledUpdateAt ? new Date(data.data.scheduledUpdateAt).toISOString().slice(0, 16) : ''
       });
+
+      if (data.data.scheduledUpdateAt) setIsScheduling(true);
+      setShowTemplatePicker(false);
     } catch (err) {
       console.error('Failed to fetch page:', err);
       setError('Failed to load page. It may have been deleted or you lack permissions.');
@@ -150,37 +169,37 @@ const PageEditor = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Block Management
+  //TEMPLATE HANDLERS
+  const handleTemplateSelect = (config) => {
+    setFormData(prev => ({
+      ...prev,
+      templateKey: config.key,
+      templateVersion: config.version,
+      content: generateDefaultContent(config)
+    }));
+    setShowTemplatePicker(false);
+  };
+
+  const handleCancelTemplatePicker = () => {
+    setShowTemplatePicker(false);
+  };
+
+  //LEGACY BLOCK MANAGEMENT
   const addBlock = (type) => {
     let defaultData = {};
-
     switch (type) {
       case 'richText':
         defaultData = { content: '' }; break;
-
       case 'contactForm':
-        defaultData = {
-          formId: '',
-          formTitle: 'Get in Touch',
-          submitButtonText: 'Submit Inquiry',
-          redirectPath: ''
-        }; break;
+        defaultData = { formId: '', formTitle: 'Get in Touch', submitButtonText: 'Submit Inquiry', redirectPath: '' }; break;
       default:
         defaultData = {};
     }
 
-    const newBlock = {
-      id: Date.now().toString(),
-      type: type,
-      data: defaultData
-    };
-
+    const newBlock = { id: Date.now().toString(), type: type, data: defaultData };
     setFormData(prev => ({
       ...prev,
-      content: {
-        ...prev.content,
-        blocks: [...(prev.content.blocks || []), newBlock]
-      }
+      content: { ...prev.content, blocks: [...(prev.content.blocks || []), newBlock] }
     }));
     setShowBlockMenu(false);
   };
@@ -189,28 +208,42 @@ const PageEditor = () => {
     setFormData(prev => {
       const newBlocks = [...(prev.content.blocks || [])];
       newBlocks.splice(index, 1);
-      return {
-        ...prev,
-        content: { ...prev.content, blocks: newBlocks }
-      };
+      return { ...prev, content: { ...prev.content, blocks: newBlocks } };
     });
   };
 
   const updateBlockData = (index, field, value) => {
     setFormData(prev => {
       const newBlocks = [...(prev.content.blocks || [])];
-      newBlocks[index] = {
-        ...newBlocks[index],
-        data: {
-          ...newBlocks[index].data,
-          [field]: value
-        }
-      };
-      return {
-        ...prev,
-        content: { ...prev.content, blocks: newBlocks }
-      };
+      newBlocks[index] = { ...newBlocks[index], data: { ...newBlocks[index].data, [field]: value } };
+      return { ...prev, content: { ...prev.content, blocks: newBlocks } };
     });
+  };
+
+  // SCHEDULE HANDLER 
+  const handleDiscardSchedule = async () => {
+    if (!window.confirm("Are you sure you want to discard the scheduled updates? The page will revert to its current live state.")) return;
+    
+    try {
+      setSaving(true);
+      const payload = { ...formData };
+      if (payload.content && payload.content.blocks) {
+        payload.content.blocks = payload.content.blocks.map(({ id, ...block }) => block);
+      }
+      
+      payload.scheduledUpdateAt = null; 
+      payload.scheduledUpdateData = null;
+      payload.status = formData.status === 'SCHEDULED' ? 'DRAFT' : 'PUBLISHED';
+      
+      await pagesApi.updatePage(id, payload);
+      
+      window.location.reload(); 
+    } catch (err) {
+      console.error('Failed to discard schedule:', err);
+      setError('Failed to discard scheduled updates.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -230,8 +263,15 @@ const PageEditor = () => {
     if (payload.content && payload.content.blocks) {
       payload.content.blocks = payload.content.blocks.map(({ id, ...block }) => block);
     }
+    
     if (!payload.slug || payload.slug.trim() === '') {
       delete payload.slug;
+    }
+
+    if (isScheduling && payload.scheduledUpdateAt) {
+      payload.scheduledUpdateAt = new Date(payload.scheduledUpdateAt).toISOString();
+    } else {
+      payload.scheduledUpdateAt = null;
     }
 
     try {
@@ -262,6 +302,7 @@ const PageEditor = () => {
     );
   }
 
+  // LEGACY PUCK MODE 
   if (isPuckMode) {
     const puckData = {
       content: (formData.content?.blocks || []).map(b => ({
@@ -275,15 +316,10 @@ const PageEditor = () => {
     const handlePuckPublish = async (data) => {
       const blocks = (data.content || []).map(item => {
         const { id, ...cleanProps } = item.props || {};
-        return {
-          type: item.type,
-          data: cleanProps,
-          id: Date.now().toString() + Math.random().toString()
-        };
+        return { type: item.type, data: cleanProps, id: Date.now().toString() + Math.random().toString() };
       });
 
       const updatedContent = { ...formData.content, blocks };
-
       setFormData(prev => ({ ...prev, content: updatedContent }));
       setIsPuckMode(false);
 
@@ -303,6 +339,12 @@ const PageEditor = () => {
       }
       if (!payload.slug || payload.slug.trim() === '') {
         delete payload.slug;
+      }
+
+      if (isScheduling && payload.scheduledUpdateAt) {
+        payload.scheduledUpdateAt = new Date(payload.scheduledUpdateAt).toISOString();
+      } else {
+        payload.scheduledUpdateAt = null;
       }
 
       try {
@@ -363,38 +405,94 @@ const PageEditor = () => {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Can permission="page.preview">
-            <PreviewManager id={isEditMode ? id : null} entityType="page" />
-          </Can>
+        <div className="flex items-start gap-3">
+          <div className="hidden sm:block">
+            <Can permission="page.preview">
+              <PreviewManager id={isEditMode ? id : null} entityType="page" />
+            </Can>
+          </div>
+          
+          {/* Minimal Scheduler UI */}
+          {isScheduling && (
+            <div className="animate-in slide-in-from-right-4 fade-in duration-300">
+              <input
+                type="datetime-local"
+                name="scheduledUpdateAt"
+                value={formData.scheduledUpdateAt}
+                onChange={handleInputChange}
+                className="h-[42px] px-3 border border-indigo-200 dark:border-indigo-500/30 rounded-xl bg-indigo-50/80 dark:bg-indigo-500/10 text-indigo-800 dark:text-indigo-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-colors [color-scheme:light] dark:[color-scheme:dark] shadow-sm cursor-pointer"
+              />
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsScheduling(!isScheduling);
+              if (isScheduling) setFormData(p => ({ ...p, scheduledUpdateAt: '' }));
+            }}
+            className={`w-[42px] h-[42px] rounded-xl border transition-all duration-300 flex items-center justify-center shadow-sm ${
+              isScheduling 
+                ? 'bg-indigo-100 dark:bg-indigo-500/20 border-indigo-300 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-400' 
+                : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-200 dark:hover:border-indigo-500/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/10'
+            }`}
+            title={isScheduling ? 'Cancel Schedule' : 'Schedule Future Update'}
+          >
+            <CalendarClock className="w-5 h-5" />
+          </button>
+
+          {formData.scheduledUpdateAt && (
+            <button
+              type="button"
+              onClick={handleDiscardSchedule}
+              className="h-[42px] px-4 rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 text-sm font-semibold transition-colors flex items-center gap-2 shadow-sm"
+              title="Discard future updates and revert to live version"
+            >
+              <TimerOff className="w-4 h-4" />
+              Discard Schedule
+            </button>
+          )}
+
           <select
             name="status"
             value={formData.status}
-            onChange={handleInputChange}
-            className="px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-zinc-100/10 cursor-pointer transition-colors"
+            onChange={(e) => {
+              handleInputChange(e);
+              if (e.target.value === 'SCHEDULED') {
+                setIsScheduling(true);
+              } else if (e.target.value === 'DRAFT' || e.target.value === 'ARCHIVED') {
+                setIsScheduling(false);
+                setFormData(p => ({ ...p, scheduledUpdateAt: '' }));
+              }
+            }}
+            className="h-[42px] px-4 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-zinc-100/10 cursor-pointer transition-colors"
           >
             <option value="DRAFT">Draft</option>
-            
             <Can 
               permission="page.publish" 
               fallback={<option value="PUBLISHED" disabled>Published (Requires Permission)</option>}
             >
               <option value="PUBLISHED">Published</option>
             </Can>
-
+            <option value="SCHEDULED">Scheduled</option>
             {isEditMode && <option value="ARCHIVED">Archived</option>}
           </select>
+
           <button
             type="submit"
-            disabled={saving}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-medium hover:bg-zinc-800 dark:hover:bg-white transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20 dark:focus:ring-zinc-100/20 disabled:opacity-70"
+            disabled={saving || (isScheduling && !formData.scheduledUpdateAt) || (formData.status === 'SCHEDULED' && !formData.scheduledUpdateAt)}
+            className={`h-[42px] inline-flex items-center justify-center gap-2 px-6 rounded-xl font-medium transition-colors shadow-sm focus:ring-2 disabled:opacity-70 ${
+              isScheduling 
+                ? 'bg-indigo-600 hover:bg-indigo-700 text-white focus:ring-indigo-600/20' 
+                : 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-white focus:ring-zinc-900/20 dark:focus:ring-zinc-100/20'
+            }`}
           >
             {saving ? (
-              <div className="w-4 h-4 border-2 border-white dark:border-zinc-900 border-t-transparent rounded-full animate-spin"></div>
+              <div className={`w-4 h-4 border-2 border-t-transparent rounded-full animate-spin ${isScheduling ? 'border-white' : 'border-white dark:border-zinc-900'}`}></div>
             ) : (
               <Save className="w-4 h-4" />
             )}
-            Save
+            {isScheduling ? 'Schedule' : 'Save'}
           </button>
         </div>
       </div>
@@ -464,91 +562,110 @@ const PageEditor = () => {
             </div>
           </div>
 
-          {/* Page Builder / Content Blocks */}
-          <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 space-y-5 transition-colors duration-300">
-            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3 transition-colors duration-300">
-              <div className="flex items-center gap-4">
-                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 transition-colors duration-300">
-                  <Type className="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
-                  Content Blocks
-                </h2>
-                <button
-                  type="button"
-                  onClick={() => setIsPuckMode(true)}
-                  className="px-3 py-1.5 bg-blue-900 dark:bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors flex items-center gap-1.5"
-                >
-                  <Layout className="w-4 h-4" /> Edit visually with Puck
-                </button>
+          {/* THE STRANGLER PATTERN ROUTER */}
+          
+          {showTemplatePicker ? (
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
+              <TemplatePicker 
+                onSelect={handleTemplateSelect} 
+                onCancelLegacy={handleCancelTemplatePicker} 
+              />
+            </div>
+
+          ) : formData.templateKey ? (
+            <TemplateEditor
+              templateKey={formData.templateKey}
+              content={formData.content}
+              onChange={(newContent) => setFormData(prev => ({ ...prev, content: newContent }))}
+            />
+
+          ) : (
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 space-y-5 transition-colors duration-300">
+              <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3 transition-colors duration-300">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 transition-colors duration-300">
+                    <Type className="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
+                    Legacy Content Blocks
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => setIsPuckMode(true)}
+                    className="px-3 py-1.5 bg-blue-900 dark:bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors flex items-center gap-1.5"
+                  >
+                    <Layout className="w-4 h-4" /> Edit visually with Puck
+                  </button>
+                </div>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowBlockMenu(!showBlockMenu)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors"
+                  >
+                    <Plus className="w-4 h-4" /> Add Block <ChevronDown className="w-4 h-4" />
+                  </button>
+                  
+                  {showBlockMenu && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl dark:shadow-black/50 rounded-xl py-2 z-20 max-h-[300px] overflow-y-auto transition-colors duration-300">
+                      <div className="px-3 py-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider transition-colors duration-300">Available Blocks</div>
+                      {AVAILABLE_BLOCKS.map(b => (
+                        <button
+                          key={b.type}
+                          type="button"
+                          onClick={() => addBlock(b.type)}
+                          className="w-full text-left px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
+                        >
+                          {b.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setShowBlockMenu(!showBlockMenu)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors"
-                >
-                  <Plus className="w-4 h-4" /> Add Block <ChevronDown className="w-4 h-4" />
-                </button>
-                
-                {showBlockMenu && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl dark:shadow-black/50 rounded-xl py-2 z-20 max-h-[300px] overflow-y-auto transition-colors duration-300">
-                    <div className="px-3 py-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider transition-colors duration-300">Available Blocks</div>
-                    {AVAILABLE_BLOCKS.map(b => (
-                      <button
-                        key={b.type}
-                        type="button"
-                        onClick={() => addBlock(b.type)}
-                        className="w-full text-left px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
-                      >
-                        {b.label}
-                      </button>
-                    ))}
+
+              <div className="space-y-4">
+                {(!formData.content?.blocks || formData.content.blocks.length === 0) ? (
+                  <div className="text-center py-10 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border border-dashed border-zinc-200 dark:border-zinc-700 transition-colors duration-300">
+                    <Type className="w-8 h-8 text-zinc-300 dark:text-zinc-600 mx-auto mb-2" />
+                    <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 transition-colors duration-300">No content blocks yet.</p>
+                    <button
+                      type="button"
+                      onClick={() => addBlock('richText')}
+                      className="mt-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors"
+                    >
+                      Add a Text Block
+                    </button>
                   </div>
+                ) : (
+                  formData.content.blocks.map((block, index) => (
+                    <div key={block.id || index} className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
+                      <div className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <button
+                          type="button"
+                          onClick={() => removeBlock(index)}
+                          className="bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 p-1.5 rounded-full shadow-sm hover:bg-red-200 dark:hover:bg-red-500/30 transition-colors"
+                          title="Remove Block"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="px-4 py-2 bg-zinc-50 dark:bg-zinc-800/50 border-b border-zinc-200 dark:border-zinc-800 rounded-t-xl text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider flex items-center transition-colors duration-300">
+                        <span className="bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 w-5 h-5 rounded flex items-center justify-center mr-2 transition-colors duration-300">{index + 1}</span>
+                        {AVAILABLE_BLOCKS.find(b => b.type === block.type)?.label || block.type}
+                      </div>
+                      <div className="p-0 border-t border-zinc-200 dark:border-zinc-800 relative transition-colors duration-300">
+                        <DynamicBlockEditor
+                          block={block}
+                          index={index}
+                          updateBlockData={updateBlockData}
+                        />
+                      </div>
+                    </div>
+                  ))
                 )}
               </div>
             </div>
+          )}
 
-            <div className="space-y-4">
-              {(!formData.content?.blocks || formData.content.blocks.length === 0) ? (
-                <div className="text-center py-10 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border border-dashed border-zinc-200 dark:border-zinc-700 transition-colors duration-300">
-                  <Type className="w-8 h-8 text-zinc-300 dark:text-zinc-600 mx-auto mb-2" />
-                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 transition-colors duration-300">No content blocks yet.</p>
-                  <button
-                    type="button"
-                    onClick={() => addBlock('richText')}
-                    className="mt-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors"
-                  >
-                    Add a Text Block
-                  </button>
-                </div>
-              ) : (
-                formData.content.blocks.map((block, index) => (
-                  <div key={block.id || index} className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
-                    <div className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                      <button
-                        type="button"
-                        onClick={() => removeBlock(index)}
-                        className="bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 p-1.5 rounded-full shadow-sm hover:bg-red-200 dark:hover:bg-red-500/30 transition-colors"
-                        title="Remove Block"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="px-4 py-2 bg-zinc-50 dark:bg-zinc-800/50 border-b border-zinc-200 dark:border-zinc-800 rounded-t-xl text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider flex items-center transition-colors duration-300">
-                      <span className="bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 w-5 h-5 rounded flex items-center justify-center mr-2 transition-colors duration-300">{index + 1}</span>
-                      {AVAILABLE_BLOCKS.find(b => b.type === block.type)?.label || block.type}
-                    </div>
-                    <div className="p-0 border-t border-zinc-200 dark:border-zinc-800 relative transition-colors duration-300">
-                      <DynamicBlockEditor
-                        block={block}
-                        index={index}
-                        updateBlockData={updateBlockData}
-                      />
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Sidebar Area */}

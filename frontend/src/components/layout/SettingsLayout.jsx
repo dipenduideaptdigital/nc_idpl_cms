@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, Navigate, useLocation } from 'react-router-dom';
-import { Settings, Users, Shield, SlidersHorizontal, Layout, MessageSquare, ShieldAlert, Send } from 'lucide-react';
+import { Settings, Users, Shield, SlidersHorizontal, Layout, MessageSquare, ShieldAlert, Send, Layers, PanelBottom } from 'lucide-react';
 import { usePermission } from '../../hooks/usePermission';
 import { useAuth } from '../../context/AuthContext';
 
@@ -11,6 +11,8 @@ const SettingsLayout = () => {
 
   const tabs = [
     { name: 'General', path: '/admin/settings/general', icon: SlidersHorizontal, permission: 'settings.manage' },
+    { name: 'Menu Builder', path: '/admin/settings/menu-builder', icon: Layers, permission: 'settings.manage' },
+    { name: 'Footer Settings', path: '/admin/settings/footer', icon: PanelBottom, permission: 'settings.manage' },
     { name: 'Team & Users', path: '/admin/settings/users', icon: Users, permission: 'user.view' },
     { name: 'Access Roles', path: '/admin/settings/roles', icon: Shield, permission: 'role.view' },
     { name: 'CMS Settings', path: '/admin/settings/cms', icon: Layout, permission: 'settings.manage' },
@@ -38,7 +40,7 @@ const SettingsLayout = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-10 max-w-6xl mx-auto text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
       {/* Settings Navigation Sidebar */}
-      <div className="lg:w-60 flex-shrink-0 border-r border-zinc-200 dark:border-zinc-800 lg:pr-6">
+      <div className="lg:w-60 flex-shrink-0 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-800 pb-6 lg:pb-0 lg:pr-6">
         <div className="sticky top-6 transition-colors duration-300">
           <div className="border-b border-zinc-200 dark:border-zinc-800 pb-4 mb-6 transition-colors duration-300">
             <p className="text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400 font-bold mb-1">Workspace</p>

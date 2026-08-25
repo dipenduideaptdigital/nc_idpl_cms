@@ -21,7 +21,6 @@ const NatureFeaturesBar = ({ featuresData }) => {
     ? featuresData 
     : DEFAULT_FEATURES;
 
-  // Auto-slide every 4 seconds in the same direction (leftwards)
   useEffect(() => {
     const timer = setInterval(() => {
       setIsTransitioning(true);
@@ -32,7 +31,6 @@ const NatureFeaturesBar = ({ featuresData }) => {
   }, []);
 
   const handleTransitionEnd = () => {
-    // When reaching the cloned first slide (index 2), reset instantly to index 0 without animation
     if (currentIndex >= 2) {
       setIsTransitioning(false);
       setCurrentIndex(0);

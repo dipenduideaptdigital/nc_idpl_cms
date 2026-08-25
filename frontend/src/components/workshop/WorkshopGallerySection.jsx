@@ -97,9 +97,6 @@ const WorkshopGallerySection = ({ data }) => {
 
       <div className="max-w-7xl mx-auto relative z-10">
 
-        {/* ========================================================================= */}
-        {/* MOBILE & TABLET (< md) SMOOTH CAROUSEL LAYOUT */}
-        {/* ========================================================================= */}
         <div className="block md:hidden">
 
           {/* Carousel Track */}
@@ -173,9 +170,6 @@ const WorkshopGallerySection = ({ data }) => {
 
         </div>
 
-        {/* ========================================================================= */}
-        {/* DESKTOP (md+) ORIGINAL GRID LAYOUT */}
-        {/* ========================================================================= */}
         <div className="hidden md:flex flex-col space-y-5 sm:space-y-6">
           <div className="grid grid-cols-12 gap-4 sm:gap-5 items-start">
             <div className="col-span-4 overflow-hidden rounded-none bg-zinc-100 shadow-sm transition-transform duration-500 hover:scale-[1.01]">

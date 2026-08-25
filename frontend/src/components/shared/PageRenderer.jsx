@@ -40,7 +40,7 @@ import MandalaHorizontalScroll from '../nc_mandala/MandalaHorizontalScroll';
 
 import NcProjectsHero from '../nc_projects/NcProjectsHero';
 
-const BlockMapper = memo(({ block, index, template }) => {
+const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
   if (data?.isVisible === false) return null;
 
@@ -50,7 +50,7 @@ const BlockMapper = memo(({ block, index, template }) => {
     case 'ripplesHero': 
       return <RipplesHero key={index} data={data} />;
     case 'ripplesIntro': 
-      return <RipplesIntroSection key={index} data={data} showQuoteBanner={template !== 'gulmo-page'} />;
+      return <RipplesIntroSection key={index} data={data} />;
     case 'ripplesNatureAquarium': 
       return <RipplesNatureAquariumSection key={index} data={data} />;
     case 'ripplesLetsBegin': 
@@ -148,9 +148,9 @@ const PageRenderer = memo(({ blocks, template }) => {
   }
 
   return (
-    <div className={`animate-in fade-in duration-700 w-full ${wrapperBg}`}>
+    <div className={`animate-in fade-in duration-700 min-h-screen w-full ${wrapperBg}`}>
       {blocks.map((block, index) => (
-        <BlockMapper key={block.id || index} block={block} index={index} template={template} />
+        <BlockMapper key={block.id || index} block={block} index={index} />
       ))}
     </div>
   );

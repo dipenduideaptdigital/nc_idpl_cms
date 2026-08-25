@@ -7,6 +7,7 @@ import PageRenderer from '../components/shared/PageRenderer';
 import SEOHead from '../components/shared/SEOHead'; 
 import MainLayout from '../components/layout/MainLayout';
 import WhatsAppButton from '../components/shared/WhatsAppButton';
+import { TemplateRenderer } from '../templates/shared/runtime/TemplateRenderer';
 
 const DynamicPage = () => {
   const location = useLocation();
@@ -65,6 +66,15 @@ const DynamicPage = () => {
   }
 
   if (error || !page) return null;
+
+  if (page.templateKey) {
+    return (
+      <MainLayout>
+        <SEOHead data={page} type="page" />
+        <TemplateRenderer page={page} />
+      </MainLayout>
+    );
+  }
 
   const isFullScreenTemplate = ['about-page', 'mandala-page'].includes(page.template);
 

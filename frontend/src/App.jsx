@@ -44,6 +44,8 @@ const TaxonomyManager = lazy(() => import('./pages/admin/blogs/TaxonomyManager')
 const GeneralSettings = lazy(() => import('./pages/admin/settings/GeneralSettings'));
 const CmsSettings = lazy(() => import('./pages/admin/settings/CmsSettings'));
 const WhatsAppSettings = lazy(() => import('./pages/admin/settings/WhatsAppSettings'));
+const HeaderMenuBuilder = lazy(() => import('./pages/admin/settings/HeaderMenuBuilder'));
+const FooterSettings = lazy(() => import('./pages/admin/settings/FooterSettings'));
 const SystemStateSettings = lazy(() => import('./pages/admin/settings/SystemStateSettings'));
 const RolesList = lazy(() => import('./pages/admin/roles/RolesList'));
 const RoleEditor = lazy(() => import('./pages/admin/roles/RoleEditor'));
@@ -123,6 +125,8 @@ function App() {
 
               <Route path="settings" element={<SettingsLayout />}>
                 <Route path="general" element={<GeneralSettings />} />
+                <Route path="menu-builder" element={<HeaderMenuBuilder />} />
+                <Route path="footer" element={<FooterSettings />} />
                 <Route path="users" element={<UsersList />} />
                 <Route path="roles" element={<RolesList />} />
                 <Route path="roles/create" element={<RoleEditor />} />
