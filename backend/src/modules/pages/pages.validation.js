@@ -21,6 +21,13 @@ export const ALLOWED_TEMPLATES = [
   "workshop-page"
 ];
 
+// ==== NEW TEMPLATE ENGINE KEYS ====
+// Whenever we create a new template in frontend, add its key here
+export const ALLOWED_TEMPLATE_KEYS = [
+  "landing-basic",
+  "landing-ripples"
+];
+
 const richTextBlockSchema = z.object({ type: z.literal("richText"), data: z.record(z.any()).default({}) });
 
 const ripplesHeroBlockSchema = z.object({ type: z.literal("ripplesHero"), data: z.record(z.any()).default({}) });
@@ -29,6 +36,7 @@ const ripplesNatureAquariumBlockSchema = z.object({ type: z.literal("ripplesNatu
 const ripplesLetsBeginBlockSchema = z.object({ type: z.literal("ripplesLetsBegin"), data: z.record(z.any()).default({}) });
 const ripplesAquascapeBlockSchema = z.object({ type: z.literal("ripplesAquascape"), data: z.record(z.any()).default({}) });
 const getStartedCtaBlockSchema = z.object({ type: z.literal("getStartedCta"), data: z.record(z.any()).default({}) });
+
 // GULMO BLOCKS
 const gulmoHeroBlockSchema = z.object({ type: z.literal("gulmoHero"), data: z.record(z.any()).default({}) });
 const gulmoTerrariumBlockSchema = z.object({ type: z.literal("gulmoTerrarium"), data: z.record(z.any()).default({}) });
@@ -91,7 +99,6 @@ const blockSchema = z.discriminatedUnion("type", [
   gulmoOurProjectsBlockSchema,
   gulmoLetsBeginBlockSchema,
   gulmoConceptBlockSchema,
-
   // PRAKRITI LAB BLOCKS
   prakritiHeroBlockSchema,
   prakritiIntroBlockSchema,
@@ -101,15 +108,12 @@ const blockSchema = z.discriminatedUnion("type", [
   prakritiLabShowcaseBlockSchema,
   prakritiGetInTouchBlockSchema,
   prakritiLetsBeginBlockSchema,
-
   // WORKSHOP BLOCKS
   workshopHeroBlockSchema,
   workshopDetailsBlockSchema,
   workshopGalleryBlockSchema,
-
   // ABOUT BLOCK
   aboutHorizontalScrollBlockSchema,
-
   // MANDALA BLOCK
   mandalaHorizontalScrollBlockSchema,
   // PROJECTS BANNER BLOCK
@@ -118,11 +122,53 @@ const blockSchema = z.discriminatedUnion("type", [
 
 const pageContentSchema = z.object({
   blocks: z.array(blockSchema).default([]),
-}).default({ blocks: [] });
+}).catchall(z.any()).default({ blocks: [] });
 
 
-// API Request Payload Validation Schemas
-export const createPageSchema = z.object({
+// ==== REUSABLE PUBLISH VALIDATION LOGIC ====
+const publishValidationRules = (data, ctx) => {
+  if (data.status === "PUBLISHED") {
+    // If it's a NEW Template Engine page
+    if (data.templateKey) {
+      if (!ALLOWED_TEMPLATE_KEYS.includes(data.templateKey)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Cannot publish: '${data.templateKey}' is not a valid registered template.`,
+          path: ["templateKey"]
+        });
+      }
+      if (!data.templateVersion) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Cannot publish: Template version is required for modern templates.",
+          path: ["templateVersion"]
+        });
+      }
+      if (!data.content || Object.keys(data.content).length === 0 || (data.content.blocks && data.content.blocks.length === 0 && Object.keys(data.content).length === 1)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Cannot publish: Content cannot be empty.",
+          path: ["content"]
+        });
+      }
+    } 
+    // If it's a LEGACY NatureCube page
+    else {
+      if (!data.content || !Array.isArray(data.content.blocks) || data.content.blocks.length === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Cannot publish: Legacy page requires at least one content block.",
+          path: ["content"]
+        });
+      }
+    }
+  }
+};
+
+
+// ==== BASE SCHEMA OBJECT (WITHOUT REFINEMENTS) ====
+// We define the base object first so we can reuse it for partial updates safely
+const basePageSchemaObject = z.object({
   title: z.string().trim().min(1, "Title is required").max(150, "Title cannot exceed 150 characters"),
   
   slug: z.string().trim().toLowerCase()
@@ -136,12 +182,16 @@ export const createPageSchema = z.object({
     
   excerpt: z.string().trim().max(1000, "Excerpt cannot exceed 1000 characters").optional().nullable(),
   content: pageContentSchema,
-  status: z.enum(["DRAFT", "PUBLISHED"]).default("DRAFT").optional(),
+  status: z.enum(["DRAFT", "PUBLISHED", "SCHEDULED"]).default("DRAFT").optional(),
+  scheduledUpdateAt: z.string().datetime({ message: "Invalid ISO-8601 datetime format" }).optional().nullable(),
+  scheduledUpdateData: z.any().optional().nullable(),
   
-  // Template Design Execution Hard Security Control
   template: z.enum(ALLOWED_TEMPLATES, {
     errorMap: () => ({ message: "Selected layout design template is not registered or supported by system." })
   }).default("default").optional(),
+
+  templateKey: z.string().max(100).optional().nullable(),
+  templateVersion: z.number().int().optional().nullable(),
 
   parentId: z.string().cuid("Invalid Parent ID structural trace context format identifier").optional().nullable(),
   menuOrder: z.coerce.number().int("Menu display re-ordering parameter metrics must remain a valid integer").default(0).optional(),
@@ -153,7 +203,6 @@ export const createPageSchema = z.object({
   
   featuredImageId: z.string().cuid("Invalid Media Asset digital asset cryptographic unique identity mapping").optional().nullable(),
 
-  // SEO Engine Fields
   includeInSitemap: z.boolean().default(true).optional(),
   noIndex: z.boolean().default(false).optional(),
   noFollow: z.boolean().default(false).optional(),
@@ -161,19 +210,28 @@ export const createPageSchema = z.object({
   ogTitle: z.string().trim().max(150).optional().nullable(),
   ogDescription: z.string().trim().max(500).optional().nullable(),
   ogImageId: z.union([z.string().cuid("Invalid OG Image ID format."), z.literal("")]).optional().nullable(),
-}).strict();
-
-// Core Update Operations Pipeline Matrix Verification Schema 
-export const updatePageSchema = createPageSchema.partial().extend({
-  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
 });
+
+// ==== API REQUEST PAYLOAD VALIDATION SCHEMAS ====
+
+export const createPageSchema = basePageSchemaObject
+  .strict()
+  .superRefine(publishValidationRules);
+
+export const updatePageSchema = basePageSchemaObject
+  .partial()
+  .extend({
+    status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED", "SCHEDULED"]).optional(),
+  })
+  .strict()
+  .superRefine(publishValidationRules);
 
 // Admin Filter Matrix & Pagination Configuration Management Schema Lookups
 export const pageQuerySchema = z.object({
   page: z.coerce.number().int().min(1, "Page tracking parameter must remain greater than 0").default(1),
   limit: z.coerce.number().int().min(1, "Pagination capacity constraint limit must register at least 1 data node").max(100, "Maximum network extraction block limit is capped at 100 records buffer").default(10),
   search: z.string().trim().optional(),
-  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
+  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED", "SCHEDULED"]).optional(),
   template: z.enum(ALLOWED_TEMPLATES).optional(), 
   authorId: z.string().cuid("Invalid corporate author query sequence filter constraint token").optional(),
   parentId: z.string().cuid("Invalid branch structural parent filter query identity token parameter").optional().nullable(), 

@@ -10,6 +10,8 @@ export const serializePage = (page, context = "admin") => {
     content: page.content,
     status: page.status,
     template: page.template,
+    templateKey: page.templateKey,
+    templateVersion: page.templateVersion,
     
     metaTitle: page.metaTitle,
     metaDescription: page.metaDescription,
@@ -23,6 +25,7 @@ export const serializePage = (page, context = "admin") => {
     ogDescription: page.ogDescription,
     
     publishedAt: page.publishedAt,
+    scheduledUpdateAt: page.scheduledUpdateAt,
     createdAt: page.createdAt,
     updatedAt: page.updatedAt,
     

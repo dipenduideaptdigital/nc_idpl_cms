@@ -65,6 +65,8 @@ export const createPageWithRevision = async (pageData, actorId) => {
       content: page.content,
       status: page.status,
       template: page.template,
+      templateKey: page.templateKey,
+      templateVersion: page.templateVersion,
       metaTitle: page.metaTitle,
       metaDescription: page.metaDescription,
       metaKeywords: page.metaKeywords,
@@ -132,19 +134,20 @@ export const softDeletePage = async (page, actorId) => {
   });
 };
 
-export const findPagesList = async ({ skip, take, search, status, template, authorId, sortBy, sortOrder }) => {
+export const findPagesList = async ({ skip, take, search, status, template, authorId, parentId, sortBy, sortOrder }) => {
   const where = { ...activeCondition };
 
   if (status) where.status = status;
   if (template) where.template = template;
   if (authorId) where.authorId = authorId;
+  if (parentId !== undefined) where.parentId = parentId;
 
   if (search) {
     where.OR = [
-      { title: { contains: search, mode: "insensitive" } },
-      { slug: { contains: search, mode: "insensitive" } },
-      { fullPath: { contains: search, mode: "insensitive" } },
-      { metaTitle: { contains: search, mode: "insensitive" } }
+      { title: { contains: search } },
+      { slug: { contains: search } },
+      { fullPath: { contains: search } },
+      { metaTitle: { contains: search } }
     ];
   }
 
@@ -268,6 +271,8 @@ export const restorePageContentSnapshot = async (pageId, snapshotData, actorId) 
         content: snapshotData.content,
         status: snapshotData.status,
         template: snapshotData.template,
+        templateKey: snapshotData.templateKey || null,
+        templateVersion: snapshotData.templateVersion || 1,
         metaTitle: snapshotData.metaTitle,
         metaDescription: snapshotData.metaDescription,
         metaKeywords: snapshotData.metaKeywords,

@@ -89,6 +89,9 @@ const buildFullSnapshot = (page) => ({
   content: page.content,
   status: page.status,
   template: page.template,
+  templateKey: page.templateKey || null,
+  templateVersion: page.templateVersion || null,
+  
   metaTitle: page.metaTitle,
   metaDescription: page.metaDescription,
   metaKeywords: page.metaKeywords,
@@ -130,6 +133,7 @@ export const createNewPage = async (payload, authorId) => {
     authorId,
     updatedById: authorId,
     publishedAt,
+    scheduledUpdateAt: payload.scheduledUpdateAt ? new Date(payload.scheduledUpdateAt) : null,
   };
 
   try {
@@ -155,17 +159,38 @@ export const updateExistingPage = async (id, payload, actorId) => {
     await validateHierarchy(id, payload.parentId);
   }
 
+  if (existingPage.status === "PUBLISHED" && payload.scheduledUpdateAt) {
+    const futureData = { ...payload };
+    delete futureData.scheduledUpdateAt;
+
+    const updateData = {
+      scheduledUpdateAt: new Date(payload.scheduledUpdateAt),
+      scheduledUpdateData: futureData,
+      updatedById: actorId
+    };
+
+    const updatedPage = await repo.updatePageWithRevision(id, updateData, null, actorId);
+    return serializePage(updatedPage, "admin");
+  }
+
+  // ==== NORMAL UPDATE LOGIC ====
   const updateData = { updatedById: actorId };
   const allowedFields = [
     "title", "excerpt", "content", "status", "template", 
     "metaTitle", "metaDescription", "metaKeywords", "featuredImageId",
     "parentId", "menuOrder", "showInMenu", "includeInSitemap", "noIndex",
-    "noFollow", "canonicalUrl", "ogTitle", "ogDescription", "ogImageId"
+    "noFollow", "canonicalUrl", "ogTitle", "ogDescription", "ogImageId",
+    "templateKey", "templateVersion", "scheduledUpdateAt"
   ];
   
   allowedFields.forEach(field => {
     if (payload[field] !== undefined) updateData[field] = payload[field];
   });
+
+  if (payload.scheduledUpdateData === null || payload.scheduledUpdateAt === null) {
+    updateData.scheduledUpdateData = null;
+    updateData.scheduledUpdateAt = null;
+  }
 
   const parentIdChanged = payload.parentId !== undefined && payload.parentId !== existingPage.parentId;
   const slugExplicitlyChanged = payload.slug !== undefined && payload.slug !== existingPage.slug;
@@ -227,6 +252,9 @@ export const duplicatePageDeep = async (originalId, actorId, newParentId = undef
     content: structuredClone(original.content),
     status: "DRAFT",
     template: original.template,
+    templateKey: original.templateKey || null,
+    templateVersion: original.templateVersion || null,
+    
     metaTitle: original.metaTitle,
     metaDescription: original.metaDescription,
     metaKeywords: original.metaKeywords,

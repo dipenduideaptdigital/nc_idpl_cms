@@ -18,6 +18,7 @@ enum PageStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+  SCHEDULED
 }
 
 enum BlogStatus {
@@ -245,7 +246,12 @@ model Page {
   excerpt         String?            @db.Text
   content         Json              
   status          PageStatus         @default(DRAFT)
+  scheduledUpdateData Json?          // Stores future changes for published pages
+  scheduledUpdateAt   DateTime?      // When the future changes should go live
   template        String             @default("default") 
+  
+  templateKey     String?            // Maps to templateRegistry
+  templateVersion Int?               // Version control for backward compatibility
   
   metaTitle       String?
   metaDescription String?            @db.Text
@@ -286,6 +292,7 @@ model Page {
   @@index([deletedAt])
   @@index([status, publishedAt])
   @@index([includeInSitemap])
+  @@index([scheduledUpdateAt])
   @@map("pages")
 }
 

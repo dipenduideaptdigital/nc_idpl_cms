@@ -30,30 +30,15 @@ export const whatsappSettingsSchema = z.object({
 export const footerSchema = z.object({
   content: z.object({
     description: z.string().max(1000).optional(),
-    address: z.string().max(500).optional(),
-    phone: z.string().max(100).optional(),
-    phone2: z.string().max(100).optional(),
-    email: z.string().max(100).optional(),
-    email2: z.string().max(100).optional(),
-    instagram: z.string().max(255).optional(),
-    twitter: z.string().max(255).optional(),
-    facebook: z.string().max(255).optional(),
-    linkedin: z.string().max(255).optional(),
     copyrightText: z.string().max(255).optional(),
+    privacyUrl: z.string().max(255).optional(),
+    termsUrl: z.string().max(255).optional(),
+    sitemapUrl: z.string().max(255).optional(),
     linksTitle1: z.string().max(100).optional(),
     linksTitle2: z.string().max(100).optional(),
-    links1: z.array(
-      z.object({
-        label: z.string().max(100).optional(),
-        url: z.string().max(255).optional(),
-      })
-    ).optional(),
-    links2: z.array(
-      z.object({
-        label: z.string().max(100).optional(),
-        url: z.string().max(255).optional(),
-      })
-    ).optional(),
+    links1: z.array(z.object({ id: z.string().optional(), label: z.string().max(100).optional(), url: z.string().max(255).optional() })).optional(),
+    links2: z.array(z.object({ id: z.string().optional(), label: z.string().max(100).optional(), url: z.string().max(255).optional() })).optional(),
+    socialLinks: z.array(z.object({ id: z.string().optional(), label: z.string().max(100).optional(), url: z.string().max(255).optional() })).optional(),
   }).optional(),
 });
 
@@ -347,4 +332,23 @@ export const ncContactPageSchema = z.object({
     teamBannerImage: z.string().optional(),
     mapEmbedCode: z.string().max(3000).optional()
   })
+});
+
+const baseMenuItemSchema = z.object({
+  id: z.string().min(1, "Menu item ID is required"),
+  label: z.string().trim().min(1, "Navigation label is required").max(100),
+  type: z.enum(["custom", "page"], {
+    errorMap: () => ({ message: "Link type must be 'custom' or 'page'" })
+  }),
+  url: z.string().trim().min(1, "URL is required").max(500),
+});
+
+const menuItemSchema = baseMenuItemSchema.extend({
+  children: z.lazy(() => z.array(menuItemSchema)).default([])
+});
+
+export const headerMenuSchema = z.object({
+  content: z.object({
+    menuItems: z.array(menuItemSchema).default([])
+  }).strict()
 });

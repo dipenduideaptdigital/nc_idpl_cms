@@ -9,6 +9,7 @@ import { systemStateStore } from "./shared/core/systemStateStore.js";
 import { cleanupExpiredTokens } from "./jobs/cleanupExpiredTokens.job.js";
 import { initPreviewCleanupJob } from "./jobs/cleanupPreviewTokens.job.js";
 import { initBlogJobs } from "./jobs/blogs.job.js";
+import { initPageJobs } from "./jobs/pages.job.js";
 
 const server = http.createServer(app);
 
@@ -30,6 +31,7 @@ const startServer = async () => {
     cleanupExpiredTokens();
     initPreviewCleanupJob();
     initBlogJobs();
+    initPageJobs();
     logger.info("Background jobs initialized.");
 
     server.listen(PORT, () => {
