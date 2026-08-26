@@ -29,8 +29,6 @@ const NatureHome = () => {
   const [blogsData, setBlogsData] = useState(null);
   const [whatTheySayData, setWhatTheySayData] = useState(null);
   const [ctaData, setCtaData] = useState(null);
-  
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleOpenModal = () => setIsModalOpen(true);
@@ -39,6 +37,7 @@ const NatureHome = () => {
     window.addEventListener('open-consultation-modal', handleOpenModal);
     window.addEventListener('close-consultation-modal', handleCloseModal);
     const hasSeenModal = sessionStorage.getItem('nc_has_seen_modal');
+    
     let timer;
     if (!hasSeenModal) {
       timer = setTimeout(() => {
@@ -81,20 +80,10 @@ const NatureHome = () => {
 
       } catch (error) {
         console.error("Failed to fetch NatureCube home data:", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchHomeData();
   }, []);
-
-  if (loading) {
-    return (
-      <div className="w-full min-h-screen bg-zinc-50 dark:bg-[#070e06] flex items-center justify-center text-zinc-700 dark:text-[#7BA641] font-sans transition-colors duration-300">
-        Loading NatureCube...
-      </div>
-    );
-  }
 
   return (
     <div className="w-full min-h-screen bg-zinc-50 dark:bg-[#070e06] text-zinc-900 dark:text-white font-sans antialiased transition-colors duration-300">
