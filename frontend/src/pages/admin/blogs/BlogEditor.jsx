@@ -3,7 +3,10 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { blogsApi } from '../../../api/blogs';
 import apiClient from '../../../api/client';
 import { resolveAssetUrl } from '../../../utils/assetResolver';
-import { Save, ArrowLeft, Layout, Type, Plus, Trash2, Settings, ChevronDown, Upload, Calendar } from 'lucide-react';
+import { 
+  Save, ArrowLeft, Layout, Type, Plus, Trash2, Settings, 
+  ChevronDown, Upload, CalendarClock, TimerOff 
+} from 'lucide-react';
 import DynamicBlockEditor from '../../../components/admin/DynamicBlockEditor';
 import Can from '../../../components/shared/Can';
 import PreviewManager from '../../../components/admin/PreviewManager';
@@ -21,6 +24,7 @@ const BlogEditor = () => {
   const [showBlockMenu, setShowBlockMenu] = useState(false);
   const [coverPreview, setCoverPreview] = useState(null);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+  const [isScheduling, setIsScheduling] = useState(false);
 
   const BLOG_BLOCKS = [
     { type: 'richText', label: 'Rich Text Paragraph' },
@@ -32,7 +36,6 @@ const BlogEditor = () => {
     { type: 'divider', label: 'Line Divider' }
   ];
 
-  // Added all Advanced SEO Engine Fields
   const [formData, setFormData] = useState({
     title: '', slug: '', excerpt: '', status: 'DRAFT', publishedAt: '',
     categoryIds: [], tagIds: [], featuredImageId: null, content: { blocks: [] },
@@ -66,11 +69,12 @@ const BlogEditor = () => {
         categoryIds: data.categories.map(c => c.id),
         tagIds: data.tags.map(t => t.id),
         publishedAt: data.publishedAt ? new Date(data.publishedAt).toISOString().slice(0, 16) : '',
-        // Ensure boolean fallbacks for older posts
         includeInSitemap: data.includeInSitemap ?? true,
         noIndex: data.noIndex ?? false,
         noFollow: data.noFollow ?? false,
       });
+
+      if (data.status === 'SCHEDULED') setIsScheduling(true);
 
       if (data.featuredImage) {
         setCoverPreview(resolveAssetUrl(data.featuredImage.url));
@@ -81,7 +85,6 @@ const BlogEditor = () => {
       setLoading(false); 
     }
   };
-
 
   const addBlock = (type) => {
     const newBlock = { id: Date.now().toString(), type, data: {} };
@@ -108,18 +111,45 @@ const BlogEditor = () => {
     });
   };
 
+  const handleDiscardSchedule = async () => {
+    if (!window.confirm("Are you sure you want to discard this schedule? It will revert to DRAFT.")) return;
+    
+    try {
+      setSaving(true);
+      const payload = { ...formData, status: 'DRAFT' };
+      delete payload.publishedAt;
+      
+      await blogsApi.updateBlogPost(id, payload);
+      window.location.reload(); 
+    } catch (err) {
+      console.error('Failed to discard schedule:', err);
+      alert('Failed to discard schedule.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = { ...formData };
-    if (payload.status === 'SCHEDULED' && !payload.publishedAt) return alert('Please set a publish date for scheduled posts.');
-    if (payload.status !== 'SCHEDULED') delete payload.publishedAt;
+    
+    if (payload.status === 'SCHEDULED') {
+      if (!payload.publishedAt) return alert('Please set a publish date for scheduled posts.');
+      payload.publishedAt = new Date(payload.publishedAt).toISOString();
+    } else {
+      delete payload.publishedAt; 
+    }
     
     try {
       setSaving(true);
       if (isEditMode) await blogsApi.updateBlogPost(id, payload);
       else await blogsApi.createBlogPost(payload);
       navigate('/admin/blogs');
-    } catch (err) { alert(err.response?.data?.message || 'Failed to save.'); } finally { setSaving(false); }
+    } catch (err) { 
+      alert(err.response?.data?.message || 'Failed to save.'); 
+    } finally { 
+      setSaving(false); 
+    }
   };
 
   if (loading) return <div className="h-64 flex justify-center items-center"><div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-zinc-900 dark:border-emerald-400"></div></div>;
@@ -127,33 +157,100 @@ const BlogEditor = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 pb-20 font-sans">
       {/* Header */}
-      <div className="flex justify-between items-center bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
         <div className="flex items-center gap-4">
           <Link to="/admin/blogs" className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full text-zinc-900 dark:text-zinc-100"><ArrowLeft className="w-5 h-5"/></Link>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{isEditMode ? 'Edit Blog Post' : 'Draft New Article'}</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{isEditMode ? 'Edit Blog Post' : 'Draft New Article'}</h1>
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1 transition-colors duration-300">
+              {isEditMode ? `Editing: ${formData.title}` : 'Draft a new blog post for your website.'}
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
+        
+        <div className="flex items-start gap-3">
           
-          <Can permission="blog.preview">
-            <PreviewManager id={isEditMode ? id : null} entityType="blog" />
-          </Can>
+          <div className="hidden sm:block">
+            <Can permission="blog.preview">
+              <PreviewManager id={isEditMode ? id : null} entityType="blog" />
+            </Can>
+          </div>
+
+          {/* Scheduler UI */}
+          {isScheduling && (
+            <div className="animate-in slide-in-from-right-4 fade-in duration-300">
+              <input
+                type="datetime-local"
+                name="publishedAt"
+                value={formData.publishedAt}
+                onChange={e => setFormData(p => ({ ...p, publishedAt: e.target.value }))}
+                className="h-[42px] px-3 border border-indigo-200 dark:border-indigo-500/30 rounded-xl bg-indigo-50/80 dark:bg-indigo-500/10 text-indigo-800 dark:text-indigo-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-colors [color-scheme:light] dark:[color-scheme:dark] shadow-sm cursor-pointer"
+              />
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsScheduling(!isScheduling);
+              if (isScheduling) setFormData(p => ({ ...p, publishedAt: '' }));
+            }}
+            className={`w-[42px] h-[42px] rounded-xl border transition-all duration-300 flex items-center justify-center shadow-sm ${
+              isScheduling 
+                ? 'bg-indigo-100 dark:bg-indigo-500/20 border-indigo-300 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-400' 
+                : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-200 dark:hover:border-indigo-500/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/10'
+            }`}
+            title={isScheduling ? 'Cancel Schedule' : 'Schedule Future Publish'}
+          >
+            <CalendarClock className="w-5 h-5" />
+          </button>
+
+          {formData.status === 'SCHEDULED' && isEditMode && (
+            <button
+              type="button"
+              onClick={handleDiscardSchedule}
+              className="h-[42px] px-4 rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 text-sm font-semibold transition-colors flex items-center gap-2 shadow-sm"
+              title="Discard schedule and move to Draft"
+            >
+              <TimerOff className="w-4 h-4" />
+              Discard
+            </button>
+          )}
 
           <select 
             value={formData.status} 
-            onChange={e => setFormData(p => ({...p, status: e.target.value}))} 
-            className="px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-emerald-400/40"
+            onChange={e => {
+              const val = e.target.value;
+              setFormData(p => ({...p, status: val}));
+              if (val === 'SCHEDULED') setIsScheduling(true);
+              else if (val === 'DRAFT' || val === 'ARCHIVED') {
+                setIsScheduling(false);
+                setFormData(p => ({ ...p, publishedAt: '' }));
+              }
+            }} 
+            className="h-[42px] px-4 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-emerald-400/40 transition-colors"
           >
             <option value="DRAFT">Draft</option>
-            
-            <Can permission="blog.publish">
+            <Can permission="blog.publish" fallback={<option value="PUBLISHED" disabled>Published (Requires Permission)</option>}>
               <option value="PUBLISHED">Published</option>
+            </Can>
+            <Can permission="blog.publish">
               <option value="SCHEDULED">Scheduled</option>
             </Can>
+            {isEditMode && <option value="ARCHIVED">Archived</option>}
           </select>
           
-          <button type="submit" disabled={saving} className="flex items-center gap-2 px-6 py-2.5 bg-[#3B82F6] text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-sm focus:ring-2 focus:ring-[#3B82F6]/20 disabled:opacity-70">
+          <button 
+            type="submit" 
+            disabled={saving || (isScheduling && !formData.publishedAt) || (formData.status === 'SCHEDULED' && !formData.publishedAt)} 
+            className={`h-[42px] inline-flex items-center justify-center gap-2 px-6 rounded-xl font-medium transition-colors shadow-sm focus:ring-2 disabled:opacity-70 ${
+              isScheduling 
+                ? 'bg-indigo-600 hover:bg-indigo-700 text-white focus:ring-indigo-600/20' 
+                : 'bg-[#3B82F6] hover:bg-blue-600 text-white focus:ring-[#3B82F6]/20'
+            }`}
+          >
             {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <Save className="w-4 h-4"/>}
-            {saving ? 'Saving...' : 'Save Post'}
+            {isScheduling ? 'Schedule' : 'Save'}
           </button>
         </div>
       </div>
@@ -317,19 +414,13 @@ const BlogEditor = () => {
               </div>
             </div>
           </div>
-
-          {formData.status === 'SCHEDULED' && (
-            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800">
-              <h2 className="text-lg font-bold border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-4 flex items-center gap-2 text-zinc-900 dark:text-zinc-100"><Calendar className="w-5 h-5 text-zinc-400 dark:text-zinc-500"/> Schedule</h2>
-              <input type="datetime-local" value={formData.publishedAt} onChange={e => setFormData(p => ({...p, publishedAt: e.target.value}))} className="w-full px-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-emerald-400/40 bg-zinc-50/50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm"/>
-            </div>
-          )}
         </div>
       </div>
+      
       <div className="flex justify-start mt-8 pt-4">
         <button 
           type="submit" 
-          disabled={saving} 
+          disabled={saving || (isScheduling && !formData.publishedAt) || (formData.status === 'SCHEDULED' && !formData.publishedAt)} 
           className="flex items-center gap-2 px-8 py-3 bg-[#3B82F6] text-white rounded-xl font-bold hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-70 text-sm w-full sm:w-auto justify-center"
         >
           {saving ? (
@@ -337,7 +428,7 @@ const BlogEditor = () => {
           ) : (
             <Save className="w-5 h-5" />
           )}
-          {saving ? 'Saving...' : 'Save Post'}
+          {isScheduling ? 'Schedule Publish' : 'Save Post'}
         </button>
       </div>
       <MediaPickerModal 

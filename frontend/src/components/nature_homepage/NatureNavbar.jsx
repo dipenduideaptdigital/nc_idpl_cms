@@ -25,7 +25,7 @@ const NatureNavbar = ({ forceDark = false }) => {
     mandala: '/mandala'
   });
 
-  // 1. Fetch Dynamic Slugs for Fallback
+  // Fetch Dynamic Slugs for Fallback
   useEffect(() => {
     const fetchDynamicNavbarSlugs = async () => {
       try {
@@ -46,7 +46,7 @@ const NatureNavbar = ({ forceDark = false }) => {
     fetchDynamicNavbarSlugs();
   }, []);
 
-  // 2. Fetch Dynamic Header Menu from DB
+  //Fetch Dynamic Header Menu from DB
   useEffect(() => {
     const fetchDynamicMenu = async () => {
       try {
@@ -83,7 +83,7 @@ const NatureNavbar = ({ forceDark = false }) => {
   const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas', '/contact', '/services'];
   const isLightPage = !forceDark && (lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p)));
 
-  // 3. Final Menu Calculation (Use DB if exists, otherwise Fallback)
+  // Final Menu Calculation (Use DB if exists, otherwise Fallback)
   const finalMenu = dbMenu || [
     { id: 'f1', label: 'PHILOSOPHY', url: dynamicPaths.mandala },
     { id: 'f2', label: 'OFFERINGS', url: '#offerings', isMega: true },
@@ -93,7 +93,7 @@ const NatureNavbar = ({ forceDark = false }) => {
     { id: 'f6', label: 'CONTACT US', url: '/contact' },
   ];
 
-  // ================= LIGHT BACKGROUND NAVBAR =================
+  // LIGHT BACKGROUND NAVBAR 
   if (isLightPage) {
     return (
       <header className="absolute top-0 left-0 right-0 z-50 bg-transparent pt-6 pb-4 px-6 md:px-12 transition-all font-kanit">
@@ -121,7 +121,7 @@ const NatureNavbar = ({ forceDark = false }) => {
                 );
               }
 
-              // B. Dynamic Sub-Menu (From DB)
+              // Dynamic Sub-Menu (From DB)
               if (link.children && link.children.length > 0) {
                 return (
                   <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('dynamic', link.id)} onMouseLeave={handleMouseLeave}>
@@ -143,7 +143,7 @@ const NatureNavbar = ({ forceDark = false }) => {
                 );
               }
 
-              // C. Standard Links
+              // Standard Links
               return link.url.startsWith('/') ? (
                 <Link key={link.id} to={link.url} className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative group">
                   {link.label}
@@ -256,7 +256,7 @@ const NatureNavbar = ({ forceDark = false }) => {
               );
             }
 
-            // B. Dynamic Sub-Menu (From DB)
+            // Dynamic Sub-Menu (From DB)
             if (link.children && link.children.length > 0) {
               return (
                 <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('dynamic', link.id)} onMouseLeave={handleMouseLeave}>
@@ -278,7 +278,7 @@ const NatureNavbar = ({ forceDark = false }) => {
               );
             }
 
-            // C. Standard Links
+            // Standard Links
             return link.url.startsWith('/') ? (
               <Link key={link.id} to={link.url} className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group">
                 {link.label}
