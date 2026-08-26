@@ -57,33 +57,27 @@ const NatureHome = () => {
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        const [
-          heroRes, mandalasRes, livingArtRes, showcaseRes, 
-          plantRes, servicesRes, partnersRes, 
-          blogsRes, whatTheySayRes, ctaRes
-        ] = await Promise.allSettled([
-          apiClient.get('/cms/section/nc_homepage_hero'),
-          apiClient.get('/cms/section/nc_homepage_mandalas'),
-          apiClient.get('/cms/section/nc_homepage_living_art'),
-          apiClient.get('/cms/section/nc_homepage_showcase'),
-          apiClient.get('/cms/section/nc_homepage_plant_display'),
-          apiClient.get('/cms/section/nc_homepage_services'),
-          apiClient.get('/cms/section/nc_homepage_partners'),
-          apiClient.get('/cms/section/nc_homepage_blogs'),
-          apiClient.get('/cms/section/nc_homepage_what_they_say'),
-          apiClient.get('/cms/section/nc_homepage_cta')
-        ]);
+        const requiredKeys = [
+          'nc_homepage_hero', 'nc_homepage_mandalas', 'nc_homepage_living_art', 
+          'nc_homepage_showcase', 'nc_homepage_plant_display', 'nc_homepage_services', 
+          'nc_homepage_partners', 'nc_homepage_blogs', 'nc_homepage_what_they_say', 'nc_homepage_cta'
+        ].join(',');
 
-        if (heroRes.status === 'fulfilled') setHeroData(heroRes.value.data?.data?.content);
-        if (mandalasRes.status === 'fulfilled') setMandalasData(mandalasRes.value.data?.data?.content);
-        if (livingArtRes.status === 'fulfilled') setLivingArtData(livingArtRes.value.data?.data?.content);
-        if (showcaseRes.status === 'fulfilled') setShowcaseData(showcaseRes.value.data?.data?.content);
-        if (plantRes.status === 'fulfilled') setPlantData(plantRes.value.data?.data?.content);
-        if (servicesRes.status === 'fulfilled') setServicesData(servicesRes.value.data?.data?.content);
-        if (partnersRes.status === 'fulfilled') setPartnersData(partnersRes.value.data?.data?.content);
-        if (blogsRes.status === 'fulfilled') setBlogsData(blogsRes.value.data?.data?.content);
-        if (whatTheySayRes.status === 'fulfilled') setWhatTheySayData(whatTheySayRes.value.data?.data?.content);
-        if (ctaRes.status === 'fulfilled') setCtaData(ctaRes.value.data?.data?.content);
+        // Single API call to fetch everything
+        const response = await apiClient.get(`/cms/sections?keys=${requiredKeys}`);
+        const allData = response.data?.data || {};
+
+        // distribute the data to states
+        setHeroData(allData['nc_homepage_hero']?.content);
+        setMandalasData(allData['nc_homepage_mandalas']?.content);
+        setLivingArtData(allData['nc_homepage_living_art']?.content);
+        setShowcaseData(allData['nc_homepage_showcase']?.content);
+        setPlantData(allData['nc_homepage_plant_display']?.content);
+        setServicesData(allData['nc_homepage_services']?.content);
+        setPartnersData(allData['nc_homepage_partners']?.content);
+        setBlogsData(allData['nc_homepage_blogs']?.content);
+        setWhatTheySayData(allData['nc_homepage_what_they_say']?.content);
+        setCtaData(allData['nc_homepage_cta']?.content);
 
       } catch (error) {
         console.error("Failed to fetch NatureCube home data:", error);
@@ -91,7 +85,6 @@ const NatureHome = () => {
         setLoading(false);
       }
     };
-
     fetchHomeData();
   }, []);
 

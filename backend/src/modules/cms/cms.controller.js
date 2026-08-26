@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
 import { sendResponse } from "../../shared/utils/apiResponse.js";
-import { getHomepageSection, updateHomepageSection } from "./cms.service.js";
+import { getHomepageSection, updateHomepageSection, getMultipleHomepageSections } from "./cms.service.js";
 import { CMS_REGISTRY } from "./cms.registry.js";
 import { AppError } from "../../shared/errors/AppError.js";
 
@@ -37,6 +37,25 @@ export const updateDynamicSectionController = asyncHandler(async (req, res) => {
     res,
     statusCode: StatusCodes.OK,
     message: `Updated ${sectionKey} successfully`,
+    data,
+  });
+});
+
+// Fetch Multiple Dynamic Sections at once
+export const getMultipleDynamicSectionsController = asyncHandler(async (req, res) => {
+  const keysParam = req.query.keys;
+  
+  if (!keysParam) {
+    throw new AppError("Keys parameter is required (comma separated)", StatusCodes.BAD_REQUEST);
+  }
+
+  const keysArray = keysParam.split(',').map(key => key.trim());
+  const data = await getMultipleHomepageSections(keysArray);
+
+  sendResponse({
+    res,
+    statusCode: StatusCodes.OK,
+    message: "Fetched multiple CMS sections successfully",
     data,
   });
 });

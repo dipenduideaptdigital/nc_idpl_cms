@@ -35,3 +35,11 @@ export const upsertSetting = async (key, value, actorUserId = null) => {
     timeout: 20000 
   });
 };
+
+export const findSettingsByKeys = async (keys) => {
+  return await prisma.setting.findMany({
+    where: { 
+      key: { in: keys } 
+    }
+  });
+};

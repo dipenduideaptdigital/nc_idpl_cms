@@ -1,4 +1,4 @@
-import { findSettingByKey, upsertSetting } from "./cms.repository.js";
+import { findSettingByKey, upsertSetting, findSettingsByKeys } from "./cms.repository.js";
 
 // Get setting, fallback to empty object if not found
 export const getHomepageSection = async (key) => {
@@ -10,4 +10,19 @@ export const getHomepageSection = async (key) => {
 export const updateHomepageSection = async (key, value, actorUserId) => {
   const updatedSetting = await upsertSetting(key, value, actorUserId);
   return updatedSetting.value;
+};
+
+export const getMultipleHomepageSections = async (keysArray) => {
+  const settings = await findSettingsByKeys(keysArray);
+  
+  const result = {};
+  keysArray.forEach(key => {
+    result[key] = { content: {} };
+  });
+
+  settings.forEach(setting => {
+    result[setting.key] = setting.value;
+  });
+
+  return result;
 };
