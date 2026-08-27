@@ -5,7 +5,7 @@ import apiClient from '../../../api/client';
 import { resolveAssetUrl } from '../../../utils/assetResolver';
 import { 
   Save, ArrowLeft, Layout, Type, Plus, Trash2, Settings, 
-  ChevronDown, Upload, CalendarClock, TimerOff 
+  ChevronDown, Upload, CalendarClock, TimerOff, CheckCircle, AlertCircle 
 } from 'lucide-react';
 import DynamicBlockEditor from '../../../components/admin/DynamicBlockEditor';
 import Can from '../../../components/shared/Can';
@@ -25,6 +25,8 @@ const BlogEditor = () => {
   const [coverPreview, setCoverPreview] = useState(null);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [isScheduling, setIsScheduling] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const BLOG_BLOCKS = [
     { type: 'richText', label: 'Rich Text Paragraph' },
@@ -80,7 +82,7 @@ const BlogEditor = () => {
         setCoverPreview(resolveAssetUrl(data.featuredImage.url));
       }
     } catch (err) { 
-      alert('Failed to load blog.'); 
+      setErrorMsg('Failed to load blog details.'); 
     } finally { 
       setLoading(false); 
     }
@@ -142,11 +144,23 @@ const BlogEditor = () => {
     
     try {
       setSaving(true);
-      if (isEditMode) await blogsApi.updateBlogPost(id, payload);
-      else await blogsApi.createBlogPost(payload);
-      navigate('/admin/blogs');
+      setErrorMsg('');
+      setSuccessMsg('');
+
+      if (isEditMode) {
+        await blogsApi.updateBlogPost(id, payload);
+        setSuccessMsg('Blog post updated successfully!');
+        setTimeout(() => setSuccessMsg(''), 3000);
+      } else {
+        const res = await blogsApi.createBlogPost(payload);
+        setSuccessMsg('Blog post created successfully!');
+        setTimeout(() => {
+          setSuccessMsg('');
+          navigate(`/admin/blogs/edit/${res.data.id}`, { replace: true });
+        }, 1500);
+      }
     } catch (err) { 
-      alert(err.response?.data?.message || 'Failed to save.'); 
+      setErrorMsg(err.response?.data?.message || 'Failed to save blog post.'); 
     } finally { 
       setSaving(false); 
     }
@@ -254,6 +268,20 @@ const BlogEditor = () => {
           </button>
         </div>
       </div>
+
+      {/* Success & Error Messages */}
+      {successMsg && (
+        <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-xl flex items-center gap-3 shadow-sm transition-colors duration-300">
+          <CheckCircle className="w-5 h-5 flex-shrink-0" />
+          <p className="font-medium">{successMsg}</p>
+        </div>
+      )}
+      {errorMsg && (
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl flex items-center gap-3 shadow-sm transition-colors duration-300">
+          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          <p className="font-medium">{errorMsg}</p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Column */}

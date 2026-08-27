@@ -12,7 +12,8 @@ import {
   Settings,
   ChevronDown,
   CalendarClock,
-  TimerOff
+  TimerOff,
+  CheckCircle
 } from 'lucide-react';
 import DynamicBlockEditor from '../../../components/admin/DynamicBlockEditor';
 import PreviewManager from '../../../components/admin/PreviewManager';
@@ -42,6 +43,7 @@ const PageEditor = () => {
   const [showBlockMenu, setShowBlockMenu] = useState(false);
   const [isPuckMode, setIsPuckMode] = useState(false);
   const [isScheduling, setIsScheduling] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
 
   //TEMPLATE ENGINE STATE 
   const [showTemplatePicker, setShowTemplatePicker] = useState(!isEditMode);
@@ -237,7 +239,10 @@ const PageEditor = () => {
       
       await pagesApi.updatePage(id, payload);
       
-      window.location.reload(); 
+      setSuccessMsg('Schedule discarded successfully!');
+      setTimeout(() => {
+        window.location.reload(); 
+      }, 1500);
     } catch (err) {
       console.error('Failed to discard schedule:', err);
       setError('Failed to discard scheduled updates.');
@@ -277,14 +282,20 @@ const PageEditor = () => {
     try {
       setSaving(true);
       setError(null);
+      setSuccessMsg('');
 
       if (isEditMode) {
         await pagesApi.updatePage(id, payload);
+        setSuccessMsg('Page updated successfully!');
+        setTimeout(() => setSuccessMsg(''), 3000);
       } else {
-        await pagesApi.createPage(payload);
+        const res = await pagesApi.createPage(payload);
+        setSuccessMsg('Page created successfully!');
+        setTimeout(() => {
+          setSuccessMsg('');
+          navigate(`${backPath}/edit/${res.data.id}`, { replace: true });
+        }, 1500);
       }
-
-      navigate(backPath);
     } catch (err) {
       console.error('Failed to save page:', err);
       setError(err.response?.data?.message || 'Failed to save page. Please check your inputs.');
@@ -350,11 +361,19 @@ const PageEditor = () => {
       try {
         setSaving(true);
         setError(null);
+        setSuccessMsg('');
+
         if (isEditMode) {
           await pagesApi.updatePage(id, payload);
+          setSuccessMsg('Page updated successfully!');
+          setTimeout(() => setSuccessMsg(''), 3000);
         } else {
           const res = await pagesApi.createPage(payload);
-          navigate(`${backPath}/edit/${res.data.id}`);
+          setSuccessMsg('Page created successfully!');
+          setTimeout(() => {
+            setSuccessMsg('');
+            navigate(`${backPath}/edit/${res.data.id}`, { replace: true });
+          }, 1500);
         }
       } catch (err) {
         console.error('Failed to save page:', err);
@@ -497,6 +516,13 @@ const PageEditor = () => {
         </div>
       </div>
 
+      {successMsg && (
+        <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-xl flex items-center gap-3 shadow-sm transition-colors duration-300">
+          <CheckCircle className="w-5 h-5 flex-shrink-0" />
+          <p className="font-medium">{successMsg}</p>
+        </div>
+      )}
+      
       {error && (
         <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl flex items-center gap-3 shadow-sm transition-colors duration-300">
           <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400 flex-shrink-0" />
