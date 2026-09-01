@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Edit2, ChevronUp, ChevronDown, Eye, EyeOff } from 'lucide-react';
 import TipTapEditor from '../components/admin/TipTapEditor';
 import ImageField from '../components/admin/ImageField';
@@ -39,6 +39,50 @@ import WorkshopGallerySection from '../components/workshop/WorkshopGallerySectio
 import AboutHorizontalScroll from '../components/nc_about/AboutHorizontalScroll';
 import MandalaHorizontalScroll from '../components/nc_mandala/MandalaHorizontalScroll';
 import NcProjectsHero from '../components/nc_projects/NcProjectsHero';
+import { dynamicFormsApi } from '../api/dynamicForms';
+import DynamicFormRenderer from '../components/dynamic-forms/DynamicFormRenderer';
+
+// --- DYNAMIC FORM SELECTOR COMPONENT FOR PUCK ---
+const FormSelectorField = ({ value, onChange }) => {
+  const [forms, setForms] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    dynamicFormsApi.getPublishedFormsList()
+      .then(res => {
+        if (res.success && Array.isArray(res.data)) {
+          setForms(res.data);
+        }
+      })
+      .catch(err => console.error("Failed to load forms for Puck dropdown", err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <div className="text-xs text-zinc-400 py-2">Loading forms list...</div>;
+  }
+
+  return (
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-2">Select Dynamic Form</label>
+      <select
+        value={value || ''}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-white text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="" disabled>Select a Form</option>
+        {forms.map(form => (
+          <option key={form.id} value={form.slug}>
+            {form.title} (slug: {form.slug})
+          </option>
+        ))}
+      </select>
+      {forms.length === 0 && (
+        <p className="text-[11px] text-amber-600 mt-1">No published forms found. Please publish a form first.</p>
+      )}
+    </div>
+  );
+};
 
 const CollapsibleTiptap = ({ label, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -114,6 +158,100 @@ export const ncPuckConfig = {
   components: {
 
     // GENERIC BLOCKS
+    dynamicButton: {
+      fields: {
+        label: { type: "text" },
+        actionType: {
+          type: "radio",
+          options: [
+            { label: "Standard Link", value: "link" },
+            { label: "Open Form Modal", value: "modal" }
+          ]
+        },
+        url: { type: "text" },
+        formSlug: {
+          type: "custom",
+          render: ({ value, onChange }) => <FormSelectorField value={value} onChange={onChange} />
+        },
+        alignment: {
+          type: "radio",
+          options: [
+            { label: "Left", value: "justify-start" },
+            { label: "Center", value: "justify-center" },
+            { label: "Right", value: "justify-end" }
+          ]
+        }
+      },
+      defaultProps: {
+        label: "Click Here",
+        actionType: "modal",
+        url: "/",
+        formSlug: "",
+        alignment: "justify-center"
+      },
+      render: (props) => {
+        const handleClick = (e) => {
+          if (props.actionType === 'modal') {
+            e.preventDefault(); 
+            if (props.formSlug) {
+              window.dispatchEvent(new CustomEvent('open-dynamic-form', { 
+                detail: { slug: props.formSlug } 
+              }));
+            } else {
+              alert("No form selected for this button.");
+            }
+          }
+        };
+
+        return (
+          <div className={`w-full py-8 px-6 flex ${props.alignment}`}>
+            <a 
+              href={props.actionType === 'link' ? props.url : '#'} 
+              onClick={handleClick}
+              className="bg-[#7BA641] hover:bg-[#6b9337] text-white font-kanit font-semibold tracking-wider text-sm uppercase px-8 py-3.5 rounded-md shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer"
+            >
+              {props.label}
+            </a>
+          </div>
+        );
+      }
+    },
+
+    contactForm: {
+      fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
+        formSlug: {
+          type: "custom",
+          render: ({ value, onChange }) => <FormSelectorField value={value} onChange={onChange} />
+        },
+        formTitle: { type: "text" },
+      },
+      defaultProps: {
+        isVisible: true,
+        formSlug: "",
+        formTitle: "Get in Touch"
+      },
+      render: (props) => {
+        if (props.isVisible === false) {
+          return <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Contact Form Block</div>;
+        }
+        if (!props.formSlug) {
+          return (
+            <div className="p-8 bg-zinc-900 text-zinc-300 text-center border border-zinc-700 rounded-xl">
+              <p className="font-semibold">Dynamic Form Block</p>
+              <p className="text-xs text-zinc-400 mt-1">Please select a published form from the right sidebar configuration.</p>
+            </div>
+          );
+        }
+        return (
+          <div className="py-12 px-6 max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-zinc-200">
+            <h2 className="text-2xl font-bold mb-6 text-zinc-900">{props.formTitle}</h2>
+            <DynamicFormRenderer slug={props.formSlug} />
+          </div>
+        );
+      }
+    },
+
     richText: {
       fields: { 
         content: { 

@@ -190,14 +190,7 @@ export const getSidebarData = async () => {
       where: { status: "PUBLISHED", deletedAt: null, publishedAt: { lte: new Date() } }, 
       take: 5, 
       orderBy: { publishedAt: "desc" }, 
-      select: { 
-        id: true, 
-        title: true, 
-        slug: true, 
-        publishedAt: true, 
-        featuredImage: { select: { url: true, thumbnailUrl: true } },
-        categories: { select: { id: true, name: true, slug: true }, take: 1 }
-      } 
+      select: { title: true, slug: true, publishedAt: true, featuredImage: { select: { thumbnailUrl: true } } } 
     }),
     prisma.blogTag.findMany({ 
       take: 15, 

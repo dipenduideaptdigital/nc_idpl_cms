@@ -80,7 +80,7 @@ const NatureNavbar = ({ forceDark = false }) => {
     }, 150);
   };
 
-  const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas', '/contact', '/services'];
+  const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas','/services'];
   const isLightPage = !forceDark && (lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p)));
 
   // Final Menu Calculation (Use DB if exists, otherwise Fallback)

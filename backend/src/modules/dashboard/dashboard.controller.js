@@ -10,7 +10,7 @@ export const getDashboardStatsController = asyncHandler(async (req, res) => {
     unreadInquiries: data.unreadInquiries,
     newInquiriesToday: data.newInquiriesToday,
     stats: {
-      inquiries: { value: data.inquiries.count, trend: data.inquiries.growth },
+      formEntries: { value: data.formEntries.count, trend: data.formEntries.growth },
       projects: { value: data.projects.count, trend: data.projects.growth },
       pages: { value: data.pages.count, trend: data.pages.growth },
       blogs: { value: data.blogs.count, trend: data.blogs.growth },
@@ -18,6 +18,11 @@ export const getDashboardStatsController = asyncHandler(async (req, res) => {
   };
   
   sendResponse({ res, statusCode: StatusCodes.OK, data: responseData });
+});
+
+export const getRecentEntriesController = asyncHandler(async (req, res) => {
+  const entries = await dashboardService.getRecentFormEntries(req.query.limit);
+  sendResponse({ res, statusCode: StatusCodes.OK, data: entries });
 });
 
 export const getDashboardChartController = asyncHandler(async (req, res) => {

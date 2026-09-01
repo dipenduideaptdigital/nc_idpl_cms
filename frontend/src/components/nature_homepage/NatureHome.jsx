@@ -14,7 +14,7 @@ import WhatTheySaySection from './WhatTheySaySection';
 import GetStartedCtaSection from './GetStartedCtaSection';
 import NatureFooter from './NatureFooter';
 import WhatsAppButton from '../shared/WhatsAppButton';
-import ScrollToTop from '../shared/ScrollToTop';
+// import ScrollToTop from '../shared/ScrollToTop';
 import GetInTouch from '../shared/GetInTouch';
 
 const NatureHome = () => {
@@ -103,7 +103,7 @@ const NatureHome = () => {
       <NatureFooter />
       
       <WhatsAppButton />
-      <ScrollToTop />
+      {/* <ScrollToTop /> */}
 
       {isModalOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8 animate-fade-in">

@@ -10,7 +10,6 @@ const getAssetUrl = (path) => {
     ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
     : 'http://localhost:5000';
     
-  // Ensure we don't end up with double slashes or missing slashes
   if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
   const safePath = path.startsWith('/') ? path : `/${path}`;
   
@@ -33,7 +32,6 @@ const MaintenancePage = ({ data }) => {
     <div 
       className="min-h-[100dvh] w-full flex flex-col items-center justify-center relative overflow-hidden bg-zinc-950 font-sans px-4 sm:px-6 py-10"
       style={bgUrl ? { 
-        // Added single quotes around ${bgUrl} to safely handle spaces in filenames
         backgroundImage: `linear-gradient(to bottom, rgba(9, 9, 11, 0.8), rgba(9, 9, 11, 0.95)), url('${bgUrl}')`, 
         backgroundSize: 'cover', 
         backgroundPosition: 'center',
@@ -41,7 +39,6 @@ const MaintenancePage = ({ data }) => {
       } : {}}
     >
       
-      {/* Animated Background Orbs - Only show if NO custom background is uploaded */}
       {!bgUrl && (
         <>
           <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#3B82F6]/20 rounded-full blur-[120px] mix-blend-screen animate-pulse pointer-events-none" style={{ animationDuration: '4s' }}></div>

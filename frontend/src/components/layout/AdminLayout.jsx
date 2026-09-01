@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Sun, Moon, MapPin,
-  Globe, Inbox, Menu, X, BookOpen, Layers, Briefcase, Wrench, ChevronDown, FolderOpen, AlertTriangle
+  Globe, Inbox, Menu, X, BookOpen, Layers, Briefcase, Wrench, ChevronDown, FolderOpen, AlertTriangle, FilePlus
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext'; 
 import { usePermission } from '../../hooks/usePermission'; 
@@ -102,7 +102,7 @@ const AdminLayout = () => {
 
   const [openMenus, setOpenMenus] = useState({
     'Blogs': location.pathname.includes('/admin/blogs'),
-    'Contacts': location.pathname.includes('/admin/contact')
+    'Dynamic Forms': location.pathname.includes('/admin/forms') || location.pathname.includes('/admin/contact-customization')
   });
   
   const toggleMenu = (menuName) => {
@@ -157,12 +157,14 @@ const AdminLayout = () => {
       ]
     },
     { 
-      name: 'Contacts', 
-      icon: Inbox, 
-      permission: 'contact.view',
+      name: 'Dynamic Forms', 
+      icon: FilePlus, 
+      permission: 'form.view',
       children: [
-        { name: 'Inbox', path: '/admin/contacts/inbox', permission: 'contact.view' },
-        { name: 'Page Settings', path: '/admin/contact-customization', permission: 'page.edit' }, 
+        { name: 'All Forms', path: '/admin/forms', permission: 'form.view' },
+        { name: 'Create Form', path: '/admin/forms/create', permission: 'form.create' },
+        { name: 'Form Entries', path: '/admin/forms/entries', permission: 'form.submission.view' },
+        { name: 'Contact Page Config', path: '/admin/contact-customization', permission: 'page.edit' }
       ]
     },
     { name: 'Projects', icon: Briefcase, path: '/admin/projects', permission: 'project.view' },

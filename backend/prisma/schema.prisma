@@ -28,12 +28,17 @@ enum BlogStatus {
   SCHEDULED
 }
 
-enum ContactStatus {
+enum DynamicFormStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum FormSubmissionStatus {
   NEW
   IN_PROGRESS
   RESOLVED
   SPAM
-  ARCHIVED
 }
 
 model User {
@@ -65,9 +70,9 @@ model User {
   blogRevisions        BlogRevision[]
   blogPreviewTokens    BlogPreviewToken[]
 
-  submissionLogs       ContactSubmissionLog[]
-  internalNotes        ContactInternalNote[]
-  leadsAssigned        ContactSubmission[]  @relation("LeadAssignment")
+  formsAuthored        DynamicForm[]        @relation("FormAuthor")
+  formsUpdated         DynamicForm[]        @relation("FormUpdater")
+  formSubmissionNotes  FormSubmissionNote[]
 
   @@map("users")
 }
@@ -471,81 +476,6 @@ model BlogSlugHistory {
 }
 
 
-model ContactSubmission {
-  id             String               @id @default(cuid())
-  name           String
-  email          String
-  phone          String?
-  website        String?              
-  subject        String?
-  message        String?              @db.Text 
-  messageHash    String?              @db.VarChar(64) 
-  
-  status         ContactStatus        @default(NEW)
-  sourcePage     String?              
-  isViewed       Boolean              @default(false)   
-
-  assignedToId   String?
-  assignedTo     User?                @relation("LeadAssignment", fields: [assignedToId], references: [id], onDelete: SetNull)
-  resolvedAt     DateTime?            
-  spamScore      Int                  @default(0)
-
-  ipAddress      String?
-  userAgent      String?
-  fingerprint    String?              @db.VarChar(64) 
-
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  deletedAt      DateTime?            
-
-  auditLogs      ContactSubmissionLog[]
-  internalNotes  ContactInternalNote[]
-
-  @@index([status])
-  @@index([createdAt])
-  @@index([email])
-  @@index([fingerprint])
-  @@index([messageHash]) 
-  @@index([deletedAt])
-  @@index([isViewed])
-  @@index([assignedToId])
-  @@index([status, createdAt]) 
-  @@map("contact_submissions")
-}
-
-model ContactSubmissionLog {
-  id             String            @id @default(cuid())
-  submissionId   String
-  submission     ContactSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
-  
-  fromStatus     ContactStatus
-  toStatus       ContactStatus
-  
-  actorId        String?           
-  actor          User?             @relation(fields: [actorId], references: [id], onDelete: SetNull)
-  
-  note           String?           @db.Text
-  createdAt      DateTime          @default(now())
-
-  @@index([submissionId])
-  @@map("contact_submission_logs")
-}
-
-model ContactInternalNote {
-  id             String            @id @default(cuid())
-  submissionId   String
-  submission     ContactSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
-  
-  authorId       String
-  author         User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  
-  note           String            @db.Text
-  createdAt      DateTime          @default(now())
-
-  @@index([submissionId])
-  @@map("contact_internal_notes")
-}
-
 model Project {
   id              String     @id @default(cuid())
   title           String
@@ -576,4 +506,72 @@ model Project {
   @@index([category])
   @@index([status])
   @@map("projects")
+}
+
+model DynamicForm {
+  id          String             @id @default(cuid())
+  title       String
+  slug        String             @unique
+  description String?            @db.Text
+  
+  schema      Json               
+  settings    Json               
+  version     Int                @default(1)
+  status      DynamicFormStatus  @default(DRAFT)
+
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  deletedAt   DateTime?          
+
+  authorId    String
+  author      User               @relation("FormAuthor", fields: [authorId], references: [id])
+  updatedById String?
+  updatedBy   User?              @relation("FormUpdater", fields: [updatedById], references: [id])
+
+  submissions FormSubmission[]
+
+  @@index([status])
+  @@index([slug])
+  @@index([deletedAt])
+  @@map("dynamic_forms")
+}
+
+model FormSubmission {
+  id          String       @id @default(cuid())
+  formId      String
+  form        DynamicForm  @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formVersion Int          
+  
+  payload     Json         
+  status      FormSubmissionStatus @default(NEW)
+  isViewed    Boolean      @default(false)
+  
+  ipAddress   String?
+  userAgent   String?
+  fingerprint String?      @db.VarChar(64)
+
+  createdAt   DateTime     @default(now())
+  deletedAt   DateTime?
+
+  notes       FormSubmissionNote[]
+
+  @@index([formId])
+  @@index([fingerprint])
+  @@index([createdAt])
+  @@map("form_submissions")
+}
+
+model FormSubmissionNote {
+  id           String         @id @default(cuid())
+  submissionId String
+  submission   FormSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  authorId     String
+  author       User           @relation(fields: [authorId], references: [id])
+  
+  text         String         @db.Text
+  createdAt    DateTime       @default(now())
+
+  @@index([submissionId])
+  @@map("form_submission_notes")
 }

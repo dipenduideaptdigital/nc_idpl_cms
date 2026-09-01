@@ -1,11 +1,11 @@
 import * as repository from "./projects.repository.js";
 import { AppError } from "../../shared/errors/AppError.js";
-import { generateSlug } from "../../shared/utils/slugify.js";
+import { generateSlug } from "../../shared/utils/slugify.js"; 
 import { prisma } from "../../config/db.js";
 
 const resolveImageId = async (imageUrlOrId) => {
   if (!imageUrlOrId || imageUrlOrId.trim() === "") return null;
-  if (!imageUrlOrId.includes("/")) return imageUrlOrId;
+  if (!imageUrlOrId.includes("/")) return imageUrlOrId; 
 
   try {
     let media = await prisma.media.findFirst({
@@ -20,7 +20,7 @@ const resolveImageId = async (imageUrlOrId) => {
       });
       if (media) return media.id;
     }
-
+    
     return null;
   } catch (error) {
     return null;
@@ -29,15 +29,15 @@ const resolveImageId = async (imageUrlOrId) => {
 
 export const createProject = async (data) => {
   let slug = data.slug ? generateSlug(data.slug) : generateSlug(data.title);
-
+  
   const existing = await repository.findBySlug(slug);
   if (existing) {
     slug = `${slug}-${Date.now().toString().slice(-4)}`;
   }
-
+  
   data.featuredImageId = await resolveImageId(data.featuredImageId);
   data.heroImageId = await resolveImageId(data.heroImageId);
-
+  
   return repository.create({ ...data, slug });
 };
 
@@ -95,6 +95,6 @@ export const updateProject = async (id, data) => {
 };
 
 export const deleteProject = async (id) => {
-  await getProjectById(id);
+  await getProjectById(id); 
   return repository.deleteById(id);
 };

@@ -4,6 +4,7 @@ import NatureNavbar from '../nature_homepage/NatureNavbar';
 import NatureFooter from '../nature_homepage/NatureFooter';
 import GetInTouch from '../shared/GetInTouch';
 import WhatsAppButton from '../shared/WhatsAppButton';
+import GlobalFormModal from '../dynamic-forms/GlobalFormModal';
 
 const MainLayout = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,8 +12,10 @@ const MainLayout = ({ children }) => {
   useEffect(() => {
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
+    
     window.addEventListener('open-consultation-modal', handleOpenModal);
     window.addEventListener('close-consultation-modal', handleCloseModal);
+    
     return () => {
       window.removeEventListener('open-consultation-modal', handleOpenModal);
       window.removeEventListener('close-consultation-modal', handleCloseModal);
@@ -41,6 +44,9 @@ const MainLayout = ({ children }) => {
           </div>
         </div>
       )}
+
+      <GlobalFormModal />
+      
     </div>
   );
 };

@@ -39,6 +39,14 @@ const QuickActions = () => {
             <span className="text-sm font-semibold">Create Page</span>
           </Link>
         </Can>
+
+        {/*Quick Action for creating dynamic forms */}
+        <Can permission="form.create">
+          <Link to="/admin/forms/create" className="flex flex-col items-center justify-center p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 transition-colors group">
+            <FileText className="w-6 h-6 mb-2 group-hover:scale-110 transition-transform" />
+            <span className="text-sm font-semibold">Create Form</span>
+          </Link>
+        </Can>
         
         <Can permission="user.view">
           <Link to="/admin/settings/users" className="flex flex-col items-center justify-center p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 transition-colors group">

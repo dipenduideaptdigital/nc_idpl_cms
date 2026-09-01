@@ -321,6 +321,7 @@ export const contactRoutingSettingsSchema = z.object({
 
 export const ncContactPageSchema = z.object({
   content: z.object({
+    assignedFormSlug: z.string().optional().nullable(),
     bannerTitle: z.string().optional(),
     bannerImage: z.string().optional(),
     contactHeading: z.string().optional(),
@@ -331,7 +332,7 @@ export const ncContactPageSchema = z.object({
     phone2: z.string().optional(),
     teamBannerImage: z.string().optional(),
     mapEmbedCode: z.string().max(3000).optional()
-  })
+  }).catchall(z.any())
 });
 
 const baseMenuItemSchema = z.object({

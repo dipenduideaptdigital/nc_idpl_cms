@@ -29,19 +29,19 @@ const calculateGrowth = async (model, whereCondition = {}) => {
 };
 
 export const getDashboardMetrics = async () => {
-  const [inquiries, projects, pages, blogs] = await Promise.all([
-    calculateGrowth('contactSubmission', { deletedAt: null }),
+  const [formEntries, projects, pages, blogs] = await Promise.all([
+    calculateGrowth('formSubmission', { deletedAt: null }),
     calculateGrowth('project', { status: 'PUBLISHED' }),
     calculateGrowth('page', { status: 'PUBLISHED', deletedAt: null }),
     calculateGrowth('blog', { status: 'PUBLISHED', deletedAt: null })
   ]);
 
   return {
-    unreadInquiries: await prisma.contactSubmission.count({ where: { isViewed: false, deletedAt: null } }),
-    newInquiriesToday: await prisma.contactSubmission.count({ 
-      where: { createdAt: { gte: new Date(new Date().setHours(0,0,0,0)) }, deletedAt: null } 
-    }),
-    inquiries,
+    unreadInquiries: await prisma.formSubmission.count({ where: { isViewed: false, deletedAt: null } }),
+    newInquiriesToday: await prisma.formSubmission.count({ 
+       where: { createdAt: { gte: new Date(new Date().setHours(0,0,0,0)) }, deletedAt: null } 
+     }),
+    formEntries,
     projects,
     pages,
     blogs
@@ -59,9 +59,9 @@ export const getLeadChartTimeline = async (range) => {
 
   const rawChartData = await prisma.$queryRaw`
     SELECT 
-      DATE(createdAt) as date, 
-      CAST(COUNT(id) AS UNSIGNED) as count
-    FROM contact_submissions
+       DATE(createdAt) as date,
+       CAST(COUNT(id) AS UNSIGNED) as count
+    FROM form_submissions
     WHERE createdAt >= ${startDate} AND deletedAt IS NULL
     GROUP BY DATE(createdAt)
     ORDER BY DATE(createdAt) ASC
@@ -76,11 +76,14 @@ export const getLeadChartTimeline = async (range) => {
 export const getSystemGlobalActivity = async () => {
   const limit = 10;
 
-  const [leadLogs, blogRevisions, pageRevisions] = await Promise.all([
-    prisma.contactSubmissionLog.findMany({
+  const [formNotes, blogRevisions, pageRevisions] = await Promise.all([
+    prisma.formSubmissionNote.findMany({
       take: limit,
       orderBy: { createdAt: "desc" },
-      include: { actor: { select: { name: true } } }
+      include: { 
+        author: { select: { name: true } },
+        submission: { include: { form: { select: { title: true } } } }
+      }
     }),
     prisma.blogRevision.findMany({
       take: limit,
@@ -102,14 +105,12 @@ export const getSystemGlobalActivity = async () => {
 
   const unifiedTimeline = [];
 
-  leadLogs.forEach(log => {
+  formNotes.forEach(note => {
     unifiedTimeline.push({
-      id: `lead_${log.id}`,
+      id: `note_${note.id}`,
       type: 'LEAD',
-      text: log.actor 
-        ? `${log.actor.name} updated lead status to ${log.toStatus}`
-        : `System updated lead to ${log.toStatus}`,
-      time: log.createdAt
+      text: `${note.author?.name || 'Admin'} added a note to "${note.submission.form.title}" entry.`,
+      time: note.createdAt
     });
   });
 
@@ -184,4 +185,13 @@ export const exportLeadsToCSV = async () => {
   ].join("\n");
 
   return csvContent;
+};
+
+export const getRecentFormEntries = async (limit = 4) => {
+  return await prisma.formSubmission.findMany({
+    where: { deletedAt: null },
+    take: Number(limit),
+    orderBy: { createdAt: 'desc' },
+    include: { form: { select: { title: true } } }
+  });
 };

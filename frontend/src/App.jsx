@@ -37,7 +37,6 @@ const PageList = lazy(() => import('./pages/admin/pages/PageList'));
 const PageEditor = lazy(() => import('./pages/admin/pages/PageEditor'));
 const ProjectList = lazy(() => import('./pages/admin/projects/ProjectList'));
 const ProjectEditor = lazy(() => import('./pages/admin/projects/ProjectEditor'));
-const ContactInbox = lazy(() => import('./pages/admin/contacts/ContactInbox'));
 const BlogList = lazy(() => import('./pages/admin/blogs/BlogList'));
 const BlogEditor = lazy(() => import('./pages/admin/blogs/BlogEditor'));
 const TaxonomyManager = lazy(() => import('./pages/admin/blogs/TaxonomyManager'));
@@ -51,6 +50,10 @@ const RolesList = lazy(() => import('./pages/admin/roles/RolesList'));
 const RoleEditor = lazy(() => import('./pages/admin/roles/RoleEditor'));
 const UsersList = lazy(() => import('./pages/admin/users/UsersList'));
 const MediaLibrary = lazy(() => import('./pages/admin/media/MediaLibrary'));
+const DynamicFormInbox = lazy(() => import('./components/dynamic-forms/DynamicFormInbox'));
+const FormBuilder = lazy(() => import('./components/dynamic-forms/builder/FormBuilder'));
+const FormList = lazy(() => import('./components/dynamic-forms/FormList'));
+const FormEntriesDashboard = lazy(() => import('./components/dynamic-forms/FormEntriesDashboard'));
 
 const GlobalSuspenseFallback = () => (
   <div className="min-h-[80vh] w-full flex items-center justify-center bg-[#fafafa]">
@@ -116,12 +119,20 @@ function App() {
               <Route path="projects" element={<ProjectList />} />
               <Route path="projects/create" element={<ProjectEditor />} />
               <Route path="projects/edit/:id" element={<ProjectEditor />} />
-              <Route path="contacts/inbox" element={<ContactInbox />} />
               <Route path="blogs" element={<BlogList />} />
               <Route path="blogs/create" element={<BlogEditor />} />
               <Route path="blogs/edit/:id" element={<BlogEditor />} />
               <Route path="blogs/taxonomies" element={<TaxonomyManager />} />
               <Route path="media" element={<MediaLibrary />} />
+              <Route path="forms" element={<FormList />} />
+              <Route path="forms/create" element={<FormBuilder />} />
+              <Route path="forms/edit/:id" element={<FormBuilder />} />
+              <Route path="forms/entries" element={<FormEntriesDashboard />} />
+              <Route path="forms/:id/submissions" element={
+                <React.Suspense fallback={<GlobalSuspenseFallback />}>
+                  <DynamicFormInbox />
+                </React.Suspense>
+              } />
 
               <Route path="settings" element={<SettingsLayout />}>
                 <Route path="general" element={<GeneralSettings />} />

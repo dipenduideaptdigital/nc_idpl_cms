@@ -8,16 +8,14 @@ import * as controller from "./dashboard.controller.js";
 const router = Router();
 
 router.use(authenticate, authorizeSystemRoles("SUPER_ADMIN", "ADMIN"));
-
 router.get("/metrics", controller.getDashboardStatsController);
-
 router.get(
   "/chart", 
   validate(dashboardChartQuerySchema, "query"), 
   controller.getDashboardChartController
 );
-
 router.get("/activity", controller.getDashboardActivityController);
+router.get("/recent-entries", controller.getRecentEntriesController);
 router.get("/export-leads", controller.exportLeadsController);
 
 export default router;

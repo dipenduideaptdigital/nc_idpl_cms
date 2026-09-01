@@ -3,13 +3,13 @@ import { Inbox, Briefcase, FileText, BookOpen, ArrowUpRight, ArrowDownRight, Min
 import Can from '../../shared/Can';
 
 const StatCards = ({ statsData }) => {
-  const { inquiries, projects, pages, blogs } = statsData.stats;
+  const { formEntries, projects, pages, blogs } = statsData.stats || {};
   
   const stats = [
-    { label: 'Total Inquiries', value: inquiries.value, trend: inquiries.trend, icon: Inbox, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-500/10', permission: 'contact.view' },
-    { label: 'Published Projects', value: projects.value, trend: projects.trend, icon: Briefcase, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-500/10', permission: 'project.view' },
-    { label: 'Published Pages', value: pages.value, trend: pages.trend, icon: FileText, color: 'text-zinc-600 dark:text-zinc-300', bg: 'bg-zinc-100 dark:bg-zinc-800', permission: 'page.view' },
-    { label: 'Published Blogs', value: blogs.value, trend: blogs.trend, icon: BookOpen, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-500/10', permission: 'blog.view' },
+    { label: 'Total Form Entries', value: formEntries?.value || 0, trend: formEntries?.trend || 0, icon: Inbox, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-500/10', permission: 'form.view' },
+    { label: 'Published Projects', value: projects?.value || 0, trend: projects?.trend || 0, icon: Briefcase, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-500/10', permission: 'project.view' },
+    { label: 'Published Pages', value: pages?.value || 0, trend: pages?.trend || 0, icon: FileText, color: 'text-zinc-600 dark:text-zinc-300', bg: 'bg-zinc-100 dark:bg-zinc-800', permission: 'page.view' },
+    { label: 'Published Blogs', value: blogs?.value || 0, trend: blogs?.trend || 0, icon: BookOpen, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-500/10', permission: 'blog.view' },
   ];
 
   return (

@@ -5,6 +5,7 @@ import ImageField from '../../components/admin/ImageField';
 
 const ContactPageCustomization = () => {
   const [formData, setFormData] = useState({
+    assignedFormSlug: '',
     bannerTitle: 'Contact Us', bannerImage: '',
     contactHeading: 'Our Contacts', contactSubtext: 'Ensuring the best return on investment for your bespoke SEO campaign requirement.',
     address: '30 B/3 Sarat Ghosh Garden Road.\nDhakuria, Kolkata, India. Pin 700031',
@@ -12,13 +13,20 @@ const ContactPageCustomization = () => {
     teamBannerImage: '', mapEmbedCode: ''
   });
   const [loading, setLoading] = useState(true);
+  const [publishedForms, setPublishedForms] = useState([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    apiClient.get('/cms/section/nc_contact_page').then(res => {
-      if (res.data?.data?.content && Object.keys(res.data.data.content).length > 0) {
-        setFormData(prev => ({ ...prev, ...res.data.data.content }));
+    Promise.all([
+      apiClient.get('/cms/section/nc_contact_page'),
+      apiClient.get('/admin/dynamic-forms/published-list')
+    ]).then(([pageRes, formsRes]) => {
+      if (pageRes.data?.data?.content && Object.keys(pageRes.data?.data?.content).length > 0) {
+        setFormData(prev => ({ ...prev, ...pageRes.data.data.content }));
+      }
+      if (formsRes.data?.data) {
+        setPublishedForms(formsRes.data.data);
       }
       setLoading(false);
     }).catch(() => setLoading(false));
@@ -60,7 +68,19 @@ const ContactPageCustomization = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 space-y-4">
-          <h2 className="font-bold text-lg border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-4 text-zinc-900 dark:text-zinc-100">Top Banner & Texts</h2>
+          <h2 className="font-bold text-lg border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-4 text-zinc-900 dark:text-zinc-100">Dynamic Form Assignment</h2>
+          <div>
+            <label className={labelClass}>Select Form for Contact Page</label>
+            <select name="assignedFormSlug" value={formData.assignedFormSlug} onChange={handleChange} className={fieldClass}>
+              <option value="">Fallback Form</option>
+              {publishedForms.map(f => (
+                <option key={f.id} value={f.slug}>{f.title} (/{f.slug})</option>
+              ))}
+            </select>
+            <p className="text-[10px] text-zinc-500 mt-1">Fields from this form will be dynamically injected into the contact page UI.</p>
+          </div>
+
+          <h2 className="font-bold text-lg border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-4 mt-6 text-zinc-900 dark:text-zinc-100">Top Banner & Texts</h2>
           <div><label className={labelClass}>Banner Title</label><input type="text" name="bannerTitle" value={formData.bannerTitle} onChange={handleChange} className={fieldClass} /></div>
           <div><label className={labelClass}>Contact Heading</label><input type="text" name="contactHeading" value={formData.contactHeading} onChange={handleChange} className={fieldClass} /></div>
           <div><label className={labelClass}>Contact Subtext</label><textarea rows="2" name="contactSubtext" value={formData.contactSubtext} onChange={handleChange} className={`${fieldClass} resize-none`} /></div>

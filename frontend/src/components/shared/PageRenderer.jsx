@@ -39,6 +39,7 @@ import AboutHorizontalScroll from '../nc_about/AboutHorizontalScroll';
 import MandalaHorizontalScroll from '../nc_mandala/MandalaHorizontalScroll';
 
 import NcProjectsHero from '../nc_projects/NcProjectsHero';
+import DynamicFormRenderer from '../dynamic-forms/DynamicFormRenderer';
 
 const BlockMapper = memo(({ block, index }) => {
   const { type, data } = block;
@@ -102,6 +103,48 @@ const BlockMapper = memo(({ block, index }) => {
     case 'projectsBanner':
       return <NcProjectsHero key={index} data={data} />;
       
+    // Dynamic Form Block
+    case 'contactForm':
+      return (
+        <div key={index} className="py-16 px-4 sm:px-6 max-w-3xl mx-auto w-full">
+          <div className="bg-white dark:bg-zinc-900 p-8 sm:p-12 rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-800">
+            {data?.formTitle && (
+              <h2 className="text-3xl font-bold mb-8 text-center text-zinc-900 dark:text-zinc-100">
+                {data.formTitle}
+              </h2>
+            )}
+            <DynamicFormRenderer slug={data?.formSlug} />
+          </div>
+        </div>
+      );
+
+    case 'dynamicButton': {
+      const handleClick = (e) => {
+        if (data?.actionType === 'modal') {
+          e.preventDefault(); 
+          if (data?.formSlug) {
+            window.dispatchEvent(new CustomEvent('open-dynamic-form', { 
+              detail: { slug: data.formSlug } 
+            }));
+          } else {
+            alert("No form selected for this button.");
+          }
+        }
+      };
+
+      return (
+        <div key={index} className={`w-full py-8 px-6 flex ${data?.alignment || 'justify-center'}`}>
+          <a 
+            href={data?.actionType === 'link' ? (data?.url || '#') : '#'} 
+            onClick={handleClick}
+            className="bg-[#7BA641] hover:bg-[#6b9337] text-white font-kanit font-semibold tracking-wider text-sm uppercase px-8 py-3.5 rounded-md shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+          >
+            {data?.label || "Click Here"}
+          </a>
+        </div>
+      );
+    }
+
     // Rich Text Block
     case 'richText':
       return (

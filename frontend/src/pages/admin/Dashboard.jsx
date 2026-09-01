@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 
 // APIs
 import { dashboardApi } from '../../api/dashboard';
-import { contactsApi } from '../../api/contacts';
 import Can from '../../components/shared/Can';
 
 // Components
@@ -35,15 +34,15 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       setLoading(true);
       try {
-        const [metricsRes, leadsRes, activityRes] = await Promise.allSettled([
+        const [metricsRes, entriesRes, activityRes] = await Promise.allSettled([
           dashboardApi.getMetrics(),
-          contactsApi.getSubmissions({ limit: 4 }), 
+          dashboardApi.getRecentEntries({ limit: 4 }),
           dashboardApi.getActivityStream()
         ]);
 
         setDashboardData({
           metrics: metricsRes.status === 'fulfilled' ? metricsRes.value.data : {},
-          recentLeads: leadsRes.status === 'fulfilled' ? leadsRes.value.data : [],
+          recentLeads: entriesRes.status === 'fulfilled' ? entriesRes.value.data : [],
           activities: activityRes.status === 'fulfilled' ? activityRes.value.data : []
         });
 
@@ -76,7 +75,7 @@ const Dashboard = () => {
       
       <StatCards statsData={dashboardData.metrics} />
       
-      <Can permission="contact.view">
+      <Can permission="form.view">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 flex flex-col h-full">
             <LeadChart />

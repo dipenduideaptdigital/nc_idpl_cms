@@ -73,18 +73,21 @@ const projectsBannerBlockSchema = z.object({ type: z.literal("projectsBanner"), 
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
   data: z.object({
-    formId: z.string().cuid("Block content specification failure: Dynamic rendering requires explicit reference binding to an active contact form engine database instance unique identity format signature."),
-    formTitle: z.string().trim().max(100).optional().default("Get in Touch"),
-    submitButtonText: z.string().trim().max(50).optional().default("Submit Inquiry"),
-    redirectPath: z.string().trim().max(250).refine((path) => path.startsWith("/"), {
-      message: "Success redirect target layout routing context must be a valid internal system relative path node string structure loop tracking pattern."
-    }).optional()
-  }).strict() 
+    isVisible: z.boolean().optional(),
+    formSlug: z.string().optional().nullable(),
+    formTitle: z.string().trim().max(150).optional().nullable()
+  }).catchall(z.any()).default({})
+});
+
+const dynamicButtonBlockSchema = z.object({ 
+  type: z.literal("dynamicButton"), 
+  data: z.record(z.any()).default({}) 
 });
 
 const blockSchema = z.discriminatedUnion("type", [
   richTextBlockSchema,
   contactFormBlockSchema,
+  dynamicButtonBlockSchema,
   ripplesHeroBlockSchema,
   ripplesIntroBlockSchema,
   ripplesNatureAquariumBlockSchema,

@@ -31,12 +31,6 @@ const PERMISSIONS = [
   { name: "Edit Media", slug: "media.edit", module: "MEDIA" }, 
   { name: "Delete Media", slug: "media.delete", module: "MEDIA" },
 
-  // CONTACTS
-  { name: "View Contacts", slug: "contact.view", module: "CONTACTS" },
-  { name: "Assign Contacts", slug: "contact.assign", module: "CONTACTS" }, 
-  { name: "Resolve Contacts", slug: "contact.resolve", module: "CONTACTS" },
-  { name: "Delete Contacts", slug: "contact.delete", module: "CONTACTS" },
-
   // ADVANCED
   { name: "Manage SEO", slug: "seo.manage", module: "SEO" },
   { name: "Manage Settings", slug: "settings.manage", module: "SETTINGS" },
@@ -60,6 +54,13 @@ const PERMISSIONS = [
   { name: "Create Project", slug: "project.create", module: "PROJECTS" },
   { name: "Edit Project", slug: "project.edit", module: "PROJECTS" },
   { name: "Delete Project", slug: "project.delete", module: "PROJECTS" },
+
+  // DYNAMIC FORMS
+  { name: "View Forms", slug: "form.view", module: "FORMS" },
+  { name: "Create Form", slug: "form.create", module: "FORMS" },
+  { name: "Edit Form", slug: "form.edit", module: "FORMS" },
+  { name: "Delete Form", slug: "form.delete", module: "FORMS" },
+  { name: "View Submissions", slug: "form.submission.view", module: "FORMS" },
 ];
 
 async function main() {

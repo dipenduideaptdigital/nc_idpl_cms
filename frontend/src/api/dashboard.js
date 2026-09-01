@@ -16,15 +16,13 @@ export const dashboardApi = {
     return response.data;
   },
 
-  exportLeadsCSV: async () => {
-    const response = await apiClient.get('/admin/dashboard/export-leads', {
-      responseType: 'blob' 
-    });
-    return response.data;
-  },
-
   getLiveVisitors: async () => {
     const response = await apiClient.get('/admin/dashboard/live-visitors');
     return response.data;
-  }
+  },
+
+  getRecentEntries: async (params = {}) => {
+    const response = await apiClient.get('/admin/dashboard/recent-entries', { params });
+    return response.data;
+  },
 };
