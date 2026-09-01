@@ -100,7 +100,7 @@ const CmsSettings = () => {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 disabled:opacity-50 text-white rounded-xl font-semibold transition-colors shadow-sm focus:ring-2 focus:ring-emerald-600/20 flex-shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 text-white rounded-xl font-semibold transition-colors shadow-sm focus:ring-2 focus:ring-blue-600/20 flex-shrink-0"
         >
           {isSaving ? (
             <>
@@ -151,7 +151,7 @@ const CmsSettings = () => {
               <button
                 type="button"
                 onClick={() => setUseLogo(!useLogo)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${useLogo ? 'bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-600'}`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${useLogo ? 'bg-blue-600' : 'bg-zinc-300 dark:bg-zinc-600'}`}
               >
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${useLogo ? 'translate-x-6' : 'translate-x-1'}`} />
               </button>
@@ -178,7 +178,7 @@ const CmsSettings = () => {
                 value={cmsName}
                 onChange={(e) => setCmsName(e.target.value)}
                 placeholder="e.g. IDPL CMS"
-                className="block w-full px-4 py-3 border border-zinc-200 dark:border-zinc-700 rounded-xl leading-5 bg-white dark:bg-zinc-950 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 dark:focus:ring-emerald-500/20 focus:border-emerald-600 dark:focus:border-emerald-500 transition-colors sm:text-sm font-semibold text-zinc-900 dark:text-zinc-100"
+                className="block w-full px-4 py-3 border border-zinc-200 dark:border-zinc-700 rounded-xl leading-5 bg-white dark:bg-zinc-950 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600/20 dark:focus:ring-blue-500/20 focus:border-blue-600 dark:focus:border-blue-500 transition-colors sm:text-sm font-semibold text-zinc-900 dark:text-zinc-100"
                 required
               />
               <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1.5">
@@ -195,7 +195,7 @@ const CmsSettings = () => {
                 value={cmsTagline}
                 onChange={(e) => setCmsTagline(e.target.value)}
                 placeholder="e.g. Content Management System"
-                className="block w-full px-4 py-3 border border-zinc-200 dark:border-zinc-700 rounded-xl leading-5 bg-white dark:bg-zinc-950 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 dark:focus:ring-emerald-500/20 focus:border-emerald-600 dark:focus:border-emerald-500 transition-colors sm:text-sm font-medium text-zinc-900 dark:text-zinc-100"
+                className="block w-full px-4 py-3 border border-zinc-200 dark:border-zinc-700 rounded-xl leading-5 bg-white dark:bg-zinc-950 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600/20 dark:focus:ring-blue-500/20 focus:border-blue-600 dark:focus:border-blue-500 transition-colors sm:text-sm font-medium text-zinc-900 dark:text-zinc-100"
               />
             </div>
             </div>

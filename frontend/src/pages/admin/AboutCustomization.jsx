@@ -28,7 +28,7 @@ const CollapsibleTiptap = ({ label, value, onChange }) => {
           className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors outline-none"
         >
           <div className="flex items-center gap-3 overflow-hidden">
-            <Edit2 className="w-4 h-4 text-zinc-500 dark:text-emerald-400 shrink-0" />
+            <Edit2 className="w-4 h-4 text-zinc-500 dark:text-blue-400 shrink-0" />
             <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 truncate">
               {isOpen ? 'Close Rich Text Editor' : getPreviewText(value)}
             </span>
@@ -285,15 +285,15 @@ const AboutCustomization = () => {
   };
 
   // Shared input/textarea styling — keeps every field visually consistent in both themes
-  const fieldClass = "w-full mt-1 px-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40 focus:border-emerald-400 dark:focus:border-emerald-500 transition-colors";
-  const fieldClassSm = "w-full px-3 py-1.5 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40 transition-colors";
+  const fieldClass = "w-full mt-1 px-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-blue-400 dark:focus:border-blue-500 transition-colors";
+  const fieldClassSm = "w-full px-3 py-1.5 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 transition-colors";
   const labelClass = "text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase";
   const subCardClass = "p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl space-y-4 border border-zinc-200 dark:border-zinc-700";
 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-64">
-        <Loader2 className="w-10 h-10 animate-spin text-zinc-900 dark:text-emerald-400" />
+        <Loader2 className="w-10 h-10 animate-spin text-zinc-900 dark:text-blue-400" />
         <p className="mt-4 text-zinc-500 dark:text-zinc-400 font-medium">Loading About engine...</p>
       </div>
     );
@@ -320,21 +320,21 @@ const AboutCustomization = () => {
     <div className="space-y-6 pb-20 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-center bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 gap-4">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-50"><Layout className="w-6 h-6 text-emerald-600 dark:text-emerald-400"/> About Us Customization</h1>
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-50"><Layout className="w-6 h-6 text-blue-600 dark:text-blue-400"/> About Us Customization</h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Manage the Horizontal Scroll Panels & Images</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => setIsPuckMode(true)} className="px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl flex items-center gap-2 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
+          <button onClick={() => setIsPuckMode(true)} className="px-4 py-2.5 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold rounded-xl flex items-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
             <Type className="w-4 h-4"/> Edit Visually
           </button>
-          <button onClick={handleFormSubmit} disabled={saving} className="px-6 py-2.5 bg-zinc-900 dark:bg-emerald-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-zinc-800 dark:hover:bg-emerald-500 transition-colors shadow-sm disabled:opacity-70">
+          <button onClick={handleFormSubmit} disabled={saving} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-70">
             {saving ? <Loader2 className="w-4 h-4 animate-spin"/> : <Save className="w-4 h-4"/>} 
             {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
 
-      {success && <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 rounded-xl flex items-center gap-2"><CheckCircle className="w-5 h-5"/> Changes saved successfully!</div>}
+      {success && <div className="p-4 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-xl flex items-center gap-2"><CheckCircle className="w-5 h-5"/> Changes saved successfully!</div>}
       {error && <div className="p-4 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-xl flex items-center gap-2"><AlertCircle className="w-5 h-5"/> {error}</div>}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -344,7 +344,7 @@ const AboutCustomization = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${activeTab === tab.id ? 'bg-zinc-900 dark:bg-emerald-600 text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
+                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${activeTab === tab.id ? 'bg-blue-600 text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
               >
                 {tab.label}
               </button>
@@ -363,7 +363,7 @@ const AboutCustomization = () => {
               <label className="flex items-center cursor-pointer">
                 <div className="relative">
                   <input type="checkbox" checked={getVisibilityState()} onChange={handleVisibilityToggle} className="sr-only" />
-                  <div className={`block w-10 h-6 rounded-full transition-colors duration-300 ${getVisibilityState() ? 'bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
+                  <div className={`block w-10 h-6 rounded-full transition-colors duration-300 ${getVisibilityState() ? 'bg-blue-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
                   <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ${getVisibilityState() ? 'transform translate-x-4' : ''}`}></div>
                 </div>
               </label>
@@ -390,7 +390,7 @@ const AboutCustomization = () => {
                     <ImageField value={formData.hero_image} onChange={(url) => handleTiptapChange('hero_image', url)} />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-2 block">Global Panoramic Tank Image</label>
+                    <label className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase mb-2 block">Global Panoramic Tank Image</label>
                     <ImageField value={formData.panoramic_image} onChange={(url) => handleTiptapChange('panoramic_image', url)} />
                   </div>
                 </div>
@@ -424,7 +424,7 @@ const AboutCustomization = () => {
                 <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-bold text-sm text-zinc-900 dark:text-zinc-100">Awards List</h3>
-                    <button type="button" onClick={addAward} className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors"><Plus className="w-3 h-3"/> Add Award</button>
+                    <button type="button" onClick={addAward} className="text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1 bg-blue-50 dark:bg-blue-950/40 px-3 py-1.5 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"><Plus className="w-3 h-3"/> Add Award</button>
                   </div>
                   {formData.awards_list.map((award, i) => (
                     <div key={i} className="flex flex-col md:flex-row gap-4 p-4 border border-zinc-200 dark:border-zinc-700 rounded-xl mb-3 relative bg-zinc-50 dark:bg-zinc-800/50">
@@ -624,10 +624,10 @@ const AboutCustomization = () => {
                 </div>
 
                 <div className="mt-8 border-t border-zinc-100 dark:border-zinc-800 pt-6">
-                  <label className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Team Group Photo (Wide Cut-out)</label>
+                  <label className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Team Group Photo (Wide Cut-out)</label>
                   <div className="flex items-center gap-2 mt-1">
-                    <input type="text" name="members_groupImage" value={formData.members_groupImage || ''} onChange={handleInputChange} className="flex-1 px-4 py-2 border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40 transition-colors" placeholder="Image URL" />
-                    <button type="button" onClick={() => { setMediaTarget({ field: 'members_groupImage' }); setIsMediaModalOpen(true); }} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white rounded-xl text-sm font-bold flex items-center gap-2 transition-colors"><ImageIcon className="w-4 h-4"/> Browse</button>
+                    <input type="text" name="members_groupImage" value={formData.members_groupImage || ''} onChange={handleInputChange} className="flex-1 px-4 py-2 border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 transition-colors" placeholder="Image URL" />
+                    <button type="button" onClick={() => { setMediaTarget({ field: 'members_groupImage' }); setIsMediaModalOpen(true); }} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold flex items-center gap-2 transition-colors"><ImageIcon className="w-4 h-4"/> Browse</button>
                   </div>
                   {formData.members_groupImage && <img src={resolveAssetUrl(formData.members_groupImage)} className="mt-3 h-32 w-auto object-contain rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm" alt="Preview"/>}
                 </div>

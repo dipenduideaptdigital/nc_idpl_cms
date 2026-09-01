@@ -325,7 +325,7 @@ const AdminLayout = () => {
                     </button>
                     
                     {/* Dropdown*/}
-                    <div className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-40 opacity-100 mt-1' : 'max-h-0 opacity-0'}`}>
+                    <div className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 mt-1' : 'max-h-0 opacity-0'}`}>
                       <div className="pl-5 pr-2 py-1 space-y-1 border-l-2 border-blue-800/50 dark:border-zinc-800 ml-6">
                         {item.children.map(child => (
                           <NavLink

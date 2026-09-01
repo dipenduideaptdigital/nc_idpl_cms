@@ -503,11 +503,11 @@ const PageEditor = () => {
             className={`h-[42px] inline-flex items-center justify-center gap-2 px-6 rounded-xl font-medium transition-colors shadow-sm focus:ring-2 disabled:opacity-70 ${
               isScheduling 
                 ? 'bg-indigo-600 hover:bg-indigo-700 text-white focus:ring-indigo-600/20' 
-                : 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-white focus:ring-zinc-900/20 dark:focus:ring-zinc-100/20'
+                : 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-600/20'
             }`}
           >
             {saving ? (
-              <div className={`w-4 h-4 border-2 border-t-transparent rounded-full animate-spin ${isScheduling ? 'border-white' : 'border-white dark:border-zinc-900'}`}></div>
+              <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
             ) : (
               <Save className="w-4 h-4" />
             )}
@@ -774,10 +774,10 @@ const PageEditor = () => {
         <button
           type="submit"
           disabled={saving}
-          className="bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 px-8 py-3 rounded-xl font-medium tracking-wide flex items-center justify-center gap-2 transition-all shadow-lg shadow-zinc-900/20 dark:shadow-none disabled:opacity-70 text-sm w-full sm:w-auto"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-medium tracking-wide flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/20 disabled:opacity-70 text-sm w-full sm:w-auto"
         >
           {saving ? (
-            <div className="w-5 h-5 border-2 border-white dark:border-zinc-900 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (
             <Save className="w-5 h-5" />
           )}

@@ -225,7 +225,7 @@ const HeaderMenuBuilder = () => {
           <button onClick={handleAdd} className="px-5 py-2.5 bg-blue-50 text-blue-600 rounded-xl font-semibold hover:bg-blue-100 transition-colors flex items-center gap-2">
             <Plus className="w-4 h-4" /> Add Item
           </button>
-          <button onClick={handleSave} disabled={isSaving} className="px-6 py-2.5 bg-zinc-900 dark:bg-emerald-600 text-white rounded-xl font-semibold hover:bg-zinc-800 dark:hover:bg-emerald-500 transition-colors disabled:opacity-70 flex items-center gap-2">
+          <button onClick={handleSave} disabled={isSaving} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-70 flex items-center gap-2">
             {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save Menu
           </button>
         </div>

@@ -419,8 +419,8 @@ const NcHomeCustomization = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">NatureCube Home Settings</h1>
           <p className="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">Manage dynamic content for the new NatureCube homepage.</p>
         </div>
-        <button onClick={handleSave} disabled={saving} className="bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg dark:shadow-none text-sm w-full sm:w-auto">
-          {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+        <button onClick={handleSave} disabled={saving} className="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-lg dark:shadow-none text-sm w-full sm:w-auto disabled:opacity-75 disabled:cursor-not-allowed">
+          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           {saving ? 'Saving...' : 'Save'}
         </button>
       </div>

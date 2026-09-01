@@ -130,7 +130,7 @@ const FooterSettings = () => {
         <button 
           onClick={handleSave} 
           disabled={saving} 
-          className="px-6 py-2.5 bg-zinc-900 dark:bg-emerald-600 text-white rounded-xl font-semibold hover:bg-zinc-800 dark:hover:bg-emerald-500 transition-colors disabled:opacity-70 flex items-center gap-2"
+          className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-70 flex items-center gap-2"
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save Footer
         </button>

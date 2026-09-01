@@ -53,16 +53,16 @@ const ContactRoutingSettings = () => {
     setFormData(prev => ({ ...prev, notifyEmails: prev.notifyEmails.filter(e => e !== email) }));
   };
 
-  if (isLoading) return <div className="flex h-64 items-center justify-center"><Loader2 className="w-8 h-8 text-blue-600 dark:text-emerald-400 animate-spin" /></div>;
+  if (isLoading) return <div className="flex h-64 items-center justify-center"><Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-500 animate-spin" /></div>;
 
   return (
     <form onSubmit={handleSave} className="space-y-6 animate-in fade-in pb-10">
       <div className="flex items-center justify-between bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800">
         <div>
-          <h1 className="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-50"><Send className="w-5 h-5 text-blue-600 dark:text-emerald-400" /> Lead Routing & Actions</h1>
+          <h1 className="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-50"><Send className="w-5 h-5 text-blue-600 dark:text-blue-500" /> Lead Routing & Actions</h1>
           <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">Configure where leads go and what users see after submission.</p>
         </div>
-        <button type="submit" disabled={isSaving} className="flex items-center gap-2 px-6 py-2.5 bg-zinc-900 dark:bg-emerald-600 text-white rounded-xl font-semibold hover:bg-zinc-800 dark:hover:bg-emerald-500 transition-colors disabled:opacity-70">
+        <button type="submit" disabled={isSaving} className="flex items-center gap-2 px-6 py-2.5 bg-zinc-900 dark:bg-blue-600 text-white rounded-xl font-semibold hover:bg-zinc-800 dark:hover:bg-blue-700 transition-colors disabled:opacity-70">
           {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save
         </button>
       </div>
@@ -78,8 +78,8 @@ const ContactRoutingSettings = () => {
         <div>
           <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-2">Lead Notification Emails</label>
           <div className="flex gap-2 mb-3">
-            <input type="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addEmail())} placeholder="e.g. sales@naturecube.in" className="flex-1 px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-sm focus:border-zinc-900 dark:focus:border-emerald-500 focus:ring-1 focus:ring-zinc-900 dark:focus:ring-emerald-400/40 outline-none transition-colors" />
-            <button type="button" onClick={addEmail} className="px-4 py-2 bg-blue-50 dark:bg-emerald-950/40 text-blue-600 dark:text-emerald-400 rounded-xl font-semibold hover:bg-blue-100 dark:hover:bg-emerald-900/50 transition-colors flex items-center gap-1"><Plus className="w-4 h-4" /> Add</button>
+            <input type="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addEmail())} placeholder="e.g. sales@naturecube.in" className="flex-1 px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-sm focus:border-zinc-900 dark:focus:border-blue-500 focus:ring-1 focus:ring-zinc-900 dark:focus:ring-blue-500/40 outline-none transition-colors" />
+            <button type="button" onClick={addEmail} className="px-4 py-2 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl font-semibold hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors flex items-center gap-1"><Plus className="w-4 h-4" /> Add</button>
           </div>
           <div className="flex flex-wrap gap-2">
             {formData.notifyEmails.length === 0 && <span className="text-xs text-zinc-400 dark:text-zinc-500 italic">Will use system default inbox if empty.</span>}
@@ -93,12 +93,12 @@ const ContactRoutingSettings = () => {
 
         <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800">
           <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-2">Success Message</label>
-          <textarea rows="2" value={formData.successMessage} onChange={e => setFormData(p => ({...p, successMessage: e.target.value}))} className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-sm focus:border-zinc-900 dark:focus:border-emerald-500 focus:ring-1 focus:ring-zinc-900 dark:focus:ring-emerald-400/40 outline-none resize-y transition-colors" placeholder="Message shown after successful submission"></textarea>
+          <textarea rows="2" value={formData.successMessage} onChange={e => setFormData(p => ({...p, successMessage: e.target.value}))} className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-sm focus:border-zinc-900 dark:focus:border-blue-500 focus:ring-1 focus:ring-zinc-900 dark:focus:ring-blue-500/40 outline-none resize-y transition-colors" placeholder="Message shown after successful submission"></textarea>
         </div>
 
         <div>
           <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-2">Success Redirect URL (Optional)</label>
-          <input type="text" value={formData.redirectUrl} onChange={e => setFormData(p => ({...p, redirectUrl: e.target.value}))} placeholder="e.g. /thank-you" className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-sm focus:border-zinc-900 dark:focus:border-emerald-500 focus:ring-1 focus:ring-zinc-900 dark:focus:ring-emerald-400/40 outline-none transition-colors" />
+          <input type="text" value={formData.redirectUrl} onChange={e => setFormData(p => ({...p, redirectUrl: e.target.value}))} placeholder="e.g. /thank-you" className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-sm focus:border-zinc-900 dark:focus:border-blue-500 focus:ring-1 focus:ring-zinc-900 dark:focus:ring-blue-500/40 outline-none transition-colors" />
         </div>
       </div>
     </form>

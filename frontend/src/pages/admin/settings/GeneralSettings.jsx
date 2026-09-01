@@ -46,7 +46,7 @@ const GeneralSettings = () => {
       const content = res.data?.data?.content || res.data?.content;
       if (content && Object.keys(content).length > 0) {
         setFormData(prev => ({ ...prev, ...content }));
-      }
+    }
     } catch (error) {
       console.error('Failed to load general settings:', error);
     } finally {
@@ -117,16 +117,17 @@ const GeneralSettings = () => {
         <button 
           type="submit" 
           disabled={isSaving}
-          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-medium hover:bg-zinc-800 dark:hover:bg-white transition-colors shadow-sm focus:ring-2 focus:ring-zinc-900/20 dark:focus:ring-zinc-100/20 flex-shrink-0 disabled:opacity-70 text-sm"
+          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-sm focus:ring-2 focus:ring-blue-600/20 flex-shrink-0 disabled:opacity-70 text-sm"
         >
           {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} 
           {isSaving ? 'Saving...' : 'Save'}
         </button>
+        
       </div>
 
       {message && (
-        <div className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium border transition-colors duration-300 ${message.type === 'success' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20' : 'bg-red-50 dark:bg-red-500/10 text-red-800 dark:text-red-400 border-red-200 dark:border-red-500/20'}`}>
-          {message.type === 'success' ? <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" />}
+        <div className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium border transition-colors duration-300 ${message.type === 'success' ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-800 dark:text-blue-400 border-blue-200 dark:border-blue-500/20' : 'bg-red-50 dark:bg-red-500/10 text-red-800 dark:text-red-400 border-red-200 dark:border-red-500/20'}`}>
+          {message.type === 'success' ? <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" />}
           <span>{message.text}</span>
         </div>
       )}
@@ -354,7 +355,7 @@ const GeneralSettings = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, showBackToTop: e.target.checked }))} 
                     className="sr-only" 
                   />
-                  <div className={`block w-12 h-7 rounded-full transition-colors duration-300 ${formData.showBackToTop === false || formData.showBackToTop === 'false' ? 'bg-zinc-300 dark:bg-zinc-700' : 'bg-emerald-500'}`}></div>
+                  <div className={`block w-12 h-7 rounded-full transition-colors duration-300 ${formData.showBackToTop === false || formData.showBackToTop === 'false' ? 'bg-zinc-300 dark:bg-zinc-700' : 'bg-blue-600'}`}></div>
                   <div className={`absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-transform duration-300 ${formData.showBackToTop === false || formData.showBackToTop === 'false' ? '' : 'transform translate-x-5'}`}></div>
                 </div>
               </label>

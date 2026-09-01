@@ -29,7 +29,7 @@ const CollapsibleTiptap = ({ label, value, onChange }) => {
           className="w-full px-4 py-3 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors outline-none"
         >
           <div className="flex items-center gap-3 overflow-hidden">
-            <Edit2 className="w-4 h-4 text-zinc-500 dark:text-emerald-400 shrink-0" />
+            <Edit2 className="w-4 h-4 text-zinc-500 dark:text-blue-400 shrink-0" />
             <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 truncate">
               {isOpen ? 'Close Rich Text Editor' : getPreviewText(value)}
             </span>
@@ -199,13 +199,13 @@ const MandalaCustomization = () => {
     zones: {}
   };
 
-  const fieldClass = "w-full mt-1 px-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40 focus:border-emerald-400 dark:focus:border-emerald-500 transition-colors";
+  const fieldClass = "w-full mt-1 px-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-blue-500 dark:focus:border-blue-400 transition-colors";
   const labelClass = "text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase";
 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-64">
-        <Loader2 className="w-10 h-10 animate-spin text-zinc-900 dark:text-emerald-400" />
+        <Loader2 className="w-10 h-10 animate-spin text-zinc-900 dark:text-blue-500" />
         <p className="mt-4 text-zinc-500 dark:text-zinc-400 font-medium">Loading Mandala engine...</p>
       </div>
     );
@@ -231,14 +231,14 @@ const MandalaCustomization = () => {
     <div className="space-y-6 pb-20 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-center bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 gap-4">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-50"><Layout className="w-6 h-6 text-emerald-600 dark:text-emerald-400"/> Mandala Customization</h1>
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-50"><Layout className="w-6 h-6 text-blue-600 dark:text-blue-400"/> Mandala Customization</h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Manage Mandala Panels</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => setIsPuckMode(true)} className="px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl flex items-center gap-2 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
+          <button onClick={() => setIsPuckMode(true)} className="px-4 py-2.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium rounded-xl flex items-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
             <Type className="w-4 h-4"/> Edit Visually
           </button>
-          <button onClick={handleFormSubmit} disabled={saving} className="px-6 py-2.5 bg-zinc-900 dark:bg-emerald-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-zinc-800 dark:hover:bg-emerald-500 transition-colors shadow-sm disabled:opacity-70">
+          <button onClick={handleFormSubmit} disabled={saving} className="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm disabled:opacity-70">
             {saving ? <Loader2 className="w-4 h-4 animate-spin"/> : <Save className="w-4 h-4"/>} 
             {saving ? 'Saving...' : 'Save'}
           </button>
@@ -255,7 +255,7 @@ const MandalaCustomization = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${activeTab === tab.id ? 'bg-zinc-900 dark:bg-emerald-600 text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
+                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${activeTab === tab.id ? 'bg-blue-600 text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
               >
                 {tab.label}
               </button>
@@ -274,7 +274,7 @@ const MandalaCustomization = () => {
               <label className="flex items-center cursor-pointer">
                 <div className="relative">
                   <input type="checkbox" checked={getVisibilityState()} onChange={handleVisibilityToggle} className="sr-only" />
-                  <div className={`block w-10 h-6 rounded-full transition-colors duration-300 ${getVisibilityState() ? 'bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
+                  <div className={`block w-10 h-6 rounded-full transition-colors duration-300 ${getVisibilityState() ? 'bg-blue-600' : 'bg-zinc-300 dark:bg-zinc-700'}`}></div>
                   <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ${getVisibilityState() ? 'transform translate-x-4' : ''}`}></div>
                 </div>
               </label>
@@ -285,7 +285,7 @@ const MandalaCustomization = () => {
                 <h2 className="text-lg font-bold border-b border-zinc-200 dark:border-zinc-700 pb-2 mb-4 text-zinc-900 dark:text-zinc-100">Hero & Global Panoramic Image</h2>
                 
                 <div>
-                  <label className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-2 block">Global Panoramic Grass Image</label>
+                  <label className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase mb-2 block">Global Panoramic Grass Image</label>
                   <ImageField value={formData.panoramic_image} onChange={(url) => handleTiptapChange('panoramic_image', url)} />
                 </div>
                 
