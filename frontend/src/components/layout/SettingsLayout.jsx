@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink, Outlet, Navigate, useLocation } from 'react-router-dom';
 import { Settings, Users, Shield, SlidersHorizontal, Layout, MessageSquare, ShieldAlert, Send, Layers, PanelBottom } from 'lucide-react';
 import { usePermission } from '../../hooks/usePermission';
@@ -8,6 +8,13 @@ const SettingsLayout = () => {
   const { hasPermission } = usePermission();
   const { user } = useAuth();
   const location = useLocation();
+
+  useEffect(() => {
+    const mainScrollArea = document.querySelector('.overflow-auto');
+    if (mainScrollArea) {
+      mainScrollArea.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [location.pathname]);
 
   const tabs = [
     { name: 'General', path: '/admin/settings/general', icon: SlidersHorizontal, permission: 'settings.manage' },
@@ -38,7 +45,7 @@ const SettingsLayout = () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-10 max-w-6xl mx-auto text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
+    <div className="flex flex-col lg:flex-row gap-10 max-w-6xl mx-auto min-h-[900px] text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
       {/* Settings Navigation Sidebar */}
       <div className="lg:w-60 flex-shrink-0 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-800 pb-6 lg:pb-0 lg:pr-6">
         <div className="sticky top-6 transition-colors duration-300">
@@ -72,7 +79,7 @@ const SettingsLayout = () => {
       </div>
 
       {/* Settings Content Area */}
-      <div className="flex-1 min-w-0 min-h-[70vh]">
+      <div className="flex-1 min-w-0 min-h-full pb-20">
         <Outlet />
       </div>
     </div>

@@ -92,12 +92,11 @@ const SystemStateSettings = () => {
     return <Navigate to="/admin/dashboard" />;
   }
 
-  if (loading) return <div className="p-10 flex justify-center"><Loader2 className="animate-spin text-zinc-500 dark:text-zinc-400 w-8 h-8" /></div>;
-
   const isMaintenance = formData.state !== 'ACTIVE';
 
   return (
     <div className="max-w-4xl space-y-6 font-sans transition-colors duration-300">
+      
       <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 flex justify-between items-center transition-colors duration-300">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-100">
@@ -107,7 +106,13 @@ const SystemStateSettings = () => {
         </div>
       </div>
 
-      {message && (
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[600px] bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
+          <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {message && (
         <div className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium transition-colors duration-300 ${message.type === 'success' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20' : 'bg-red-50 dark:bg-red-500/10 text-red-800 dark:text-red-400 border border-red-200 dark:border-red-500/20'}`}>
           {message.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
           {message.text}
@@ -116,10 +121,8 @@ const SystemStateSettings = () => {
 
       <form onSubmit={handleSubmit} className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 overflow-hidden transition-colors duration-300">
         
-        {/* Toggle & Preview on the same line */}
         <div className="p-5 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors duration-300">
           
-          {/* Left Side: Label & Toggle */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
             <div className="flex bg-zinc-200/60 dark:bg-zinc-950 p-1.5 rounded-xl w-full sm:w-auto shadow-inner transition-colors duration-300">
               <button
@@ -206,6 +209,8 @@ const SystemStateSettings = () => {
           </button>
         </div>
       </form>
+        </div>
+      )}
     </div>
   );
 };

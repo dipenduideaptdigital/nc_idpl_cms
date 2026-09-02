@@ -110,16 +110,8 @@ const FooterSettings = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 pb-20">
+    <div className="space-y-6 pb-20">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-100 dark:border-zinc-800 transition-colors">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-100">
@@ -129,20 +121,26 @@ const FooterSettings = () => {
         </div>
         <button 
           onClick={handleSave} 
-          disabled={saving} 
+          disabled={saving || loading} 
           className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-70 flex items-center gap-2"
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save Footer
         </button>
       </div>
 
-      {message && (
-        <div className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium ${message.type === 'success' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-red-50 text-red-800 border-red-200'}`}>
-          {message.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />} {message.text}
+      {loading ? (
+        <div className="flex min-h-[600px] items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
         </div>
-      )}
+      ) : (
+        <div className="space-y-6">
+          {message && (
+            <div className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium ${message.type === 'success' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-red-50 text-red-800 border-red-200'}`}>
+              {message.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />} {message.text}
+            </div>
+          )}
 
-      <FooterCustomization 
+          <FooterCustomization 
         footerData={footerData}
         onChange={handleChange}
         onLinkChange={handleLinkChange}
@@ -150,6 +148,8 @@ const FooterSettings = () => {
         onDeleteLink={handleDeleteLink}
         onDragEnd={handleDragEnd}
       />
+        </div>
+      )}
     </div>
   );
 };

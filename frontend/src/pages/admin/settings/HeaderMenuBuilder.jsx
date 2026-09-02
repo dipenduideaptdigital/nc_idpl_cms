@@ -39,38 +39,35 @@ const SortableMenuItem = ({ item, allItems, onUpdate, onRemove, expandedId, setE
         </div>
       </div>
 
-      {/* EXPANDED ACCORDION CONTENT */}
       {isExpanded && (
       <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 space-y-4">
         
-        {/* Row 1: URL & Navigation Label side-by-side on screens >= sm */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1.5">URL</label>
-            <input 
-              type="text" 
-              value={item.url} 
-              onChange={(e) => onUpdate(item.id, 'url', e.target.value)}
+            <input
+               type="text"
+               value={item.url}
+               onChange={(e) => onUpdate(item.id, 'url', e.target.value)}
               className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
             />
           </div>
           <div>
             <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1.5">Navigation Label</label>
-            <input 
-              type="text" 
-              value={item.label} 
-              onChange={(e) => onUpdate(item.id, 'label', e.target.value)}
+            <input
+               type="text"
+               value={item.label}
+               onChange={(e) => onUpdate(item.id, 'label', e.target.value)}
               className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
             />
           </div>
         </div>
 
-        {/* Row 2: Menu Parent */}
         <div>
           <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-1.5">Menu Parent</label>
-          <select 
-            value={item.parentId || ''} 
-            onChange={(e) => onUpdate(item.id, 'parentId', e.target.value || null)}
+          <select
+             value={item.parentId || ''}
+             onChange={(e) => onUpdate(item.id, 'parentId', e.target.value || null)}
             className="w-full sm:w-1/2 px-3 py-2 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40 cursor-pointer"
           >
             <option value="">No Parent (Top Level)</option>
@@ -80,7 +77,6 @@ const SortableMenuItem = ({ item, allItems, onUpdate, onRemove, expandedId, setE
           </select>
         </div>
 
-        {/* Footer Actions */}
         <div className="pt-2 flex justify-between items-center">
           <button onClick={() => onRemove(item.id)} className="text-red-500 hover:text-red-700 text-sm font-semibold flex items-center gap-1">
             <Trash2 className="w-4 h-4" /> Remove
@@ -89,14 +85,12 @@ const SortableMenuItem = ({ item, allItems, onUpdate, onRemove, expandedId, setE
             Cancel
           </button>
         </div>
-        
       </div>
     )}
     </div>
   );
-};
+}
 
-// MAIN BUILDER COMPONENT 
 const HeaderMenuBuilder = () => {
   const [items, setItems] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
@@ -104,7 +98,6 @@ const HeaderMenuBuilder = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
-  // Setup Drag Sensors
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -112,7 +105,6 @@ const HeaderMenuBuilder = () => {
 
   useEffect(() => { fetchMenu(); }, []);
 
-  // Convert nested DB JSON to Flat Array for the UI
   const flattenTree = (nestedArray, parentId = null) => {
     let flat = [];
     nestedArray.forEach(node => {
@@ -124,7 +116,6 @@ const HeaderMenuBuilder = () => {
     return flat;
   };
 
-  // Convert Flat Array back to Nested JSON for the DB
   const buildTree = (flatArray) => {
     let tree = [];
     let mappedArr = {};
@@ -133,16 +124,14 @@ const HeaderMenuBuilder = () => {
     });
     flatArray.forEach(arrElem => {
       if (arrElem.parentId) {
-        // If parent exists, push to parent's children
         if (mappedArr[arrElem.parentId]) {
           mappedArr[arrElem.parentId].children.push(mappedArr[arrElem.id]);
         }
       } else {
-        // If no parent, it's a top level item
         tree.push(mappedArr[arrElem.id]);
       }
     });
-    // Clean up parentId before sending to backend
+
     const cleanTree = (nodes) => nodes.map(({ parentId, ...rest }) => ({
       ...rest,
       children: cleanTree(rest.children)
@@ -151,6 +140,7 @@ const HeaderMenuBuilder = () => {
   };
 
   const fetchMenu = async () => {
+    setIsLoading(true);
     try {
       const res = await apiClient.get('/cms/section/global_header_menu');
       const menuItems = res.data?.data?.content?.menuItems || [];
@@ -168,8 +158,8 @@ const HeaderMenuBuilder = () => {
     try {
       const nestedData = buildTree(items);
       await apiClient.put('/cms/section/global_header_menu', { 
-        content: { menuItems: nestedData } 
-      });
+         content: { menuItems: nestedData } 
+       });
       setMessage({ type: 'success', text: 'Menu updated successfully!' });
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
@@ -210,10 +200,8 @@ const HeaderMenuBuilder = () => {
     }
   };
 
-  if (isLoading) return <div className="flex h-64 items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-zinc-500" /></div>;
-
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 pb-20">
+    <div className="space-y-6 pb-20">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-100 dark:border-zinc-800">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-100">
@@ -222,46 +210,53 @@ const HeaderMenuBuilder = () => {
           <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">Drag items to reorder. Click to edit links or assign sub-menus.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={handleAdd} className="px-5 py-2.5 bg-blue-50 text-blue-600 rounded-xl font-semibold hover:bg-blue-100 transition-colors flex items-center gap-2">
+          <button onClick={handleAdd} disabled={isLoading} className="px-5 py-2.5 bg-blue-50 text-blue-600 rounded-xl font-semibold hover:bg-blue-100 transition-colors flex items-center gap-2 disabled:opacity-70">
             <Plus className="w-4 h-4" /> Add Item
           </button>
-          <button onClick={handleSave} disabled={isSaving} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-70 flex items-center gap-2">
+          <button onClick={handleSave} disabled={isSaving || isLoading} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-70 flex items-center gap-2">
             {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save Menu
           </button>
         </div>
       </div>
 
-      {message && (
-        <div className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium ${message.type === 'success' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
-          {message.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />} {message.text}
+      {isLoading ? (
+        <div className="flex min-h-[600px] items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {message && (
+            <div className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium ${message.type === 'success' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
+              {message.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />} {message.text}
+            </div>
+          )}
+
+          <div className="max-w-3xl">
+            {items.length === 0 ? (
+              <div className="bg-white dark:bg-zinc-900 rounded-2xl p-10 text-center border border-dashed border-zinc-300 dark:border-zinc-700">
+                <p className="text-zinc-500 mb-4">Your menu is currently empty.</p>
+                <button onClick={handleAdd} className="text-blue-600 font-semibold hover:underline">Add your first link</button>
+              </div>
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={items.map(i => i.id)} strategy={verticalListSortingStrategy}>
+                  {items.map(item => (
+                    <SortableMenuItem 
+                      key={item.id} 
+                      item={item} 
+                      allItems={items}
+                      onUpdate={handleUpdate} 
+                      onRemove={handleRemove}
+                      expandedId={expandedId}
+                      setExpandedId={setExpandedId}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
+            )}
+          </div>
         </div>
       )}
-
-      {/* Drag and Drop Context */}
-      <div className="max-w-3xl">
-        {items.length === 0 ? (
-          <div className="bg-white dark:bg-zinc-900 rounded-2xl p-10 text-center border border-dashed border-zinc-300 dark:border-zinc-700">
-            <p className="text-zinc-500 mb-4">Your menu is currently empty.</p>
-            <button onClick={handleAdd} className="text-blue-600 font-semibold hover:underline">Add your first link</button>
-          </div>
-        ) : (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={items.map(i => i.id)} strategy={verticalListSortingStrategy}>
-              {items.map(item => (
-                <SortableMenuItem 
-                  key={item.id} 
-                  item={item} 
-                  allItems={items}
-                  onUpdate={handleUpdate} 
-                  onRemove={handleRemove}
-                  expandedId={expandedId}
-                  setExpandedId={setExpandedId}
-                />
-              ))}
-            </SortableContext>
-          </DndContext>
-        )}
-      </div>
     </div>
   );
 };

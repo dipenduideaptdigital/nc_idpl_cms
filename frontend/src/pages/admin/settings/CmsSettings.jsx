@@ -75,16 +75,8 @@ const CmsSettings = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[300px]">
-        <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-500 animate-spin" />
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
+    <div className="space-y-8 text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-300">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 transition-colors duration-300">
         <div>
@@ -99,7 +91,7 @@ const CmsSettings = () => {
 
         <button
           onClick={handleSave}
-          disabled={isSaving}
+          disabled={isSaving || isLoading}
           className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 text-white rounded-xl font-semibold transition-colors shadow-sm focus:ring-2 focus:ring-blue-600/20 flex-shrink-0"
         >
           {isSaving ? (
@@ -116,7 +108,13 @@ const CmsSettings = () => {
         </button>
       </div>
 
-      {message && (
+      {isLoading ? (
+        <div className="flex items-center justify-center min-h-[600px]">
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-500 animate-spin" />
+        </div>
+      ) : (
+        <div className="space-y-8">
+          {message && (
         <div
           className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium border transition-colors duration-300 ${
             message.type === 'success'
@@ -237,6 +235,8 @@ const CmsSettings = () => {
           </div>
         </div>
       </div>
+      </div>
+      )}
     </div>
   );
 };

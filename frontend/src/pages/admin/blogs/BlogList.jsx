@@ -238,19 +238,19 @@ const BlogList = () => {
                     <div className="flex items-center justify-end gap-2 group-hover:opacity-100 transition-opacity">
                       
                       <Can permission="blog.preview">
-                        <a href={`/blog/${blog.slug}`} target="_blank" rel="noopener noreferrer" className="p-2 text-zinc-400 dark:text-zinc-500 hover:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg transition-colors">
+                        <a href={`/blog/${blog.slug}`} target="_blank" rel="noopener noreferrer" className="p-2 text-[#3B82F6] dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg transition-colors">
                           <ExternalLink className="w-4 h-4" />
                         </a>
                       </Can>
 
                       <Can permission="blog.edit">
-                        <Link to={`/admin/blogs/edit/${blog.id}`} className="p-2 text-zinc-400 dark:text-zinc-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg transition-colors">
+                        <Link to={`/admin/blogs/edit/${blog.id}`} className="p-2 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg transition-colors">
                           <Edit3 className="w-4 h-4" />
                         </Link>
                       </Can>
 
                       <Can permission="blog.delete">
-                        <button onClick={() => handleDelete(blog.id)} disabled={isDeleting === blog.id} className="p-2 text-zinc-400 dark:text-zinc-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg transition-colors">
+                        <button onClick={() => handleDelete(blog.id)} disabled={isDeleting === blog.id} className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg transition-colors">
                           {isDeleting === blog.id ? <div className="w-4 h-4 border-2 border-red-600 dark:border-red-400 border-t-transparent rounded-full animate-spin"></div> : <Trash2 className="w-4 h-4" />}
                         </button>
                       </Can>

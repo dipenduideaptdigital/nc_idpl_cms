@@ -53,21 +53,25 @@ const ContactRoutingSettings = () => {
     setFormData(prev => ({ ...prev, notifyEmails: prev.notifyEmails.filter(e => e !== email) }));
   };
 
-  if (isLoading) return <div className="flex h-64 items-center justify-center"><Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-500 animate-spin" /></div>;
-
   return (
-    <form onSubmit={handleSave} className="space-y-6 animate-in fade-in pb-10">
+    <form onSubmit={handleSave} className="space-y-6 pb-10">
       <div className="flex items-center justify-between bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-50"><Send className="w-5 h-5 text-blue-600 dark:text-blue-500" /> Lead Routing & Actions</h1>
           <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">Configure where leads go and what users see after submission.</p>
         </div>
-        <button type="submit" disabled={isSaving} className="flex items-center gap-2 px-6 py-2.5 bg-zinc-900 dark:bg-blue-600 text-white rounded-xl font-semibold hover:bg-zinc-800 dark:hover:bg-blue-700 transition-colors disabled:opacity-70">
+        <button type="submit" disabled={isSaving || isLoading} className="flex items-center gap-2 px-6 py-2.5 bg-zinc-900 dark:bg-blue-600 text-white rounded-xl font-semibold hover:bg-zinc-800 dark:hover:bg-blue-700 transition-colors disabled:opacity-70">
           {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save
         </button>
       </div>
 
-      {message && (
+      {isLoading ? (
+        <div className="flex min-h-[600px] items-center justify-center">
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-500 animate-spin" />
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {message && (
         <div className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium ${message.type === 'success' ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' : 'bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-400 border border-red-200 dark:border-red-800'}`}>
           {message.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
           {message.text}
@@ -101,7 +105,9 @@ const ContactRoutingSettings = () => {
           <input type="text" value={formData.redirectUrl} onChange={e => setFormData(p => ({...p, redirectUrl: e.target.value}))} placeholder="e.g. /thank-you" className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-sm focus:border-zinc-900 dark:focus:border-blue-500 focus:ring-1 focus:ring-zinc-900 dark:focus:ring-blue-500/40 outline-none transition-colors" />
         </div>
       </div>
-    </form>
+    </div>
+   )}
+  </form>
   );
 };
 export default ContactRoutingSettings;
