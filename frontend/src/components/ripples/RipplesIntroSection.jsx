@@ -33,47 +33,47 @@ const RipplesIntroSection = ({ data, showQuoteBanner }) => {
   return (
     <section className={`w-full bg-white select-none font-kanit ${shouldShowQuote ? 'pb-16 sm:pb-20 md:pb-28' : 'pb-8 sm:pb-12 md:pb-16'} overflow-hidden`}>
       {/* Top Intro Section */}
-      <div className="max-w-7xl mx-auto pt-10 sm:pt-16 md:pt-24 lg:pt-28 pb-2 px-5 sm:px-8 md:px-12 lg:px-20">
+      <div className="min-h-[80vh] lg:min-h-screen flex flex-col justify-center max-w-7xl mx-auto py-20 lg:py-0 px-5 sm:px-8 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 md:gap-16 items-start">
           
           {/* Main Title (Left Column) */}
-          <div className="lg:col-span-7 pr-0 lg:pr-6">
-            <h2 className="font-kanit text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold text-[#222222] leading-[1.2] sm:leading-[1.16] tracking-tight whitespace-pre-line">
-              {data?.mainTitle || 'It is a long established fact that a reader will be distracted.'}
+          <div className="lg:col-span-6 pr-0 lg:pr-8">
+            <h2 className="font-kanit text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[86px] font-medium text-[#363636] leading-[1.1] tracking-tight whitespace-pre-line">
+              {data?.mainTitle || 'It is a long\nestablished\nfact that a\nreader will be\ndistracted.'}
             </h2>
           </div>
 
           {/* Subtitle, Description & Explore Action (Right Column) */}
-          <div className="lg:col-span-5 space-y-4 sm:space-y-6">
-            <h3 className="font-kanit text-base sm:text-xl md:text-[22px] font-bold text-[#444444] leading-snug whitespace-pre-line">
-              {data?.subTitle || 'It is a long established fact that a reader will be distracted.'}
+          <div className="lg:col-span-5 lg:col-start-8 space-y-4 sm:space-y-6 pt-2 lg:pt-4">
+            <h3 className="font-kanit text-base sm:text-xl md:text-2xl lg:text-[40px] font-medium text-[#666666] leading-snug whitespace-pre-line">
+              {data?.subTitle || 'It is a long established fact\nthat a reader will be\ndistracted.'}
             </h3>
 
-            <p className="font-kanit text-xs sm:text-sm md:text-base font-light text-[#666666] leading-relaxed max-w-lg whitespace-pre-line">
+            <p className="font-kanit text-xs sm:text-sm md:text-base lg:text-[25px] font-light text-[#777777] leading-[1.6] max-w-lg whitespace-pre-line">
               {data?.description || "Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India. Specializing in setting up 'Nature Aquariums' and 'Biotopes' that mimic actual fish habitats, we offer international quality brands and exceptional customer service, helping you build and maintain your dream aquarium."}
             </p>
 
             {/* Explore Button */}
-            <div className="pt-2">
+            <div className="pt-4 lg:pt-6">
               <button 
                 onClick={() => {
                   const event = new CustomEvent('open-consultation-modal');
                   window.dispatchEvent(event);
                 }}
-                className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#7BA641] transition-colors cursor-pointer"
+                className="group inline-flex items-center gap-4 lg:gap-5 cursor-pointer"
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-zinc-200/80 group-hover:bg-[#7BA641] text-zinc-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_0_14px_rgba(123,166,65,0.45)] group-active:scale-95">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#f4f4f4] text-[#7BA641] flex items-center justify-center transition-all duration-300 group-hover:bg-[#7BA641] group-hover:text-white group-hover:shadow-[0_4px_14px_rgba(123,166,65,0.4)] group-active:scale-95">
                   <svg 
-                    className="w-4 h-4 transition-transform duration-300 group-hover:rotate-90" 
+                    className="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:rotate-90" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor"
-                    strokeWidth="2.5"
+                    strokeWidth="1.5"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
                 </div>
-                <span className="font-kanit text-xs sm:text-sm font-semibold tracking-wide lowercase text-zinc-800 group-hover:text-[#7BA641] transition-colors">
+                <span className="font-kanit text-lg md:text-[22px] font-normal tracking-wide lowercase text-[#111827] group-hover:text-[#7BA641] transition-colors">
                   explore
                 </span>
               </button>
@@ -85,9 +85,9 @@ const RipplesIntroSection = ({ data, showQuoteBanner }) => {
 
       {/* Bottom Navy Banner: Prominent Overlapping Image & Spacious Quote */}
       {shouldShowQuote && (
-        <div className="w-full bg-[#0e222b] mt-20 xs:mt-24 sm:mt-32 md:mt-40 mb-12 sm:mb-16 md:mb-20 py-8 sm:py-10 md:py-14">
+        <div className="w-full bg-[#0e222b] mt-12 sm:mt-16 md:mt-24 mb-16 md:mb-24 py-8 sm:py-10 md:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-20 relative">
-            <div className="grid grid-cols-12 gap-4 xs:gap-6 sm:gap-10 md:gap-12 items-center">
+            <div className="grid grid-cols-12 gap-6 sm:gap-10 md:gap-12 items-center">
               
               {/* Person Image (Left Side - Symmetrical Overlap across ALL screens) */}
               <div className="col-span-5 sm:col-span-5 md:col-span-6 relative z-10 flex justify-start -my-10 xs:-my-12 sm:-my-18 md:-my-28 lg:-my-32">

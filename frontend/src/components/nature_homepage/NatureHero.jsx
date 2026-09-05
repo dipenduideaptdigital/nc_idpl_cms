@@ -38,10 +38,10 @@ const NatureHero = ({ data }) => {
         <img
           src={bgImage}
           alt="NatureCube Aquascape"
-          className="w-full h-full object-cover object-[center_35%] md:object-center scale-100 sm:scale-102 md:scale-105 filter brightness-95 contrast-105 transition-all duration-700"
+          className="w-full h-full object-cover object-[center_35%] md:object-center scale-100 sm:scale-102 md:scale-105 filter brightness-100 contrast-100 transition-all duration-700"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 sm:from-black/65 sm:via-black/25 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060e05] via-[#060e05]/35 to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
       </div>
 
       {/* Main Hero Content */}
@@ -56,7 +56,7 @@ const NatureHero = ({ data }) => {
             <h2 className="font-reem text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-md sm:whitespace-nowrap">
               {subHeadline}
             </h2>
-            <div className="font-larken text-5xl xs:text-6xl sm:text-7xl md:text-7xl lg:text-[5.5rem] text-zinc-100 font-normal italic tracking-normal mt-1 sm:mt-2 md:mt-3 select-none leading-none drop-shadow-lg">
+            <div className="font-larken text-5xl xs:text-6xl sm:text-7xl md:text-7xl lg:text-[5.5rem] text-zinc-100 font-normal italic tracking-normal mt-0 select-none leading-none drop-shadow-lg">
               {italicWord}
             </div>
           </div>

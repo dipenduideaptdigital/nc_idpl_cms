@@ -8,8 +8,8 @@ import card4Img from '../../assets/nc_home/card4.png';
 const getAssetUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http') || path.startsWith('data:')) return path;
-  const baseUrl = import.meta.env.VITE_API_URL 
-    ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
+  const baseUrl = import.meta.env.VITE_API_URL
+    ? import.meta.env.VITE_API_URL.replace('/api/v1', '')
     : 'http://localhost:5000';
   return `${baseUrl}${path}`;
 };
@@ -59,8 +59,8 @@ const OurBlogsSection = ({ data }) => {
               &nbsp;
             </span>
             <span 
-              className="font-larken font-normal italic text-5xl sm:text-7xl lg:text-[88px] text-[#7BA641] leading-[100%] tracking-[0%] lowercase align-middle"
-              style={{ fontWeight: 400, verticalAlign: 'middle' }}
+              className="font-larken font-normal italic text-5xl sm:text-7xl lg:text-[88px] text-[#6CA844] leading-[100%] tracking-[0%] lowercase align-middle"
+              style={{ fontWeight: 700, verticalAlign: 'middle' }}
             >
               {italicTitle}
             </span>
@@ -72,16 +72,14 @@ const OurBlogsSection = ({ data }) => {
           />
 
           <div 
-            className="font-kanit font-bold text-2xl sm:text-3xl lg:text-[36px] text-zinc-900 leading-snug [&>p]:m-0"
+            className="font-kanit font-medium text-2xl sm:text-3xl lg:text-[36px] text-zinc-900 leading-snug [&>p]:m-0"
             dangerouslySetInnerHTML={{ __html: headline }}
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 items-start">
           {cardsToRender.map((card, index) => {
-            const cardImg = card.image?.startsWith('http') || card.image?.startsWith('/') 
-              ? getAssetUrl(card.image) 
-              : card.image;
+            const cardImg = typeof card.image === 'string' ? getAssetUrl(card.image) : card.image;
               
             return (
               <div
@@ -96,12 +94,12 @@ const OurBlogsSection = ({ data }) => {
                   />
                 </div>
 
-                <h3 className="font-kanit font-bold text-lg sm:text-xl text-zinc-900 mb-2.5">
+                <h3 className="font-reem-fun font-bold text-lg sm:text-xl text-zinc-900 mb-2.5">
                   {card.title}
                 </h3>
 
                 <div 
-                  className="font-kanit font-light text-sm sm:text-base text-zinc-600 leading-relaxed [&>p]:m-0"
+                  className="font-kanit font-light text-sm sm:text-base text-zinc-900 leading-relaxed [&>p]:m-0"
                   dangerouslySetInnerHTML={{ __html: card.description }}
                 />
               </div>

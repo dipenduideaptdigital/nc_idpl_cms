@@ -55,20 +55,20 @@ const NatureFooter = () => {
   const sitemapUrl = footerData?.sitemapUrl || "/sitemap";
 
   return (
-    <footer className="relative w-full bg-[#08171d] text-white pt-12 sm:pt-16 lg:pt-20 pb-10 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
+    <footer className="relative w-full bg-[#06232B] text-white pt-12 sm:pt-16 lg:pt-20 pb-10 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
       {/* Background Bush Decorative Image */}
-      <div className="absolute -bottom-15 -left-35 w-[380px] sm:w-[520px] lg:w-[400px] h-auto pointer-events-none z-0 opacity-25">
+      <div className="absolute -bottom-0 -left-[190px] w-[380px] sm:w-[500px] lg:w-[420px]  pointer-events-none z-0 opacity-95">
         <img
           src={bushBg}
           alt=""
-          className="w-full h-auto object-contain object-left-bottom filter brightness-125 transform rotate-180"
+          className="w-full h-auto object-contain  filter brightness-50 transform rotate-320"
         />
       </div>
 
       <div className="max-w-[1440px] mx-auto relative z-10">
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-start pb-12 sm:pb-16">
-          
+
           <div className="lg:col-span-4 flex flex-col items-start pr-0 lg:pr-6">
             {/* NatureCube Logo (Typographic Design) */}
             <a href="/" className="inline-flex flex-col group mb-6">
@@ -95,15 +95,15 @@ const NatureFooter = () => {
 
           <div className="lg:col-span-8 flex flex-col space-y-8 sm:space-y-10">
             {/* Nav Links Grid */}
-            <div className="grid grid-cols-2 gap-8 sm:gap-12 items-start">
-              
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-12 items-start">
+
               {/* Column 1 */}
               <div className="flex flex-col space-y-3.5 sm:space-y-4">
                 {col1Links.map((link) => (
                   <a
                     key={link.id}
                     href={link.url}
-                    className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors uppercase"
+                    className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#6CA844] transition-colors uppercase"
                   >
                     {link.label}
                   </a>
@@ -116,7 +116,7 @@ const NatureFooter = () => {
                   <a
                     key={link.id}
                     href={link.url}
-                    className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors uppercase"
+                    className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#6CA844] transition-colors uppercase"
                   >
                     {link.label}
                   </a>
@@ -133,21 +133,21 @@ const NatureFooter = () => {
                 </div>
               </div>
 
-            </div>
+              {/* Column 3 - Social Links */}
+              <div className="flex flex-col space-y-3.5 sm:space-y-4">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#6CA844] transition-colors uppercase"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
 
-            {/* DYNAMIC SOCIAL LINKS */}
-            <div className="flex flex-wrap items-center gap-6 sm:gap-10 pt-2 sm:pt-4">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-kanit text-sm sm:text-base font-normal tracking-wider text-zinc-200 hover:text-[#7BA641] transition-colors uppercase"
-                >
-                  {link.label}
-                </a>
-              ))}
             </div>
 
           </div>
@@ -155,19 +155,18 @@ const NatureFooter = () => {
         </div>
 
         {/* Bottom Legal / Copyright Bar */}
-        <div className="border-t border-zinc-800/80 pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs sm:text-sm text-zinc-400 font-kanit font-light">
+        <div className="border-t border-zinc-800/80 pt-8 flex flex-col lg:flex-row items-center lg:items-end justify-evenly gap-6 text-xs sm:text-sm text-zinc-400 font-kanit font-light">
 
           {/* Left Copyright */}
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-center sm:text-left uppercase">
+          <div className="flex flex-col items-center lg:items-start gap-1 sm:gap-1.5 text-center sm:text-left uppercase">
             <span>{copyrightText}</span>
-            <span className="hidden sm:inline text-zinc-600">|</span>
             <span>
               DESIGNED & DEVELOPED BY{' '}
               <a
                 href="https://ideaptdigital.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="hover:text-white transition-colors underline underline-offset-2"
               >
                 IDEAPTDIGITAL
               </a>
@@ -175,7 +174,7 @@ const NatureFooter = () => {
           </div>
 
           {/* Right Legal Links */}
-          <div className="flex items-center gap-6 sm:gap-8 tracking-wider">
+          <div className="flex items-center gap-6 sm:gap-8 tracking-wider mt-4 lg:mt-0">
             <a href={privacyUrl} className="hover:text-white transition-colors uppercase">
               PRIVACY POLICY
             </a>

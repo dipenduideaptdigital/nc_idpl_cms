@@ -12,11 +12,12 @@ const RipplesLetsBeginSection = ({ data }) => {
   
   const bottomImage = data?.bottomImage || branchImg; 
 
+
   const defaultSteps = [
     { num: '01', title: 'Design Consultation', description: 'Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.', img: deepImg },
-    { num: '02', title: 'Design Consultation', description: 'Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.', img: deepImg },
-    { num: '03', title: 'Design Consultation', description: 'Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.', img: deepImg },
-    { num: '04', title: 'Design Consultation', description: 'Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.', img: deepImg },
+    { num: '02', title: 'Space Planning', description: 'Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.', img: deepImg },
+    { num: '03', title: 'Implementation', description: 'Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.', img: deepImg },
+    { num: '04', title: 'Maintenance', description: 'Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.', img: deepImg },
   ];
 
   // Use dynamic steps if available, otherwise use default
@@ -27,74 +28,82 @@ const RipplesLetsBeginSection = ({ data }) => {
   };
 
   return (
-    <section className="w-full bg-white select-none font-kanit py-12 md:py-20 px-6 md:px-12 lg:px-20">
-      <div className="max-w-5xl mx-auto">
-        
-        {/* Top Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+    <section className="w-full bg-white select-none font-kanit">
+      
+      {/* Screen 1: Let's Begin Accordion */}
+      <div className="w-full h-[85vh] lg:h-screen lg:overflow-hidden flex flex-col pt-8 lg:pt-12 pb-8">
+        <div className="max-w-[1300px] w-[92%] mx-auto px-4 md:px-8">
           
-          {/* Left Column: Heading & Intro Text */}
-          <div className="lg:col-span-4 space-y-4">
-            <h2 className="font-kanit text-4xl sm:text-5xl md:text-[54px] font-medium text-[#2c2c2c] leading-tight tracking-tight">
-              {heading}
-            </h2>
-            <p className="font-kanit text-xs sm:text-sm font-light text-zinc-500 leading-relaxed max-w-xs">
-              {introText}
-            </p>
-          </div>
-
-          {/* Right Column: Step Accordion List */}
-          <div className="lg:col-span-8 space-y-2 ml-10">
-            {steps.map((step, index) => {
-              const isActive = activeStep === index;
-              return (
-                <div key={index} className="border-b border-zinc-400/80 py-4 transition-all duration-300">
-                  {/* Step Header Line */}
-                  <button
-                    onClick={() => handleToggle(index)}
-                    className="w-full flex items-center gap-6 text-left cursor-pointer group focus:outline-none"
-                  >
-                    <div className="w-8 h-8 rounded-full border border-zinc-400 flex items-center justify-center text-xs font-medium text-zinc-600 group-hover:border-zinc-800 transition-colors shrink-0">
-                      {step.num}
-                    </div>
-                    <span className="font-kanit text-lg sm:text-xl font-medium text-[#2c2c2c] group-hover:text-black transition-colors">
-                      {step.title}
-                    </span>
-                  </button>
-
-                  {/* Active Step Banner Card */}
-                  {isActive && (
-                    <div className="relative w-full rounded-xs overflow-hidden mt-4 mb-2 h-[220px] sm:h-[270px] md:h-[310px] shadow-md transition-all duration-500">
-                      <img
-                        src={step.img || deepImg} // 👉 Fallback for step image
-                        alt={step.title}
-                        className="w-full h-full object-cover object-center"
-                      />
-                      {/* Text Overlay on the Right side of image */}
-                      <div className="absolute inset-0 bg-gradient-to-l from-black/70 via-black/30 to-transparent flex items-center justify-end p-6 sm:p-8 md:p-10">
-                        <p className="font-kanit text-xs sm:text-sm text-white/90 font-light max-w-xs text-left leading-relaxed drop-shadow-md">
-                          {step.description}
-                        </p>
+          {/* Top Layout */}
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-16">
+            
+            {/* Left Column: Heading & Intro Text */}
+            <div className="w-full lg:w-[45%] flex-shrink-0 space-y-6 lg:space-y-8 pt-4">
+              <h2 className="font-reem text-6xl sm:text-7xl md:text-[90px] font-bold text-[#363636] tracking-wide leading-none whitespace-nowrap">
+                {heading}
+              </h2>
+              <p className="font-kanit text-base sm:text-lg lg:text-[30px] font-light text-zinc-500">
+                {introText}
+              </p>
+            </div>
+  
+            {/* Right Column: Step Accordion List */}
+            <div className="w-full lg:w-[50%] space-y-1">
+              {steps.map((step, index) => {
+                const isActive = activeStep === index;
+                return (
+                  <div key={index} className="border-b border-zinc-300 py-6 lg:py-8 transition-all duration-300">
+                    {/* Step Header Line */}
+                    <button
+                      onClick={() => handleToggle(index)}
+                      className="w-full flex items-center gap-6 lg:gap-10 text-left cursor-pointer group focus:outline-none"
+                    >
+                      <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-zinc-100 flex items-center justify-center text-base lg:text-lg font-semibold text-zinc-600 group-hover:bg-zinc-200 transition-colors shrink-0">
+                        {step.num}
+                      </div>
+                      <span className="font-kanit text-2xl sm:text-3xl lg:text-[34px] font-medium text-zinc-800 group-hover:text-black transition-colors tracking-wide">
+                        {step.title}
+                      </span>
+                    </button>
+  
+                    {/* Active Step Banner Card */}
+                    <div 
+                      className={`relative w-full overflow-hidden transition-all duration-500 ease-in-out ${
+                        isActive ? 'max-h-[600px] lg:max-h-[50vh] mt-8 mb-2 opacity-100' : 'max-h-0 mt-0 mb-0 opacity-0'
+                      }`}
+                    >
+                      <div className="h-[250px] sm:h-[350px] lg:h-[40vh] w-full">
+                        <img
+                          src={step.img || deepImg}
+                          alt={step.title}
+                          className="w-full h-full object-cover object-center block"
+                        />
+                        {/* Text Overlay on the Right side of image */}
+                        <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/50 to-transparent flex items-center justify-end p-8 sm:p-12 lg:p-16">
+                          <p className="font-kanit text-base sm:text-lg lg:text-xl text-white/95 font-light max-w-md text-right leading-relaxed drop-shadow-md">
+                            {step.description}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })}
+            </div>
+  
           </div>
-
         </div>
-
-        {/* Bottom Large Image Banner */}
-        <div className="w-full mt-16 md:mt-24 rounded-xs overflow-hidden shadow-lg border border-zinc-100">
-          <img
-            src={bottomImage}
-            alt="Nature Aquascape Banner"
-            className="w-full h-auto object-cover block"
-          />
-        </div>
-
       </div>
+
+      {/* Screen 2: Bottom Large Image Banner (Full Bleed) */}
+      <div className="w-full h-[60vh] lg:h-screen overflow-hidden mt-12 lg:mt-24">
+        <img
+          src={bottomImage}
+          alt="Nature Aquascape Banner"
+          className="w-full h-full object-cover object-center block"
+        />
+      </div>
+
     </section>
   );
 };

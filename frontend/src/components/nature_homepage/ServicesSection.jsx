@@ -105,35 +105,35 @@ const ServicesSection = ({ data }) => {
   const currentService = servicesToRender[safeIndex] || servicesToRender[0];
   if (data?.isVisible === false) return null;
   return (
-    <section className="relative w-full pl-5 bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-12 overflow-hidden select-none">
+    <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-12 overflow-hidden select-none">
       
       <div className="absolute top-0 right-0 w-[350px] sm:w-[500px] lg:w-[500px] h-auto pointer-events-none z-0 opacity-59">
         <img src={brush2Img} alt="" className="w-full h-auto object-contain object-right-top" />
       </div>
 
-      <div className="max-w-[1340px] mx-auto relative z-10 ml-5">
+      <div className="w-full mx-auto relative z-10">
         
         {/* Section Header */}
-        <div className="max-w-[820px] space-y-6 mb-12 sm:mb-16">
-          <span className="font-kanit text-[20px] sm:text-[30px] font-medium text-[#7BA641] leading-[100%] tracking-[0%] align-middle block lowercase" style={{ fontWeight: 500, verticalAlign: 'middle' }}>
+        <div className="max-w-[820px] mb-12 sm:mb-16">
+          <span className="font-kanit text-[20px] sm:text-[30px] font-medium text-[#6CAB44] leading-[100%] tracking-[0%] align-middle block lowercase mb-4 sm:mb-5" style={{ fontWeight: 500, verticalAlign: 'middle' }}>
             {tagline}
           </span>
           <div 
-            className="font-kanit text-xl sm:text-4xl lg:text-[30px] font-light text-zinc-900 leading-[38px] sm:leading-[48px] lg:leading-[55px] tracking-[0%] align-middle max-w-4xl [&>p]:m-0" 
+            className="font-kanit text-2xl sm:text-4xl lg:text-[36px] font-light text-zinc-900 leading-[32px] sm:leading-[38px] lg:leading-[42px] tracking-[0%] align-middle max-w-4xl mb-6 sm:mb-8 [&>p]:m-0" 
             style={{ fontWeight: 300, verticalAlign: 'middle' }}
             dangerouslySetInnerHTML={{ __html: headline }}
           />
           <div 
-            className="font-kanit text-base sm:text-lg text-zinc-500 font-light leading-[34px] tracking-[0%] align-middle max-w-[420px] [&>p]:m-0" 
-            style={{ fontWeight: 300, lineHeight: '34px', letterSpacing: '0%', verticalAlign: 'middle' }}
+            className="font-kanit text-base sm:text-lg text-zinc-500 font-light leading-[26px] sm:leading-[30px] tracking-[0%] align-middle max-w-[500px] [&>p]:m-0" 
+            style={{ fontWeight: 300, verticalAlign: 'middle' }}
             dangerouslySetInnerHTML={{ __html: subtext }}
           />
         </div>
 
         {/* Dynamic Card Container - Automatically rotates every 4 seconds */}
-        <div className="relative max-w-[1240px] mx-auto">
+        <div className="relative w-full mx-auto">
           {/* Main Card */}
-          <div className="relative rounded-xs overflow-hidden shadow-2xl bg-[#08171d] min-h-[500px] lg:h-[560px] grid grid-cols-1 lg:grid-cols-12 items-stretch">
+          <div className="relative rounded-xs overflow-hidden shadow-2xl bg-[#08171d] min-h-[500px] lg:h-[680px] xl:h-[760px] grid grid-cols-1 lg:grid-cols-12 items-stretch">
             
             {/* Left Image Side (8 Columns) */}
             <div className="lg:col-span-8 relative h-[240px] sm:h-[300px] lg:h-full overflow-hidden">
@@ -153,7 +153,7 @@ const ServicesSection = ({ data }) => {
               isFading ? 'opacity-30 translate-x-2' : 'opacity-100 translate-x-0'
             }`}>
               <div className="space-y-4 sm:space-y-6">
-                <div className="font-kanit text-4xl sm:text-5xl lg:text-6xl font-normal text-[#7BA641] tracking-wider">
+                <div className="font-kanit text-4xl sm:text-5xl lg:text-6xl font-normal text-[#6CAB44] tracking-wider">
                   {currentService.number || `0${currentIndex + 1}`}
                 </div>
                 <h3 className="font-kanit text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-wide uppercase">
@@ -174,7 +174,7 @@ const ServicesSection = ({ data }) => {
                         key={idx}
                         className={`h-2 rounded-full transition-all duration-500 ${
                           idx === currentIndex 
-                            ? 'w-8 bg-[#7BA641]' 
+                            ? 'w-8 bg-[#6CAB44]' 
                             : 'w-2 bg-white/30'
                         }`}
                       />

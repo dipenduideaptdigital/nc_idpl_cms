@@ -73,36 +73,36 @@ const WhatTheySaySection = ({ data }) => {
         
         {/* Left Column */}
         <div className="lg:col-span-5 flex flex-col items-start pt-0 lg:pt-4">
-          <span className="font-kanit text-[18px] sm:text-[20px] font-medium text-[#7BA641] tracking-wide block lowercase mb-3">
+          <span className="font-kanit text-[18px] sm:text-[20px] font-medium text-[#6CA844] tracking-wide block lowercase mb-3">
             {tagline}
           </span>
 
           <div className="mb-6 flex items-baseline flex-wrap">
-            <span className="font-reem font-bold text-3xl sm:text-5xl lg:text-[64px] text-black leading-[100%] uppercase align-middle" style={{ fontWeight: 700, verticalAlign: 'middle' }}>
+            <span className="font-reem font-bold text-3xl sm:text-5xl lg:text-[55px] text-black leading-[100%] uppercase align-middle" style={{ fontWeight: 700, verticalAlign: 'middle' }}>
               {titlePrefix}
             </span>
             <span className="font-reem font-bold text-3xl sm:text-5xl lg:text-[64px] leading-[100%] align-middle" style={{ fontWeight: 700, verticalAlign: 'middle' }}>
               &nbsp;
             </span>
-            <span className="font-larken font-normal italic text-4xl sm:text-6xl lg:text-[88px] text-[#7BA641] leading-[100%] lowercase align-middle" style={{ fontWeight: 400, verticalAlign: 'middle' }}>
+            <span className="font-larken font-normal italic text-4xl sm:text-6xl lg:text-[88px] text-[#6CA844] leading-[100%] lowercase align-middle" style={{ fontWeight: 550, verticalAlign: 'middle' }}>
               {italicTitle}
             </span>
           </div>
 
           <h2 
-            className="font-kanit font-bold text-2xl sm:text-4xl lg:text-[40px] text-zinc-900 leading-[1.2] max-w-sm mb-4 lg:mb-12"
+            className="font-kanit font-medium text-2xl sm:text-4xl lg:text-[40px] text-zinc-900 leading-[1.2] max-w-md lg:max-w-lg mb-4 lg:mb-12"
             dangerouslySetInnerHTML={{ __html: headline }}
           />
 
           {/* Secondary Card Container - Hidden on smaller screens (`lg:block`) */}
           {testimonials.length > 1 && (
-            <div className="hidden lg:block w-full max-w-[370px] relative rounded-xs overflow-hidden shadow-lg group mt-8 sm:mt-12 ml-25">
-              <div className="aspect-[4/4.5] w-full relative">
+            <div className="hidden lg:block w-full max-w-[460px] relative rounded-xs overflow-hidden shadow-lg group mt-4 sm:mt-6 lg:-mt-4 ml-28 lg:ml-32 lg:-mr-16 z-20">
+              <div className="aspect-[4/5] w-full relative">
                 <img src={getImageUrl(secondaryItem.image)} alt={secondaryItem.name || 'Testimonial'} className="w-full h-full object-cover object-left" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-40% to-transparent p-5 sm:p-6 flex flex-col justify-end text-white">
-                  <h4 className="font-kanit font-medium text-base sm:text-lg text-white mb-0.5">{secondaryItem.name}</h4>
-                  <p className="font-kanit font-medium text-xs sm:text-sm text-white/90 mb-2">{secondaryItem.location}</p>
-                  <p className="font-kanit font-light text-xs sm:text-[13px] leading-relaxed text-white/95 line-clamp-4">{secondaryItem.comment}</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-40% to-transparent p-6 sm:p-8 flex flex-col justify-end text-white">
+                  <h4 className="font-kanit font-medium text-lg sm:text-xl text-white mb-1">{secondaryItem.name}</h4>
+                  <p className="font-kanit font-medium text-sm sm:text-base text-white/90 mb-2">{secondaryItem.location}</p>
+                  <p className="font-kanit font-light text-sm sm:text-[15px] leading-relaxed text-white/95 line-clamp-4">{secondaryItem.comment}</p>
                 </div>
               </div>
             </div>
@@ -110,17 +110,17 @@ const WhatTheySaySection = ({ data }) => {
 
           {/* Desktop Navigation Buttons */}
           {testimonials.length > 1 && (
-            <div className="hidden lg:flex items-center justify-end gap-5 mt-6 w-full max-w-[360px] ml-20">
+            <div className="hidden lg:flex items-center justify-end gap-5 mt-6 w-full max-w-[460px] ml-28 lg:ml-32 lg:-mr-16 z-20">
               <button 
                 onClick={handlePrev} 
-                className="w-10 h-10 rounded-full bg-[#f0f4ec] hover:bg-[#7BA641] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group" 
+                className="w-10 h-10 rounded-full bg-[#f0f4ec] hover:bg-[#6CA844] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group" 
                 aria-label="Previous testimonial"
               >
                 <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
               </button>
               <button 
                 onClick={handleNext} 
-                className="w-10 h-10 rounded-full bg-[#f0f4ec] hover:bg-[#7BA641] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group" 
+                className="w-10 h-10 rounded-full bg-[#f0f4ec] hover:bg-[#6CA844] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group" 
                 aria-label="Next testimonial"
               >
                 <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
@@ -132,7 +132,7 @@ const WhatTheySaySection = ({ data }) => {
         {/* Right Column: Featured Single Primary Card for Mobile/Tablet & Desktop */}
         <div className="lg:col-span-6 flex flex-col items-center lg:items-start w-full mt-4 lg:mt-60">
           <div className="w-full max-w-[620px] relative rounded-xs overflow-hidden shadow-2xl mt-0 ml-0 lg:ml-6 mx-auto lg:mx-0">
-            <div className="w-full aspect-[4/5] sm:aspect-[768/850] min-h-[360px] xs:min-h-[420px] sm:min-h-[500px] lg:min-h-[580px] relative">
+            <div className="w-full aspect-[4/5] sm:aspect-[768/930] min-h-[360px] xs:min-h-[420px] sm:min-h-[500px] lg:min-h-[680px] relative">
               <img src={getImageUrl(activeItem.image)} alt={activeItem.name || 'Testimonial'} className="w-full h-full object-cover object-left" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-40% to-transparent p-6 sm:p-8 lg:p-10 flex flex-col justify-end text-white">
                 <h3 className="font-kanit font-medium text-2xl sm:text-3xl lg:text-[32px] text-white mb-1 tracking-tight">{activeItem.name}</h3>

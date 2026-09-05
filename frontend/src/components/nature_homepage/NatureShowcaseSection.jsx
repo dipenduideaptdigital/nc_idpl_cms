@@ -17,8 +17,8 @@ import defaultPlantBoxImg from '../../assets/nc_home/plant_box.png';
 const getAssetUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http') || path.startsWith('data:')) return path;
-  const baseUrl = import.meta.env.VITE_API_URL 
-    ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
+  const baseUrl = import.meta.env.VITE_API_URL
+    ? import.meta.env.VITE_API_URL.replace('/api/v1', '')
     : 'http://localhost:5000';
   return `${baseUrl}${path}`;
 };
@@ -45,34 +45,34 @@ const NatureShowcaseSection = ({ data }) => {
   if (data?.isVisible === false) return null;
   return (
     <section className="relative w-full bg-[#fcfdfc] py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 overflow-hidden select-none">
-      
+
       {/* Background Soft Paint Splash */}
       <div className="absolute -top-10 sm:-top-16 lg:-top-24 -left-10 sm:-left-16 lg:-left-24 w-[320px] sm:w-[480px] lg:w-[580px] h-auto pointer-events-none z-0 opacity-40">
         <img src={brush1Img} alt="" className="w-full h-auto object-contain object-left-top" />
       </div>
 
-      <div className="max-w-[1440px] mx-auto relative z-10 space-y-20 sm:space-y-28 lg:space-y-36">
-        
+      <div className="w-full relative z-10">
+
         {/* Row 1: NatureCube Showcase */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-5 space-y-6 md:space-y-8 pr-0 lg:pr-6 text-center lg:text-left">
             <div className="w-[180px] sm:w-[240px] lg:w-[300px] mx-auto lg:mx-0">
               <img src={row1Logo} alt="NatureCube Logo" className="w-full h-auto object-contain" />
             </div>
-            <p className="font-kanit text-base sm:text-lg lg:text-[25px] font-light text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] max-w-md lg:max-w-[420px] mx-auto lg:mx-0">
+            <p className="font-kanit text-base sm:text-lg lg:text-[25px] font-light text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] max-w-md lg:max-w-[420px] mx-auto lg:mx-0 lg:pl-6">
               {row1Desc}
             </p>
           </div>
 
-          <div className="lg:col-span-7 overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-            <div className="flex gap-4 sm:gap-6 min-w-[650px] lg:min-w-0 pb-4 sm:pb-0">
-              <div className="w-1/3 min-w-[200px] lg:min-w-0 aspect-[4/5] rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+          <div className="lg:col-span-7 overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 lg:-mr-20">
+            <div className="flex gap-3 sm:gap-5 lg:gap-6 min-w-[650px] lg:min-w-0 pb-4 sm:pb-0 pr-4 sm:pr-0 lg:pr-2">
+              <div className="flex-1 min-w-[200px] lg:min-w-0 aspect-square rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <img src={gal1} alt="Gallery 1" className="w-full h-full object-cover" />
               </div>
-              <div className="w-1/3 min-w-[200px] lg:min-w-0 aspect-[4/5] rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex-1 min-w-[200px] lg:min-w-0 aspect-square rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <img src={gal2} alt="Gallery 2" className="w-full h-full object-cover" />
               </div>
-              <div className="w-1/3 min-w-[200px] lg:min-w-0 aspect-[4/5] rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex-1 min-w-[200px] lg:min-w-0 aspect-square rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <img src={gal3} alt="Gallery 3" className="w-full h-full object-cover" />
               </div>
             </div>
@@ -80,53 +80,53 @@ const NatureShowcaseSection = ({ data }) => {
         </div>
 
         {/* Row 2: Ripples Aquatic Studio */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative mt-24 lg:mt-32">
           <div className="lg:col-span-5 flex justify-center items-center">
-            <div className="w-[160px] sm:w-[180px] lg:w-[225px]">
+            <div className="w-[190px] sm:w-[230px] lg:w-[300px]">
               <img src={row2Logo} alt="Ripples Logo" className="w-full h-auto object-contain" />
             </div>
           </div>
 
           <div className="lg:col-span-4 space-y-6 ml-0 lg:ml-12 text-center lg:text-left">
-            <p 
-              className="font-kanit text-base sm:text-lg lg:text-[22px] text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] font-light max-w-md lg:max-w-[450px] mx-auto lg:mx-0 [&>b]:font-bold [&>b]:text-[#111111] [&>strong]:font-bold [&>strong]:text-[#111111]"
+            <p
+              className="font-kanit text-base sm:text-lg lg:text-[22px] text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] font-light max-w-md lg:max-w-[450px] mx-auto lg:mx-0 [&>b]:font-medium [&>b]:text-[#676767] [&>strong]:font-bold [&>strong]:text-[#676767]"
               dangerouslySetInnerHTML={{ __html: row2Desc }}
             />
 
-            <div className="flex justify-center lg:justify-end pr-0 lg:pr-12 pt-2">
-              <Link to="/ripples" className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#7BA641] transition-colors cursor-pointer">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-zinc-200/80 group-hover:bg-[#7BA641] text-zinc-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_0_14px_rgba(123,166,65,0.45)] group-active:scale-95">
-                  <svg 
-                    className="w-4 h-4 transition-transform duration-300 group-hover:rotate-90" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
+            <div className="flex justify-center pt-2">
+              <Link to="/ripples" className="group inline-flex items-center gap-3.5 text-[#505A5C] hover:text-[#48682E] transition-colors cursor-pointer">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#EBF3DF] group-hover:bg-[#4A712E] text-[#6CA844] group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_2px_12px_rgba(72,104,46,0.35)] group-active:scale-95">
+                  <svg
+                    className="w-6 h-6 transition-transform duration-300 group-hover:rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
                     stroke="currentColor"
-                    strokeWidth="2.5"
+                    strokeWidth="2.4"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
                 </div>
-                <span className="font-kanit text-xs sm:text-sm font-semibold tracking-wide lowercase text-zinc-800 group-hover:text-[#7BA641] transition-colors">
+                <span className="font-kanit text-[14.5px] sm:text-[15.5px] font-medium tracking-normal lowercase text-[#505A5C] group-hover:text-[#48682E] transition-colors">
                   {row2BtnText}
                 </span>
               </Link>
             </div>
           </div>
 
-          <div className="hidden lg:flex lg:col-span-3 relative min-h-[160px] items-center justify-end mb-28">
-            <div className="absolute top-[-30px] right-[-20px] w-[180px] pointer-events-none opacity-30 filter blur-[2px] transform -rotate-12">
+          <div className="hidden lg:flex lg:col-span-3 relative min-h-[180px] items-center justify-end lg:-translate-y-10">
+            <div className="absolute top-[-60px] right-[-20px] w-[220px] pointer-events-none opacity-30 filter blur-[2px] transform -translate-x-7 -scale-x-100">
               <img src={row2FloatingImg} alt="" className="w-full h-auto object-contain" />
             </div>
-            <div className="relative z-10 w-[280px] pointer-events-none transform -rotate-6 hover:scale-105 transition-transform duration-500">
+            <div className="relative z-10 w-[380px] pointer-events-none transform -translate-x-7 -scale-x-100 -rotate-6 hover:scale-105 transition-transform duration-500">
               <img src={row2FloatingImg} alt="Floating Fish" className="w-full h-auto object-contain filter drop-shadow-lg" />
             </div>
           </div>
         </div>
 
         {/* Row 3: Gulmohar Concept Gardening */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mt-12 lg:mt-8">
           <div className="lg:col-span-4 flex justify-center lg:justify-start">
-            <div className="w-[180px] sm:w-[240px] lg:w-[250px] pointer-events-none transform transition-transform duration-500 hover:scale-105">
+            <div className="w-[260px] sm:w-[320px] lg:w-[380px] xl:w-[420px] pointer-events-none transform transition-transform duration-500 hover:scale-105">
               <img src={row3FloatingImg} alt="Terrarium" className="w-full h-auto object-contain filter drop-shadow-xl" />
             </div>
           </div>
@@ -136,25 +136,25 @@ const NatureShowcaseSection = ({ data }) => {
               <img src={row3Logo} alt="Gulmohar Logo" className="w-full h-auto object-contain" />
             </div>
 
-            <p 
-              className="font-kanit ml-0 lg:ml-32 text-base sm:text-lg lg:text-[22px] text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] font-light max-w-md lg:max-w-[450px] mx-auto lg:mx-0 [&>b]:font-bold [&>b]:text-[#111111] [&>strong]:font-bold [&>strong]:text-[#111111]"
+            <p
+              className="font-kanit ml-0 lg:ml-32 text-base sm:text-lg lg:text-[22px] text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] font-light max-w-md lg:max-w-[450px] mx-auto lg:mx-0 [&>b]:font-medium [&>b]:text-[#676767] [&>strong]:font-bold [&>strong]:text-[#676767]"
               dangerouslySetInnerHTML={{ __html: row3Desc }}
             />
 
             <div className="flex justify-center pr-0 lg:pr-16 pt-2">
-              <Link to="/gulmo" className="group inline-flex items-center gap-3 text-zinc-700 hover:text-[#7BA641] transition-colors cursor-pointer">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-zinc-200/80 group-hover:bg-[#7BA641] text-zinc-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_0_14px_rgba(123,166,65,0.45)] group-active:scale-95">
-                  <svg 
-                    className="w-4 h-4 transition-transform duration-300 group-hover:rotate-90" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
+              <Link to="/gulmo" className="group inline-flex items-center gap-3.5 text-[#505A5C] hover:text-[#48682E] transition-colors cursor-pointer">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#EBF3DF] group-hover:bg-[#4A712E] text-[#6CA844] group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_2px_12px_rgba(72,104,46,0.35)] group-active:scale-95">
+                  <svg
+                    className="w-6 h-6 transition-transform duration-300 group-hover:rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
                     stroke="currentColor"
-                    strokeWidth="2.5"
+                    strokeWidth="2.4"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
                 </div>
-                <span className="font-kanit text-xs sm:text-sm font-semibold tracking-wide lowercase text-zinc-800 group-hover:text-[#7BA641] transition-colors">
+                <span className="font-kanit text-[14.5px] sm:text-[15.5px] font-medium tracking-normal lowercase text-[#505A5C] group-hover:text-[#48682E] transition-colors">
                   {row3BtnText}
                 </span>
               </Link>

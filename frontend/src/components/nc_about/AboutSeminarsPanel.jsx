@@ -13,52 +13,56 @@ const AboutSeminarsPanel = ({ data }) => {
   const cuttakText = data?.cuttakText || "Nature Cube plays an active role in setting up a state-of-the-art public aquarium in Cuttak, Odisha, with the key exhibits being an eight feet Nature Aquarium.";
 
   return (
-    <div className="w-screen min-w-[100vw] h-full bg-white text-zinc-900 flex-shrink-0 relative grid grid-cols-1 md:grid-cols-2 grid-rows-2 font-kanit select-none pt-20 sm:pt-24 md:pt-0">
-      
-      {/* Top-Left: 2011 Seminar Text */}
-      <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white">
-        <span className="font-kanit font-extrabold text-4xl sm:text-5xl lg:text-6xl text-[#1E293B] mb-2 tracking-tight">
-          {year2011Title}
-        </span>
-        <h3 className="font-kanit font-bold text-lg sm:text-xl lg:text-2xl text-[#1E293B] tracking-tight uppercase mb-3 max-w-lg leading-snug">
-          {seminarHeading}
-        </h3>
-        <p className="text-[#6A6A6A] text-xs sm:text-sm lg:text-base leading-relaxed max-w-lg font-medium">
-          {seminarText}
-        </p>
-      </div>
+    <div className="w-auto flex-shrink-0 h-full bg-white text-zinc-900 relative flex flex-col justify-center pt-20 sm:pt-24 pb-12 sm:pb-16 px-0 z-10 select-none font-kanit overflow-hidden">
+      <div className="relative z-10 flex flex-row items-center my-auto font-kanit mt-28">
+        
+        {/* Card Column 4: 2011 Text (top) & Tank 2 Image (bottom) */}
+        <div className="w-[280px] sm:w-[320px] md:w-[360px] lg:w-[400px] flex-shrink-0 flex flex-col space-y-0 font-kanit">
+          <div className="bg-white p-6 sm:p-8 aspect-[1.5/1] flex flex-col justify-center space-y-2">
+            <span className="font-kanit font-semibold text-3xl sm:text-4xl tracking-tight leading-none text-[#1E293B]">
+              {year2011Title}
+            </span>
+            <span className="font-kanit font-semibold text-xs sm:text-sm tracking-wider uppercase text-[#1E293B] leading-tight">
+              {seminarHeading}
+            </span>
+            <p className="font-kanit font-normal text-[10px] sm:text-[11px] text-zinc-500 pt-0.5 leading-relaxed uppercase">
+              {seminarText}
+            </p>
+          </div>
 
-      {/* Top-Right: 2014 Cuttak Public Aquarium Text */}
-      <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white border-l border-zinc-100">
-        <span className="font-kanit font-extrabold text-4xl sm:text-5xl lg:text-6xl text-[#1E293B] mb-2 tracking-tight">
-          {year2014Title}
-        </span>
-        <h3 className="font-kanit font-bold text-lg sm:text-xl lg:text-2xl text-[#1E293B] tracking-tight uppercase mb-3 max-w-lg leading-snug">
-          {cuttakHeading}
-        </h3>
-        <p className="text-[#6A6A6A] text-xs sm:text-sm lg:text-base leading-relaxed max-w-lg font-medium">
-          {cuttakText}
-        </p>
-      </div>
+          <div className="bg-zinc-900 aspect-[1.5/1] overflow-hidden relative">
+            <img
+              src={data?.image1 ? resolveAssetUrl(data.image1) : tank2Img}
+              alt="First Nature Aquarium Seminar 2011"
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
+        </div>
 
-      {/* Bottom-Left: Tank 2 Image */}
-      <div className="relative w-full h-full overflow-hidden bg-zinc-900">
-        <img
-          src={data?.image1 ? resolveAssetUrl(data.image1) : tank2Img}
-          alt="First Nature Aquarium Seminar 2011"
-          className="w-full h-full object-cover"
-        />
-      </div>
+        {/* Card Column 5: 2014 Text (top) & Tank 3 Image (bottom) */}
+        <div className="w-[280px] sm:w-[320px] md:w-[360px] lg:w-[400px] flex-shrink-0 flex flex-col space-y-0 font-kanit">
+          <div className="bg-white p-6 sm:p-8 aspect-[1.5/1] flex flex-col justify-center space-y-2">
+            <span className="font-kanit font-semibold text-3xl sm:text-4xl tracking-tight leading-none text-[#1E293B]">
+              {year2014Title}
+            </span>
+            <span className="font-kanit font-semibold text-xs sm:text-sm tracking-wider uppercase text-[#1E293B] leading-tight">
+              {cuttakHeading}
+            </span>
+            <p className="font-kanit font-normal text-[10px] sm:text-[11px] text-zinc-500 pt-0.5 leading-relaxed uppercase">
+              {cuttakText}
+            </p>
+          </div>
 
-      {/* Bottom-Right: Tank 3 Image */}
-      <div className="relative w-full h-full overflow-hidden bg-zinc-900 border-l border-zinc-100">
-        <img
-          src={data?.image2 ? resolveAssetUrl(data.image2) : tank3Img}
-          alt="First Public Aquarium Setup Cuttak 2014"
-          className="w-full h-full object-cover"
-        />
-      </div>
+          <div className="bg-zinc-900 aspect-[1.5/1] overflow-hidden relative">
+            <img
+              src={data?.image2 ? resolveAssetUrl(data.image2) : tank3Img}
+              alt="First Public Aquarium Setup Cuttak 2014"
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
+        </div>
 
+      </div>
     </div>
   );
 };

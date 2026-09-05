@@ -37,7 +37,7 @@ const RipplesHero = ({ data }) => {
           className="w-full h-full object-cover object-[center_35%] md:object-center scale-100 sm:scale-102 md:scale-105 filter brightness-95 contrast-105 transition-all duration-700"
         />
         {/* Top gradient for header navigation readability */}
-        <div className="absolute top-0 left-0 right-0 h-36 sm:h-44 bg-gradient-to-b from-black/80 via-black/35 to-transparent pointer-events-none z-10" />
+        <div className="absolute top-0 left-0 right-0 h-36 sm:h-44 bg-gradient-to-b to-transparent pointer-events-none z-10" />
         {/* Bottom gradient for smooth section blending */}
         <div className="absolute bottom-0 left-0 right-0 h-28 sm:h-36 bg-gradient-to-t from-[#070e06] via-[#070e06]/35 to-transparent pointer-events-none z-10" />
         {/* Vignette overlay */}
