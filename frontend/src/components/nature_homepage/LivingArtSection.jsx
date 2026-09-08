@@ -56,7 +56,7 @@ const LivingArtSection = ({ data }) => {
         {/* Left Column */}
         <div className="w-full lg:w-[42%] xl:w-[40%] flex-shrink-0 flex flex-col justify-between px-4 sm:px-8 lg:pl-12 xl:pl-20 2xl:pl-28 lg:pr-8">
           <div>
-            <span className="font-kanit text-sm sm:text-base lg:text-[20px] font-medium text-[#6CAB44] tracking-wide block mb-3 lowercase">
+            <span className="font-kanit text-sm sm:text-base lg:text-[20px] font-medium text-[#6CAB44] tracking-wide block mb-8 lowercase">
               {tagline}
             </span>
 
@@ -64,11 +64,11 @@ const LivingArtSection = ({ data }) => {
               {mainTitle} <span className="font-larken text-5xl sm:text-6xl lg:text-7xl font-semibold italic text-[#6CAB44] lowercase ml-2">{italicTitle}</span>
             </h2>
 
-            <h3 className="font-kanit text-2xl sm:text-3xl lg:text-[50px] font-medium text-[#363636] leading-[1.18] tracking-tight max-w-[340px] lg:max-w-[500px] mb-6">
+            <h3 className="font-kanit text-2xl sm:text-3xl lg:text-[48px] font-medium text-[#363636] leading-tighter  tracking-tight max-w-[340px] lg:max-w-[500px] mb-10">
               {subHeadline}
             </h3>
 
-            <p className="font-kanit text-base sm:text-lg lg:text-[40px] text-zinc-500 font-light leading-relaxed max-w-[250px] lg:max-w-[440px] mb-8">
+            <p className="font-kanit text-base sm:text-lg lg:text-[35px] text-zinc-500 font-ligh  leading-tight max-w-[250px] lg:max-w-[440px] mb-8">
               {paragraph}
             </p>
           </div>
@@ -100,11 +100,10 @@ const LivingArtSection = ({ data }) => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center font-reem font-bold text-sm sm:text-base tracking-wider transition-all rounded-xs cursor-pointer ${
-                  activeTab === tab.id
-                    ? 'bg-[#6CAB44] text-white shadow-lg scale-105'
-                    : 'bg-[#5a8a36] text-white/90 hover:bg-[#6CAB44]'
-                }`}
+                className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center font-reem font-bold text-sm sm:text-base tracking-wider transition-all rounded-xs cursor-pointer ${activeTab === tab.id
+                  ? 'bg-[#6CAB44] text-white shadow-lg scale-105'
+                  : 'bg-[#5a8a36] text-white/90 hover:bg-[#6CAB44]'
+                  }`}
               >
                 {tab.id}
               </button>
@@ -112,7 +111,7 @@ const LivingArtSection = ({ data }) => {
           </div>
 
           {/* Main Dark Card Container - no right rounding, bleeds to edge */}
-          <div className="relative bg-[#0e2129] rounded-tl-xs rounded-tr-none p-6 sm:p-10 lg:p-12 lg:pr-8 text-white shadow-2xl overflow-visible min-h-[420px] sm:min-h-[460px] lg:min-h-[500px] flex flex-col justify-between flex-1">
+          <div className="relative bg-[#0e2129] rounded-tl-xs rounded-tr-none p-6 sm:p-10 lg:p-14 text-white shadow-2xl overflow-visible min-h-[420px] sm:min-h-[460px] lg:min-h-[600px] flex flex-col justify-between flex-1">
 
             <div className="max-w-xs sm:max-w-sm lg:max-w-md relative z-30 space-y-6 lg:space-y-5">
               <h3 className="font-larken text-4xl sm:text-5xl lg:text-6xl xl:text-7xl italic font-normal text-white tracking-wide leading-tight">
@@ -148,11 +147,11 @@ const LivingArtSection = ({ data }) => {
             </div>
 
             {/* Background Paint Splash (bush3) */}
-            <div className="absolute bottom-[-40px] sm:bottom-[-50px] lg:bottom-[-80px] xl:bottom-[-100px] right-[25%] lg:right-[30%] w-[220px] sm:w-[280px] lg:w-[300px] xl:w-[340px] h-[220px] sm:h-[280px] lg:h-[320px] xl:h-[360px] pointer-events-none z-10 opacity-100 transform rotate-180">
+            <div className="absolute bottom-[-40px] sm:bottom-[-50px] lg:bottom-[-170px]  right-[25%] lg:right-[32%] w-[220px] sm:w-[280px] lg:w-[420px]  h-[220px] sm:h-[280px] lg:h-[380px] pointer-events-none z-10 opacity-100 transform scale-y-[-1] rotate-180">
               <img
-                src={bush3Img}
+                src={brush1Img}
                 alt=""
-                className="w-full h-full object-contain filter brightness-110 contrast-110"
+                className="w-full h-full object-contain filter brightness-100 contrast-90"
               />
             </div>
 

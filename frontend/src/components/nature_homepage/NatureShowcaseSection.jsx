@@ -47,24 +47,24 @@ const NatureShowcaseSection = ({ data }) => {
     <section className="relative w-full bg-[#fcfdfc] py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 overflow-hidden select-none">
 
       {/* Background Soft Paint Splash */}
-      <div className="absolute -top-10 sm:-top-16 lg:-top-24 -left-10 sm:-left-16 lg:-left-24 w-[320px] sm:w-[480px] lg:w-[580px] h-auto pointer-events-none z-0 opacity-40">
+      <div className="absolute -top-10 sm:-top-16 lg:-top-50 -left-10 sm:-left-16 lg:-left-75 w-[320px] sm:w-[480px] lg:w-[580px] h-auto pointer-events-none z-0 opacity-100">
         <img src={brush1Img} alt="" className="w-full h-auto object-contain object-left-top" />
       </div>
 
       <div className="w-full relative z-10">
 
         {/* Row 1: NatureCube Showcase */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          <div className="lg:col-span-5 space-y-6 md:space-y-8 pr-0 lg:pr-6 text-center lg:text-left">
-            <div className="w-[180px] sm:w-[240px] lg:w-[300px] mx-auto lg:mx-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="lg:col-span-4 space-y-6 md:space-y-8 pr-0 lg:pr-6 lg:text-left">
+            <div className="w-[180px] sm:w-[240px] lg:w-[300px] mx-auto lg:mx-0 pt-2">
               <img src={row1Logo} alt="NatureCube Logo" className="w-full h-auto object-contain" />
             </div>
-            <p className="font-kanit text-base sm:text-lg lg:text-[25px] font-light text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] max-w-md lg:max-w-[420px] mx-auto lg:mx-0 lg:pl-6">
+            <p className="font-kanit text-base sm:text-lg lg:text-[25px] font-light text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] max-w-md lg:max-w-[420px] mx-auto lg:mx-0 lg:pl-11">
               {row1Desc}
             </p>
           </div>
 
-          <div className="lg:col-span-7 overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 lg:-mr-20">
+          <div className="lg:col-span-8 overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 lg:-mr-20">
             <div className="flex gap-3 sm:gap-5 lg:gap-6 min-w-[650px] lg:min-w-0 pb-4 sm:pb-0 pr-4 sm:pr-0 lg:pr-2">
               <div className="flex-1 min-w-[200px] lg:min-w-0 aspect-square rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <img src={gal1} alt="Gallery 1" className="w-full h-full object-cover" />
@@ -80,14 +80,14 @@ const NatureShowcaseSection = ({ data }) => {
         </div>
 
         {/* Row 2: Ripples Aquatic Studio */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative mt-24 lg:mt-32">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center relative mt-12 lg:mt-16">
           <div className="lg:col-span-5 flex justify-center items-center">
             <div className="w-[190px] sm:w-[230px] lg:w-[300px]">
               <img src={row2Logo} alt="Ripples Logo" className="w-full h-auto object-contain" />
             </div>
           </div>
 
-          <div className="lg:col-span-4 space-y-6 ml-0 lg:ml-12 text-center lg:text-left">
+          <div className="lg:col-span-4 space-y-4 ml-0 lg:ml-12 text-center lg:text-left">
             <p
               className="font-kanit text-base sm:text-lg lg:text-[22px] text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] font-light max-w-md lg:max-w-[450px] mx-auto lg:mx-0 [&>b]:font-medium [&>b]:text-[#676767] [&>strong]:font-bold [&>strong]:text-[#676767]"
               dangerouslySetInnerHTML={{ __html: row2Desc }}
@@ -117,21 +117,21 @@ const NatureShowcaseSection = ({ data }) => {
             <div className="absolute top-[-60px] right-[-20px] w-[220px] pointer-events-none opacity-30 filter blur-[2px] transform -translate-x-7 -scale-x-100">
               <img src={row2FloatingImg} alt="" className="w-full h-auto object-contain" />
             </div>
-            <div className="relative z-10 w-[380px] pointer-events-none transform -translate-x-7 -scale-x-100 -rotate-6 hover:scale-105 transition-transform duration-500">
+            <div className="relative z-10 w-[380px] pointer-events-none transform -translate-x-6 -scale-x-100">
               <img src={row2FloatingImg} alt="Floating Fish" className="w-full h-auto object-contain filter drop-shadow-lg" />
             </div>
           </div>
         </div>
 
         {/* Row 3: Gulmohar Concept Gardening */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mt-12 lg:mt-8">
-          <div className="lg:col-span-4 flex justify-center lg:justify-start">
-            <div className="w-[260px] sm:w-[320px] lg:w-[380px] xl:w-[420px] pointer-events-none transform transition-transform duration-500 hover:scale-105">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-start mt-12 lg:mt-18 pb-12 lg:pb-16">
+          <div className="lg:col-span-4 flex justify-center lg:justify-start order-2 lg:order-1 lg:mt-20">
+            <div className="w-[160px] sm:w-[200px] lg:w-[260px] xl:w-[280px] pointer-events-none transform transition-transform duration-500 hover:scale-105">
               <img src={row3FloatingImg} alt="Terrarium" className="w-full h-auto object-contain filter drop-shadow-xl" />
             </div>
           </div>
 
-          <div className="lg:col-span-8 space-y-6 lg:pl-6 text-center lg:text-left">
+          <div className="lg:col-span-8 space-y-4 lg:pl-6 text-center lg:text-left order-1 lg:order-2">
             <div className="w-[160px] sm:w-[220px] lg:w-[225px] mx-auto lg:mx-0">
               <img src={row3Logo} alt="Gulmohar Logo" className="w-full h-auto object-contain" />
             </div>

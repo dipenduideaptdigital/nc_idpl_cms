@@ -107,15 +107,15 @@ const ServicesSection = ({ data }) => {
   return (
     <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-12 overflow-hidden select-none">
       
-      <div className="absolute top-0 right-0 w-[350px] sm:w-[500px] lg:w-[500px] h-auto pointer-events-none z-0 opacity-59">
-        <img src={brush2Img} alt="" className="w-full h-auto object-contain object-right-top" />
+      <div className="absolute top-[5%] right-0 w-[350px] sm:w-[500px] lg:w-[450px] h-auto pointer-events-none z-0 opacity-100 translate-x-[30%]">
+        <img src={brush2Img} alt="" className="w-full h-auto object-contain transform rotate-150" />
       </div>
 
       <div className="w-full mx-auto relative z-10">
         
         {/* Section Header */}
         <div className="max-w-[820px] mb-12 sm:mb-16">
-          <span className="font-kanit text-[20px] sm:text-[30px] font-medium text-[#6CAB44] leading-[100%] tracking-[0%] align-middle block lowercase mb-4 sm:mb-5" style={{ fontWeight: 500, verticalAlign: 'middle' }}>
+          <span className="font-kanit text-[20px] sm:text-[30px] font-medium text-[#6CAB44] leading-[100%] tracking-[0%] align-middle block lowercase mb-8 sm:mb-10" style={{ fontWeight: 500, verticalAlign: 'middle' }}>
             {tagline}
           </span>
           <div 

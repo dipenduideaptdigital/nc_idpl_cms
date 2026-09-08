@@ -40,7 +40,7 @@ const LivingMandalasSection = ({ data }) => {
           />
         </div>
         {/* Bottom-Right Brush */}
-        <div className="absolute -bottom-6 -right-4 sm:bottom-4 sm:right-4 md:right-12 lg:right-[22%] lg:-bottom-4 w-[240px] sm:w-[300px] md:w-[340px] h-[200px] sm:h-[240px] md:h-[280px]">
+        <div className="absolute -bottom-6 -right-4 sm:bottom-4 sm:right-4 md:right-12 lg:right-[22%] lg:bottom-6  w-[240px] sm:w-[300px] md:w-[340px] h-[200px] sm:h-[240px] md:h-[280px]">
           <img
             src={brush2Img}
             alt=""
@@ -101,7 +101,7 @@ const LivingMandalasSection = ({ data }) => {
           <div className="relative max-w-sm mx-auto lg:mx-0 pt-2 lg:pt-0">
 
             <div className="relative z-10 space-y-4">
-              <div className="font-kanit text-xs sm:text-[12.5px] lg:text-[13px] font-bold tracking-[0.035em] text-[#06232B] uppercase leading-[1.4] space-y-0.5">
+              <div className="font-kanit text-xs sm:text-[12.5px] lg:text-[16px] font-medium tracking-[0.035em] text-[#06232B] uppercase leading-[1.4] space-y-0.5">
                 <div>{descLine1}</div>
                 <div>{descLine2}</div>
               </div>

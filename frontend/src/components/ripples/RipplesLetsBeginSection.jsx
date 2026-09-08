@@ -31,37 +31,37 @@ const RipplesLetsBeginSection = ({ data }) => {
     <section className="w-full bg-white select-none font-kanit">
       
       {/* Screen 1: Let's Begin Accordion */}
-      <div className="w-full h-[85vh] lg:h-screen lg:overflow-hidden flex flex-col pt-8 lg:pt-12 pb-8">
+      <div className="w-full min-h-[85vh] lg:min-h-[90vh] flex flex-col justify-center lg:pt-6 pb-8">
         <div className="max-w-[1300px] w-[92%] mx-auto px-4 md:px-8">
           
           {/* Top Layout */}
           <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-16">
             
             {/* Left Column: Heading & Intro Text */}
-            <div className="w-full lg:w-[45%] flex-shrink-0 space-y-6 lg:space-y-8 pt-4">
-              <h2 className="font-reem text-6xl sm:text-7xl md:text-[90px] font-bold text-[#363636] tracking-wide leading-none whitespace-nowrap">
+            <div className="w-full lg:w-[40%] flex-shrink-0 space-y-4 lg:space-y-6 pt-4">
+              <h2 className="font-reem text-5xl sm:text-6xl md:text-[72px] font-medium text-[#363636] tracking-wide leading-none whitespace-nowrap">
                 {heading}
               </h2>
-              <p className="font-kanit text-base sm:text-lg lg:text-[30px] font-light text-zinc-500">
+              <p className="font-kanit text-base sm:text-lg lg:text-[18px] font-light text-zinc-500 max-w-[340px] leading-relaxed">
                 {introText}
               </p>
             </div>
   
             {/* Right Column: Step Accordion List */}
-            <div className="w-full lg:w-[50%] space-y-1">
+            <div className="w-full lg:w-[55%] space-y-1">
               {steps.map((step, index) => {
                 const isActive = activeStep === index;
                 return (
-                  <div key={index} className="border-b border-zinc-300 py-6 lg:py-8 transition-all duration-300">
+                  <div key={index} className="border-b border-zinc-300 py-4 lg:py-5 transition-all duration-300">
                     {/* Step Header Line */}
                     <button
                       onClick={() => handleToggle(index)}
-                      className="w-full flex items-center gap-6 lg:gap-10 text-left cursor-pointer group focus:outline-none"
+                      className="w-full flex items-center gap-5 lg:gap-8 text-left cursor-pointer group focus:outline-none"
                     >
-                      <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-zinc-100 flex items-center justify-center text-base lg:text-lg font-semibold text-zinc-600 group-hover:bg-zinc-200 transition-colors shrink-0">
+                      <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-zinc-100 flex items-center justify-center text-sm lg:text-base font-semibold text-zinc-600 group-hover:bg-zinc-200 transition-colors shrink-0">
                         {step.num}
                       </div>
-                      <span className="font-kanit text-2xl sm:text-3xl lg:text-[34px] font-medium text-zinc-800 group-hover:text-black transition-colors tracking-wide">
+                      <span className="font-kanit text-xl sm:text-2xl lg:text-[28px] font-medium text-zinc-800 group-hover:text-black transition-colors tracking-wide">
                         {step.title}
                       </span>
                     </button>
@@ -69,10 +69,10 @@ const RipplesLetsBeginSection = ({ data }) => {
                     {/* Active Step Banner Card */}
                     <div 
                       className={`relative w-full overflow-hidden transition-all duration-500 ease-in-out ${
-                        isActive ? 'max-h-[600px] lg:max-h-[50vh] mt-8 mb-2 opacity-100' : 'max-h-0 mt-0 mb-0 opacity-0'
+                        isActive ? 'max-h-[400px] lg:max-h-[40vh] mt-6 mb-2 opacity-100' : 'max-h-0 mt-0 mb-0 opacity-0'
                       }`}
                     >
-                      <div className="h-[250px] sm:h-[350px] lg:h-[40vh] w-full">
+                      <div className="h-[250px] sm:h-[300px] lg:h-[350px] w-full rounded-sm overflow-hidden">
                         <img
                           src={step.img || deepImg}
                           alt={step.title}

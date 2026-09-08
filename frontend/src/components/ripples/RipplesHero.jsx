@@ -28,7 +28,7 @@ const RipplesHero = ({ data }) => {
   const description = data?.description || "";
 
   return (
-    <section className="relative w-full h-[60vh] sm:h-[72vh] md:h-[85vh] lg:h-screen min-h-[380px] sm:min-h-[480px] overflow-hidden select-none bg-[#070e06]">
+    <section className="relative w-full h-[60vh] sm:h-[72vh] md:h-[85vh] lg:h-screen min-h-[380px] sm:min-h-[480px] -mt-24 overflow-hidden select-none bg-[#070e06]">
       {/* Background Image & Overlay Layers */}
       <div className="absolute inset-0 w-full h-full">
         <img

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import bush3Img from '../../assets/nc_logo/bush3.png';
+import brush2Img from '../../assets/nc_logo/brush2.png';
 
 const LearnTogetherSection = ({ data }) => {
   const tagline = data?.tagline || "learn together";
@@ -16,8 +16,8 @@ const LearnTogetherSection = ({ data }) => {
     <section className="relative w-full bg-white py-16 sm:py-20 lg:py-24 px-6 sm:px-12 lg:px-24 overflow-hidden select-none">
       
       {/* Background Graphic */}
-      <div className="absolute right-[-100px] bottom-[-100px] pointer-events-none z-0 opacity-20 transform -rotate-12">
-        <img src={bush3Img} alt="" className="w-[400px] lg:w-[600px] h-auto object-contain" />
+      <div className="absolute right-[-40px] bottom-[50px] pointer-events-none z-0 opacity-100 transform -scale-x-100">
+        <img src={brush2Img} alt="" className="w-[200px] lg:w-[400px] h-auto object-contain" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-start space-y-6">
@@ -32,11 +32,11 @@ const LearnTogetherSection = ({ data }) => {
 
         {/* Titles */}
         <h2 className="font-reem text-5xl sm:text-6xl lg:text-[64px] font-normal tracking-wide text-[#0f2329] leading-none uppercase pt-2">
-          {mainTitle} <span className="font-larken font-normal italic text-[#6CAB44] lowercase ml-1">{italicTitle}</span>
+          {mainTitle} <span className="font-larken font-bold italic text-[#6CAB44] lowercase ml-1">{italicTitle}</span>
         </h2>
 
         {/* Subheadline */}
-        <h3 className="font-kanit text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#363636] leading-[1.2] max-w-md pt-2">
+        <h3 className="font-kanit text-2xl sm:text-3xl lg:text-[32px] font-medium text-[#363636] leading-[1.2] max-w-md pt-2">
           {subHeadline}
         </h3>
 
@@ -46,7 +46,7 @@ const LearnTogetherSection = ({ data }) => {
         </p>
 
         {/* Button */}
-        <div className="pt-4">
+        <div className="pt-4 w-full max-w-md flex justify-end">
           <Link to="/explore" className="group inline-flex items-center gap-3.5 text-[#505A5C] hover:text-[#48682E] transition-colors cursor-pointer">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#f4f7f0] group-hover:bg-[#4A712E] text-[#6CAB44] group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_2px_12px_rgba(72,104,46,0.35)] group-active:scale-95">
               <svg className="w-5 h-5 transition-transform duration-300 group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">

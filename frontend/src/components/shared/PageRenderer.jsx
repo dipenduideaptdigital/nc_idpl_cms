@@ -5,6 +5,7 @@ import RipplesHero from '../ripples/RipplesHero';
 import RipplesIntroSection from '../ripples/RipplesIntroSection';
 import RipplesNatureAquariumSection from '../ripples/RipplesNatureAquariumSection';
 import RipplesLetsBeginSection from '../ripples/RipplesLetsBeginSection';
+import RipplesGulmoLetsBeginSection from '../ripples/RipplesGulmoLetsBeginSection';
 import RipplesAquascapeSection from '../ripples/RipplesAquascapeSection';
 import GetStartedCtaSection from '../nature_homepage/GetStartedCtaSection';
 
@@ -56,6 +57,8 @@ const BlockMapper = memo(({ block, index }) => {
       return <RipplesNatureAquariumSection key={index} data={data} />;
     case 'ripplesLetsBegin': 
       return <RipplesLetsBeginSection key={index} data={data} />;
+    case 'ripplesGulmoLetsBegin':
+      return <RipplesGulmoLetsBeginSection key={index} data={data} />;
     case 'ripplesAquascape': 
       return <RipplesAquascapeSection key={index} data={data} />;
     case 'getStartedCta': 

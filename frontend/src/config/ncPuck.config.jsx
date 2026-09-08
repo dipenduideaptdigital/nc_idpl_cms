@@ -8,6 +8,7 @@ import RipplesHero from '../components/ripples/RipplesHero';
 import RipplesIntroSection from '../components/ripples/RipplesIntroSection';
 import RipplesNatureAquariumSection from '../components/ripples/RipplesNatureAquariumSection';
 import RipplesLetsBeginSection from '../components/ripples/RipplesLetsBeginSection';
+import RipplesGulmoLetsBeginSection from '../components/ripples/RipplesGulmoLetsBeginSection';
 import RipplesAquascapeSection from '../components/ripples/RipplesAquascapeSection';
 import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
 
@@ -384,6 +385,30 @@ export const ncPuckConfig = {
         ]
       },
       render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Ripples Let's Begin</div> : <RipplesLetsBeginSection data={props} />
+    },
+
+    ripplesGulmoLetsBegin: {
+      fields: {
+        isVisible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
+        title: { type: "text" },
+        description: { type: "textarea" },
+        storeUrl: { type: "text" },
+        storeUrlText: { type: "text" },
+        btnText: { type: "text" },
+        imageMain: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        imageOverlay: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+      },
+      defaultProps: {
+        isVisible: true,
+        title: "Let's begin",
+        description: "Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India.",
+        storeUrl: "https://naturecube.store",
+        storeUrlText: "naturecube.store",
+        btnText: "STORE",
+        imageMain: "",
+        imageOverlay: ""
+      },
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Ripples Gulmo Let's Begin</div> : <RipplesGulmoLetsBeginSection data={props} />
     },
 
     ripplesAquascape: {

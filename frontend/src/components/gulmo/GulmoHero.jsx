@@ -5,7 +5,7 @@ const GulmoHero = ({ data }) => {
   const imgSrc = data?.backgroundImage || gulmoBg;
 
   return (
-    <section className="relative w-full h-[60vh] min-h-[320px] sm:h-[75vh] sm:min-h-[450px] md:h-[88vh] md:min-h-[550px] lg:h-screen lg:min-h-[640px] overflow-hidden select-none bg-[#070e06]">
+    <section className="relative w-full h-[60vh] min-h-[320px] sm:h-[75vh] sm:min-h-[450px] md:h-[88vh] md:min-h-[550px] lg:h-screen lg:min-h-[640px] -mt-24 overflow-hidden select-none bg-[#070e06]">
       {/* Hero Background Image */}
       <div className="absolute inset-0 w-full h-full flex items-center justify-center">
         <img

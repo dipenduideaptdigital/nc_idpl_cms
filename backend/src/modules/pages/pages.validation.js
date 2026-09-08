@@ -34,6 +34,7 @@ const ripplesHeroBlockSchema = z.object({ type: z.literal("ripplesHero"), data: 
 const ripplesIntroBlockSchema = z.object({ type: z.literal("ripplesIntro"), data: z.record(z.any()).default({}) });
 const ripplesNatureAquariumBlockSchema = z.object({ type: z.literal("ripplesNatureAquarium"), data: z.record(z.any()).default({}) });
 const ripplesLetsBeginBlockSchema = z.object({ type: z.literal("ripplesLetsBegin"), data: z.record(z.any()).default({}) });
+const ripplesGulmoLetsBeginBlockSchema = z.object({ type: z.literal("ripplesGulmoLetsBegin"), data: z.record(z.any()).default({}) });
 const ripplesAquascapeBlockSchema = z.object({ type: z.literal("ripplesAquascape"), data: z.record(z.any()).default({}) });
 const getStartedCtaBlockSchema = z.object({ type: z.literal("getStartedCta"), data: z.record(z.any()).default({}) });
 
@@ -92,6 +93,7 @@ const blockSchema = z.discriminatedUnion("type", [
   ripplesIntroBlockSchema,
   ripplesNatureAquariumBlockSchema,
   ripplesLetsBeginBlockSchema,
+  ripplesGulmoLetsBeginBlockSchema,
   ripplesAquascapeBlockSchema,
   getStartedCtaBlockSchema,
   // Gulmo Blocks

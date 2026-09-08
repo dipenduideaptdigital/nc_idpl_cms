@@ -66,7 +66,7 @@ const PrakritiEducationSection = ({ data }) => {
   const brushBottom = data?.brushBottomImage ? getAssetUrl(data.brushBottomImage) : brush2Img;
 
   return (
-    <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-24 sm:py-32 lg:py-40 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
+    <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-24 sm:py-32 lg:py-10 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
       
       {/* Bottom-Left Watercolor Brush Accent */}
       <div className="absolute -bottom-36 -left-28 sm:-bottom-40 sm:-left-32 md:-bottom-48 md:-left-36 w-[450px] sm:w-[550px] md:w-[600px] aspect-square pointer-events-none z-0">
@@ -80,13 +80,13 @@ const PrakritiEducationSection = ({ data }) => {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 lg:gap-16 xl:gap-24 items-start mb-16 sm:mb-24 lg:mb-28">
           <div className="md:col-span-6">
-            <h2 className="font-kanit font-bold text-3xl sm:text-4xl lg:text-[42px] xl:text-[40px] text-[#6A6A6A] leading-[1.18] tracking-tight max-w-xl">
+            <h2 className="font-kanit font-medium text-3xl sm:text-4xl lg:text-[40px] xl:text-[30px] text-[#6A6A6A] leading-[1.18] tracking-tight max-w-xl">
               {headlineText}
             </h2>
           </div>
           <div className="md:col-span-6 md:pt-2 ml-0 md:ml-4 lg:ml-10">
             <div 
-              className="font-sans text-sm sm:text-base lg:text-[18px] text-[#6A6A6A] font-normal leading-[1.8] max-w-[420px] tiptap-content"
+              className="font-kanit text-sm sm:text-base lg:text-[18px] text-[#6A6A6A] font-normal max-w-[420px] tiptap-content"
               dangerouslySetInnerHTML={{ __html: descriptionText }}
             />
           </div>

@@ -57,11 +57,11 @@ const NatureFooter = () => {
   return (
     <footer className="relative w-full bg-[#06232B] text-white pt-12 sm:pt-16 lg:pt-20 pb-10 px-6 sm:px-12 lg:px-20 overflow-hidden select-none">
       {/* Background Bush Decorative Image */}
-      <div className="absolute -bottom-0 -left-[190px] w-[380px] sm:w-[500px] lg:w-[420px]  pointer-events-none z-0 opacity-95">
+      <div className="absolute -bottom-4 -left-[200px] w-[380px] sm:w-[500px] lg:w-[360px]  pointer-events-none z-0 opacity-95">
         <img
           src={bushBg}
           alt=""
-          className="w-full h-auto object-contain  filter brightness-50 transform rotate-320"
+          className="w-full h-auto object-contain  filter brightness-70 transform rotate-310"
         />
       </div>
 
