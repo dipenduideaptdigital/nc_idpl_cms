@@ -7,7 +7,8 @@ import callIcon from '../../assets/nc_contact/call.png';
 import call2Icon from '../../assets/nc_contact/call2.png';
 import expIcon from '../../assets/nc_contact/experience.png';
 import locIcon from '../../assets/nc_contact/location.png';
-import bushBg from '../../assets/nc_logo/bush3.png';
+import bushBg from '../../assets/nc_logo/brush1.png';
+import bushBg2 from '../../assets/nc_logo/bush3.png';
 
 const NcContactInfo = ({ data }) => {
   const heading = data?.contactHeading || "Our Contacts";
@@ -65,19 +66,22 @@ const NcContactInfo = ({ data }) => {
             </p>
           </div>
 
-          {/* Floating Fish Image from nc_mandala */}
-          <div className="absolute right-0 sm:right-4 md:right-[-10px] -top-6 sm:-top-10 md:-top-14 w-40 sm:w-56 md:w-72 lg:w-80 pointer-events-none z-20 transition-transform duration-700 hover:scale-105">
+          {/* Floating Fishes from nc_mandala */}
+          {/* Background Fish (Small, Blurred, Top Right) */}
+          <div className="absolute right-0 sm:right-4 md:right-2 lg:right-[-10px] -top-6 sm:-top-10 md:-top-14 w-24 sm:w-32 md:w-40 lg:w-40 pointer-events-none z-10 transition-transform duration-700 hover:scale-105">
             <img 
               src={fishImg} 
-              alt="NatureCube Tetra Fish" 
-              className="w-full h-auto object-contain filter drop-shadow-md"
+              alt="NatureCube Tetra Fish Background" 
+              className="w-full h-auto object-contain filter drop-shadow-sm blur-[3px] opacity-80"
             />
           </div>
-           <div className="absolute right-0 sm:right-4 md:right-[-180px] -top-6 sm:-top-10 md:-top-[-30px] w-40 sm:w-56 md:w-72 lg:w-70 pointer-events-none z-20 transition-transform duration-700 hover:scale-105">
+
+          {/* Foreground Fish (Large, Sharp, Bottom Left) */}
+          <div className="absolute right-12 sm:right-24 md:right-32 lg:right-40 top-2 sm:top-6 md:top-10 w-36 sm:w-52 md:w-64 lg:w-[180px] pointer-events-none z-20 transition-transform duration-700 hover:scale-105">
             <img 
               src={fishImg} 
-              alt="NatureCube Tetra Fish" 
-              className="w-full h-auto object-contain filter drop-shadow-md"
+              alt="NatureCube Tetra Fish Foreground" 
+              className="w-full h-auto object-contain filter drop-shadow-xl"
             />
           </div>
         </div>
@@ -88,7 +92,7 @@ const NcContactInfo = ({ data }) => {
           {/* Right Side Organic Watercolor Bush Image inside card */}
           <div className="absolute right-0 bottom-0 w-[320px] sm:w-[440px] pointer-events-none opacity-90 z-0">
             <img 
-              src={bushBg} 
+              src={bushBg2} 
               alt="Bush Background" 
               className="w-full h-auto object-contain transform rotate-12 scale-110" 
             />
@@ -109,7 +113,7 @@ const NcContactInfo = ({ data }) => {
                     <div className="relative w-full max-w-sm p-8 text-center overflow-hidden rounded-[32px] bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] animate-in zoom-in-95 slide-in-from-bottom-4 duration-500">
                       
                       {/* Subtle Lighting / Glow Effects behind the glass */}
-                      <div className="absolute -top-20 -left-20 w-56 h-56 bg-emerald-400/40 dark:bg-emerald-500/30 blur-[50px] rounded-full pointer-events-none"></div>
+                      <div className="absolute -top-20 -left-20 w-56 h-56 bg-[#7BA641]/40 dark:bg-[#7BA641]/30 blur-[50px] rounded-full pointer-events-none"></div>
                       <div className="absolute -bottom-20 -right-20 w-56 h-56 bg-blue-400/20 dark:bg-blue-500/20 blur-[50px] rounded-full pointer-events-none"></div>
                       
                       {/* Inner Glass Reflection */}
@@ -117,8 +121,8 @@ const NcContactInfo = ({ data }) => {
 
                       <div className="relative z-10">
                         {/* Glowing Icon Container */}
-                        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.3)] backdrop-blur-md">
-                          <CheckCircle className="w-10 h-10 text-emerald-600 dark:text-emerald-400 drop-shadow-lg" />
+                        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#7BA641]/20 border border-[#7BA641]/30 flex items-center justify-center shadow-[0_0_30px_rgba(123,166,65,0.3)] backdrop-blur-md">
+                          <CheckCircle className="w-10 h-10 text-[#7BA641] drop-shadow-lg" />
                         </div>
                         
                         <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2 font-kanit tracking-wide drop-shadow-sm">
@@ -148,7 +152,7 @@ const NcContactInfo = ({ data }) => {
                 ) : schema?.fields ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 sm:gap-y-8">
                     {schema.fields.map(field => {
-                      const isFullWidth = field.width === 'full' || field.type === 'textarea';
+                      const isFullWidth = field.type === 'textarea';
                       const hasError = !!fieldErrors[field.key];
                       const commonInputClass = `w-full bg-transparent border-b py-1.5 px-0 text-zinc-900 font-normal text-sm sm:text-base outline-none focus:border-zinc-800 transition-colors disabled:opacity-50 ${hasError ? 'border-red-400' : 'border-zinc-200'}`;
 
@@ -248,7 +252,7 @@ const NcContactInfo = ({ data }) => {
               
               <a 
                 href={`tel:${cleanPhone1}`} 
-                className="text-zinc-900 font-bold text-lg sm:text-xl md:text-2xl tracking-tight hover:text-emerald-700 transition-colors inline-block"
+                className="text-zinc-900 font-bold text-lg sm:text-xl md:text-2xl tracking-tight hover:text-[#7BA641] transition-colors inline-block"
               >
                 {phone1}
               </a>
@@ -267,9 +271,9 @@ const NcContactInfo = ({ data }) => {
             {/* Email Contact */}
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-[#edf5e6] flex items-center justify-center shrink-0">
-                <img src={expIcon} alt="Email" className="w-5 h-5 object-contain" />
+                <img src={expIcon} alt="Email" className="w-12 h-12 object-contain" />
               </div>
-              <a href={`mailto:${emailAddress}`} className="text-xs sm:text-sm font-medium text-zinc-800 hover:text-emerald-700 transition-colors">
+              <a href={`mailto:${emailAddress}`} className="text-xs sm:text-sm font-outfit text-zinc-800 hover:text-[#7BA641] transition-colors">
                 {emailAddress}
               </a>
             </div>
@@ -277,9 +281,9 @@ const NcContactInfo = ({ data }) => {
             {/* Address Contact */}
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-[#edf5e6] flex items-center justify-center shrink-0">
-                <img src={locIcon} alt="Location" className="w-5 h-5 object-contain" />
+                <img src={locIcon} alt="Location" className="w-12 h-12 object-contain" />
               </div>
-              <p className="text-xs sm:text-sm font-medium text-zinc-800 leading-snug whitespace-pre-line">
+              <p className="text-xs sm:text-sm font-outfit text-zinc-800 leading-snug whitespace-pre-line">
                 {address}
               </p>
             </div>
@@ -287,11 +291,11 @@ const NcContactInfo = ({ data }) => {
             {/* Phone Contact */}
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-[#edf5e6] flex items-center justify-center shrink-0">
-                <img src={call2Icon} alt="Phone" className="w-5 h-5 object-contain" />
+                <img src={call2Icon} alt="Phone" className="w-6 h-6 object-contain" />
               </div>
-              <div className="flex flex-col text-xs sm:text-sm font-medium text-zinc-800">
-                <a href={`tel:${cleanPhone1}`} className="hover:text-emerald-700 transition-colors">{phone1}</a>
-                {phone2 && <a href={`tel:${cleanPhone2}`} className="hover:text-emerald-700 transition-colors">{phone2}</a>}
+              <div className="flex flex-col text-xs sm:text-sm font-outfit text-zinc-800">
+                <a href={`tel:${cleanPhone1}`} className="hover:text-[#7BA641] transition-colors">{phone1}</a>
+                {phone2 && <a href={`tel:${cleanPhone2}`} className="hover:text-[#7BA641] transition-colors">{phone2}</a>}
               </div>
             </div>
 
@@ -302,7 +306,7 @@ const NcContactInfo = ({ data }) => {
             
             {/* Experience Centre */}
             <div className="flex flex-col">
-              <h4 className="text-base sm:text-lg font-bold text-zinc-900 mb-2">
+              <h4 className="text-base sm:text-lg font-reem text-zinc-900 mb-2">
                 Experience Centre
               </h4>
               <p className="text-zinc-500 font-light text-xs sm:text-sm leading-relaxed mb-4 whitespace-pre-line">
@@ -310,7 +314,7 @@ const NcContactInfo = ({ data }) => {
               </p>
               <div className="flex items-center gap-2">
                 <img src={callIcon} alt="Phone Icon" className="w-4 h-4 object-contain" />
-                <a href={`tel:${cleanPhone1}`} className="font-bold text-sm text-zinc-900 hover:text-emerald-700 transition-colors">
+                <a href={`tel:${cleanPhone1}`} className="font-kanit text-sm text-zinc-900 hover:text-[#7BA641] transition-colors">
                   {phone1}
                 </a>
               </div>
@@ -318,7 +322,7 @@ const NcContactInfo = ({ data }) => {
 
             {/* Corporate */}
             <div className="flex flex-col">
-              <h4 className="text-base sm:text-lg font-bold text-zinc-900 mb-2">
+              <h4 className="text-base sm:text-lg font-reem text-zinc-900 mb-2">
                 Corporate
               </h4>
               <p className="text-zinc-500 font-light text-xs sm:text-sm leading-relaxed mb-4 whitespace-pre-line">
@@ -326,7 +330,7 @@ const NcContactInfo = ({ data }) => {
               </p>
               <div className="flex items-center gap-2">
                 <img src={callIcon} alt="Phone Icon" className="w-4 h-4 object-contain" />
-                <a href={`tel:${cleanPhone1}`} className="font-bold text-sm text-zinc-900 hover:text-emerald-700 transition-colors">
+                <a href={`tel:${cleanPhone1}`} className="font-kanit text-sm text-zinc-900 hover:text-[#7BA641] transition-colors">
                   {phone1}
                 </a>
               </div>

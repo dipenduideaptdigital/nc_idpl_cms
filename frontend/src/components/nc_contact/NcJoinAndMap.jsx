@@ -52,12 +52,15 @@ const NcJoinAndMap = ({ data }) => {
       </section>
 
       {/* Google Map Section */}
-      <section className="w-full h-[300px] xs:h-[360px] sm:h-[450px] md:h-[520px] relative overflow-hidden bg-zinc-100">
+      <section className="w-full h-[300px] xs:h-[360px] sm:h-[450px] md:h-[520px] mt-4 relative overflow-hidden bg-zinc-100">
         <div 
           className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
           dangerouslySetInnerHTML={{ __html: mapEmbedCode }}
         />
       </section>
+
+      {/* Added bottom spacer div */}
+      <div className="w-full h-20 bg-white mt-20"></div>
 
     </div>
   );

@@ -246,10 +246,10 @@ const NatureNavbar = ({ forceDark = false }) => {
             if (link.isMega) {
               return (
                 <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('mega')} onMouseLeave={handleMouseLeave}>
-                  <button onClick={() => setIsOfferingsOpen(!isOfferingsOpen)} className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
+                  <button onClick={() => setIsOfferingsOpen(!isOfferingsOpen)} className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
                     <span>{link.label}</span>
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-emerald-400' : ''}`} />
-                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-[#7BA641]' : ''}`} />
+                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />
                   </button>
                   {isOfferingsOpen && <OfferingsMegaMenu onClose={() => setIsOfferingsOpen(false)} />}
                 </div>
@@ -260,15 +260,15 @@ const NatureNavbar = ({ forceDark = false }) => {
             if (link.children && link.children.length > 0) {
               return (
                 <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('dynamic', link.id)} onMouseLeave={handleMouseLeave}>
-                  <button className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
+                  <button className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
                     <span>{link.label}</span>
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdownId === link.id ? 'rotate-180 text-emerald-400' : ''}`} />
-                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdownId === link.id ? 'rotate-180 text-[#7BA641]' : ''}`} />
+                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />
                   </button>
                   {openDropdownId === link.id && (
                     <div className="absolute top-full left-0 mt-2 min-w-[200px] bg-[#070e06]/95 backdrop-blur-md rounded-xl shadow-xl border border-zinc-800 p-3 z-50 animate-in fade-in slide-in-from-top-2">
                       {link.children.map(child => (
-                        <Link key={child.id} to={child.url} onClick={() => setOpenDropdownId(null)} className="block px-4 py-2.5 text-sm font-medium tracking-wide uppercase rounded-lg transition-colors text-zinc-300 hover:text-emerald-400 hover:bg-zinc-800/80">
+                        <Link key={child.id} to={child.url} onClick={() => setOpenDropdownId(null)} className="block px-4 py-2.5 text-sm font-medium tracking-wide uppercase rounded-lg transition-colors text-zinc-300 hover:text-[#7BA641] hover:bg-zinc-800/80">
                           {child.label}
                         </Link>
                       ))}
@@ -280,14 +280,14 @@ const NatureNavbar = ({ forceDark = false }) => {
 
             // Standard Links
             return link.url.startsWith('/') ? (
-              <Link key={link.id} to={link.url} className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group">
+              <Link key={link.id} to={link.url} className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] transition-colors uppercase py-1 relative group">
                 {link.label}
-                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
+                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />
               </Link>
             ) : (
-              <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 transition-colors uppercase py-1 relative group">
+              <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] transition-colors uppercase py-1 relative group">
                 {link.label}
-                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-emerald-400 transition-all duration-300 group-hover:w-full" />
+                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />
               </a>
             );
           })}
@@ -312,19 +312,19 @@ const NatureNavbar = ({ forceDark = false }) => {
       {/* Mobile Menu Dropdown Slider */}
       <div className={`lg:hidden grid transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileMenuOpen ? 'grid-rows-[1fr] opacity-100 mt-4 pointer-events-auto' : 'grid-rows-[0fr] opacity-0 mt-0 pointer-events-none'}`}>
         <div className="overflow-hidden">
-          <div className={`transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileMenuOpen ? 'translate-y-0 scale-100' : '-translate-y-4 scale-95'} bg-[#070e06]/75 backdrop-blur-2xl rounded-2xl p-6 border border-emerald-500/25 shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.15)] space-y-2 font-kanit`}>
+          <div className={`transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileMenuOpen ? 'translate-y-0 scale-100' : '-translate-y-4 scale-95'} bg-[#070e06]/75 backdrop-blur-2xl rounded-2xl p-6 border border-[#7BA641]/25 shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.15)] space-y-2 font-kanit`}>
             {finalMenu.map((link, idx) => {
               if (link.children && link.children.length > 0) {
                 return (
                   <div key={link.id} className="w-full" style={{ transitionDelay: `${idx * 30}ms` }}>
-                    <button onClick={() => setOpenMobileDropdownId(openMobileDropdownId === link.id ? null : link.id)} className="w-full flex items-center justify-between text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 hover:bg-white/10 px-4 py-3 rounded-xl transition-all duration-200 uppercase">
+                    <button onClick={() => setOpenMobileDropdownId(openMobileDropdownId === link.id ? null : link.id)} className="w-full flex items-center justify-between text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] hover:bg-white/10 px-4 py-3 rounded-xl transition-all duration-200 uppercase">
                       {link.label}
                       <ChevronDown className={`w-4 h-4 transition-transform ${openMobileDropdownId === link.id ? 'rotate-180' : ''}`} />
                     </button>
                     {openMobileDropdownId === link.id && (
                       <div className="pl-6 border-l-2 border-zinc-800 ml-6 my-2 space-y-1 animate-in fade-in slide-in-from-top-1">
                         {link.children.map(child => (
-                          <Link key={child.id} to={child.url} onClick={() => setMobileMenuOpen(false)} className="block py-2 text-xs font-medium tracking-wide text-zinc-400 hover:text-emerald-400 uppercase transition-colors">
+                          <Link key={child.id} to={child.url} onClick={() => setMobileMenuOpen(false)} className="block py-2 text-xs font-medium tracking-wide text-zinc-400 hover:text-[#7BA641] uppercase transition-colors">
                             {child.label}
                           </Link>
                         ))}
@@ -335,16 +335,16 @@ const NatureNavbar = ({ forceDark = false }) => {
               }
 
               return link.url.startsWith('/') ? (
-                <Link key={link.id} to={link.url} onClick={() => setMobileMenuOpen(false)} className="block text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 hover:bg-white/10 px-4 py-3 rounded-xl border border-transparent hover:border-emerald-500/20 transition-all duration-200 uppercase" style={{ transitionDelay: `${idx * 30}ms` }}>
+                <Link key={link.id} to={link.url} onClick={() => setMobileMenuOpen(false)} className="block text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] hover:bg-white/10 px-4 py-3 rounded-xl border border-transparent hover:border-[#7BA641]/20 transition-all duration-200 uppercase" style={{ transitionDelay: `${idx * 30}ms` }}>
                   {link.label}
                 </Link>
               ) : (
-                <a key={link.id} href={link.url} onClick={() => setMobileMenuOpen(false)} className="block text-sm font-medium tracking-wide text-zinc-100 hover:text-emerald-400 hover:bg-white/10 px-4 py-3 rounded-xl border border-transparent hover:border-emerald-500/20 transition-all duration-200 uppercase" style={{ transitionDelay: `${idx * 30}ms` }}>
+                <a key={link.id} href={link.url} onClick={() => setMobileMenuOpen(false)} className="block text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] hover:bg-white/10 px-4 py-3 rounded-xl border border-transparent hover:border-[#7BA641]/20 transition-all duration-200 uppercase" style={{ transitionDelay: `${idx * 30}ms` }}>
                   {link.label}
                 </a>
               );
             })}
-            <a href="#store" onClick={() => setMobileMenuOpen(false)} className="block text-center bg-[#7BA641]/90 hover:bg-[#7BA641] text-white font-medium text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-[0_4px_20px_rgba(123,166,65,0.4)] backdrop-blur-md transition-all duration-300 border border-emerald-400/30 uppercase mt-4 font-kanit">
+            <a href="#store" onClick={() => setMobileMenuOpen(false)} className="block text-center bg-[#7BA641]/90 hover:bg-[#7BA641] text-white font-medium text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-[0_4px_20px_rgba(123,166,65,0.4)] backdrop-blur-md transition-all duration-300 border border-[#7BA641]/30 uppercase mt-4 font-kanit">
               STORE
             </a>
           </div>
