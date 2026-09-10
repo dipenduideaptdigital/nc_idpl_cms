@@ -78,10 +78,19 @@ const OurPartnersSection = ({ data }) => {
   return (
     <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 overflow-hidden select-none">
 
-      <div className="max-w-[1440px] mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+      {/* Absolute Bottom-Left Watercolor Splash matching Figma */}
+      <div className="absolute bottom-[12%] left-[-5%] w-[250px] sm:w-[300px] lg:w-[500px] pointer-events-none z-0 opacity-100 transform -scale-y-100">
+        <img
+          src={brushBg}
+          alt=""
+          className="w-full h-auto object-contain"
+        />
+      </div>
+
+      <div className="max-w-[1200px] mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-start">
 
         {/* Left Column: Text Content & Call-to-Action */}
-        <div className="lg:col-span-4 flex flex-col items-start pr-0 lg:pr-6 pt-0 lg:pt-1">
+        <div className="lg:col-span-5 flex flex-col items-start pr-0 lg:pr-6 pt-0 lg:pt-1">
 
           <div className="mb-6 sm:mb-8 flex items-baseline whitespace-nowrap">
             <span
@@ -127,22 +136,15 @@ const OurPartnersSection = ({ data }) => {
             </div>
           </a>
 
-          {/* Soft Green Watercolor Splash under button */}
-          <div className="mt-8 sm:mt-12 -ml-8 sm:-ml-12 w-[300px] sm:w-[400px] lg:w-[450px] h-auto pointer-events-none z-0 opacity-65 -mb-20">
-            <img
-              src={brushBg}
-              alt=""
-              className="w-full h-auto object-contain object-left-top"
-            />
-          </div>
+
 
         </div>
 
         {/* Right Column: Desktop Staggered Grid vs Mobile Auto-Sliding Carousel */}
-        <div className="lg:col-span-8 w-full lg:-mt-6">
+        <div className="lg:col-span-7 w-full lg:-mt-6">
 
           {/* Desktop View (Staggered 2-column Grid) */}
-          <div className="hidden lg:grid grid-cols-2 gap-x-6 gap-y-0 items-start max-w-[600px] ml-auto">
+          <div className="hidden lg:grid grid-cols-2 gap-x-6 gap-y-0 items-start max-w-[600px] ml-auto lg:mx-0 xl:ml-auto">
             {/* Left Column of Logos */}
             <div className="flex flex-col gap-6">
               {column1Partners.map((logoUrl, index) => (

@@ -41,19 +41,19 @@ const NcContactInfo = ({ data }) => {
   };
 
   return (
-    <section className="relative w-full bg-white text-zinc-900 pt-10 md:pt-14 pb-20 md:pb-28 font-kanit overflow-hidden">
+    <section className="relative w-full bg-white text-zinc-900 pt-10 lg:mt-20 md:pt-14 pb-20 md:pb-28 font-kanit overflow-hidden">
       
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
 
         {/* Header Title & Floating Fish Section */}
         <div className="relative mb-10 md:mb-14">
           
           {/* Top Left Organic Watercolor Bush Image behind Our Contacts */}
-          <div className="absolute -top-12 -left-16 w-72 sm:w-[400px] pointer-events-none opacity-90 z-0">
+          <div className="absolute -top-12 -left-20 sm:-top-20 sm:-left-28 md:-top-32 md:-left-40 lg:-top-50 lg:-left-90 w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] md:w-[450px] md:h-[450px] lg:w-[540px] lg:h-[500px] pointer-events-none brightness-100 opacity-90 z-0 rotate-4">
             <img 
               src={bushBg} 
               alt="Bush Background" 
-              className="w-full h-auto object-contain transform -rotate-12" 
+              className="w-full h-full object-contain transform -rotate-12" 
             />
           </div>
 
@@ -90,18 +90,18 @@ const NcContactInfo = ({ data }) => {
         <div className="bg-white rounded-[32px] sm:rounded-[40px] shadow-[0_15px_45px_rgba(0,0,0,0.035)] border border-zinc-100/90 p-7 sm:p-10 lg:p-14 relative z-10 overflow-hidden mb-16 md:mb-24">
           
           {/* Right Side Organic Watercolor Bush Image inside card */}
-          <div className="absolute right-0 bottom-0 w-[320px] sm:w-[440px] pointer-events-none opacity-90 z-0">
+          <div className="absolute top-[-50px] right-[-50px] lg:top-[-100px] lg:right-[-100px] w-[400px] sm:w-[600px] lg:w-[620px] pointer-events-none opacity-90 z-0 transform rotate-135">
             <img 
               src={bushBg2} 
               alt="Bush Background" 
-              className="w-full h-auto object-contain transform rotate-12 scale-110" 
+              className="w-full h-auto object-contain" 
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-stretch relative z-10">
 
             {/* Left Form Section */}
-            <div className="lg:col-span-7 flex flex-col justify-between relative z-10">
+            <div className="lg:col-span-7 flex flex-col justify-between relative z-10 pr-0 lg:pr-6">
               
               <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-7">
 
@@ -236,23 +236,23 @@ const NcContactInfo = ({ data }) => {
             </div>
 
             {/* Right Card Panel */}
-            <div className="lg:col-span-5 flex flex-col justify-center pl-0 lg:pl-6 py-4 relative z-10">
-              <h3 className="font-reem-fun text-3xl sm:text-4xl font-bold text-zinc-900 tracking-tight leading-tight">
+            <div className="lg:col-span-5 flex flex-col justify-center items-start text-left pl-0 lg:pl-10 py-4 relative z-10 mt-8 lg:mt-0">
+              <h3 className="font-kanit text-4xl sm:text-5xl lg:text-[50px] font-semibold text-[#06232B] tracking-tight leading-[1.1]">
                 Questions?
               </h3>
-              <h3 className="font-reem-fun text-3xl sm:text-4xl font-bold text-zinc-900 tracking-tight leading-tight mb-3">
+              <h3 className="font-kanit text-4xl sm:text-5xl lg:text-[50px] font-semibold text-[#06232B] tracking-tight leading-[1.1] mb-6">
                 We have answers.
               </h3>
 
-              <div className="w-14 h-[2px] bg-zinc-800 my-4" />
+              <div className="w-24 h-[2px] bg-[#142A2C] mb-8" />
 
-              <p className="text-zinc-600 text-xs sm:text-sm font-normal mb-0.5">
+              <p className="text-[#4A3C38] text-base sm:text-lg lg:text-xl font-medium mb-1">
                 Call us for fast support
               </p>
               
               <a 
                 href={`tel:${cleanPhone1}`} 
-                className="text-zinc-900 font-bold text-lg sm:text-xl md:text-2xl tracking-tight hover:text-[#7BA641] transition-colors inline-block"
+                className="text-[#3B5266] font-outfit text-xl sm:text-2xl md:text-[28px] tracking-tight hover:text-[#7BA641] transition-colors inline-block"
               >
                 {phone1}
               </a>
@@ -306,15 +306,15 @@ const NcContactInfo = ({ data }) => {
             
             {/* Experience Centre */}
             <div className="flex flex-col">
-              <h4 className="text-base sm:text-lg font-reem text-zinc-900 mb-2">
+              <h4 className="text-xl sm:text-2xl font-reem text-zinc-900 mb-3">
                 Experience Centre
               </h4>
-              <p className="text-zinc-500 font-light text-xs sm:text-sm leading-relaxed mb-4 whitespace-pre-line">
+              <p className="text-zinc-500 font-light text-sm sm:text-base leading-relaxed mb-5 whitespace-pre-line">
                 {address}
               </p>
-              <div className="flex items-center gap-2">
-                <img src={callIcon} alt="Phone Icon" className="w-4 h-4 object-contain" />
-                <a href={`tel:${cleanPhone1}`} className="font-kanit text-sm text-zinc-900 hover:text-[#7BA641] transition-colors">
+              <div className="flex items-center gap-2.5">
+                <img src={callIcon} alt="Phone Icon" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                <a href={`tel:${cleanPhone1}`} className="font-kanit text-base sm:text-lg text-zinc-900 hover:text-[#7BA641] transition-colors">
                   {phone1}
                 </a>
               </div>
@@ -322,15 +322,15 @@ const NcContactInfo = ({ data }) => {
 
             {/* Corporate */}
             <div className="flex flex-col">
-              <h4 className="text-base sm:text-lg font-reem text-zinc-900 mb-2">
+              <h4 className="text-xl sm:text-2xl font-reem text-zinc-900 mb-3">
                 Corporate
               </h4>
-              <p className="text-zinc-500 font-light text-xs sm:text-sm leading-relaxed mb-4 whitespace-pre-line">
+              <p className="text-zinc-500 font-light text-sm sm:text-base leading-relaxed mb-5 whitespace-pre-line">
                 {address}
               </p>
-              <div className="flex items-center gap-2">
-                <img src={callIcon} alt="Phone Icon" className="w-4 h-4 object-contain" />
-                <a href={`tel:${cleanPhone1}`} className="font-kanit text-sm text-zinc-900 hover:text-[#7BA641] transition-colors">
+              <div className="flex items-center gap-2.5">
+                <img src={callIcon} alt="Phone Icon" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                <a href={`tel:${cleanPhone1}`} className="font-kanit text-base sm:text-lg text-zinc-900 hover:text-[#7BA641] transition-colors">
                   {phone1}
                 </a>
               </div>

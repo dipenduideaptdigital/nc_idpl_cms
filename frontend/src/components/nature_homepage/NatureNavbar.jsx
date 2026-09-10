@@ -97,7 +97,7 @@ const NatureNavbar = ({ forceDark = false }) => {
   if (isLightPage) {
     return (
       <header className="absolute top-0 left-0 right-0 z-50 bg-transparent pt-6 pb-4 px-6 md:px-12 transition-all font-kanit">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between transition-all duration-500">
 
           {/* Logo */}
           <Link to="/" className="flex items-center group">
@@ -223,7 +223,7 @@ const NatureNavbar = ({ forceDark = false }) => {
   // ================= DARK BACKGROUND NAVBAR =================
   return (
     <header className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 via-black/40 to-transparent pt-6 pb-4 px-6 md:px-12 transition-all">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between transition-all duration-500">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 group">
           <div className="flex flex-col">

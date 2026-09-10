@@ -56,7 +56,7 @@ const AboutAwardsPanel = ({ data }) => {
           {awardsList.map((item) => (
             <div key={item.id} className="flex flex-col space-y-3 group">
               {/* Image Box */}
-              <div className="w-full aspect-[1.91/1] bg-zinc-200 overflow-hidden shadow-sm border border-zinc-100 rounded-sm relative">
+              <div className="w-full aspect-[4/3] sm:aspect-[3/2] bg-zinc-200 overflow-hidden shadow-sm border border-zinc-100 rounded-sm relative">
                 <img
                   src={item.image}
                   alt={item.title}

@@ -45,18 +45,18 @@ const NatureHero = ({ data }) => {
       </div>
 
       {/* Main Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 xs:px-6 sm:px-8 md:px-12 lg:px-16 w-full my-auto py-8 sm:py-12 md:py-16">
-        <div className="max-w-full lg:max-w-4xl xl:max-w-5xl space-y-4 sm:space-y-6">
-          <h1 className="font-reem text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.2rem] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-lg space-y-1 sm:space-y-2.5">
+      <div className="relative z-10 max-w-7xl min-[1921px]:max-w-[70vw] mx-auto px-4 xs:px-6 sm:px-8 w-full my-auto py-8 sm:py-12 md:py-16 transition-all duration-500">
+        <div className="max-w-full lg:max-w-4xl xl:max-w-5xl min-[1921px]:max-w-[55vw] space-y-4 sm:space-y-6">
+          <h1 className="font-reem text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.2rem] min-[1921px]:text-[clamp(3.5rem,3.5vw,5rem)] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-lg space-y-1 sm:space-y-2.5">
             <div className="sm:whitespace-nowrap">{titleLine1}</div>
             <div className="sm:whitespace-nowrap">{titleLine2}</div>
           </h1>
 
           <div className="pt-2 sm:pt-4 md:pt-6">
-            <h2 className="font-reem text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-md sm:whitespace-nowrap">
+            <h2 className="font-reem text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl min-[1921px]:text-[clamp(2.5rem,2.5vw,4rem)] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-md sm:whitespace-nowrap">
               {subHeadline}
             </h2>
-            <div className="font-larken text-5xl xs:text-6xl sm:text-7xl md:text-7xl lg:text-[5.5rem] text-zinc-100 font-normal italic tracking-normal mt-0 select-none leading-none drop-shadow-lg">
+            <div className="font-larken text-5xl xs:text-6xl sm:text-7xl md:text-7xl lg:text-[5.5rem] min-[1921px]:text-[clamp(6rem,7vw,10rem)] text-zinc-100 font-normal italic tracking-normal mt-0 select-none leading-none drop-shadow-lg">
               {italicWord}
             </div>
           </div>

@@ -69,7 +69,7 @@ const WhatTheySaySection = ({ data }) => {
         <img src={brushBg} alt="" className="w-full h-auto object-contain object-left-top" />
       </div>
 
-      <div className="max-w-[1440px] mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      <div className="max-w-[1200px] mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         
         {/* Left Column */}
         <div className="lg:col-span-5 flex flex-col items-start pt-0 lg:pt-4">
@@ -96,7 +96,7 @@ const WhatTheySaySection = ({ data }) => {
 
           {/* Secondary Card Container - Hidden on smaller screens (`lg:block`) */}
           {testimonials.length > 1 && (
-            <div className="hidden lg:block w-full max-w-[460px] relative rounded-xs overflow-hidden shadow-lg group mt-4 sm:mt-6 lg:-mt-4 ml-28 lg:ml-32 lg:-mr-16 z-20">
+            <div className="hidden lg:block w-full max-w-[360px] relative rounded-xs overflow-hidden shadow-lg group mt-4 sm:mt-6 lg:-mt-4 ml-auto lg:mr-0 z-20">
               <div className="aspect-[4/5] w-full relative">
                 <img src={getImageUrl(secondaryItem.image)} alt={secondaryItem.name || 'Testimonial'} className="w-full h-full object-cover object-left" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-40% to-transparent p-6 sm:p-8 flex flex-col justify-end text-white">
@@ -110,7 +110,7 @@ const WhatTheySaySection = ({ data }) => {
 
           {/* Desktop Navigation Buttons */}
           {testimonials.length > 1 && (
-            <div className="hidden lg:flex items-center justify-end gap-5 mt-6 w-full max-w-[460px] ml-28 lg:ml-32 lg:-mr-16 z-20">
+            <div className="hidden lg:flex items-center justify-end gap-5 mt-6 w-full max-w-[360px] ml-auto lg:mr-0 z-20">
               <button 
                 onClick={handlePrev} 
                 className="w-10 h-10 rounded-full bg-[#f0f4ec] hover:bg-[#6CA844] text-zinc-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group" 
@@ -130,9 +130,9 @@ const WhatTheySaySection = ({ data }) => {
         </div>
 
         {/* Right Column: Featured Single Primary Card for Mobile/Tablet & Desktop */}
-        <div className="lg:col-span-6 flex flex-col items-center lg:items-start w-full mt-4 lg:mt-60">
-          <div className="w-full max-w-[620px] relative rounded-xs overflow-hidden shadow-2xl mt-0 ml-0 lg:ml-6 mx-auto lg:mx-0">
-            <div className="w-full aspect-[4/5] sm:aspect-[768/930] min-h-[360px] xs:min-h-[420px] sm:min-h-[500px] lg:min-h-[680px] relative">
+        <div className="lg:col-span-6 flex flex-col items-center lg:items-start w-[600px] mt-4 lg:mt-60">
+          <div className="w-full relative rounded-xs overflow-hidden shadow-2xl mt-0 ml-0 mx-auto lg:mx-0">
+            <div className="w-full aspect-[4/5] max-h-[360px] xs:max-h-[420px] sm:max-h-[500px] lg:max-h-[630px] relative">
               <img src={getImageUrl(activeItem.image)} alt={activeItem.name || 'Testimonial'} className="w-full h-full object-cover object-left" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-40% to-transparent p-6 sm:p-8 lg:p-10 flex flex-col justify-end text-white">
                 <h3 className="font-kanit font-medium text-2xl sm:text-3xl lg:text-[32px] text-white mb-1 tracking-tight">{activeItem.name}</h3>
