@@ -2,22 +2,22 @@ import React from 'react';
 import patternImg from '../../assets/nc_mandala/pattern.png';
 import branchImg from '../../assets/nc_mandala/branch.png';
 import { resolveAssetUrl } from '../../utils/assetResolver';
-
+import brush1 from '../../assets/nc_logo/brush1.png';
 const MandalaPanel2 = ({ data }) => {
   return (
-    <div className="w-screen min-w-[100vw] h-full bg-white text-zinc-800 flex-shrink-0 relative flex flex-col justify-center items-center pt-32 sm:pt-36 lg:pt-38 pb-12 sm:pb-16 px-8 sm:px-14 lg:px-24 select-none font-kanit overflow-hidden">
+    <div className="w-screen min-w-[100vw] h-full bg-white text-zinc-800 flex-shrink-0 relative flex flex-col justify-center items-center pt-20 sm:pt-24 lg:pt-28 pb-6 sm:pb-10 px-8 sm:px-14 lg:px-24 select-none font-kanit overflow-hidden">
       
       {/* Main Layout Container matching Second Design Image */}
-      <div className="w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-8 lg:gap-12 pl-12 sm:pl-24 lg:pl-32 pr-4 sm:pr-8">
+      <div className="w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-4 lg:gap-8 pl-12 sm:pl-24 lg:pl-32 pr-4 sm:pr-8">
         
         {/* Left Visual Composition: Top-Left Mandala Pattern + Diagonally Spanning Green Blob + Bottom-Right Plant Branch */}
-        <div className="relative flex-shrink-0 w-[300px] sm:w-[380px] lg:w-[440px] h-[320px] sm:h-[380px]">
+        <div className="relative flex-shrink-0 w-[260px] sm:w-[320px] lg:w-[380px] h-[280px] sm:h-[340px]">
           
           {/* Diagonally Spanning Soft Green Watercolor Blob Background */}
-          <div className="absolute top-10 left-8 sm:left-12 z-0 w-[200px] sm:w-[270px] h-[200px] sm:h-[270px] bg-[#E4EED7]/75 rounded-full blur-2xl transform rotate-12 pointer-events-none" />
+          <img src={brush1} alt="Brush1" className="w-full h-auto object-contain filter drop-shadow-sm rotate-[12deg]"/>
 
           {/* Top-Left Line Art Mandala Pattern Image (Dynamic) */}
-          <div className="absolute top-0 left-0 z-10 w-[190px] sm:w-[240px] lg:w-[270px] aspect-square">
+          <div className="absolute top-0 left-0 z-10 w-[170px] sm:w-[210px] lg:w-[240px] aspect-square">
             <img
               src={data?.patternImage ? resolveAssetUrl(data.patternImage) : patternImg}
               alt="Line Art Mandala Pattern"
@@ -26,7 +26,7 @@ const MandalaPanel2 = ({ data }) => {
           </div>
 
           {/* Bottom-Right Black Line-Art Plant Branch Artwork (Dynamic) */}
-          <div className="absolute bottom-[-150px] right-2 sm:right-[-20px] z-20 w-[150px] sm:w-[190px] lg:w-[220px]">
+          <div className="absolute bottom-[-100px] right-2 sm:right-[-20px] z-20 w-[130px] sm:w-[160px] lg:w-[190px]">
             <img
               src={data?.branchImage ? resolveAssetUrl(data.branchImage) : branchImg}
               alt="Plant Branch Art"
@@ -39,7 +39,7 @@ const MandalaPanel2 = ({ data }) => {
         <div className="max-w-xs sm:max-w-sm lg:max-w-md space-y-6 pt-2 md:pt-16 ml-6 sm:ml-10">
           
           {/* Title: 2-Line "elements of balance" (Dynamic lowercase bold dark font) */}
-          <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-zinc-900 tracking-tight lowercase font-kanit leading-[0.95] max-w-[260px] sm:max-w-[320px]">
+          <h2 className="text-3xl sm:text-3xl lg:text-[40px] font-extrabold text-zinc-900 tracking-tight lowercase font-kanit leading-[0.95] max-w-[260px] sm:max-w-[320px]">
             <div>{data?.titleLine1 || "elements of"}</div>
             <div>{data?.titleLine2 || "balance"}</div>
           </h2>

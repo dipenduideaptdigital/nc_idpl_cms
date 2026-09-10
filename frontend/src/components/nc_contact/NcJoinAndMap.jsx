@@ -59,6 +59,9 @@ const NcJoinAndMap = ({ data }) => {
         />
       </section>
 
+      {/* Added bottom spacer div */}
+      {/* <div className="w-full h-20 bg-white mt-20"></div> */}
+
     </div>
   );
 };

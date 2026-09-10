@@ -9,7 +9,7 @@ const NcProjectsSectionHeader = ({
   onSelectCategory
 }) => {
   return (
-    <section className="w-full bg-white pt-10 sm:pt-16 md:pt-24 pb-8 sm:pb-12 px-4 sm:px-8 md:px-16 font-kanit">
+    <section className="w-full bg-white pt-10 sm:pt-16 md:pt-24 pb-8 sm:pb-12 px-4 sm:px-8 md:px-16 font-reem">
       <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6 md:space-y-9">
 
         <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-black tracking-wider uppercase leading-tight font-reem">
@@ -17,13 +17,13 @@ const NcProjectsSectionHeader = ({
         </h2>
 
         {subHeadline && (
-          <div className="text-base sm:text-xl md:text-2xl font-semibold text-zinc-600 leading-snug sm:leading-normal max-w-3xl mx-auto font-kanit whitespace-pre-line">
+          <div className="text-base sm:text-xl md:text-2xl font-medium text-zinc-500 leading-snug sm:leading-normal max-w-3xl mx-auto font-kanit whitespace-pre-line">
             {subHeadline}
           </div>
         )}
 
         {description && (
-          <p className="text-xs sm:text-base md:text-lg font-normal text-zinc-500 leading-relaxed max-w-3xl mx-auto font-kanit">
+          <p className="text-xs sm:text-base md:text-lg font-light text-zinc-500 leading-relaxed max-w-3xl mx-auto font-kanit">
             {description}
           </p>
         )}
@@ -37,8 +37,8 @@ const NcProjectsSectionHeader = ({
                   <button
                     onClick={() => onSelectCategory && onSelectCategory(cat)}
                     className={`text-[11px] sm:text-sm md:text-base uppercase tracking-widest transition-colors duration-200 cursor-pointer ${isActive
-                        ? 'text-[#6CA844] font-bold'
-                        : 'text-zinc-800 font-semibold hover:text-[#6CA844]'
+                      ? 'text-[#6CA844] font-medium'
+                      : 'text-zinc-900 font-light hover:text-[#6CA844]'
                       }`}
                   >
                     {cat}

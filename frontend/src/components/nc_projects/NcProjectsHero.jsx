@@ -16,8 +16,8 @@ const NcProjectsHero = ({ data }) => {
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-700 overflow-hidden"
         style={{ backgroundImage: `url(${bgImageUrl})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div> */}
       </div>
 
       <div className="relative z-10 w-full max-w-[1800px] mx-auto min-h-[320px] xs:min-h-[380px] sm:min-h-[480px] md:min-h-[620px] lg:min-h-[750px] xl:min-h-[850px] flex items-center px-4 sm:px-12 md:px-16 lg:px-24 py-12 sm:py-16">

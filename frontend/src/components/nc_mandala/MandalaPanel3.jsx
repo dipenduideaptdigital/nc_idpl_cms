@@ -2,6 +2,7 @@ import React from 'react';
 import darkMandalaImg from '../../assets/nc_mandala/dark_Mandala.png';
 import fishImg from '../../assets/nc_mandala/fish.png';
 import { resolveAssetUrl } from '../../utils/assetResolver';
+import bush3 from '../../assets/nc_logo/bush3.png';
 
 const MandalaPanel3 = ({ data }) => {
   // Dynamic variables with default fallbacks
@@ -14,17 +15,17 @@ const MandalaPanel3 = ({ data }) => {
   const fishImageSrc = data?.fishImage ? resolveAssetUrl(data.fishImage) : fishImg;
 
   return (
-    <div className="w-screen min-w-[100vw] h-full bg-white text-zinc-800 flex-shrink-0 relative flex flex-col justify-center items-center pt-32 sm:pt-36 lg:pt-38 pb-12 sm:pb-16 px-8 sm:px-14 lg:px-24 select-none font-kanit overflow-hidden">
+    <div className="w-screen min-w-[100vw] h-full bg-white text-zinc-800 flex-shrink-0 relative flex flex-col justify-center items-start pt-32 sm:pt-36 lg:pt-38 pb-12 sm:pb-16 px-8 sm:px-14 lg:px-24 select-none font-kanit overflow-hidden">
       
       {/* Swimming Neon Tetra Fish Overlay Top Right */}
-      <div className="absolute top-[14%] sm:top-[10%] right-[5vw] lg:right-[5vw] z-20 pointer-events-none w-28 sm:w-40 lg:w-38">
+      <div className="absolute top-[14%] sm:top-[10%] right-[5vw] lg:right-[5vw] z-20 pointer-events-none w-28 sm:w-40 blur-xs mt-10 lg:w-38">
         <img
           src={fishImageSrc}
           alt="Neon Tetra Fishes"
           className="w-full h-auto object-contain"
         />
       </div>
-       <div className="absolute top-[14%] sm:top-[18%] right-[9vw] lg:right-[10vw] z-20 pointer-events-none w-28 sm:w-40 lg:w-48">
+       <div className="absolute top-[14%] sm:top-[18%] right-[9vw] lg:right-[10vw] z-20 pointer-events-none w-28 mt-18 sm:w-40 lg:w-48">
         <img
           src={fishImageSrc}
           alt="Neon Tetra Fishes"
@@ -33,13 +34,14 @@ const MandalaPanel3 = ({ data }) => {
       </div>
 
       {/* Main Container holding Split Dark Mandala & Text */}
-      <div className="w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-8 lg:gap-12 pl-12 sm:pl-24 lg:pl-32 pr-4 sm:pr-8">
+      <div className="w-full max-w-5xl mr-auto flex flex-col md:flex-row items-center md:items-start justify-start md:justify-start gap-8 lg:gap-16 pl-0 sm:pl-4 lg:pl-8 pr-4 sm:pr-8">
         
         {/* Left Visual Composition: Green Blob + Split Dark Mandala Artwork */}
         <div className="relative flex-shrink-0 w-[260px] sm:w-[320px] md:w-[360px] lg:w-[400px] aspect-square flex items-center justify-center">
           
           {/* Light Green Watercolor Splash Background */}
-          <div className="absolute inset-0 z-0 bg-[#E5EED7]/75 rounded-full blur-2xl scale-105 pointer-events-none" />
+          {/* <div className="absolute inset-0 z-0 bg-[#E5EED7]/75 rounded-full blur-2xl scale-105 pointer-events-none" /> */}
+          <img src={bush3} alt="Bush3" className="absolute top-1/2 -translate-y-1/2 -right-16 sm:-right-24 lg:-right-32 z-0 w-[280px] sm:w-[340px] lg:w-[380px] h-auto object-contain rotate-[12deg] pointer-events-none" />
 
           {/* Split Dark Mandala Circle Image */}
           <img
@@ -50,7 +52,7 @@ const MandalaPanel3 = ({ data }) => {
         </div>
 
         {/* Right Text Description & Tagline matching screenshot */}
-        <div className="max-w-xs sm:max-w-sm lg:max-w-md space-y-6 pt-2 md:pt-4">
+        <div className="relative z-10 max-w-xs sm:max-w-sm lg:max-w-md space-y-6 pt-2 md:pt-4">
           
           {/* Title: "elements of balance" (lowercase bold dark text) */}
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-zinc-900 tracking-tight lowercase font-kanit">

@@ -17,8 +17,8 @@ const NatureFeaturesBar = ({ featuresData }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
 
-  const features = (featuresData && featuresData.length === 4) 
-    ? featuresData 
+  const features = (featuresData && featuresData.length === 4)
+    ? featuresData
     : DEFAULT_FEATURES;
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const NatureFeaturesBar = ({ featuresData }) => {
   const renderFeatureItem = (item, index) => {
     if (!item) return null;
     const iconUrl = item.icon ? resolveAssetUrl(item.icon) : DEFAULT_FEATURES[index]?.icon;
-    
+
     return (
       <div className="flex items-center justify-center gap-2.5 sm:gap-4 w-full min-w-0">
         <div className="w-8 h-8 sm:w-10 sm:h-10 2xl:w-14 2xl:h-14 flex-shrink-0 flex items-center justify-center filter brightness-125 contrast-125">
@@ -59,17 +59,16 @@ const NatureFeaturesBar = ({ featuresData }) => {
   };
 
   return (
-    <div className="w-full bg-[#0a1608]/85 backdrop-blur-md border-t border-emerald-900/40 py-3.5 sm:py-4 md:py-6 px-3 sm:px-6 md:px-12 2xl:px-16 font-kanit">
+    <div className="w-full bg-[#2C441B]/45 border-t border-emerald-900/40 py-3.5 sm:py-4 md:py-6 px-3 sm:px-6 md:px-12 2xl:px-16 font-kanit">
       <div className="max-w-7xl 2xl:max-w-[1536px] mx-auto">
-        
+
         {/* Desktop View (Static 4 columns with 3 vertical dividing lines) */}
         <div className="hidden lg:grid lg:grid-cols-4 gap-0 justify-items-center items-center">
           {features.map((item, index) => (
             <div
               key={index}
-              className={`flex items-center justify-center gap-3 sm:gap-4 py-2 w-full px-4 md:px-6 ${
-                index !== 0 ? 'border-l border-white/20' : ''
-              }`}
+              className={`flex items-center justify-center gap-3 sm:gap-4 py-2 w-full px-4 md:px-6 ${index !== 0 ? 'border-l border-white/20' : ''
+                }`}
             >
               {renderFeatureItem(item, index)}
             </div>
@@ -78,7 +77,7 @@ const NatureFeaturesBar = ({ featuresData }) => {
 
         {/* Mobile / Tablet View (Continuous infinite left-sliding 2 features at a time) */}
         <div className="block lg:hidden w-full overflow-hidden relative">
-          <div 
+          <div
             className={`flex w-[300%] ${isTransitioning ? 'transition-transform duration-700 ease-in-out' : 'transition-none'}`}
             style={{ transform: `translateX(-${currentIndex * 33.333333}%)` }}
             onTransitionEnd={handleTransitionEnd}

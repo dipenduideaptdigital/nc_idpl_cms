@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import MandalaHeader from '../nc_mandala/MandalaHeader';
 import AboutHeroPanel from './AboutHeroPanel';
 import AboutJourneyPanel from './AboutJourneyPanel';
 import AboutAwardsPanel from './AboutAwardsPanel';
@@ -11,26 +12,18 @@ import AboutMainImagePanel from './AboutMainImagePanel';
 import AboutTeamPanel from './AboutTeamPanel';
 import AboutTeamMembersPanel from './AboutTeamMembersPanel';
 import tankImg from '../../assets/nc_about/tank.png';
-import { resolveAssetUrl } from '../../utils/assetResolver'; 
+import brushImg from '../../assets/nc_logo/brush1.png';
+import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutHorizontalScroll = ({ data }) => {
   const containerRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
+  const [panelCount, setPanelCount] = useState(0);
 
   const flatData = data || {};
 
-  // Dynamically calculate total visible panels based on admin toggles
-  const totalPanels = [
-    flatData.hero_isVisible !== false ? 1 : 0,
-    flatData.journey_isVisible !== false ? 1 : 0,
-    flatData.awards_isVisible !== false ? 1 : 0,
-    flatData.history_isVisible !== false ? 1 : 0,
-    flatData.seminars_isVisible !== false ? 1 : 0,
-    flatData.ripples_isVisible !== false ? 1 : 0,
-    flatData.brands_isVisible !== false ? 2 : 0,
-    flatData.team_isVisible !== false ? 2 : 0, 
-  ].reduce((a, b) => a + b, 0);
-  
+
+
   const structuredData = {
     panoramicImage: flatData.panoramic_image,
     heroPanel: {
@@ -118,11 +111,17 @@ const AboutHorizontalScroll = ({ data }) => {
     }
   };
 
-  const scrollToPanel = (index) => {
+  const getPanels = () => {
     const el = containerRef.current;
-    if (!el || !el.children[index]) return;
-    const targetChild = el.children[index];
-    el.scrollTo({
+    if (!el) return [];
+    return Array.from(el.children).filter(child => !child.classList.contains('pointer-events-none'));
+  };
+
+  const scrollToPanel = (index) => {
+    const panels = getPanels();
+    if (!panels[index]) return;
+    const targetChild = panels[index];
+    containerRef.current.scrollTo({
       left: targetChild.offsetLeft,
       behavior: 'smooth'
     });
@@ -132,15 +131,32 @@ const AboutHorizontalScroll = ({ data }) => {
   const handleScroll = () => {
     const el = containerRef.current;
     if (!el) return;
-    const index = Math.round(el.scrollLeft / el.clientWidth);
-    if (index >= 0 && index < totalPanels && index !== activePanel) {
-      setActivePanel(index);
+    const panels = getPanels();
+    if (panels.length === 0) return;
+
+    const scrollLeft = el.scrollLeft;
+    let closestIndex = 0;
+    let minDiff = Infinity;
+
+    panels.forEach((child, idx) => {
+      const diff = Math.abs(child.offsetLeft - scrollLeft);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIndex = idx;
+      }
+    });
+
+    if (closestIndex !== activePanel) {
+      setActivePanel(closestIndex);
     }
   };
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    const panels = getPanels();
+    setPanelCount(panels.length);
+
     const handleWheel = (e) => {
       if (document.body.classList.contains('puck-mode')) return;
       if (e.deltaY !== 0) {
@@ -150,11 +166,16 @@ const AboutHorizontalScroll = ({ data }) => {
     };
     el.addEventListener('wheel', handleWheel, { passive: false });
     return () => el.removeEventListener('wheel', handleWheel);
-  }, []);
+  }, [flatData]);
+
+  const totalPanels = panelCount || 10;
 
   return (
     <div className="relative w-full h-screen overflow-hidden select-none bg-black text-white font-kanit">
-      
+
+      {/* Persistent Navigation Bar across all panels */}
+      <MandalaHeader data={{ logo: flatData.logo }} />
+
       {/* Horizontal Scroll Track */}
       <div
         ref={containerRef}
@@ -168,14 +189,14 @@ const AboutHorizontalScroll = ({ data }) => {
         {flatData.history_isVisible !== false && <AboutHistoryPanel data={structuredData.historyPanel} />}
         {flatData.seminars_isVisible !== false && <AboutSeminarsPanel data={structuredData.seminarsPanel} />}
         {flatData.ripples_isVisible !== false && <AboutRipplesPanel data={structuredData.ripplesPanel} />}
-        
+
         {flatData.brands_isVisible !== false && (
           <>
             <AboutBrandsPanel data={structuredData.brandsPanel} />
             <AboutMainImagePanel data={structuredData.mainImagePanel} />
           </>
         )}
-        
+
         {flatData.team_isVisible !== false && (
           <>
             <AboutTeamPanel data={structuredData.teamPanel} />
@@ -189,6 +210,17 @@ const AboutHorizontalScroll = ({ data }) => {
             <img
               src={structuredData.panoramicImage ? resolveAssetUrl(structuredData.panoramicImage) : tankImg}
               alt="Naturecube Aquarium Tank"
+              className="w-full h-auto object-contain"
+            />
+          </div>
+        )}
+
+        {/* BRUSH DECOR OVERLAY - Positioned seamlessly between Awards and History panels */}
+        {flatData.awards_isVisible !== false && (
+          <div className="absolute -top-16 left-[265vw] -translate-x-1/2 z-20 pointer-events-none w-[420px] sm:w-[520px] lg:w-[420px] opacity-40">
+            <img
+              src={brushImg}
+              alt="Background Decor"
               className="w-full h-auto object-contain"
             />
           </div>
@@ -227,8 +259,8 @@ const AboutHorizontalScroll = ({ data }) => {
               scrollToPanel(idx);
             }}
             className={`flex items-center justify-center h-6 rounded-full transition-all duration-300 cursor-pointer ${activePanel === idx
-                ? 'bg-[#7BA641] text-white w-8 font-bold text-[11px] shadow-sm'
-                : 'bg-white/30 hover:bg-white/80 text-white/80 w-6 text-[11px] font-semibold'
+              ? 'bg-[#7BA641] text-white w-8 font-bold text-[11px] shadow-sm'
+              : 'bg-white/30 hover:bg-white/80 text-white/80 w-6 text-[11px] font-semibold'
               }`}
             aria-label={`Go to panel ${idx + 1}`}
           >

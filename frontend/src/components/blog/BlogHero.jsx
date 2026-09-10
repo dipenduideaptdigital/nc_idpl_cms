@@ -1,5 +1,5 @@
 import React from 'react';
-import heroImg from '../../assets/blog/hero.jpg';
+import heroImg from '../../assets/nc_home/trunk.png';
 
 const BlogHero = () => {
   return (
@@ -13,11 +13,11 @@ const BlogHero = () => {
           className="w-full h-full object-cover object-center filter brightness-95 contrast-105"
         />
         {/* Top Dark Overlay Gradient for Navbar Contrast */}
-        <div className="absolute top-0 left-0 right-0 h-28 sm:h-36 md:h-44 bg-gradient-to-b from-black/80 via-black/35 to-transparent pointer-events-none z-10" />
+        {/* <div className="absolute top-0 left-0 right-0 h-28 sm:h-36 md:h-44 bg-gradient-to-b from-black/80 via-black/35 to-transparent pointer-events-none z-10" /> */}
         {/* Bottom Dark Gradient for Seamless Section Blend */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-28 md:h-36 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent pointer-events-none z-10" />
+        {/* <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-28 md:h-36 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent pointer-events-none z-10" /> */}
         {/* Vignette Overlay */}
-        <div className="absolute inset-0 bg-black/25 pointer-events-none z-10" />
+        {/* <div className="absolute inset-0 bg-black/25 pointer-events-none z-10" /> */}
       </div>
 
       {/* Hero Content */}

@@ -37,7 +37,7 @@ const PrakritiHero = ({ data }) => {
   const brushBg = data?.brushImage ? getAssetUrl(data.brushImage) : brush2Img;
 
   return (
-    <section className="relative w-full min-h-[60vh] sm:min-h-[75vh] md:min-h-[85vh] lg:min-h-screen bg-[#FAFAF7] overflow-hidden select-none flex items-center pt-24 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-24">
+    <section className="relative w-full min-h-[60vh] sm:min-h-[75vh] md:min-h-[85vh] lg:min-h-screen -mt-24 bg-[#FAFAF7] overflow-hidden select-none flex items-center pt-24 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-24">
       {/* Background Radial Ambient Glow */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-60"
@@ -47,11 +47,11 @@ const PrakritiHero = ({ data }) => {
       />
       
       {/* Bottom-Left Watercolor Brush Element */}
-      <div className="absolute -bottom-[-40px] -left-[-190px] sm:-bottom-16 sm:-left-20 md:-bottom-20 md:-left-24 lg:-bottom-24 lg:-left-28 w-[260px] xs:w-[280px] sm:w-[400px] md:w-[520px] lg:w-[640px] aspect-square pointer-events-none z-0">
+      <div className="absolute -bottom-[-40px] -left-[-190px] sm:-bottom-16 sm:-left-20 md:-bottom-20 md:-left-24 lg:-bottom-4 lg:-left-24 w-[260px] xs:w-[280px] sm:w-[400px] md:w-[520px] lg:w-[400px] aspect-square pointer-events-none z-0">
         <img
           src={brushBg}
           alt="Prakriti Lab Brush Accent"
-          className="w-full h-full object-contain object-left-bottom opacity-85 sm:opacity-90 filter brightness-105 transform -rotate-12 transition-all duration-700 hover:scale-105"
+          className="w-full h-full object-contain object-left-bottom opacity-80 sm:opacity-90 filter brightness-100 transform -rotate-12 transition-all duration-700 hover:scale-105"
         />
       </div>
 
@@ -66,7 +66,7 @@ const PrakritiHero = ({ data }) => {
             {headlineLines.map((lineObj, idx) => (
               <h1
                 key={idx}
-                className="font-kanit font-bold text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[58px] text-[#6A6A6A] leading-[1.08] tracking-tight transition-all duration-500 hover:translate-x-1"
+                className="font-kanit font-bold text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[58px] text-[#363636] leading-[1.08] tracking-tight transition-all duration-500 hover:translate-x-1"
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
                 {lineObj.line}

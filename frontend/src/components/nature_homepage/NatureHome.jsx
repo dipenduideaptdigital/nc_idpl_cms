@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import apiClient from '../../api/client'; 
+import apiClient from '../../api/client';
 
 import NatureNavbar from './NatureNavbar';
 import NatureHero from './NatureHero';
@@ -12,6 +12,7 @@ import OurPartnersSection from './OurPartnersSection';
 import OurBlogsSection from './OurBlogsSection';
 import WhatTheySaySection from './WhatTheySaySection';
 import GetStartedCtaSection from './GetStartedCtaSection';
+import LearnTogetherSection from './LearnTogetherSection';
 import NatureFooter from './NatureFooter';
 import WhatsAppButton from '../shared/WhatsAppButton';
 // import ScrollToTop from '../shared/ScrollToTop';
@@ -33,11 +34,11 @@ const NatureHome = () => {
   useEffect(() => {
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
-    
+
     window.addEventListener('open-consultation-modal', handleOpenModal);
     window.addEventListener('close-consultation-modal', handleCloseModal);
     const hasSeenModal = sessionStorage.getItem('nc_has_seen_modal');
-    
+
     let timer;
     if (!hasSeenModal) {
       timer = setTimeout(() => {
@@ -57,8 +58,8 @@ const NatureHome = () => {
     const fetchHomeData = async () => {
       try {
         const requiredKeys = [
-          'nc_homepage_hero', 'nc_homepage_mandalas', 'nc_homepage_living_art', 
-          'nc_homepage_showcase', 'nc_homepage_plant_display', 'nc_homepage_services', 
+          'nc_homepage_hero', 'nc_homepage_mandalas', 'nc_homepage_living_art',
+          'nc_homepage_showcase', 'nc_homepage_plant_display', 'nc_homepage_services',
           'nc_homepage_partners', 'nc_homepage_blogs', 'nc_homepage_what_they_say', 'nc_homepage_cta'
         ].join(',');
 
@@ -96,17 +97,18 @@ const NatureHome = () => {
       <NatureShowcaseSection data={showcaseData} />
       <PlantDisplaySection data={plantData} />
       <ServicesSection data={servicesData} />
+      <LearnTogetherSection />
       <OurPartnersSection data={partnersData} />
       <OurBlogsSection data={blogsData} />
       <WhatTheySaySection data={whatTheySayData} />
       <GetStartedCtaSection data={ctaData} />
       <NatureFooter />
-      
+
       <WhatsAppButton />
       {/* <ScrollToTop /> */}
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8 animate-fade-in">
+        <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 md:p-8 animate-fade-in">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
             onClick={() => setIsModalOpen(false)}
