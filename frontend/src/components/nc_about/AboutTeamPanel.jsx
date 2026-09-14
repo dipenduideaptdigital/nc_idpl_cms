@@ -12,14 +12,14 @@ const AboutTeamPanel = ({ data }) => {
   const description = data?.description || "<p>Gautam Gupta is a committed Nature Advocate, environmental steward, and lifelong aquascaping enthusiast, whose deep-rooted passion for ecological harmony continues to shape the vision and direction of Nature Cube.</p><p>As a core mentor to NatureCube, his guidance and vision play a pivotal role in driving the organisation's mission to introduce living, regenerative ecosystems into modern urban environments through Nature Aquariums, Terrariums, and Indoor Gardens.</p><p>Leveraging his expertise in aquatic ecology, ecosystem design, and sustainable habitat creation, he has been instrumental in establishing Kolkata's first Natural Aquarium gallery and in forging collaborations with global leaders such as Aqua Design Amano (Japan) and 2Hr Aquarist (Singapore).</p><p>Through outreach programs, workshops, his YouTube channel, he has built a vibrant community of students, hobbyists, and environmentally conscious individuals, inspiring them to appreciate, recreate, and responsibly care for natural ecosystems across diverse environments.</p><p>With 28+ years of corporate experience in IT consulting, he add immense values in terms of business, leadership and strategy.</p>";
 
   return (
-    <div className="w-auto min-w-[85vw] lg:min-w-[90vw] h-full bg-white text-zinc-900 flex-shrink-0 relative flex flex-col justify-center pt-20 sm:pt-24 pb-12 sm:pb-16 px-6 sm:px-10 lg:px-16 z-10 select-none font-kanit overflow-hidden">
+    <div className="w-auto min-w-[75vw] lg:min-w-[75vw] h-full bg-white text-zinc-900 flex-shrink-0 relative flex flex-col justify-center pt-20 sm:pt-24 pb-12 sm:pb-16 pl-6 sm:pl-10 lg:pl-16 pr-0 sm:pr-2 lg:pr-0 z-10 select-none font-kanit overflow-hidden">
 
       {/* Background Single Bush Decor (Bottom Left) */}
-      <div className="absolute bottom-0 left-[-55px] pointer-events-none opacity-65 z-0">
+      <div className="absolute bottom-[-100px] -left-[110px] pointer-events-none opacity-100 z-0">
         <img
           src={singleBush}
           alt="Bush Decoration"
-          className="w-72 sm:w-96 md:w-[380px] h-auto object-contain"
+          className="w-72 sm:w-96 md:w-[380px] h-auto object-contain rotate-[-160deg]"
         />
       </div>
 

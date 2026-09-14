@@ -20,11 +20,11 @@ const AboutTeamMembersPanel = ({ data }) => {
     <div className="w-auto flex-shrink-0 h-full bg-white text-zinc-900 relative flex flex-col justify-center pt-20 sm:pt-24 pb-12 sm:pb-16 px-0 z-10 select-none font-kanit overflow-hidden">
 
       {/* Top-Right Decorative Leaf */}
-      <div className="absolute -top-10 -right-10 pointer-events-none opacity-50 z-0">
+      <div className="absolute top-[-150px] right-[-100px] pointer-events-none opacity-100 z-0">
         <img
           src={topLeaf}
           alt="Leaf Decoration"
-          className="w-72 sm:w-96 md:w-[260px] rotate-90 h-auto object-contain"
+          className="w-72 sm:w-96 md:w-[360px] rotate-90 h-auto object-contain"
         />
       </div>
 
@@ -32,14 +32,14 @@ const AboutTeamMembersPanel = ({ data }) => {
       <div className="relative z-10 flex flex-row items-center my-auto font-kanit mt-28 pl-4 sm:pl-6 lg:pl-2 pr-12 lg:pr-16 gap-8 lg:gap-12">
 
         {/* Left Section: 3 Core Team Leaders Stacked Vertically with Large Square Photos */}
-        <div className="w-[420px] sm:w-[520px] lg:w-[600px] flex-shrink-0 space-y-4 sm:space-y-6">
+        <div className="w-[420px] sm:w-[520px] lg:w-[600px] flex-shrink-0 space-y-2 sm:space-y-3">
 
           {/* Member 1: Col. Basudev Mitra */}
           <div className="flex flex-row items-start space-x-4 sm:space-x-6">
             <img
               src={data?.image1 ? resolveAssetUrl(data.image1) : team2Img}
               alt="Col. Basudev Mitra"
-              className="w-32 sm:w-40 lg:w-48 h-32 sm:h-40 lg:h-48 aspect-square object-cover flex-shrink-0 shadow-sm border border-zinc-100"
+              className="w-24 sm:w-32 lg:w-44 h-24 sm:h-32 lg:h-44 aspect-square object-cover flex-shrink-0 shadow-sm border border-zinc-100"
             />
             <div className="pt-1">
               <h3 className="font-kanit font-semibold text-base sm:text-lg lg:text-xl text-[#7BA641] tracking-wide uppercase mb-1 sm:mb-2">
@@ -56,7 +56,7 @@ const AboutTeamMembersPanel = ({ data }) => {
             <img
               src={data?.image2 ? resolveAssetUrl(data.image2) : team3Img}
               alt="Partha Chakraborty"
-              className="w-32 sm:w-40 lg:w-48 h-32 sm:h-40 lg:h-48 aspect-square object-cover flex-shrink-0 shadow-sm border border-zinc-100"
+              className="w-24 sm:w-32 lg:w-44 h-24 sm:h-32 lg:h-44 aspect-square object-cover flex-shrink-0 shadow-sm border border-zinc-100"
             />
             <div className="pt-1">
               <h3 className="font-kanit font-semibold text-base sm:text-lg lg:text-xl text-[#7BA641] tracking-wide uppercase mb-1 sm:mb-2">
@@ -73,7 +73,7 @@ const AboutTeamMembersPanel = ({ data }) => {
             <img
               src={data?.image3 ? resolveAssetUrl(data.image3) : team4Img}
               alt="Sanjoy Dutta"
-              className="w-32 sm:w-40 lg:w-48 h-32 sm:h-40 lg:h-48 aspect-square object-cover flex-shrink-0 shadow-sm border border-zinc-100"
+              className="w-24 sm:w-32 lg:w-44 h-24 sm:h-32 lg:h-44 aspect-square object-cover flex-shrink-0 shadow-sm border border-zinc-100"
             />
             <div className="pt-1">
               <h3 className="font-kanit font-semibold text-base sm:text-lg lg:text-xl text-[#7BA641] tracking-wide uppercase mb-1 sm:mb-2">
