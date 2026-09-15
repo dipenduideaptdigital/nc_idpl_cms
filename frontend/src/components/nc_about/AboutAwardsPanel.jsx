@@ -2,7 +2,7 @@ import React from 'react';
 import gallery1 from '../../assets/nc_home/gallery1.png';
 import gallery2 from '../../assets/nc_home/gallery2.png';
 import gallery3 from '../../assets/nc_home/gallery3.png';
-import singleBush from '../../assets/nc_logo/brush2.png';
+// import singleBush from '../../assets/nc_logo/brush2.png';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutAwardsPanel = ({ data }) => {

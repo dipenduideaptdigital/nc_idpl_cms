@@ -8,11 +8,11 @@ const AboutJourneyPanel = ({ data }) => {
   const paragraph2 = data?.paragraph2 || "WITH A COMMITMENT TO ETHICAL BUSINESS PRACTICES AND KEEPING ENVIRONMENTAL SUSTAINABILITY AT THE CORE, WE PARTNER WITH BEST IN CLASS TECHNOLOGY PROVIDERS TO OFFER THE BEST AQUARIUM, TERRARIUM, NATURE CONNECT PROGRAMS, WORKSHOPS, AND ALSO INNOVATIVE INDOOR GARDENING SOLUTIONS TO OUR CUSTOMERS.";
 
   return (
-    <div className="w-[78vw] min-w-[78vw] h-full bg-[#0a1f1c] text-white flex-shrink-0 relative flex flex-col justify-between pt-20 sm:pt-24 pb-12 sm:pb-16 px-6 sm:px-10 lg:px-14 z-10 select-none font-kanit">
+    <div className="w-[78vw] min-w-[78vw] h-full bg-[#06232B] text-white flex-shrink-0 relative flex flex-col justify-between pt-20 sm:pt-24 pb-12 sm:pb-16 px-6 sm:px-10 lg:px-14 z-10 select-none font-kanit">
 
       {/* Dark Tropical Leaf Background Texture Overlay */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-50 bg-cover bg-center"
+        className="absolute inset-0 pointer-events-none opacity-100  bg-cover bg-center"
         style={{
           backgroundImage: `url(${data?.bgImage ? resolveAssetUrl(data.bgImage) : leafTexture})`,
         }}
@@ -22,7 +22,7 @@ const AboutJourneyPanel = ({ data }) => {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at 60% 50%, rgba(15, 45, 40, 0.4) 0%, rgba(7, 22, 20, 0.9) 100%)'
+          background: 'radial-gradient(circle at 60% 50%, rgba(15, 45, 40, 0.1) 0%, rgba(7, 22, 20, 0.6) 100%)'
         }}
       />
 
