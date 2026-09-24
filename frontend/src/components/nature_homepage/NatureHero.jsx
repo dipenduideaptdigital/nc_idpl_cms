@@ -1,5 +1,5 @@
 import React from 'react';
-import defaultHeroBg from '../../assets/nc_home/hero.jpg';
+import heroVideo from '../../assets/nc_home/Naturecueb Header V03.mp4';
 import NatureFeaturesBar from './NatureFeaturesBar';
 
 // Helper to resolve the correct image URL from your backend
@@ -24,7 +24,6 @@ const getAssetUrl = (path) => {
 };
 
 const NatureHero = ({ data }) => {
-  const bgImage = data?.backgroundImage ? getAssetUrl(data.backgroundImage) : defaultHeroBg;
   const titleLine1 = data?.titleLine1 || "NATURE HAS";
   const titleLine2 = data?.titleLine2 || "ALWAYS BEEN CALLING.";
   const subHeadline = data?.subHeadline || "WE SIMPLY HELP YOU";
@@ -33,30 +32,33 @@ const NatureHero = ({ data }) => {
   if (data?.isVisible === false) return null;
   
   return (
-    <section className="relative min-h-screen min-h-[100dvh] w-full flex flex-col justify-between bg-[#060e05] text-white overflow-hidden pt-28 xs:pt-32 md:pt-36 lg:pt-40">
+    <section className="relative min-h-screen min-h-[100dvh] w-full flex flex-col justify-between bg-[#060e05] text-white overflow-hidden pt-24 xs:pt-28 md:pt-36 lg:pt-40">
       <div className="absolute inset-0 z-0">
-        <img
-          src={bgImage}
-          alt="NatureCube Aquascape"
+        <video
+          src={heroVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
           className="w-full h-full object-cover object-[center_35%] md:object-center scale-100 sm:scale-102 md:scale-105 filter brightness-100 contrast-100 transition-all duration-700"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-black/10 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/50 sm:from-black/40 lg:from-black/25 via-black/20 lg:via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 sm:from-black/40 lg:from-black/25 via-transparent to-black/20 lg:to-black/10" />
       </div>
 
       {/* Main Hero Content */}
-      <div className="relative z-10 max-w-7xl min-[1921px]:max-w-[70vw] mx-auto px-4 xs:px-6 sm:px-8 w-full my-auto py-8 sm:py-12 md:py-16 transition-all duration-500">
-        <div className="max-w-full lg:max-w-4xl xl:max-w-5xl min-[1921px]:max-w-[55vw] space-y-4 sm:space-y-6">
-          <h1 className="font-reem text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.2rem] min-[1921px]:text-[clamp(3.5rem,3.5vw,5rem)] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-lg space-y-1 sm:space-y-2.5">
-            <div className="sm:whitespace-nowrap">{titleLine1}</div>
-            <div className="sm:whitespace-nowrap">{titleLine2}</div>
+      <div className="relative z-10 max-w-7xl min-[1921px]:max-w-[70vw] mx-auto px-4 xs:px-6 sm:px-8 w-full my-auto py-8 sm:py-12 md:py-16 transition-all duration-500 flex-grow flex flex-col justify-center">
+        <div className="max-w-full lg:max-w-4xl xl:max-w-5xl min-[1921px]:max-w-[55vw] space-y-3 sm:space-y-4 lg:space-y-6">
+          <h1 className="font-reem text-[1.75rem] xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.2rem] min-[1921px]:text-[clamp(3.5rem,3.5vw,5rem)] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.25] lg:leading-[1.18] text-white uppercase font-light drop-shadow-lg space-y-1.5 sm:space-y-2.5 break-words">
+            <div className="whitespace-normal sm:whitespace-nowrap">{titleLine1}</div>
+            <div className="whitespace-normal sm:whitespace-nowrap">{titleLine2}</div>
           </h1>
 
           <div className="pt-2 sm:pt-4 md:pt-6">
-            <h2 className="font-reem text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl min-[1921px]:text-[clamp(2.5rem,2.5vw,4rem)] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.18] text-white uppercase font-light drop-shadow-md sm:whitespace-nowrap">
+            <h2 className="font-reem text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl min-[1921px]:text-[clamp(2.5rem,2.5vw,4rem)] tracking-[0.03em] sm:tracking-[0.02em] [word-spacing:0.15em] sm:[word-spacing:0.2em] leading-[1.3] lg:leading-[1.18] text-white uppercase font-light drop-shadow-md whitespace-normal sm:whitespace-nowrap break-words">
               {subHeadline}
             </h2>
-            <div className="font-larken text-5xl xs:text-6xl sm:text-7xl md:text-7xl lg:text-[5.5rem] min-[1921px]:text-[clamp(6rem,7vw,10rem)] text-zinc-100 font-normal italic tracking-normal mt-0 select-none leading-none drop-shadow-lg">
+            <div className="font-larken text-[3rem] xs:text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] min-[1921px]:text-[clamp(6rem,7vw,10rem)] text-zinc-100 font-normal italic tracking-normal mt-1 lg:mt-0 select-none leading-none drop-shadow-lg break-words">
               {italicWord}
             </div>
           </div>
