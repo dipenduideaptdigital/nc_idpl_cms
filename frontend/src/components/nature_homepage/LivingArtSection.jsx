@@ -64,13 +64,15 @@ const LivingArtSection = ({ data }) => {
               {mainTitle} <span className="font-larken text-5xl sm:text-6xl lg:text-7xl font-semibold italic text-[#6CAB44] lowercase ml-2">{italicTitle}</span>
             </h2>
 
-            <h3 className="font-kanit text-2xl sm:text-3xl lg:text-[48px] font-medium text-[#363636] leading-tighter  tracking-tight max-w-[340px] lg:max-w-[500px] mb-10">
-              {subHeadline}
-            </h3>
+            <div 
+              className="font-kanit text-2xl sm:text-3xl lg:text-[48px] font-medium text-[#363636] leading-tighter tracking-tight max-w-[340px] lg:max-w-[500px] mb-10 [&>p]:m-0"
+              dangerouslySetInnerHTML={{ __html: subHeadline }}
+            />
 
-            <p className="font-kanit text-base sm:text-lg lg:text-[35px] text-zinc-500 font-ligh  leading-tight max-w-[250px] lg:max-w-[440px] mb-8">
-              {paragraph}
-            </p>
+            <div 
+              className="font-kanit text-base sm:text-lg lg:text-[35px] text-zinc-500 font-light leading-tight max-w-[250px] lg:max-w-[440px] mb-8 [&>p]:m-0"
+              dangerouslySetInnerHTML={{ __html: paragraph }}
+            />
           </div>
 
           {/* Play Button */}
@@ -118,13 +120,15 @@ const LivingArtSection = ({ data }) => {
                 {currentTab?.title}
               </h3>
 
-              <p className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light">
-                {currentTab?.desc1}
-              </p>
+              <div 
+                className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light [&>p]:m-0"
+                dangerouslySetInnerHTML={{ __html: currentTab?.desc1 }}
+              />
 
-              <p className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light">
-                {currentTab?.desc2}
-              </p>
+              <div 
+                className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light [&>p]:m-0"
+                dangerouslySetInnerHTML={{ __html: currentTab?.desc2 }}
+              />
 
               <div className="pt-4">
                 <button className="group inline-flex items-center gap-3.5 text-[#505A5C] hover:text-[#48682E] transition-colors cursor-pointer">

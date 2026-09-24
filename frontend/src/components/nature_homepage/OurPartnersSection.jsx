@@ -110,17 +110,15 @@ const OurPartnersSection = ({ data }) => {
             </span>
           </div>
 
-          {/* Headline using dangerouslySetInnerHTML to allow <br/> from admin */}
-          <h2
-            className="font-kanit font-medium text-2xl sm:text-4xl lg:text-[40px] text-[#363636] leading-[1.18] lg:leading-[111%] max-w-lg mb-6 sm:mb-8 mt-2 sm:mt-4"
+          <div
+            className="font-kanit font-medium text-2xl sm:text-4xl lg:text-[40px] text-[#363636] leading-[1.18] lg:leading-[111%] max-w-lg mb-6 sm:mb-8 mt-2 sm:mt-4 [&>p]:m-0"
             dangerouslySetInnerHTML={{ __html: headline }}
           />
 
-          <p
-            className="font-kanit font-light text-base sm:text-xl lg:text-[22px] text-[#6A6A6A] leading-relaxed lg:leading-[34px] max-w-lg mb-6 sm:mb-8"
-          >
-            {paragraph}
-          </p>
+          <div
+            className="font-kanit font-light text-base sm:text-xl lg:text-[22px] text-[#6A6A6A] leading-relaxed lg:leading-[34px] max-w-lg mb-6 sm:mb-8 [&>p]:m-0"
+            dangerouslySetInnerHTML={{ __html: paragraph }}
+          />
 
           <a
             href={buttonLink}

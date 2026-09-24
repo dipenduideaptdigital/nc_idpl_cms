@@ -35,20 +35,18 @@ const GetStartedCtaSection = ({ data }) => {
           </span>
         </div>
 
-        {/* Main Headline (Supports <br /> tags for line breaks) */}
-        <h2
-          className="font-kanit font-medium text-2xl sm:text-3xl lg:text-[38px] text-zinc-900 text-center align-middle leading-[120%] tracking-[0%] mt-4 max-w-2xl mx-auto mb-4"
+        <div
+          className="font-kanit font-medium text-2xl sm:text-3xl lg:text-[38px] text-zinc-900 text-center align-middle leading-[120%] tracking-[0%] mt-4 max-w-2xl mx-auto mb-4 [&>p]:m-0"
           style={{ fontWeight: 500, lineHeight: '110%', letterSpacing: '0%', textAlign: 'center', verticalAlign: 'middle' }}
           dangerouslySetInnerHTML={{ __html: headline }}
         />
 
         {/* Subtext Paragraph */}
-        <p
-          className="font-kanit font-light text-base sm:text-xl text-[#6A6A6A] max-w-3xl mt-5 mx-auto mb-8 leading-relaxed"
+        <div
+          className="font-kanit font-light text-base sm:text-xl text-[#6A6A6A] max-w-3xl mt-5 mx-auto mb-8 leading-relaxed [&>p]:m-0"
           style={{ fontWeight: 300, color: '#6A6A6A' }}
-        >
-          {subtext}
-        </p>
+          dangerouslySetInnerHTML={{ __html: subtext }}
+        />
 
         {/* Button */}
         <a
