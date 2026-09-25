@@ -5,11 +5,16 @@ import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import heroback from '../assets/nc_home/plant_hero.jpg';
 import logo from '../assets/nc_logo/naturecube.png';
 import apiClient from '../api/client';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
+import { useDispatch } from 'react-redux';
 
+import { loginSuccess } from '../features/auth/authSlice';
+
+import { parseJwt } from '../utils/jwtHelper';
 const Login = () => {
   const navigate = useNavigate();
-  const { loginContext } = useAuth();
+  // const { loginContext } = useAuth();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const isAdminMode = searchParams.get('mode') === 'admin';
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -55,14 +60,45 @@ const Login = () => {
 
       setSuccess('Login successful! Redirecting...');
       
-      const tokenPayload = JSON.parse(atob(data.data.accessToken.split('.')[1]));
-      const userPermissions = tokenPayload.permissions || [];
-      const loggedInUser = data.data.user;
-      const roleSlug = loggedInUser?.systemRole?.slug?.toUpperCase();
-      const isAdmin = roleSlug === 'SUPER_ADMIN' || roleSlug === 'ADMIN';
+      // const tokenPayload = JSON.parse(atob(data.data.accessToken.split('.')[1]));
+      // const userPermissions = tokenPayload.permissions || [];
+      // const loggedInUser = data.data.user;
+      // const roleSlug = loggedInUser?.systemRole?.slug?.toUpperCase();
+      // const isAdmin = roleSlug === 'SUPER_ADMIN' || roleSlug === 'ADMIN';
 
-      loginContext(loggedInUser, data.data.accessToken);
+      // loginContext(loggedInUser, data.data.accessToken);
+const accessToken =
+  data.data.accessToken;
 
+const loggedInUser =
+  data.data.user;
+
+const tokenPayload =
+  parseJwt(accessToken);
+
+const userWithPerms = {
+  ...loggedInUser,
+  permissions:
+    loggedInUser.permissions ||
+    tokenPayload?.permissions ||
+    [],
+};
+
+const roleSlug =
+  loggedInUser?.systemRole?.slug?.toUpperCase();
+
+const isAdmin =
+  roleSlug === 'SUPER_ADMIN' ||
+  roleSlug === 'ADMIN';
+
+localStorage.setItem(
+  'accessToken',
+  accessToken
+);
+
+dispatch(
+  loginSuccess(userWithPerms)
+);
       setTimeout(() => {
         if (isAdmin) {
           navigate('/admin', { replace: true }); 
