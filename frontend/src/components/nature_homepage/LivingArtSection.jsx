@@ -69,10 +69,9 @@ const LivingArtSection = ({ data }) => {
               dangerouslySetInnerHTML={{ __html: subHeadline }}
             />
 
-            <div 
-              className="font-kanit text-base sm:text-lg lg:text-[35px] text-zinc-500 font-light leading-tight max-w-[250px] lg:max-w-[440px] mb-8 [&>p]:m-0"
-              dangerouslySetInnerHTML={{ __html: paragraph }}
-            />
+            <p className="font-kanit text-base sm:text-lg lg:text-[35px] text-zinc-500 font-ligh  leading-tight max-w-[250px] lg:max-w-[440px] mb-8">
+              {paragraph}
+            </p>
           </div>
 
           {/* Play Button */}
@@ -120,15 +119,13 @@ const LivingArtSection = ({ data }) => {
                 {currentTab?.title}
               </h3>
 
-              <div 
-                className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light [&>p]:m-0"
-                dangerouslySetInnerHTML={{ __html: currentTab?.desc1 }}
-              />
+              <p className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light">
+                {currentTab?.desc1}
+              </p>
 
-              <div 
-                className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light [&>p]:m-0"
-                dangerouslySetInnerHTML={{ __html: currentTab?.desc2 }}
-              />
+              <p className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light">
+                {currentTab?.desc2}
+              </p>
 
               <div className="pt-4">
                 <button className="group inline-flex items-center gap-3.5 text-[#505A5C] hover:text-[#48682E] transition-colors cursor-pointer">
