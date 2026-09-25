@@ -64,10 +64,9 @@ const LivingArtSection = ({ data }) => {
               {mainTitle} <span className="font-larken text-5xl sm:text-6xl lg:text-7xl font-semibold italic text-[#6CAB44] lowercase ml-2">{italicTitle}</span>
             </h2>
 
-            <div 
-              className="font-kanit text-2xl sm:text-3xl lg:text-[48px] font-medium text-[#363636] leading-tighter tracking-tight max-w-[340px] lg:max-w-[500px] mb-10 [&>p]:m-0"
-              dangerouslySetInnerHTML={{ __html: subHeadline }}
-            />
+            <h3 className="font-kanit text-2xl sm:text-3xl lg:text-[48px] font-medium text-[#363636] leading-tighter  tracking-tight max-w-[340px] lg:max-w-[500px] mb-10">
+              {subHeadline}
+            </h3>
 
             <p className="font-kanit text-base sm:text-lg lg:text-[35px] text-zinc-500 font-ligh  leading-tight max-w-[250px] lg:max-w-[440px] mb-8">
               {paragraph}
