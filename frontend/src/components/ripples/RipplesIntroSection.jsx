@@ -38,20 +38,23 @@ const RipplesIntroSection = ({ data, showQuoteBanner }) => {
           
           {/* Main Title (Left Column) */}
           <div className="lg:col-span-6 pr-0 mt-40 ">
-            <h2 className="font-kanit lg:mt-10 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[80px] font-medium text-[#363636] leading-[1.1] tracking-tight whitespace-pre-line">
-              {data?.mainTitle || 'It is a long\nestablished\nfact that a\nreader will be\ndistracted.'}
-            </h2>
+            <div 
+              className="font-kanit lg:mt-10 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[80px] font-medium text-[#363636] leading-[1.1] tracking-tight whitespace-pre-line [&>p]:m-0"
+              dangerouslySetInnerHTML={{ __html: data?.mainTitle || 'It is a long<br/>established<br/>fact that a<br/>reader will be<br/>distracted.' }}
+            />
           </div>
 
           {/* Subtitle, Description & Explore Action (Right Column) */}
           <div className="lg:col-span-6 lg:col-start-8 space-y-4 sm:space-y-6 mt-50 lg:pt-4">
-            <h3 className="font-kanit text-base sm:text-xl md:text-2xl lg:text-[35px] font-medium text-[#666666] leading-snug whitespace-pre-line">
-              {data?.subTitle || 'It is a long established fact\nthat a reader will be\ndistracted.'}
-            </h3>
+            <div 
+              className="font-kanit text-base sm:text-xl md:text-2xl lg:text-[35px] font-medium text-[#666666] leading-snug whitespace-pre-line [&>p]:m-0"
+              dangerouslySetInnerHTML={{ __html: data?.subTitle || 'It is a long established fact<br/>that a reader will be<br/>distracted.' }}
+            />
 
-            <p className="font-kanit text-xs sm:text-sm md:text-base lg:text-[23px] font-light text-[#777777]  max-w-lg ">
-              {data?.description || "Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India. Specializing in setting up 'Nature Aquariums' and 'Biotopes' that mimic actual fish habitats, we offer international quality brands and exceptional customer service, helping you build and maintain your dream aquarium."}
-            </p>
+            <div 
+              className="font-kanit text-xs sm:text-sm md:text-base lg:text-[23px] font-light text-[#777777] max-w-lg [&>p]:m-0"
+              dangerouslySetInnerHTML={{ __html: data?.description || "Founded in 2014 with a vision of promoting ethical fish keeping, Ripples brings over 40 years of expertise to hobbyists in Kolkata and India. Specializing in setting up 'Nature Aquariums' and 'Biotopes' that mimic actual fish habitats, we offer international quality brands and exceptional customer service, helping you build and maintain your dream aquarium." }}
+            />
 
             {/* Explore Button */}
             <div className="pt-4 lg:pt-6">
@@ -102,12 +105,14 @@ const RipplesIntroSection = ({ data, showQuoteBanner }) => {
 
               {/* Quote & Author Signature (Right Side - Elegant Typography) */}
               <div className="col-span-7 sm:col-span-7 md:col-span-6 space-y-2 xs:space-y-3 sm:space-y-4 py-2 sm:py-6 md:py-10 pl-[36rem] text-left text-white h-[108.25] sm:h-[152.25] md:h-[204px] lg:h-[260px] w-[1000px]">
-                <blockquote className="font-kanit text-sm xs:text-base sm:text-2xl md:text-3xl lg:text-[34px] font-light leading-tighter tracking-wide whitespace-pre-line">
-                  {data?.quote || '“To know Mother Nature is to love her smallest creations.”'}
-                </blockquote>
-                <p className="font-kanit text-xs xs:text-sm sm:text-xl md:text-2xl font-normal italic tracking-wide text-[#8CB84D] sm:text-zinc-200 whitespace-pre-line pt-1">
-                  {data?.authorName || '–Takashi Amano'}
-                </p>
+                <blockquote 
+                  className="font-kanit text-sm xs:text-base sm:text-2xl md:text-3xl lg:text-[34px] font-light leading-tighter tracking-wide whitespace-pre-line [&>p]:m-0"
+                  dangerouslySetInnerHTML={{ __html: data?.quote || '“To know Mother Nature is to love her smallest creations.”' }}
+                />
+                <div 
+                  className="font-kanit text-xs xs:text-sm sm:text-xl md:text-2xl font-normal italic tracking-wide text-[#8CB84D] sm:text-zinc-200 whitespace-pre-line pt-1 [&>p]:m-0"
+                  dangerouslySetInnerHTML={{ __html: data?.authorName || '–Takashi Amano' }}
+                />
               </div>
 
             </div>
