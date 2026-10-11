@@ -10,7 +10,7 @@ export const getDynamicSectionController = asyncHandler(async (req, res) => {
   const { sectionKey } = req.params;
 
   // Validate if someone is trying to fetch an unregistered/invalid key
-  if (!CMS_REGISTRY[sectionKey]) {
+  if (!Object.hasOwn(CMS_REGISTRY, sectionKey)) {
     throw new AppError("CMS section not found", StatusCodes.NOT_FOUND);
   }
 
@@ -28,7 +28,7 @@ export const getDynamicSectionController = asyncHandler(async (req, res) => {
 export const updateDynamicSectionController = asyncHandler(async (req, res) => {
   const { sectionKey } = req.params;
   const { content } = req.body;
-  const actorUserId = req.user.id; // Get the admin who is making the change
+  const actorUserId = req.user?.id; // Get the admin who is making the change safely
 
   // Pass actorUserId to the service
   const data = await updateHomepageSection(sectionKey, { content }, actorUserId);
@@ -45,11 +45,18 @@ export const updateDynamicSectionController = asyncHandler(async (req, res) => {
 export const getMultipleDynamicSectionsController = asyncHandler(async (req, res) => {
   const keysParam = req.query.keys;
   
-  if (!keysParam) {
-    throw new AppError("Keys parameter is required (comma separated)", StatusCodes.BAD_REQUEST);
+  if (!keysParam || typeof keysParam !== "string" || keysParam.trim() === "") {
+    throw new AppError("Keys parameter is required and must be a comma-separated string", StatusCodes.BAD_REQUEST);
   }
-
+  
   const keysArray = keysParam.split(',').map(key => key.trim());
+  
+  // Validate all extracted keys against the registry and drop empty keys
+  const invalidKeys = keysArray.filter(key => key === "" || !Object.hasOwn(CMS_REGISTRY, key));
+  if (invalidKeys.length > 0) {
+    throw new AppError(`Invalid or unregistered CMS section keys detected.`, StatusCodes.BAD_REQUEST);
+  }
+  
   const data = await getMultipleHomepageSections(keysArray);
 
   sendResponse({

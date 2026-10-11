@@ -12,7 +12,7 @@ export const getSystemStateConfig = async () => {
 export const updateSystemStateConfig = async (payload, actorId, actorName) => {
   const SETTING_KEY = "system_state_config";
 
-  return await prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
     const currentSetting = await tx.setting.findUnique({
       where: { key: SETTING_KEY }
     });
@@ -64,8 +64,9 @@ export const updateSystemStateConfig = async (payload, actorId, actorName) => {
       }
     });
 
-    systemStateStore.set(newState);
-
     return newState;
   });
+
+  systemStateStore.set(result);
+  return result;
 };

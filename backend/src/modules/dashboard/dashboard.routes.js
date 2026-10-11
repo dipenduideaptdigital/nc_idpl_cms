@@ -2,7 +2,7 @@ import { Router } from "express";
 import { authenticate } from "../../shared/middlewares/authenticate.middleware.js";
 import { authorizeSystemRoles } from "../../shared/middlewares/authorize.middleware.js";
 import { validate } from "../../shared/middlewares/validate.middleware.js";
-import { dashboardChartQuerySchema } from "./dashboard.validation.js";
+import { dashboardChartQuerySchema, dashboardRecentEntriesQuerySchema } from "./dashboard.validation.js";
 import * as controller from "./dashboard.controller.js";
 
 const router = Router();
@@ -15,7 +15,7 @@ router.get(
   controller.getDashboardChartController
 );
 router.get("/activity", controller.getDashboardActivityController);
-router.get("/recent-entries", controller.getRecentEntriesController);
+router.get("/recent-entries",validate(dashboardRecentEntriesQuerySchema, "query"),controller.getRecentEntriesController);
 router.get("/export-leads", controller.exportLeadsController);
 
 export default router;

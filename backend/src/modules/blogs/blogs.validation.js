@@ -66,9 +66,30 @@ export const createBlogSchema = z.object({
   ogImageId: z.union([z.string().cuid("Invalid OG Image ID format."), z.literal("")]).optional().nullable()
 }); 
 
-export const updateBlogSchema = createBlogSchema.partial().extend({
-  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED", "SCHEDULED"]).optional()
+const updateBlogBaseSchema = createBlogSchema.partial().extend({
+  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED", "SCHEDULED"]).optional(),
+  __providedKeys: z.array(z.string()).optional()
+}).transform(({ __providedKeys = [], ...data }) => {
+  const providedKeys = new Set(__providedKeys);
+  return Object.fromEntries(
+    Object.entries(data).filter(([key]) => providedKeys.has(key))
+  );
 });
+
+export const updateBlogSchema = z.preprocess((input) => {
+  if (
+    input === null ||
+    typeof input !== "object" ||
+    Array.isArray(input)
+  ) {
+    return input;
+  }
+
+  return {
+    ...input,
+    __providedKeys: Object.keys(input)
+  };
+}, updateBlogBaseSchema);
 
 export const blogQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),

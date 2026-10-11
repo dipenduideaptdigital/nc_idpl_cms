@@ -6,9 +6,9 @@ import { findUserById } from "../../modules/auth/auth.repository.js";
 
 export const authenticate = async (req, res, next) => {
   try {
-    const authorizationHeader = req.headers.authorization;
+    const authorizationHeader = req.headers?.authorization;
     const accessToken = extractBearerToken(authorizationHeader);
-
+    
     if (!accessToken) {
       throw new AppError("Access token missing", StatusCodes.UNAUTHORIZED);
     }
@@ -20,8 +20,11 @@ export const authenticate = async (req, res, next) => {
       throw new AppError("Invalid or expired token", StatusCodes.UNAUTHORIZED);
     }
 
-    const user = await findUserById(decoded.userId);
+    if (!decoded || !decoded.userId) {
+      throw new AppError("Invalid or expired token", StatusCodes.UNAUTHORIZED);
+    }
 
+    const user = await findUserById(decoded.userId);
     if (!user) {
       throw new AppError("User no longer exists", StatusCodes.UNAUTHORIZED);
     }
@@ -30,11 +33,13 @@ export const authenticate = async (req, res, next) => {
       throw new AppError("Account is not active", StatusCodes.FORBIDDEN);
     }
 
+    const permissions = Array.isArray(decoded.permissions) ? decoded.permissions : [];
+
     req.user = {
       ...user,
-      permissions: decoded.permissions || [] 
+      permissions
     };
-
+    
     next();
   } catch (error) {
     next(error);

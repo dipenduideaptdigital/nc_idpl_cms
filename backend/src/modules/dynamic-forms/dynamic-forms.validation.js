@@ -28,12 +28,12 @@ const formSettingsJson = z.object({
   submitButton: z.object({
     text: z.string().default("Submit"),
     processingText: z.string().default("Please wait...")
-  }).default({}),
+  }).default({ text: "Submit", processingText: "Please wait..." }),
   successAction: z.object({
     type: z.enum(["message", "redirect"]).default("message"),
     message: z.string().default("Thank you! Your submission has been received."),
     redirectUrl: z.string().optional()
-  }).default({})
+  }).default({ type: "message", message: "Thank you! Your submission has been received." })
 }).catchall(z.any());
 
 export const updateSubmissionStatusSchema = z.object({
