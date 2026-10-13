@@ -21,7 +21,21 @@ const checkLastSuperAdmin = async (targetUserId) => {
 };
 
 export const changeUserStatus = async ({ actorUserId, targetUserId, newStatus }) => {
-  if (actorUserId === targetUserId) throw new AppError("You cannot modify your own status", StatusCodes.FORBIDDEN);
+  if (actorUserId === targetUserId) {
+    throw new AppError(
+      "You cannot modify your own status",
+      StatusCodes.FORBIDDEN
+    );
+  }
+
+  const targetUser = await prisma.user.findUnique({
+    where: { id: targetUserId },
+    select: { id: true },
+  });
+
+  if (!targetUser) {
+    throw new AppError("User not found", StatusCodes.NOT_FOUND);
+  }
 
   if (newStatus !== "ACTIVE") {
     await checkLastSuperAdmin(targetUserId);
@@ -49,7 +63,35 @@ export const changeUserStatus = async ({ actorUserId, targetUserId, newStatus })
 
 export const changeUserSystemRole = async ({ actorUserId, targetUserId, roleSlug }) => {
   if (actorUserId === targetUserId) {
-    throw new AppError("Self-Protection Rule: You cannot modify or demote your own system role.", StatusCodes.FORBIDDEN);
+    throw new AppError(
+      "Self-Protection Rule: You cannot modify or demote your own system role.",
+      StatusCodes.FORBIDDEN
+    );
+  }
+
+  // Verify the actor's actual system role from the database.
+  const actor = await prisma.user.findUnique({
+    where: { id: actorUserId },
+    select: {
+      systemRole: {
+        select: { slug: true },
+      },
+    },
+  });
+
+  if (!actor) {
+    throw new AppError("Actor not found", StatusCodes.NOT_FOUND);
+  }
+
+  // Only SUPER_ADMIN can assign the SUPER_ADMIN role.
+  if (
+    roleSlug === "SUPER_ADMIN" &&
+    actor.systemRole?.slug !== "SUPER_ADMIN"
+  ) {
+    throw new AppError(
+      "Only a SUPER_ADMIN can assign the SUPER_ADMIN role.",
+      StatusCodes.FORBIDDEN
+    );
   }
 
   const target = await prisma.user.findUnique({ where: { id: targetUserId }, include: { systemRole: true } });
@@ -80,7 +122,19 @@ export const changeUserSystemRole = async ({ actorUserId, targetUserId, roleSlug
 
 export const assignFunctionalRolesToUser = async ({ actorUserId, targetUserId, functionalRoleIds }) => {
   if (actorUserId === targetUserId) {
-    throw new AppError("You cannot modify your own functional roles.", StatusCodes.FORBIDDEN);
+    throw new AppError(
+      "You cannot modify your own functional roles.",
+      StatusCodes.FORBIDDEN
+    );
+  }
+
+  const targetUser = await prisma.user.findUnique({
+    where: { id: targetUserId },
+    select: { id: true },
+  });
+
+  if (!targetUser) {
+    throw new AppError("User not found", StatusCodes.NOT_FOUND);
   }
 
   // Validate roles exist
@@ -173,6 +227,24 @@ export const inviteAdminUser = async ({ name, email, systemRoleSlug, functionalR
   const systemRole = await prisma.systemRole.findUnique({ where: { slug: systemRoleSlug } });
   if (!systemRole || !["ADMIN", "SUPER_ADMIN"].includes(systemRoleSlug)) {
     throw new AppError("Invalid system role for invitation.", StatusCodes.BAD_REQUEST);
+  }
+  
+  if (systemRoleSlug === "SUPER_ADMIN") {
+    const inviter = await prisma.user.findUnique({
+      where: { id: inviterId },
+      select: {
+        systemRole: {
+          select: { slug: true },
+        },
+      },
+    });
+
+    if (inviter?.systemRole?.slug !== "SUPER_ADMIN") {
+      throw new AppError(
+        "Only a SUPER_ADMIN can invite another SUPER_ADMIN.",
+        StatusCodes.FORBIDDEN
+      );
+    }
   }
 
   if (functionalRoleIds.length > 0) {
@@ -281,22 +353,38 @@ export const getUserDetailedProfile = async (userId) => {
     include: { blog: { select: { title: true } } }
   });
 
+  const safeUser = { ...user };
+
+  delete safeUser.password;
+  delete safeUser.passwordHash;
+
   return {
-    ...user,
+    ...safeUser,
     permissionsList: Array.from(permissionsSet),
-    recentActivity
+    recentActivity,
   };
 };
 
 export const revokeUserSessions = async (targetUserId) => {
-  await checkLastSuperAdmin(targetUserId); 
-  
+  const targetUser = await prisma.user.findUnique({
+    where: { id: targetUserId },
+    select: { id: true },
+  });
+
+  if (!targetUser) {
+    throw new AppError("User not found", StatusCodes.NOT_FOUND);
+  }
+
+  await checkLastSuperAdmin(targetUserId);
+
   await prisma.refreshToken.updateMany({
     where: { userId: targetUserId, revokedAt: null },
     data: { revokedAt: new Date() },
   });
-  
-  return { message: "All active sessions for this user have been terminated." };
+
+  return {
+    message: "All active sessions for this user have been terminated.",
+  };
 };
 
 export const cancelInvitation = async (email) => {

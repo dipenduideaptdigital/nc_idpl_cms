@@ -65,6 +65,13 @@ export const inviteAdminSchema = z.object({
   functionalRoleIds: z.array(z.string().cuid()).default([])
 });
 
+export const cancelInvitationSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .email("Invalid email format"),
+});
+
 export const userQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(10),

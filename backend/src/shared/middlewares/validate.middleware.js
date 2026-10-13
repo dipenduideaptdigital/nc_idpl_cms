@@ -4,6 +4,9 @@ export const validate = (schema, source = "body") => {
       req[source] = await schema.parseAsync(req[source]);
       next();
     } catch (error) {
+      if (error.name === 'ZodError') {
+        error.statusCode = 400;
+      }
       next(error);
     }
   };

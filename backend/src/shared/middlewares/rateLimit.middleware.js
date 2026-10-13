@@ -58,7 +58,7 @@ export const sensitiveOperationRateLimiter = createRateLimiter({
   max: 5,
   message: "Too many sensitive account operations. Please try again later.",
   keyGenerator: (req) => {
-    const ip = ipKeyGenerator(req);
-    return req.user ? `${req.user.id}_${ip}` : ip;
-  },
+  const ip = ipKeyGenerator(req.ip);
+  return req.user ? `${req.user.id}_${ip}` : ip;
+},
 });

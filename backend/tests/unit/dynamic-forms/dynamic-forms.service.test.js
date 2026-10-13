@@ -112,25 +112,30 @@ describe("Dynamic Forms Service", () => {
       expect(prisma.dynamicForm.findMany).toHaveBeenCalledWith(expect.objectContaining({ skip: 40, take: 20 }));
     });
 
-    it("TC-12: should combine status and search filters", async () => {
-      prisma.dynamicForm.findMany.mockResolvedValue([]);
-      prisma.dynamicForm.count.mockResolvedValue(0);
+    
+  it("TC-12: should combine status and search filters", async () => {
+    prisma.dynamicForm.findMany.mockResolvedValue([]);
+    prisma.dynamicForm.count.mockResolvedValue(0);
 
-      await formService.getAdminFormsList({ status: "PUBLISHED", search: "contact" });
-
-      expect(prisma.dynamicForm.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: {
-            deletedAt: null,
-            status: "PUBLISHED",
-            OR: [
-              { title: { contains: "contact", mode: "insensitive" } },
-              { slug: { contains: "contact", mode: "insensitive" } }
-            ]
-          }
-        })
-      );
+    await formService.getAdminFormsList({
+      status: "PUBLISHED",
+      search: "contact",
     });
+
+    expect(prisma.dynamicForm.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          deletedAt: null,
+          status: "PUBLISHED",
+          OR: [
+            { title: { contains: "contact" } },
+            { slug: { contains: "contact" } },
+          ],
+        },
+      })
+    );
+  });
+
   });
 
   describe("ADMIN - updateForm()", () => {

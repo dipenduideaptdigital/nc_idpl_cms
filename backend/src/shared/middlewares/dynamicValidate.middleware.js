@@ -19,6 +19,27 @@ export const dynamicCmsValidator = async (req, res, next) => {
     
     next();
   } catch (error) {
-    next(error);
+    if (error?.name === "ZodError") {
+      const validationMessage = Array.isArray(error.issues)
+        ? error.issues
+            .map((issue) => {
+              const field = issue.path.length
+                ? issue.path.join(".")
+                : "body";
+
+              return `${field}: ${issue.message}`;
+            })
+            .join("; ")
+        : "Invalid CMS content";
+
+      return next(
+        new AppError(
+          validationMessage,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
+
+    return next(error);
   }
 };

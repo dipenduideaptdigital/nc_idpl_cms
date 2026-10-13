@@ -209,73 +209,114 @@ describe("Dashboard Service", () => {
     });
   });
 
-  //CSV Export
+  
+  // CSV Export
   describe("exportLeadsToCSV()", () => {
-    it("TC-17 & TC-18: should correctly structure header and map fully populated lead data", async () => {
+    it("TC-17 & TC-18: should export form submission data with correct headers and values", async () => {
       const mockDate = new Date("2026-05-10T12:00:00Z");
-      prisma.contactSubmission.findMany.mockResolvedValue([{
-        name: "John Doe", email: "john@example.com", phone: "1234567890",
-        website: "https://john.com", subject: "Inquiry", message: "Hello",
-        sourcePage: "/contact", status: "NEW", spamScore: 0.1,
-        createdAt: mockDate, ipAddress: "192.168.1.1"
-      }]);
+
+      prisma.formSubmission.findMany.mockResolvedValue([
+        {
+          form: { title: "Contact Form" },
+          status: "NEW",
+          createdAt: mockDate,
+          ipAddress: "192.168.1.1",
+          payload: {
+            name: "John Doe",
+            message: "Hello",
+          },
+        },
+      ]);
 
       const csv = await dashboardService.exportLeadsToCSV();
       const rows = csv.split("\n");
-      
-      expect(rows[0]).toBe("Name,Email,Phone,Website,Subject,Message,Source Page,Status,Spam Score,Date Submitted,IP Address");
-      expect(rows[1]).toBe('"John Doe","john@example.com","1234567890","https://john.com","Inquiry","Hello","/contact","NEW","0.1","2026-05-10","192.168.1.1"');
+
+      expect(rows[0]).toBe(
+        "Form Title,Status,Date Submitted,IP Address,Payload Data"
+      );
+
+      expect(rows[1]).toBe(
+        '"Contact Form","NEW","2026-05-10","192.168.1.1","{""name"":""John Doe"",""message"":""Hello""}"'
+      );
     });
 
-    it("TC-19: should substitute N/A for optional missing values", async () => {
-      prisma.contactSubmission.findMany.mockResolvedValue([{
-        name: "Jane", email: "jane@example.com", status: "RESOLVED", spamScore: 0, createdAt: new Date("2026-01-01T00:00:00Z"),
-        // Missing phone, website, subject, message, sourcePage, ipAddress
-      }]);
+    it("TC-19: should substitute N/A for missing optional values", async () => {
+      prisma.formSubmission.findMany.mockResolvedValue([
+        {
+          form: null,
+          status: "RESOLVED",
+          createdAt: new Date("2026-01-01T00:00:00Z"),
+          ipAddress: null,
+          payload: null,
+        },
+      ]);
 
       const csv = await dashboardService.exportLeadsToCSV();
       const dataRow = csv.split("\n")[1];
-      expect(dataRow).toBe('"Jane","jane@example.com","N/A","N/A","N/A","N/A","N/A","RESOLVED","0","2026-01-01","N/A"');
+
+      expect(dataRow).toBe(
+        '"Unknown Form","RESOLVED","2026-01-01","N/A","N/A"'
+      );
     });
 
-    it("TC-20 & TC-21: should escape double quotes, wrap in quotes, and format dates correctly", async () => {
-      prisma.contactSubmission.findMany.mockResolvedValue([{
-        name: 'John "The Boss" Doe', email: "test,test@test.com", message: "Line1\nLine2",
-        status: "NEW", spamScore: -0.5, createdAt: new Date("2026-12-31T23:59:59Z")
-      }]);
+    it("TC-20 & TC-21: should escape CSV quotes and preserve JSON-escaped newlines and dates", async () => {
+      prisma.formSubmission.findMany.mockResolvedValue([
+        {
+          form: { title: 'John "The Boss" Form' },
+          status: "NEW",
+          createdAt: new Date("2026-12-31T23:59:59Z"),
+          ipAddress: "192.168.1.10",
+          payload: {
+            name: 'John "The Boss" Doe',
+            message: "Line1\nLine2",
+          },
+        },
+      ]);
 
       const csv = await dashboardService.exportLeadsToCSV();
-      
-      expect(csv).toContain('"John ""The Boss"" Doe"');
-      expect(csv).toContain('"test,test@test.com"');
-      expect(csv).toContain('"Line1\nLine2"');
-      expect(csv).toContain('"-0.5"');
-      expect(csv).toContain('"2026-12-31"'); // TC-21 Date format
+
+      expect(csv).toContain('"2026-12-31"');
+      expect(csv).toContain('""The Boss""');
+      expect(csv).toContain("\\n");
+      expect(csv).toContain('"192.168.1.10"');
     });
 
     it("TC-22: should return only headers if dataset is empty", async () => {
-      prisma.contactSubmission.findMany.mockResolvedValue([]);
+      prisma.formSubmission.findMany.mockResolvedValue([]);
+
       const csv = await dashboardService.exportLeadsToCSV();
-      
-      expect(csv.split("\n").length).toBe(1);
-      expect(csv).toContain("Name,Email");
+
+      expect(csv).toBe(
+        "Form Title,Status,Date Submitted,IP Address,Payload Data"
+      );
+      expect(csv.split("\n")).toHaveLength(1);
     });
 
-    it("TC-23 & TC-24: should query correctly and propagate database errors", async () => {
-      prisma.contactSubmission.findMany.mockResolvedValue([]);
+    it("TC-23 & TC-24: should query active form submissions correctly and propagate database errors", async () => {
+      prisma.formSubmission.findMany.mockResolvedValue([]);
+
       await dashboardService.exportLeadsToCSV();
-      
-      expect(prisma.contactSubmission.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: { deletedAt: null },
-          orderBy: { createdAt: "desc" }
-        })
+
+      expect(prisma.formSubmission.findMany).toHaveBeenCalledWith({
+        where: { deletedAt: null },
+        orderBy: { createdAt: "desc" },
+        include: {
+          form: {
+            select: { title: true },
+          },
+        },
+      });
+
+      prisma.formSubmission.findMany.mockRejectedValue(
+        new Error("Timeout")
       );
 
-      prisma.contactSubmission.findMany.mockRejectedValue(new Error("Timeout"));
-      await expect(dashboardService.exportLeadsToCSV()).rejects.toThrow("Timeout");
+      await expect(
+        dashboardService.exportLeadsToCSV()
+      ).rejects.toThrow("Timeout");
     });
   });
+
 
   // Chart and Recent Entries
   describe("getLeadChartTimeline()", () => {

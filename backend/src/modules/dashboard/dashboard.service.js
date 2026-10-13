@@ -142,42 +142,29 @@ export const getSystemGlobalActivity = async () => {
 };
 
 export const exportLeadsToCSV = async () => {
-  const leads = await prisma.contactSubmission.findMany({
+  const leads = await prisma.formSubmission.findMany({
     where: { deletedAt: null },
     orderBy: { createdAt: "desc" },
-    select: {
-      name: true,
-      email: true,
-      phone: true,
-      website: true,
-      subject: true,
-      message: true,
-      sourcePage: true,
-      status: true,
-      spamScore: true,
-      createdAt: true,
-      ipAddress: true
+    include: {
+      form: { select: { title: true } }
     }
   });
 
   const headers = [
-    "Name", "Email", "Phone", "Website", "Subject", "Message",
-    "Source Page", "Status", "Spam Score", "Date Submitted", "IP Address"
+    "Form Title", "Status", "Date Submitted", "IP Address", "Payload Data"
   ];
 
-  const rows = leads.map(lead => [
-    lead.name,
-    lead.email,
-    lead.phone || "N/A",
-    lead.website || "N/A",
-    lead.subject || "N/A",
-    lead.message || "N/A",
-    lead.sourcePage || "N/A",
-    lead.status,
-    lead.spamScore,
-    lead.createdAt.toISOString().split("T")[0],
-    lead.ipAddress || "N/A"
-  ]);
+  const rows = leads.map(lead => {
+    const safePayload = lead.payload ? JSON.stringify(lead.payload) : "N/A";
+    
+    return [
+      lead.form?.title || "Unknown Form",
+      lead.status,
+      lead.createdAt.toISOString().split("T")[0],
+      lead.ipAddress || "N/A",
+      safePayload
+    ];
+  });
 
   const csvContent = [
     headers.join(","),

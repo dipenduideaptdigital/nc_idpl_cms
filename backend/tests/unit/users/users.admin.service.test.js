@@ -56,9 +56,10 @@ describe("Users Admin Service", () => {
     });
 
     it("TC-2: should only update user (no token revoke) if newStatus is ACTIVE", async () => {
-      prisma.user.update.mockResolvedValue({ id: "u2", status: "ACTIVE" });
+    prisma.user.findUnique.mockResolvedValue({ id: "u2" });
+    prisma.user.update.mockResolvedValue({ id: "u2", status: "ACTIVE" });
 
-      const result = await adminService.changeUserStatus({ actorUserId: "u1", targetUserId: "u2", newStatus: "ACTIVE" });
+    const result = await adminService.changeUserStatus({ actorUserId: "u1", targetUserId: "u2", newStatus: "ACTIVE" });
 
       expect(prisma.refreshToken.updateMany).not.toHaveBeenCalled();
       expect(prisma.user.update).toHaveBeenCalledWith(expect.objectContaining({ data: { status: "ACTIVE" } }));
@@ -108,10 +109,20 @@ describe("Users Admin Service", () => {
     });
 
     it("TC-9: should throw 404 if target user is not found", async () => {
-      prisma.user.findUnique.mockResolvedValue(null);
-      await expect(adminService.changeUserSystemRole({ actorUserId: "u1", targetUserId: "u2", roleSlug: "ADMIN" }))
-        .rejects.toThrow("User not found");
-    });
+    prisma.user.findUnique
+      .mockResolvedValueOnce({
+        systemRole: { slug: "ADMIN" },
+      })
+      .mockResolvedValueOnce(null);
+
+    await expect(
+      adminService.changeUserSystemRole({
+        actorUserId: "u1",
+        targetUserId: "u2",
+        roleSlug: "ADMIN",
+      })
+    ).rejects.toThrow("User not found");
+  });
 
     it("TC-10: should throw 403 if demoting the last SUPER_ADMIN", async () => {
       prisma.user.findUnique.mockResolvedValue({ systemRole: { slug: "SUPER_ADMIN" } }); // Target

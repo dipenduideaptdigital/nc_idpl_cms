@@ -60,6 +60,6 @@ router.post("/logout", logoutController);
 // Logout all devices
 router.post("/logout-all", authenticate, sensitiveOperationRateLimiter, logoutAllDevicesController);
 
-router.post("/setup-admin", setupAdminAccountController);
+router.post("/setup-admin", validate(resetPasswordSchema), setupAdminAccountController);
 
 export default router;

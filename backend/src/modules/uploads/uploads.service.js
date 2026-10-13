@@ -17,15 +17,18 @@ export const saveUploadedFile = async (file, userId) => {
     where: { fileHash }
   });
 
-  if (existingMedia) {
-    if (existingMedia.deletedAt) {
-      await prisma.media.update({
-        where: { id: existingMedia.id },
-        data: { deletedAt: null }
-      });
-    }
-    return existingMedia;
+  
+if (existingMedia) {
+  if (existingMedia.deletedAt) {
+    return await prisma.media.update({
+      where: { id: existingMedia.id },
+      data: { deletedAt: null },
+    });
   }
+
+  return existingMedia;
+}
+
 
   const processed = await processImageBuffer(file.buffer, file.originalname);
   
@@ -72,11 +75,35 @@ export const saveMultipleFiles = async (files, userId) => {
 
   const savedMedia = await Promise.all(uploadPromises);
   return savedMedia.filter(Boolean);
-};
+  };
 
-export const getMediaList = async (query) => {
+  export const getMediaList = async (query) => {
+    
   const { page = 1, limit = 20, search } = query;
-  const skip = (Number(page) - 1) * Number(limit);
+
+  const pageNumber = Number(page);
+  const limitNumber = Number(limit);
+
+  if (!Number.isInteger(pageNumber) || pageNumber < 1) {
+    throw new AppError(
+      "Page must be a positive integer",
+      StatusCodes.BAD_REQUEST
+    );
+  }
+
+  if (
+    !Number.isInteger(limitNumber) ||
+    limitNumber < 1 ||
+    limitNumber > 100
+  ) {
+    throw new AppError(
+      "Limit must be between 1 and 100",
+      StatusCodes.BAD_REQUEST
+    );
+  }
+
+  const skip = (pageNumber - 1) * limitNumber;
+
 
   const where = { deletedAt: null };
 
@@ -90,7 +117,7 @@ export const getMediaList = async (query) => {
     prisma.media.findMany({
       where,
       skip,
-      take: Number(limit),
+      take: limitNumber,
       orderBy: { createdAt: "desc" },
       include: {
         uploadedBy: { select: { name: true, email: true } }
@@ -103,9 +130,9 @@ export const getMediaList = async (query) => {
     media,
     meta: {
       total,
-      page: Number(page),
-      limit: Number(limit),
-      totalPages: Math.ceil(total / Number(limit))
+      page: pageNumber,
+      limit: limitNumber,
+      totalPages: Math.ceil(total / limitNumber)
     }
   };
 };

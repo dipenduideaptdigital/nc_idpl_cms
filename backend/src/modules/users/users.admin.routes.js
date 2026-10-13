@@ -19,7 +19,8 @@ import {
   userIdParamSchema,
   assignFunctionalRolesSchema,
   inviteAdminSchema,           
-  userQuerySchema          
+  userQuerySchema,
+  cancelInvitationSchema,       
 } from "./users.validation.js";
 
 const router = Router();
@@ -90,11 +91,11 @@ router.post(
   revokeSessionsController
 );
 
-// Cancel Pending Invitation
 router.delete(
   "/invite/cancel",
-  requirePermission("user.delete"), 
-  cancelInviteController 
+  requirePermission("user.delete"),
+  validate(cancelInvitationSchema, "body"),
+  cancelInviteController
 );
 
 export default router;

@@ -416,12 +416,20 @@ describe("Blogs Repository", () => {
 
   describe("O. Slug history & Sitemap", () => {
     it("SH-03: findBlogIdByOldSlug retrieves exact relations", async () => {
-      await repo.findBlogIdByOldSlug("old-test-slug");
-      expect(prisma.blogSlugHistory.findUnique).toHaveBeenCalledWith({
-        where: { oldSlug: "old-test-slug" },
-        include: { blog: { select: { slug: true, status: true, deletedAt: null } } }
-      });
+    await repo.findBlogIdByOldSlug("old-test-slug");
+    expect(prisma.blogSlugHistory.findUnique).toHaveBeenCalledWith({
+      where: { oldSlug: "old-test-slug" },
+      include: {
+        blog: {
+          select: {
+            slug: true,
+            status: true,
+            deletedAt: true,
+          },
+        },
+      },
     });
+  });
 
     it("SM-01 to SM-03: getBlogsForSitemap fetches eligible blogs", async () => {
       await repo.getBlogsForSitemap();

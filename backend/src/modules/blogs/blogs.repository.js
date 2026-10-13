@@ -372,7 +372,15 @@ export const createBlogSlugHistory = async (blogId, oldSlug) => {
 export const findBlogIdByOldSlug = async (oldSlug) => {
   const history = await prisma.blogSlugHistory.findUnique({
     where: { oldSlug },
-    include: { blog: { select: { slug: true, status: true, deletedAt: null } } }
+    include: {
+  blog: {
+    select: {
+      slug: true,
+      status: true,
+      deletedAt: true,
+    },
+  },
+}
   });
   return history; 
 };

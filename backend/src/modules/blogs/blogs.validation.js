@@ -64,12 +64,12 @@ export const createBlogSchema = z.object({
   ogTitle: z.string().trim().max(150).optional().nullable(),
   ogDescription: z.string().trim().max(500).optional().nullable(),
   ogImageId: z.union([z.string().cuid("Invalid OG Image ID format."), z.literal("")]).optional().nullable()
-}); 
+}).strict(); 
 
 const updateBlogBaseSchema = createBlogSchema.partial().extend({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED", "SCHEDULED"]).optional(),
   __providedKeys: z.array(z.string()).optional()
-}).transform(({ __providedKeys = [], ...data }) => {
+}).strict().transform(({ __providedKeys = [], ...data }) => {
   const providedKeys = new Set(__providedKeys);
   return Object.fromEntries(
     Object.entries(data).filter(([key]) => providedKeys.has(key))

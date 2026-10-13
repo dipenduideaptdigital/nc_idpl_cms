@@ -5,7 +5,19 @@ import { prisma } from "../../config/db.js";
 
 const resolveImageId = async (imageUrlOrId) => {
   if (!imageUrlOrId || imageUrlOrId.trim() === "") return null;
-  if (!imageUrlOrId.includes("/")) return imageUrlOrId; 
+
+  if (!imageUrlOrId.includes("/")) {
+    const media = await prisma.media.findUnique({
+      where: { id: imageUrlOrId },
+      select: { id: true },
+    });
+
+    if (!media) {
+      throw new AppError("Invalid image ID", 400);
+    }
+
+    return media.id;
+  } 
 
   try {
     let media = await prisma.media.findFirst({
@@ -52,7 +64,7 @@ export const getProjects = async (query) => {
     where.OR = [
       { title: { contains: search } },
       { location: { contains: search } },
-      { client: { contains: search } }
+      { category: { contains: search } }
     ];
   }
 
@@ -88,8 +100,13 @@ export const updateProject = async (id, data) => {
     }
   }
 
-  data.featuredImageId = await resolveImageId(data.featuredImageId);
-  data.heroImageId = await resolveImageId(data.heroImageId);
+  if (Object.prototype.hasOwnProperty.call(data, "featuredImageId")) {
+    data.featuredImageId = await resolveImageId(data.featuredImageId);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(data, "heroImageId")) {
+    data.heroImageId = await resolveImageId(data.heroImageId);
+  }
 
   return repository.update(id, data);
 };

@@ -10,6 +10,7 @@ vi.mock("../../../src/config/db.js", () => ({
   prisma: {
     media: {
       findFirst: vi.fn(),
+      findUnique: vi.fn(),
     },
   },
 }));
@@ -69,15 +70,27 @@ describe("Project Service", () => {
       );
     });
 
-    it("TC-5: should directly use featuredImageId if it does not contain a slash (is an ID)", async () => {
-      repository.findBySlug.mockResolvedValue(null);
-      await projectService.createProject({ title: "Img Project", category: "Test", featuredImageId: "clxxxxxx" });
-      
-      expect(prisma.media.findFirst).not.toHaveBeenCalled();
-      expect(repository.create).toHaveBeenCalledWith(
-        expect.objectContaining({ featuredImageId: "clxxxxxx" })
-      );
+    it("TC-5: should validate an image ID and use it when media exists", async () => {
+    repository.findBySlug.mockResolvedValue(null);
+    prisma.media.findUnique.mockResolvedValue({ id: "clxxxxxx" });
+
+    await projectService.createProject({
+      title: "Img Project",
+      category: "Test",
+      featuredImageId: "clxxxxxx",
     });
+
+    expect(prisma.media.findUnique).toHaveBeenCalledWith({
+      where: { id: "clxxxxxx" },
+      select: { id: true },
+    });
+
+    expect(prisma.media.findFirst).not.toHaveBeenCalled();
+
+    expect(repository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ featuredImageId: "clxxxxxx" })
+    );
+  });
 
     it("TC-6: should resolve media ID from image URL", async () => {
       repository.findBySlug.mockResolvedValue(null);
@@ -176,7 +189,7 @@ describe("Project Service", () => {
             OR: [
               { title: { contains: "villa" } },
               { location: { contains: "villa" } },
-              { client: { contains: "villa" } }
+              { category: { contains: "villa" } }
             ]
           })
         })
@@ -195,7 +208,7 @@ describe("Project Service", () => {
             OR: [
               { title: { contains: "office" } },
               { location: { contains: "office" } },
-              { client: { contains: "office" } }
+              { category: { contains: "office" } }
             ]
           }
         })

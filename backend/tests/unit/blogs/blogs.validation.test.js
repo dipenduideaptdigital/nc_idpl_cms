@@ -935,13 +935,11 @@ describe("createBlogSchema", () => {
   });
 
   describe("unknown properties", () => {
-    it("strips unknown top-level properties", () => {
-      const result = expectValid(createBlogSchema, {
+    it("rejects unknown top-level properties because the schema is strict", () => {
+      expectInvalid(createBlogSchema, {
         ...validBlog,
         unexpectedField: "should not be retained",
       });
-
-      expect(result.data).not.toHaveProperty("unexpectedField");
     });
   });
 });
@@ -1027,14 +1025,12 @@ describe("updateBlogSchema", () => {
     expect(result.data.featuredImageId).toBeNull();
   });
 
-  it("strips unknown update properties", () => {
-    const result = expectValid(updateBlogSchema, {
-      title: "Updated Blog Title",
-      unknownField: "ignored",
-    });
-
-    expect(result.data).not.toHaveProperty("unknownField");
+  it("rejects unknown update properties because the schema is strict", () => {
+  expectInvalid(updateBlogSchema, {
+    title: "Updated Blog Title",
+    unknownField: "ignored",
   });
+});
 
   it("does not inject defaults for fields omitted from a PATCH payload", () => {
     const result = expectValid(updateBlogSchema, {
