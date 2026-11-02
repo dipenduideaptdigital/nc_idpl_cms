@@ -8,6 +8,7 @@ import LivingArtCustomization from '../../components/admin/NcHome/LivingArtCusto
 import ShowcaseCustomization from '../../components/admin/NcHome/ShowcaseCustomization';
 import PlantDisplayCustomization from '../../components/admin/NcHome/PlantDisplayCustomization';
 import ServicesCustomization from '../../components/admin/NcHome/ServicesCustomization';
+import LearnTogetherCustomization from '../../components/admin/NcHome/LearnTogetherCustomization';
 import PartnersCustomization from '../../components/admin/NcHome/PartnersCustomization';
 import BlogsCustomization from '../../components/admin/NcHome/BlogsCustomization';
 import WhatTheySayCustomization from '../../components/admin/NcHome/WhatTheySayCustomization';
@@ -29,6 +30,7 @@ const TABS = [
   { key: 'nc_showcase', label: 'Showcase Grid', icon: List },
   { key: 'nc_plant_display', label: 'Plant Banner', icon: ImageIcon },
   { key: 'nc_services', label: 'Our Services', icon: List },
+  { key: 'nc_learn_together', label: 'Learn Together', icon: List },
   { key: 'nc_partners', label: 'Our Partners', icon: List },
   { key: 'nc_blogs', label: 'Our Blogs', icon: List },
   { key: 'nc_what_they_say', label: 'What They Say', icon: List },
@@ -109,6 +111,18 @@ const NcHomeCustomization = () => {
     ]
   });
 
+  const [ncLearnTogetherData, setNcLearnTogetherData] = useState({
+    isVisible: true,
+    tagline: 'learn together',
+    logoImage: '',
+    mainTitle: 'LIVING',
+    italicTitle: 'art',
+    subHeadline: 'It is a long established fact that a reader will be distracted.',
+    paragraph: 'It is a long established fact that a reader will be distracted.',
+    buttonText: 'explore the art',
+    buttonLink: '/explore'
+  });
+
   const [ncPartnersData, setNcPartnersData] = useState({
     mainTitle1: 'OUR', italicTitle: 'partners', headline: '', paragraph: '', 
     buttonText: 'STORE', buttonLink: '#store', partnerLogos: []
@@ -159,13 +173,14 @@ const NcHomeCustomization = () => {
       setLoading(true);
       setErrorMsg('');
 
-      const [heroRes, mandalasRes, livingArtRes, showcaseRes, plantRes, servicesRes, partnersRes, blogsRes, whatTheySayRes, ctaRes] = await Promise.allSettled([
+      const [heroRes, mandalasRes, livingArtRes, showcaseRes, plantRes, servicesRes, learnTogetherRes, partnersRes, blogsRes, whatTheySayRes, ctaRes] = await Promise.allSettled([
         apiClient.get('/cms/section/nc_homepage_hero'),
         apiClient.get('/cms/section/nc_homepage_mandalas'),
         apiClient.get('/cms/section/nc_homepage_living_art'),
         apiClient.get('/cms/section/nc_homepage_showcase'),
         apiClient.get('/cms/section/nc_homepage_plant_display'),
         apiClient.get('/cms/section/nc_homepage_services'),
+        apiClient.get('/cms/section/nc_homepage_learn_together'),
         apiClient.get('/cms/section/nc_homepage_partners'),
         apiClient.get('/cms/section/nc_homepage_blogs'),
         apiClient.get('/cms/section/nc_homepage_what_they_say'),
@@ -201,6 +216,9 @@ const NcHomeCustomization = () => {
       }
       if (servicesRes.status === 'fulfilled' && servicesRes.value.data?.data?.content) {
         if (Object.keys(servicesRes.value.data.data.content).length > 0) setNcServicesData(servicesRes.value.data.data.content);
+      }
+      if (learnTogetherRes.status === 'fulfilled' && learnTogetherRes.value.data?.data?.content) {
+        if (Object.keys(learnTogetherRes.value.data.data.content).length > 0) setNcLearnTogetherData(learnTogetherRes.value.data.data.content);
       }
       if (partnersRes.status === 'fulfilled' && partnersRes.value.data?.data?.content) {
         if (Object.keys(partnersRes.value.data.data.content).length > 0) setNcPartnersData(partnersRes.value.data.data.content);
@@ -244,6 +262,7 @@ const NcHomeCustomization = () => {
       case 'nc_showcase': return ncShowcaseData.isVisible !== false;
       case 'nc_plant_display': return ncPlantDisplayData.isVisible !== false;
       case 'nc_services': return ncServicesData.isVisible !== false;
+      case 'nc_learn_together': return ncLearnTogetherData.isVisible !== false;
       case 'nc_partners': return ncPartnersData.isVisible !== false;
       case 'nc_blogs': return ncBlogsData.isVisible !== false;
       case 'nc_what_they_say': return ncWhatTheySayData.isVisible !== false;
@@ -261,6 +280,7 @@ const NcHomeCustomization = () => {
       case 'nc_showcase': setNcShowcaseData(p => ({...p, isVisible})); break;
       case 'nc_plant_display': setNcPlantDisplayData(p => ({...p, isVisible})); break;
       case 'nc_services': setNcServicesData(p => ({...p, isVisible})); break;
+      case 'nc_learn_together': setNcLearnTogetherData(p => ({...p, isVisible})); break;
       case 'nc_partners': setNcPartnersData(p => ({...p, isVisible})); break;
       case 'nc_blogs': setNcBlogsData(p => ({...p, isVisible})); break;
       case 'nc_what_they_say': setNcWhatTheySayData(p => ({...p, isVisible})); break;
@@ -294,6 +314,9 @@ const NcHomeCustomization = () => {
       } else if (activeTab === 'nc_services') {
         url = '/cms/section/nc_homepage_services';
         payload = { content: ncServicesData };
+      } else if (activeTab === 'nc_learn_together') {
+        url = '/cms/section/nc_homepage_learn_together';
+        payload = { content: ncLearnTogetherData };
       } else if (activeTab === 'nc_partners') {
         url = '/cms/section/nc_homepage_partners';
         payload = { content: ncPartnersData };
@@ -528,6 +551,14 @@ const NcHomeCustomization = () => {
             data={ncServicesData} 
             setData={setNcServicesData} 
             onImageUpload={handleImageUpload} 
+          />
+        )}
+
+        {/* LEARN TOGETHER FORM */}
+        {activeTab === 'nc_learn_together' && (
+          <LearnTogetherCustomization 
+            data={ncLearnTogetherData} 
+            setData={setNcLearnTogetherData} 
           />
         )}
 

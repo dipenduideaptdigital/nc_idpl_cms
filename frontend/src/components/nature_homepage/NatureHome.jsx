@@ -26,6 +26,7 @@ const NatureHome = () => {
   const [showcaseData, setShowcaseData] = useState(null);
   const [plantData, setPlantData] = useState(null);
   const [servicesData, setServicesData] = useState(null);
+  const [learnTogetherData, setLearnTogetherData] = useState(null);
   const [partnersData, setPartnersData] = useState(null);
   const [blogsData, setBlogsData] = useState(null);
   const [whatTheySayData, setWhatTheySayData] = useState(null);
@@ -60,7 +61,7 @@ const NatureHome = () => {
         const requiredKeys = [
           'nc_homepage_hero', 'nc_homepage_mandalas', 'nc_homepage_living_art',
           'nc_homepage_showcase', 'nc_homepage_plant_display', 'nc_homepage_services',
-          'nc_homepage_partners', 'nc_homepage_blogs', 'nc_homepage_what_they_say', 'nc_homepage_cta'
+          'nc_homepage_learn_together', 'nc_homepage_partners', 'nc_homepage_blogs', 'nc_homepage_what_they_say', 'nc_homepage_cta'
         ].join(',');
 
         // Single API call to fetch everything
@@ -74,6 +75,7 @@ const NatureHome = () => {
         setShowcaseData(allData['nc_homepage_showcase']?.content);
         setPlantData(allData['nc_homepage_plant_display']?.content);
         setServicesData(allData['nc_homepage_services']?.content);
+        setLearnTogetherData(allData['nc_homepage_learn_together']?.content);
         setPartnersData(allData['nc_homepage_partners']?.content);
         setBlogsData(allData['nc_homepage_blogs']?.content);
         setWhatTheySayData(allData['nc_homepage_what_they_say']?.content);
@@ -97,7 +99,7 @@ const NatureHome = () => {
       <NatureShowcaseSection data={showcaseData} />
       <PlantDisplaySection data={plantData} />
       <ServicesSection data={servicesData} />
-      <LearnTogetherSection />
+      <LearnTogetherSection data={learnTogetherData} />
       <OurPartnersSection data={partnersData} />
       <OurBlogsSection data={blogsData} />
       <WhatTheySaySection data={whatTheySayData} />

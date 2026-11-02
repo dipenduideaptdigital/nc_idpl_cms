@@ -154,6 +154,20 @@ export const ncServicesSchema = z.object({
   })
 });
 
+export const ncLearnTogetherSchema = z.object({
+  content: z.object({
+    isVisible: z.boolean().optional(),
+    tagline: z.string().max(100).optional(),
+    logoImage: z.string().optional(),
+    mainTitle: z.string().max(100).optional(),
+    italicTitle: z.string().max(50).optional(),
+    subHeadline: z.string().max(500).optional(),
+    paragraph: z.string().max(1000).optional(),
+    buttonText: z.string().max(100).optional(),
+    buttonLink: z.string().max(255).optional(),
+  })
+});
+
 export const ncPartnersSchema = z.object({
   content: z.object({
     isVisible: z.boolean().optional(),
