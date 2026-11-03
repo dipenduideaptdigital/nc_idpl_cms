@@ -23,7 +23,7 @@ const DynamicFormModal = ({ slug, isOpen, onClose }) => {
         onClick={onClose}
       ></div>
       
-      <div className="relative bg-white text-zinc-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto z-10 animate-in zoom-in-95 duration-200 flex flex-col">
+      <div data-lenis-prevent className="relative bg-white text-zinc-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto z-10 animate-in zoom-in-95 duration-200 flex flex-col">
         
         <div className="sticky top-0 z-20 flex items-center justify-end p-4">
           <button 

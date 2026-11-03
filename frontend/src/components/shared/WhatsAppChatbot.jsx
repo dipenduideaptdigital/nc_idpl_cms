@@ -254,7 +254,7 @@ const WhatsAppChatbot = ({ isOpen, onClose, configuredPhoneNumber, configuredDef
       </div>
 
       {/* Message Feed Area */}
-      <div className="flex-grow p-4 overflow-y-auto space-y-4 hide-scrollbar bg-[#efeae2] relative">
+      <div data-lenis-prevent className="flex-grow p-4 overflow-y-auto space-y-4 hide-scrollbar bg-[#efeae2] relative">
         {/* Subtle WhatsApp-style wallpaper background detail */}
         <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px]"></div>
         

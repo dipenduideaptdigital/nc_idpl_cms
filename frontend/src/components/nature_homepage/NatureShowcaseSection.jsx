@@ -1,5 +1,7 @@
 import React from 'react';
+import DOMPurify from 'dompurify';
 import { Link } from 'react-router-dom';
+import Reveal from '../../animations/Reveal';
 import brush1Img from '../../assets/nc_logo/brush1.png';
 import ellipseBtnImg from '../../assets/nc_logo/Ellipse_plus_btn.png';
 
@@ -56,27 +58,38 @@ const NatureShowcaseSection = ({ data }) => {
         {/* Row 1: NatureCube Showcase */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           <div className="lg:col-span-4 space-y-6 md:space-y-8 pr-0 lg:pr-6 lg:text-left">
-            <div className="w-[180px] sm:w-[240px] lg:w-[300px] mx-auto lg:mx-0 pt-2">
+            <Reveal direction="right" className="w-[180px] sm:w-[240px] lg:w-[300px] mx-auto lg:mx-0 pt-2">
               <img src={row1Logo} alt="NatureCube Logo" className="w-full h-auto object-contain" />
-            </div>
-            <p className="font-kanit text-base sm:text-lg lg:text-[25px] font-light text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] max-w-md lg:max-w-[420px] mx-auto lg:mx-0 lg:pl-11">
-              {row1Desc}
-            </p>
+            </Reveal>
+            <Reveal
+              delay={0.1}
+              className="font-kanit text-base sm:text-lg lg:text-[25px] font-light text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] max-w-md lg:max-w-[420px] mx-auto lg:mx-0 lg:pl-11"
+              contentClassName="[&>p]:m-0"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(row1Desc) }}
+            />
           </div>
 
-          <div className="lg:col-span-8 overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 lg:-mr-20">
-            <div className="flex gap-3 sm:gap-5 lg:gap-6 min-w-[650px] lg:min-w-0 pb-4 sm:pb-0 pr-4 sm:pr-0 lg:pr-2">
-              <div className="flex-1 min-w-[200px] lg:min-w-0 aspect-square rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <img src={gal1} alt="Gallery 1" className="w-full h-full object-cover" />
-              </div>
-              <div className="flex-1 min-w-[200px] lg:min-w-0 aspect-square rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <img src={gal2} alt="Gallery 2" className="w-full h-full object-cover" />
-              </div>
-              <div className="flex-1 min-w-[200px] lg:min-w-0 aspect-square rounded-xs overflow-hidden shadow-lg border border-zinc-200/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <img src={gal3} alt="Gallery 3" className="w-full h-full object-cover" />
+          <Reveal
+            direction="left"
+            className="lg:col-span-8 min-w-0 -mx-4 sm:mx-0 lg:-mr-20"
+          >
+            <div className="overflow-x-auto hide-scrollbar px-4 sm:px-0">
+              <div className="flex gap-3 sm:gap-5 lg:gap-6 min-w-[650px] lg:min-w-0 pb-4 sm:pb-0 pr-4 sm:pr-0 lg:pr-2">
+                {[gal1, gal2, gal3].map((image, index) => (
+                  <div
+                    key={index}
+                    className="flex-1 min-w-[200px] lg:min-w-0 aspect-square overflow-hidden rounded-xs shadow-lg border border-zinc-200/50"
+                  >
+                    <img
+                      src={image}
+                      alt={`Gallery ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
 
         {/* Row 2: Ripples Aquatic Studio */}
