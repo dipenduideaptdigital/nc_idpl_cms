@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import { cancelScrollMomentum, createSmoothScrollOptions, isPublicScrollRoute } from './smoothScrollOptions';
+import attachSectionPaging from './attachSectionPaging';
 
 export default function SmoothScroll() {
   const { pathname, key } = useLocation();
@@ -16,6 +17,7 @@ export default function SmoothScroll() {
     root.classList.add('scroll-auto!');
     let lenis;
     lenis = new Lenis(createSmoothScrollOptions(() => lenis));
+    const detachSectionPaging = attachSectionPaging(lenis);
 
     const cancelMomentum = () => cancelScrollMomentum(lenis);
     const onKeyDown = (event) => {
@@ -36,6 +38,7 @@ export default function SmoothScroll() {
     window.addEventListener('pointerdown', cancelMomentum, { passive: true });
 
     return () => {
+      detachSectionPaging();
       bodyObserver.disconnect();
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('pointerdown', cancelMomentum);

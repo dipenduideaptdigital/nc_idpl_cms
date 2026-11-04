@@ -5,6 +5,25 @@ import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
 import leaveIcon from '../../assets/nc_logo/leave.png';
 import OfferingsMegaMenu from '../layout/OfferingsMegaMenu';
 import apiClient from '../../api/client';
+import { LazyMotion, domAnimation, useReducedMotion } from 'motion/react';
+import * as m from 'motion/react-m';
+import useNavbarAppearance from '../../animations/useNavbarAppearance';
+
+// Animate only the surface behind the original navbar; its contents never move.
+function NavbarBackdrop({ visible }) {
+  const reduceMotion = useReducedMotion();
+  return (
+    <LazyMotion features={domAnimation} strict>
+      <m.div
+        aria-hidden="true"
+        className="absolute -inset-x-3 md:-inset-x-6 -inset-y-3 -z-10 rounded-[24px] bg-white shadow-[0_8px_32px_rgba(15,35,41,0.12)] ring-1 ring-black/5 pointer-events-none"
+        initial={false}
+        animate={{ opacity: visible ? 1 : 0, scaleY: visible ? 1 : 0.92 }}
+        transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+      />
+    </LazyMotion>
+  );
+}
 
 const NatureNavbar = ({ forceDark = false }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,6 +38,7 @@ const NatureNavbar = ({ forceDark = false }) => {
 
   const location = useLocation();
   const timeoutRef = useRef(null);
+  const headerRef = useRef(null);
 
   const [dynamicPaths, setDynamicPaths] = useState({
     about: '/about',
@@ -31,7 +51,7 @@ const NatureNavbar = ({ forceDark = false }) => {
       try {
         const res = await apiClient.get('/pages/public'); 
         const pages = res.data?.data || res.data || [];
-        const newPaths = { ...dynamicPaths };
+        const newPaths = { about: '/about', mandala: '/mandala' };
 
         pages.forEach(page => {
           if (page.template === 'about-page') newPaths.about = `/${page.slug}`;
@@ -83,6 +103,9 @@ const NatureNavbar = ({ forceDark = false }) => {
   const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas','/services'];
   const isLightPage = !forceDark && (lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p)));
 
+  const { floating, dark } = useNavbarAppearance(headerRef, !isLightPage, location.key);
+  const lightText = !floating && dark;
+
   // Final Menu Calculation (Use DB if exists, otherwise Fallback)
   const finalMenu = dbMenu || [
     { id: 'f1', label: 'PHILOSOPHY', url: dynamicPaths.mandala },
@@ -96,8 +119,9 @@ const NatureNavbar = ({ forceDark = false }) => {
   // LIGHT BACKGROUND NAVBAR 
   if (isLightPage) {
     return (
-      <header className="absolute top-0 left-0 right-0 z-50 bg-transparent pt-6 pb-4 px-6 md:px-12 transition-all font-kanit">
-        <div className="max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between transition-all duration-500">
+      <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 bg-transparent pt-6 pb-4 px-6 md:px-12 font-kanit">
+        <div data-navbar-content className="relative isolate max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between">
+          <NavbarBackdrop visible={floating} />
 
           {/* Logo */}
           <Link to="/" className="flex items-center group">
@@ -222,18 +246,20 @@ const NatureNavbar = ({ forceDark = false }) => {
 
   // ================= DARK BACKGROUND NAVBAR =================
   return (
-    <header className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 via-black/40 to-transparent pt-6 pb-4 px-6 md:px-12 transition-all">
-      <div className="max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between transition-all duration-500">
+    <header ref={headerRef} className={'fixed isolate top-0 left-0 right-0 z-50 pt-6 pb-4 px-6 md:px-12 motion-safe:transition-colors motion-safe:duration-300 ' + (lightText ? 'text-white' : 'text-black')}>
+      <div aria-hidden="true" className={'absolute inset-0 -z-10 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none motion-safe:transition-opacity motion-safe:duration-300 ' + (lightText ? 'opacity-100' : 'opacity-0')} />
+      <div data-navbar-content className="relative isolate max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between">
+          <NavbarBackdrop visible={floating} />
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 group">
           <div className="flex flex-col">
-            <div className="flex items-center tracking-[0.12em] text-white uppercase font-kanit">
+            <div className="flex items-center tracking-[0.12em] text-inherit uppercase font-kanit">
               <span className="text-2xl md:text-3xl font-light">NATURE</span>
               <span className="text-2xl md:text-3xl font-normal ml-0.5">C</span>
               <img src={leaveIcon} alt="NatureCube Leaf" className="w-5 h-5 md:w-6 md:h-6 object-contain inline-block mx-0.5 filter brightness-110 contrast-125" />
               <span className="text-2xl md:text-3xl font-normal">BE</span>
             </div>
-            <span className="font-kanit text-[8px] md:text-[9.5px] tracking-[0.26em] text-zinc-300 font-light uppercase mt-0.5 text-center">
+            <span className={'font-kanit text-[8px] md:text-[9.5px] tracking-[0.26em] font-light uppercase mt-0.5 text-center motion-safe:transition-colors motion-safe:duration-300 ' + (lightText ? 'text-zinc-300' : 'text-zinc-600')}>
               LIVING ART UNDER WATER
             </span>
           </div>
@@ -246,7 +272,7 @@ const NatureNavbar = ({ forceDark = false }) => {
             if (link.isMega) {
               return (
                 <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('mega')} onMouseLeave={handleMouseLeave}>
-                  <button onClick={() => setIsOfferingsOpen(!isOfferingsOpen)} className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
+                  <button onClick={() => setIsOfferingsOpen(!isOfferingsOpen)} className="font-kanit text-sm font-medium tracking-wide text-inherit hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
                     <span>{link.label}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-[#7BA641]' : ''}`} />
                     <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />
@@ -260,7 +286,7 @@ const NatureNavbar = ({ forceDark = false }) => {
             if (link.children && link.children.length > 0) {
               return (
                 <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('dynamic', link.id)} onMouseLeave={handleMouseLeave}>
-                  <button className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
+                  <button className="font-kanit text-sm font-medium tracking-wide text-inherit hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
                     <span>{link.label}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdownId === link.id ? 'rotate-180 text-[#7BA641]' : ''}`} />
                     <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />
@@ -280,12 +306,12 @@ const NatureNavbar = ({ forceDark = false }) => {
 
             // Standard Links
             return link.url.startsWith('/') ? (
-              <Link key={link.id} to={link.url} className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] transition-colors uppercase py-1 relative group">
+              <Link key={link.id} to={link.url} className="font-kanit text-sm font-medium tracking-wide text-inherit hover:text-[#7BA641] transition-colors uppercase py-1 relative group">
                 {link.label}
                 <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />
               </Link>
             ) : (
-              <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" className="font-kanit text-sm font-medium tracking-wide text-zinc-100 hover:text-[#7BA641] transition-colors uppercase py-1 relative group">
+              <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" className="font-kanit text-sm font-medium tracking-wide text-inherit hover:text-[#7BA641] transition-colors uppercase py-1 relative group">
                 {link.label}
                 <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />
               </a>
@@ -301,7 +327,7 @@ const NatureNavbar = ({ forceDark = false }) => {
         </div>
 
         {/* Mobile Hamburger / Close Button */}
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-white p-2 focus:outline-none cursor-pointer transition-transform duration-300 transform active:scale-90" aria-label="Toggle Menu">
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-inherit p-2 focus:outline-none cursor-pointer transition-transform duration-300 transform active:scale-90" aria-label="Toggle Menu">
           <div className="relative w-6 h-6 flex items-center justify-center">
             <Menu className={`w-6 h-6 absolute inset-0 transition-all duration-300 ease-out transform ${mobileMenuOpen ? 'opacity-0 rotate-90 scale-75' : 'opacity-100 rotate-0 scale-100'}`} />
             <X className={`w-6 h-6 absolute inset-0 transition-all duration-300 ease-out transform ${mobileMenuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-75'}`} />

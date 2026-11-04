@@ -2,8 +2,9 @@ import React from 'react';
 import DOMPurify from 'dompurify';
 import { Link } from 'react-router-dom';
 import Reveal from '../../animations/Reveal';
+import ImageCarousel from '../../animations/ImageCarousel';
+import SwimmingFish from '../../animations/SwimmingFish';
 import brush1Img from '../../assets/nc_logo/brush1.png';
-import ellipseBtnImg from '../../assets/nc_logo/Ellipse_plus_btn.png';
 
 // Fallback Default Images
 import defaultLogoImg from '../../assets/nc_logo/naturecube.png';
@@ -73,34 +74,19 @@ const NatureShowcaseSection = ({ data }) => {
             direction="left"
             className="lg:col-span-8 min-w-0 -mx-4 sm:mx-0 lg:-mr-20"
           >
-            <div className="overflow-x-auto hide-scrollbar px-4 sm:px-0">
-              <div className="flex gap-3 sm:gap-5 lg:gap-6 min-w-[650px] lg:min-w-0 pb-4 sm:pb-0 pr-4 sm:pr-0 lg:pr-2">
-                {[gal1, gal2, gal3].map((image, index) => (
-                  <div
-                    key={index}
-                    className="flex-1 min-w-[200px] lg:min-w-0 aspect-square overflow-hidden rounded-xs shadow-lg border border-zinc-200/50"
-                  >
-                    <img
-                      src={image}
-                      alt={`Gallery ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ImageCarousel images={[gal1, gal2, gal3]} />
           </Reveal>
         </div>
 
         {/* Row 2: Ripples Aquatic Studio */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center relative mt-12 lg:mt-16">
           <div className="lg:col-span-5 flex justify-center items-center">
-            <div className="w-[190px] sm:w-[230px] lg:w-[300px]">
+            <Reveal direction="right" amount={0.3} className="w-[190px] sm:w-[230px] lg:w-[300px]">
               <img src={row2Logo} alt="Ripples Logo" className="w-full h-auto object-contain" />
-            </div>
+            </Reveal>
           </div>
 
-          <div className="lg:col-span-4 space-y-4 ml-0 lg:ml-12 text-center lg:text-left">
+          <Reveal amount={0.3} delay={0.1} className="lg:col-span-4 ml-0 lg:ml-12 text-center lg:text-left" contentClassName="space-y-4">
             <p
               className="font-kanit text-base sm:text-lg lg:text-[22px] text-[#676767] leading-relaxed lg:leading-[37px] tracking-[0%] font-light max-w-md lg:max-w-[450px] mx-auto lg:mx-0 [&>b]:font-medium [&>b]:text-[#676767] [&>strong]:font-bold [&>strong]:text-[#676767]"
               dangerouslySetInnerHTML={{ __html: row2Desc }}
@@ -124,27 +110,27 @@ const NatureShowcaseSection = ({ data }) => {
                 </span>
               </Link>
             </div>
-          </div>
+          </Reveal>
 
           <div className="hidden lg:flex lg:col-span-3 relative min-h-[180px] items-center justify-end lg:-translate-y-10">
-            <div className="absolute top-[-60px] right-[-20px] w-[220px] pointer-events-none opacity-30 filter blur-[2px] transform -translate-x-7 -scale-x-100">
+            <SwimmingFish depth="background" className="absolute top-[-60px] right-[-20px] w-[220px] pointer-events-none opacity-30 filter blur-[2px] transform -translate-x-7 -scale-x-100">
               <img src={row2FloatingImg} alt="" className="w-full h-auto object-contain" />
-            </div>
-            <div className="relative z-10 w-[380px] pointer-events-none transform -translate-x-6 -scale-x-100">
+            </SwimmingFish>
+            <SwimmingFish className="relative z-10 w-[380px] pointer-events-none transform -translate-x-6 -scale-x-100">
               <img src={row2FloatingImg} alt="Floating Fish" className="w-full h-auto object-contain filter drop-shadow-lg" />
-            </div>
+            </SwimmingFish>
           </div>
         </div>
 
         {/* Row 3: Gulmohar Concept Gardening */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-start mt-12 lg:mt-18 pb-12 lg:pb-16">
           <div className="lg:col-span-4 flex justify-center lg:justify-start order-2 lg:order-1 lg:mt-20">
-            <div className="w-[160px] sm:w-[200px] lg:w-[260px] xl:w-[280px] pointer-events-none transform transition-transform duration-500 hover:scale-105">
+            <Reveal amount={0.3} className="w-[160px] sm:w-[200px] lg:w-[260px] xl:w-[280px] pointer-events-none">
               <img src={row3FloatingImg} alt="Terrarium" className="w-full h-auto object-contain filter drop-shadow-xl" />
-            </div>
+            </Reveal>
           </div>
 
-          <div className="lg:col-span-8 space-y-4 lg:pl-6 text-center lg:text-left order-1 lg:order-2">
+          <Reveal amount={0.3} delay={0.1} className="lg:col-span-8 lg:pl-6 text-center lg:text-left order-1 lg:order-2" contentClassName="space-y-4">
             <div className="w-[160px] sm:w-[220px] lg:w-[225px] mx-auto lg:mx-0">
               <img src={row3Logo} alt="Gulmohar Logo" className="w-full h-auto object-contain" />
             </div>
@@ -172,7 +158,7 @@ const NatureShowcaseSection = ({ data }) => {
                 </span>
               </Link>
             </div>
-          </div>
+          </Reveal>
         </div>
 
       </div>
