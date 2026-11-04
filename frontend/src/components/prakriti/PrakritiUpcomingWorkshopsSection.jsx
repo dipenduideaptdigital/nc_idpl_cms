@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Reveal from '../../animations/Reveal';
 import bush3 from '../../assets/nc_logo/bush3.png';
 import card1 from '../../assets/nc_home/plab3.png';
 import card2 from '../../assets/nc_home/plab4.png';
@@ -62,7 +63,7 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
   };
 
   return (
-    <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-16 sm:py-28 lg:py-36 px-4 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
+    <section data-prakriti-step="workshops" data-nav-theme="light" className="relative w-full min-h-[100svh] bg-[#FAFAF7] text-zinc-900 pt-28 pb-10 px-4 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit flex items-center">
       
       {/* Top-Left Paint Splash */}
       <div className="absolute -top-20 -left-20 sm:-top-28 sm:-left-24 md:-top-32 md:-left-28 w-[320px] sm:w-[520px] md:w-[620px] aspect-square pointer-events-none z-0">
@@ -73,10 +74,10 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+      <div className="w-full max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
         
         {/* Left Column */}
-        <div className="lg:col-span-5 flex flex-col items-start space-y-6 sm:space-y-10 pr-0 lg:pr-4">
+        <Reveal amount={0.3} duration={1.2} className="lg:col-span-4 pr-0 lg:pr-4" contentClassName="flex flex-col items-start space-y-6 sm:space-y-10">
           <h2 className="font-kanit font-bold text-3xl sm:text-4xl lg:text-[40px] xl:text-[42px] text-[#1E293B] tracking-tight uppercase leading-tight">
             {heading}
           </h2>
@@ -94,11 +95,11 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
               <span>{buttonText}</span>
             </button>
           </div>
-        </div>
+        </Reveal>
 
         {/* Right Column: Dynamic Stacked Cards Loop */}
-        <div className="lg:col-span-5 relative w-full flex flex-col items-center sm:items-stretch lg:items-end justify-center pt-6 lg:pt-30">
-          <div className="relative w-full max-w-[500px] xl:max-w-[540px] aspect-[4/3] sm:aspect-[1.25/1]">
+        <Reveal direction="right" amount={0.3} duration={1.3} delay={0.1} className="lg:col-span-8 min-w-0" contentClassName="relative w-full flex flex-col items-center sm:items-stretch lg:items-end justify-center py-8 pl-8 sm:pr-[190px]">
+          <div className="relative w-full max-w-[500px] lg:max-w-[min(540px,65svh)] aspect-[4/3] sm:aspect-[1.25/1]">
             
             {workshops.map((ws, index) => {
               const uploadedImgField = ws.image || ws.imageUrl || ws.src || ws.picture;
@@ -135,7 +136,7 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
             })}
 
             {/* Exact Original Desktop Attached Dark Overlay Box (Hidden on mobile < sm) */}
-            <div className="hidden sm:flex absolute -right-4 sm:-right-60 bottom-8 sm:bottom-12 z-40 bg-[#0C1A22] text-white p-5 sm:p-6 w-[210px] sm:w-[245px] rounded-xs shadow-2xl flex-col justify-between border border-zinc-800/80 min-h-[175px] sm:min-h-[195px]">
+            <div className="hidden sm:flex absolute right-[-180px] bottom-8 z-40 bg-[#0C1A22] text-white p-5 w-[210px] rounded-xs shadow-2xl flex-col justify-between border border-zinc-800/80 min-h-[175px]">
               <div className="mb-4">
                 <h3 className="font-kanit font-bold text-lg sm:text-xl tracking-wide uppercase text-white leading-tight transition-all duration-500">
                   {currentWorkshop?.title}
@@ -183,7 +184,7 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
             </div>
           </div>
 
-        </div>
+        </Reveal>
       </div>
     </section>
 

@@ -1,4 +1,6 @@
 import React from 'react';
+import DOMPurify from 'dompurify';
+import Reveal from '../../animations/Reveal';
 import plab1 from '../../assets/nc_home/plab1.png';
 import plab2 from '../../assets/nc_home/plab2.png';
 import plab3 from '../../assets/nc_home/card4.png';
@@ -53,78 +55,60 @@ const defaultCards = [
 ];
 
 const heightClasses = [
-  "h-[440px] sm:h-[500px] lg:h-[540px] xl:h-[560px]",
-  "h-[390px] sm:h-[440px] lg:h-[470px] xl:h-[520px]",
-  "h-[340px] sm:h-[380px] lg:h-[400px] xl:h-[460px]"
+  'h-[440px] sm:h-[500px] lg:h-[min(560px,calc(100svh-152px))]',
+  'h-[390px] sm:h-[440px] lg:h-[min(520px,calc(100svh-192px))]',
+  'h-[340px] sm:h-[380px] lg:h-[min(460px,calc(100svh-232px))]',
 ];
 
 const PrakritiEducationSection = ({ data }) => {
-  const headlineText = data?.headline || "It is a long established fact that a reader will be distracted.";
+  const headlineText = data?.headline || "Welcome to Prakriti Lab, our classroom without walls.";
   const descriptionText = data?.description || "<p>At Naturecube, we take students from schools and colleges on extensive field tours to natural surroundings and nature reserves, teaching them about nature, conservation, and ecosystem functions. Using both outdoor environments and our gallery's aquariums and terrariums as models, we expose students to basic scientific techniques and E-STEM teachings that complement their curriculum. Conducted year-round by multidisciplinary teachers, these workshops provide practical, hands-on learning experiences, and students receive certificates upon completion.</p>";
 
   const cardsToRender = (data?.cards && data.cards.length > 0) ? data.cards : defaultCards;
   const brushBottom = data?.brushBottomImage ? getAssetUrl(data.brushBottomImage) : brush2Img;
 
   return (
-    <section className="relative w-full bg-[#FAFAF7] text-zinc-900 py-24 sm:py-32 lg:py-10 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden select-none font-kanit">
-      
-      {/* Bottom-Left Watercolor Brush Accent */}
-      <div className="absolute -bottom-36 -left-28 sm:-bottom-40 sm:-left-32 md:-bottom-48 md:-left-36 w-[450px] sm:w-[550px] md:w-[600px] aspect-square pointer-events-none z-0">
-        <img 
-          src={brushBottom} 
-          alt="" 
-          className="w-full h-full object-contain object-left-bottom opacity-90 filter brightness-105 transform rotate-12"
-        />
-      </div>
-
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 lg:gap-16 xl:gap-24 items-start mb-16 sm:mb-24 lg:mb-28">
-          <div className="md:col-span-6">
+    <>
+      <section data-prakriti-step="welcome" data-nav-theme="light" className="relative w-full min-h-[100svh] bg-[#FAFAF7] text-zinc-900 pt-28 pb-10 px-6 sm:px-12 lg:px-20 xl:px-24 flex items-center font-kanit">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 lg:gap-16 xl:gap-24 items-start">
+          <Reveal amount={0.3} duration={1.2} className="md:col-span-6">
             <h2 className="font-kanit font-medium text-3xl sm:text-4xl lg:text-[40px] xl:text-[30px] text-[#6A6A6A] leading-[1.18] tracking-tight max-w-xl">
               {headlineText}
             </h2>
-          </div>
-          <div className="md:col-span-6 md:pt-2 ml-0 md:ml-4 lg:ml-10">
-            <div 
+          </Reveal>
+          <Reveal amount={0.3} duration={1.2} delay={0.15} className="md:col-span-6 md:pt-2 md:ml-4 lg:ml-10">
+            <div
               className="font-kanit text-sm sm:text-base lg:text-[18px] text-[#6A6A6A] font-normal max-w-[420px] tiptap-content"
-              dangerouslySetInnerHTML={{ __html: descriptionText }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(descriptionText) }}
             />
-          </div>
+          </Reveal>
         </div>
+      </section>
 
-        {/* Bottom 3 Cards Grid - Staggered Heights */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-start">
+      <section data-prakriti-step="activities" data-nav-theme="light" aria-label="Prakriti Lab activities" className="relative w-full min-h-[100svh] bg-[#FAFAF7] pt-28 pb-10 px-6 sm:px-12 lg:px-20 xl:px-24 overflow-hidden flex items-center font-kanit">
+        <div className="absolute -bottom-36 -left-28 sm:-bottom-40 sm:-left-32 md:-bottom-48 md:-left-36 w-[450px] sm:w-[550px] md:w-[600px] aspect-square pointer-events-none">
+          <img src={brushBottom} alt="" className="w-full h-full object-contain opacity-90 rotate-12" />
+        </div>
+        <div className="w-full max-w-7xl mx-auto relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 items-start">
           {cardsToRender.map((card, index) => {
-            const cardHeight = card.heightClass || heightClasses[index % heightClasses.length];
             const imgSrc = card.image ? getAssetUrl(card.image) : '';
-
             return (
-              <div 
-                key={card.id || index} 
-                className={`relative w-full ${cardHeight} rounded-xs overflow-hidden group shadow-md hover:shadow-2xl transition-all duration-500`}
-              >
-                {/* Background Card Image */}
-                {imgSrc && (
-                  <img 
-                    src={imgSrc} 
-                    alt={card.alt || card.title || 'Education Card'} 
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent transition-opacity duration-300" />
-                
-                {/* Text Title Overlay at Bottom-Left */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-7 lg:p-8 z-10">
-                  <h3 className="font-kanit font-bold text-2xl sm:text-3xl lg:text-[30px] text-white leading-[1.15] tracking-tight whitespace-pre-line group-hover:translate-x-1 transition-transform duration-300">
-                    {card.title}
-                  </h3>
-                </div>
-              </div>
+              <Reveal key={card.id || index} direction="right" amount={0.2} duration={1.2} delay={index * 0.12} className={heightClasses[index % heightClasses.length]} contentClassName="h-full">
+                <article className="relative w-full h-full rounded-xs overflow-hidden group shadow-md">
+                  {imgSrc && <img src={imgSrc} alt={card.alt || card.title || 'Education Card'} className="w-full h-full object-cover object-center motion-safe:group-hover:scale-105 motion-safe:transition-transform duration-700" />}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 p-6 sm:p-7 lg:p-8">
+                    <h3 className="font-kanit font-bold text-2xl sm:text-3xl lg:text-[30px] text-white leading-[1.15] tracking-tight whitespace-pre-line">
+                      {card.title}
+                    </h3>
+                  </div>
+                </article>
+              </Reveal>
             );
           })}
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

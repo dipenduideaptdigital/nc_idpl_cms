@@ -87,7 +87,7 @@ const ServiceDetails = () => {
 
               {isDropdownOpen && (
                 <div className="absolute left-5 right-5 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden z-50">
-                  <div className="max-h-[300px] overflow-y-auto py-1">
+                  <div data-lenis-prevent className="max-h-[300px] overflow-y-auto py-1">
                     {dynamicServices.length > 0 ? (
                       dynamicServices.map((service) => {
                         const isActive = location.pathname === service.fullPath;

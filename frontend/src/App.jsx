@@ -7,6 +7,7 @@ import MainLayout from './components/layout/MainLayout';
 import AdminLayout from './components/layout/AdminLayout';
 import SettingsLayout from './components/layout/SettingsLayout';
 import MaintenancePage from './components/shared/MaintenancePage';
+import SmoothScroll from './animations/SmoothScroll';
 
 // Auth Pages
 const Login = lazy(() => import('./pages/Login'));
@@ -90,6 +91,7 @@ function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
+        <SmoothScroll />
         <Suspense fallback={<GlobalSuspenseFallback />}>
           <Routes>
             <Route path="/login" element={<Login />} />

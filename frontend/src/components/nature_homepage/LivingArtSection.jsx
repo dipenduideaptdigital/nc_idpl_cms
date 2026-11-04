@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import DOMPurify from 'dompurify';
+import Reveal from '../../animations/Reveal';
+import Typewriter from '../../animations/Typewriter';
+import HeadingReveal from '../../animations/HeadingReveal';
+import CarouselSlide from '../../animations/CarouselSlide';
+import PanelEntrance from '../../animations/PanelEntrance';
+import CarouselOption from '../../animations/CarouselOption';
+import useScrollCarousel from '../../animations/useScrollCarousel';
 import boxImg from '../../assets/nc_home/box.png';
 import playBtnImg from '../../assets/nc_logo/play_btn.png';
-import ellipseBtnImg from '../../assets/nc_logo/Ellipse_plus_btn.png';
 import brush1Img from '../../assets/nc_logo/brush1.png';
-import brush2Img from '../../assets/nc_logo/brush2.png';
-import bush3Img from '../../assets/nc_logo/bush3.png';
 import card1Img from '../../assets/nc_home/card1.png';
 import card2Img from '../../assets/nc_home/card2.png';
 import card3Img from '../../assets/nc_home/card3.png';
-import card4Img from '../../assets/nc_home/card4.png';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
@@ -26,7 +30,7 @@ const defaultTabData = [
 ];
 
 const LivingArtSection = ({ data }) => {
-  const [activeTab, setActiveTab] = useState('01');
+  const footerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Dynamic Data Bindings with Fallbacks
@@ -39,11 +43,8 @@ const LivingArtSection = ({ data }) => {
   const footerQuote = data?.footerQuote || "Nature showed it to us twice – once in the Ripples on water and once in the flowers of the Gulmohar";
   const videoUrl = data?.videoUrl || "";
   const tabsToRender = (data?.tabs && data.tabs.length > 0) ? data.tabs : defaultTabData;
-  const currentTab = tabsToRender.find((tab) => tab.id === activeTab) || tabsToRender[0];
-  const configuredImage = typeof currentTab?.image === 'string' ? currentTab.image.trim() : '';
-  const currentTabImage = configuredImage
-    ? getAssetUrl(configuredImage)
-    : boxImg;
+  const carousel = useScrollCarousel(tabsToRender.length, data?.isVisible !== false && !isPlaying);
+  const currentTab = tabsToRender[carousel.index];
 
   if (data?.isVisible === false) return null;
 
@@ -60,18 +61,22 @@ const LivingArtSection = ({ data }) => {
               {tagline}
             </span>
 
-            <h2 className="font-reem text-4xl sm:text-5xl lg:text-6xl font-normal tracking-wide text-[#0f2329] leading-none mb-8 uppercase">
+            <HeadingReveal className="font-reem text-4xl sm:text-5xl lg:text-6xl font-normal tracking-wide text-[#0f2329] leading-none mb-8 uppercase">
               {mainTitle} <span className="font-larken text-5xl sm:text-6xl lg:text-7xl font-semibold italic text-[#6CAB44] lowercase ml-2">{italicTitle}</span>
-            </h2>
+            </HeadingReveal>
 
-            <div 
-              className="font-kanit text-2xl sm:text-3xl lg:text-[48px] font-medium text-[#363636] leading-tighter  tracking-tight max-w-[340px] lg:max-w-[500px] mb-10 [&>p]:m-0"
-              dangerouslySetInnerHTML={{ __html: subHeadline }}
+            <Reveal
+              duration={1.2}
+              className="font-kanit text-2xl sm:text-3xl lg:text-[48px] font-medium text-[#363636] leading-[1.05] tracking-tight max-w-[340px] lg:max-w-[500px] mb-8"
+              contentClassName="[&>p]:m-0 [&_sub]:static [&_sub]:align-baseline [&_sup]:static [&_sup]:align-baseline"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(subHeadline) }}
             />
 
-            <div 
-              className="font-kanit text-base sm:text-lg lg:text-[35px] text-zinc-500 font-ligh  leading-tight max-w-[250px] lg:max-w-[440px] mb-8 [&>p]:m-0"
-              dangerouslySetInnerHTML={{ __html: paragraph }}
+            <Reveal
+              delay={0.15}
+              className="font-kanit text-base sm:text-lg lg:text-[35px] text-zinc-500 font-light leading-tight [&:has(sub_sup)]:leading-[1.05] max-w-[250px] lg:max-w-[440px] mb-8"
+              contentClassName="[&>p]:m-0"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(paragraph) }}
             />
           </div>
 
@@ -94,92 +99,122 @@ const LivingArtSection = ({ data }) => {
         </div>
 
         {/* Right Column: Dark Card - extends to right edge */}
-        <div className="w-full lg:flex-1 relative mt-4 lg:mt-0 lg:pt-10 flex flex-col min-w-0">
+        <div
+          ref={carousel.panelRef}
+          {...carousel.panelEvents}
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Living art collections"
+          className="w-full lg:flex-1 relative mt-4 lg:mt-0 lg:pt-10 flex flex-col min-w-0"
+        >
+          <PanelEntrance triggerRef={carousel.panelRef}>
 
-          {/* Top Right Floating Tabs attached to dark card */}
-          <div className="flex justify-end gap-2 sm:gap-2 mb-0.5 relative z-20 pr-8 sm:pr-12 lg:pr-16">
-            {[...tabsToRender].reverse().map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center font-reem font-bold text-sm sm:text-base tracking-wider transition-all rounded-xs cursor-pointer ${activeTab === tab.id
-                  ? 'bg-[#6CAB44] text-white shadow-lg scale-105'
-                  : 'bg-[#5a8a36] text-white/90 hover:bg-[#6CAB44]'
-                  }`}
-              >
-                {tab.id}
-              </button>
-            ))}
-          </div>
+            {/* Top Right Floating Tabs attached to dark card */}
+            <div className="flex items-center justify-end gap-2 sm:gap-2 mb-0.5 relative z-20 pr-8 sm:pr-12 lg:pr-16">
+              {[...tabsToRender].reverse().map((tab, index) => (
+                <CarouselOption
+                  key={tab.id}
+                  active={currentTab.id === tab.id}
+                  order={tabsToRender.length - 1 - index}
+                  onClick={() => carousel.select(tabsToRender.indexOf(tab))}
+                  aria-label={`${tab.id}: ${tab.title}`}
+                >
+                  {tab.id}
+                </CarouselOption>
+              ))}
+            </div>
 
-          {/* Main Dark Card Container - no right rounding, bleeds to edge */}
-          <div className="relative bg-[#0e2129] rounded-tl-xs rounded-tr-none p-6 sm:p-10 lg:p-14 text-white shadow-2xl overflow-visible min-h-[420px] sm:min-h-[460px] lg:min-h-[600px] flex flex-col justify-between flex-1">
+            {/* Main Dark Card Container - no right rounding, bleeds to edge */}
+            <div className="relative bg-[#0e2129] rounded-tl-xs rounded-tr-none p-6 sm:p-10 lg:p-14 text-white shadow-2xl overflow-visible min-h-[420px] sm:min-h-[460px] lg:min-h-[600px] flex flex-col justify-between flex-1">
 
-            <div className="max-w-xs sm:max-w-sm lg:max-w-md relative z-30 space-y-6 lg:space-y-5">
-              <h3 className="font-larken text-4xl sm:text-5xl lg:text-6xl xl:text-7xl italic font-normal text-white tracking-wide leading-tight">
-                {currentTab?.title}
-              </h3>
+              <div className="max-w-xs sm:max-w-sm lg:max-w-md relative z-30 space-y-6 lg:space-y-5">
+                {/* Overlapping grid cells reserve the tallest slide's height. */}
+                <div className="grid">
+                  {tabsToRender.map((tab, index) => (
+                    <CarouselSlide key={tab.id} active={carousel.index === index}>
+                      <div className="space-y-6 lg:space-y-5">
+                        <h3 className="font-larken text-4xl sm:text-5xl lg:text-6xl xl:text-7xl italic font-normal text-white tracking-wide leading-tight">
+                          {tab.title}
+                        </h3>
+                        <div
+                          className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light [&>p]:mb-2 last:[&>p]:mb-0"
+                          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(tab.desc1 || '') }}
+                        />
+                        <div
+                          className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light [&>p]:mb-2 last:[&>p]:mb-0"
+                          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(tab.desc2 || '') }}
+                        />
+                      </div>
+                    </CarouselSlide>
+                  ))}
+                </div>
 
-              <div 
-                className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light [&>p]:mb-2 last:[&>p]:mb-0"
-                dangerouslySetInnerHTML={{ __html: currentTab?.desc1 }}
-              />
-
-              <div 
-                className="font-kanit text-sm sm:text-base text-zinc-300/90 leading-relaxed font-light [&>p]:mb-2 last:[&>p]:mb-0"
-                dangerouslySetInnerHTML={{ __html: currentTab?.desc2 }}
-              />
-
-              <div className="pt-4">
-                <button className="group inline-flex items-center gap-3.5 text-[#505A5C] hover:text-[#48682E] transition-colors cursor-pointer">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#EBF3DF] group-hover:bg-[#4A712E] text-[#6CAB44] group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_2px_12px_rgba(72,104,46,0.35)] group-active:scale-95">
-                    <svg
-                      className="w-6 h-6 transition-transform duration-300 group-hover:rotate-90"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2.4"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                  </div>
-                  <span className="font-kanit text-[14.5px] sm:text-[15.5px] font-medium tracking-normal lowercase text-[#505A5C] group-hover:text-[#48682E] transition-colors">
-                    explore the art
-                  </span>
-                </button>
+                <div className="pt-4">
+                  <button className="group inline-flex items-center gap-3.5 text-[#505A5C] hover:text-[#48682E] transition-colors cursor-pointer">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#EBF3DF] group-hover:bg-[#4A712E] text-[#6CAB44] group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_2px_12px_rgba(72,104,46,0.35)] group-active:scale-95">
+                      <svg
+                        className="w-6 h-6 transition-transform duration-300 group-hover:rotate-90"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                      </svg>
+                    </div>
+                    <span className="font-kanit text-[14.5px] sm:text-[15.5px] font-medium tracking-normal lowercase text-[#505A5C] group-hover:text-[#48682E] transition-colors">
+                      explore the art
+                    </span>
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {/* Background Paint Splash (bush3) */}
-            <div className="absolute bottom-[-40px] sm:bottom-[-50px] lg:bottom-[-170px]  right-[25%] lg:right-[32%] w-[220px] sm:w-[280px] lg:w-[420px]  h-[220px] sm:h-[280px] lg:h-[380px] pointer-events-none z-10 opacity-100 transform scale-y-[-1] rotate-180">
-              <img
-                src={brush1Img}
-                alt=""
-                className="w-full h-full object-contain filter brightness-100 contrast-90"
-              />
-            </div>
+              {/* Background Paint Splash (bush3) */}
+              <div className="absolute bottom-[-40px] sm:bottom-[-50px] lg:bottom-[-170px]  right-[25%] lg:right-[32%] w-[220px] sm:w-[280px] lg:w-[420px]  h-[220px] sm:h-[280px] lg:h-[380px] pointer-events-none z-10 opacity-100 transform scale-y-[-1] rotate-180">
+                <img
+                  src={brush1Img}
+                  alt=""
+                  className="w-full h-full object-contain filter brightness-100 contrast-90"
+                />
+              </div>
 
-            {/* Terrarium / Paludarium Box Image */}
-            <div className="relative lg:absolute self-end lg:self-auto mt-6 lg:mt-0 right-[20%] lg:right-[25%] lg:bottom-[-60px] xl:bottom-[-80px] z-20 w-[180px] xs:w-[220px] sm:w-[260px] md:w-[280px] lg:w-[280px] xl:w-[310px] 2xl:w-[340px] pointer-events-none transform transition-transform duration-500 ease-out hover:scale-102">
-              <img
-                src={currentTabImage}
-                alt={currentTab?.title}
-                className="w-full h-auto object-contain filter"
-              />
-            </div>
+              {/* Terrarium / Paludarium Box Image */}
+              <div className="relative lg:absolute self-end lg:self-auto mt-6 lg:mt-0 right-[20%] lg:right-[25%] lg:bottom-[-60px] xl:bottom-[-80px] z-20 w-[180px] xs:w-[220px] sm:w-[260px] md:w-[280px] lg:w-[280px] xl:w-[310px] 2xl:w-[340px] pointer-events-none grid items-end">
+                {tabsToRender.map((tab, index) => (
+                  <CarouselSlide key={tab.id} active={carousel.index === index} image>
+                    <img
+                      src={typeof tab.image === 'string' && tab.image.trim() ? getAssetUrl(tab.image.trim()) : boxImg}
+                      alt={tab.title}
+                      className="w-full h-auto object-contain filter"
+                    />
+                  </CarouselSlide>
+                ))}
+              </div>
 
-          </div>
+            </div>
+          </PanelEntrance>
         </div>
       </div>
 
       {/* Bottom Section: Footer Quote */}
-      <div className="mt-12 sm:mt-16 lg:mt-40 text-center space-y-4 max-w-6xl mx-auto px-4">
-        <span className="font-kanit text-sm sm:text-base font-semibold text-[#6CAB44] tracking-wide block lowercase">
-          {footerTagline}
-        </span>
-        <h4 className="font-larken text-[28px] sm:text-[38px] lg:text-[50px] italic font-semibold text-[#222222] leading-[1.2] tracking-normal text-center">
-          {footerQuote}
-        </h4>
+      <div
+        ref={footerRef}
+        className="mt-12 sm:mt-16 lg:mt-40 text-center max-w-6xl mx-auto px-4 space-y-4"
+      >
+        <Typewriter
+          text={footerTagline}
+          triggerRef={footerRef}
+          className="font-kanit text-sm sm:text-base font-semibold text-[#6CAB44] tracking-wide block lowercase"
+        />
+        <Reveal
+          amount={0.3}
+          triggerRef={footerRef}
+          role="heading"
+          aria-level={4}
+          className="font-larken text-[28px] sm:text-[38px] lg:text-[50px] italic font-semibold text-[#222222] leading-[1.2] tracking-normal text-center"
+          contentClassName="[&>p]:m-0"
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(footerQuote) }}
+        />
       </div>
 
       {/* Video Modal Placeholder */}

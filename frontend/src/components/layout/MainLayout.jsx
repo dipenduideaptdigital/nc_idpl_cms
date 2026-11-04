@@ -39,7 +39,7 @@ const MainLayout = ({ children }) => {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
             onClick={() => setIsModalOpen(false)}
           ></div>
-          <div className="relative bg-white text-zinc-900 rounded-2xl shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto z-10 transition-transform duration-300 transform scale-100 flex flex-col">
+          <div data-lenis-prevent className="relative bg-white text-zinc-900 rounded-2xl shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto z-10 transition-transform duration-300 transform scale-100 flex flex-col">
             <GetInTouch isModal={true} onClose={() => setIsModalOpen(false)} />
           </div>
         </div>
