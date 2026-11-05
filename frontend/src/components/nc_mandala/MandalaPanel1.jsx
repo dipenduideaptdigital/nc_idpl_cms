@@ -1,34 +1,38 @@
 import React from 'react';
+import * as m from 'motion/react-m';
+import usePhilosophyMotion from '../../animations/usePhilosophyMotion';
+import Typewriter from '../../animations/Typewriter';
 import mandalaImg from '../../assets/nc_mandala/mandala.png';
 import mountainImg from '../../assets/nc_mandala/mountain.png';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 import brush2 from '../../assets/nc_logo/brush2.png';
 
-const MandalaPanel1 = ({ data }) => {
+const MandalaPanel1 = ({ data, scrollRoot }) => {
+  const { panelRef, text, artwork, fade } = usePhilosophyMotion(scrollRoot);
   return (
-    <div className="w-screen min-w-[100vw] h-full bg-white text-zinc-800 flex-shrink-0 relative flex flex-col justify-between pt-20 sm:pt-24 lg:pt-28 pb-6 sm:pb-10 px-8 sm:px-14 lg:px-24 select-none font-kanit overflow-hidden">
+    <div ref={panelRef} data-philosophy-panel className="w-screen min-w-[100vw] h-full bg-white text-zinc-800 flex-shrink-0 relative flex flex-col justify-between pt-20 sm:pt-24 lg:pt-28 pb-6 sm:pb-10 px-8 sm:px-14 lg:px-24 select-none font-kanit overflow-hidden">
       
       {/* Top Title & Subtitle matching second image layout */}
-      <div className="space-y-1 relative z-10 max-w-2xl pl-2 sm:pl-6 lg:pl-8">
+      <m.div {...fade()} className="space-y-1 relative z-10 max-w-2xl pl-2 sm:pl-6 lg:pl-8">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black tracking-wide uppercase leading-tight font-kanit">
-          {data?.title || "LIVING MANDALAS"}
+          <Typewriter text={data?.title || 'LIVING MANDALAS'} triggerRef={panelRef} amount={0.95} />
         </h1>
         
         {/* Subtitle block indented to the right under LIVING MANDALAS */}
-        <div className="pl-16 sm:pl-24 lg:pl-32 font-kanit text-base sm:text-xl lg:text-2xl font-bold text-[#4B6B2E] tracking-tight leading-snug space-y-0.5 pt-0.5">
+        <m.div {...fade(0.35)} className="pl-16 sm:pl-24 lg:pl-32 font-kanit text-base sm:text-xl lg:text-2xl font-bold text-[#4B6B2E] tracking-tight leading-snug space-y-0.5 pt-0.5">
           <div>{data?.subLine1 || "A quest to"}</div>
           <div>{data?.subLine2 || "expose the principles of"}</div>
           <div className="font-larken italic text-[#4B6B2E] text-xl sm:text-2xl lg:text-3xl font-normal lowercase">
             {data?.subItalic || "mandala"}
           </div>
-        </div>
-      </div>
+        </m.div>
+      </m.div>
 
       {/* Main Content Showcase Section */}
       <div className="relative z-10 w-full max-w-5xl mx-auto my-auto flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-8 pl-2 sm:pl-6 lg:pl-40 pr-6 lg:pr-28">
         
         {/* Left Visual Composition: Green Blob + Mandala Artwork + Mountain Overlay */}
-        <div className="relative flex-shrink-0 w-[220px] sm:w-[260px] md:w-[300px] lg:w-[320px] aspect-square flex items-center justify-center">
+        <m.div {...artwork(0.12)} className="relative flex-shrink-0 w-[220px] sm:w-[260px] md:w-[300px] lg:w-[320px] aspect-square flex items-center justify-center">
           
           {/* Soft Green Watercolor Blob Background */}
           <div className="relative z-0 top-0 right-0 h-50 w-50" />
@@ -55,10 +59,10 @@ const MandalaPanel1 = ({ data }) => {
               className="w-full h-auto object-contain"
             />
           </div>
-        </div>
+        </m.div>
 
         {/* Right Text Description & Quotes */}
-        <div className="max-w-xs sm:max-w-sm lg:max-w-md space-y-5 pt-2 lg:pt-0 z-20">
+        <m.div {...text(0.28)} className="max-w-xs sm:max-w-sm lg:max-w-md space-y-5 pt-2 lg:pt-0 z-20">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-black tracking-tight mb-2.5">
               {data?.rightTitle || "mandalas"}
@@ -74,7 +78,7 @@ const MandalaPanel1 = ({ data }) => {
               {data?.quote || "This eternal circle of life is playing constantly in and around us."}
             </p>
           </div>
-        </div>
+        </m.div>
 
       </div>
 

@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Subhaakritee Counter Animation Component
 const AnimatedCounter = ({ text }) => {
@@ -59,11 +57,7 @@ const AnimatedCounter = ({ text }) => {
 };
 
 const AboutHeroPanel = ({ data }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
-
   const headlineLine1 = data?.headlineLine1 || "LOOK DEEP INTO NATURE, AND THEN YOU WILL";
-  const headlineLine2 = data?.headlineLine2 || "UNDERSTAND EVERYTHING BETTER";
   const subtext = data?.subtext || "We are evolving the landscape of how nature and science bringing peace in your inner world.";
   const yearsExp = data?.yearsExp || "25+";
   const sinceYear = data?.sinceYear || "SINCE 2010";
@@ -77,9 +71,6 @@ const AboutHeroPanel = ({ data }) => {
         <h1 className="leading-tight">
           <span className="font-reem-fun text-[#6A6A6A] font-semibold text-2xl sm:text-3xl lg:text-[34px] tracking-tight block uppercase">
             {headlineLine1}
-          </span>
-          <span className="font-reem-fun text-[#1E293B] font-bold text-3xl sm:text-5xl lg:text-[56px] tracking-tight block uppercase mt-1 leading-none">
-            {headlineLine2}
           </span>
         </h1>
 

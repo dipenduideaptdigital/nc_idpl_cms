@@ -3,6 +3,7 @@ import { LazyMotion, domAnimation, useReducedMotion, useScroll, useTransform } f
 import * as m from 'motion/react-m';
 
 const EDGE_SPACING = 12;
+const MAX_VISIBLE_EDGES = 3;
 
 function entryProgress(progress, index, count) {
   if (index === 0) return 1;
@@ -16,7 +17,8 @@ function StackLayer({ children, index, count, progress, cardHeight }) {
   const coveredBy = (value) => {
     let layers = 0;
     for (let next = index + 1; next < count; next += 1) layers += entryProgress(value, next, count);
-    return layers;
+    // Keep long galleries from shrinking earlier cards or growing past the viewport.
+    return Math.min(layers, MAX_VISIBLE_EDGES);
   };
   const y = useTransform(progress, value =>
     (1 - entryProgress(value, index, count)) * (cardHeight + 80) + coveredBy(value) * EDGE_SPACING);
@@ -34,7 +36,7 @@ function StackLayer({ children, index, count, progress, cardHeight }) {
 
 function PinnedStack({ cards, layout }) {
   const trackRef = useRef(null);
-  const stageHeight = layout.cardHeight + (cards.length - 1) * EDGE_SPACING + 24;
+  const stageHeight = layout.cardHeight + Math.min(cards.length - 1, MAX_VISIBLE_EDGES) * EDGE_SPACING + 24;
   const { scrollYProgress } = useScroll({
     target: trackRef,
     offset: [`start ${layout.top}px`, `end ${layout.top + stageHeight}px`],
@@ -66,7 +68,8 @@ export default function ScrollCardStack({ children }) {
     const measure = () => {
       // Pin behind the fixed navbar, with room for the real stacked edges below.
       const top = 16;
-      const cardHeight = window.innerHeight - top - (cards.length - 1) * EDGE_SPACING - 40;
+      const visibleEdges = Math.min(Math.max(cards.length - 1, 0), MAX_VISIBLE_EDGES);
+      const cardHeight = window.innerHeight - top - visibleEdges * EDGE_SPACING - 40;
       // Keep every service readable on phones, short windows, and with reduced motion.
       const next = window.innerWidth >= 1024 && cardHeight >= 460
         ? { top, cardHeight, travel: window.innerHeight * 0.8 } : null;

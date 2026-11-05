@@ -31,7 +31,7 @@ const RipplesIntroSection = ({ data, showQuoteBanner }) => {
   const shouldShowQuote = !isGulmoPage && showQuoteBanner !== false && data?.showQuoteBanner !== false && data?.hideQuoteBanner !== true;
 
   return (
-    <section className={`w-full bg-white select-none font-kanit ${shouldShowQuote ? 'pb-16 sm:pb-20 md:pb-28' : 'pb-8 sm:pb-12 md:pb-16'} overflow-hidden`}>
+    <section className="w-full bg-white select-none font-kanit pb-0 overflow-hidden">
       {/* Top Intro Section */}
       <div className="min-h-[80vh] lg:min-h-screen flex flex-col justify-center max-w-7xl mx-auto py-20 lg:py-0 px-5 sm:px-8 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 md:gap-16 items-start">
