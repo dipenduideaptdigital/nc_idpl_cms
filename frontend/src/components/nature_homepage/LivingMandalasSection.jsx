@@ -22,6 +22,7 @@ const LivingMandalasSection = ({ data }) => {
   const descLine1 = data?.descLine1 || "LIQUID LANDSCAPES MIRRORED IN MINDFUL ART,";
   const descLine2 = data?.descLine2 || "A LIVING MANDALA'S HEART.";
   const buttonText = data?.buttonText || "explore the mandala";
+  const bottomQuote = data?.bottomQuote || 'This eternal circle of life\nis playing constantly in\nand around us.';
   const mandalaImage = data?.mandalaImage ? getAssetUrl(data.mandalaImage) : defaultMandalaImg;
 
   if (data?.isVisible === false) return null;
@@ -60,6 +61,10 @@ const LivingMandalasSection = ({ data }) => {
             {mainTitle}
           </h2>
         </div>
+
+        <p className="hidden lg:block absolute left-6 xl:left-10 bottom-3 xl:bottom-5 max-w-[300px] whitespace-pre-line font-kanit text-[20px] font-medium tracking-[0.035em] leading-[1.4] text-[#06232B]">
+          {bottomQuote}
+        </p>
 
         {/* Central Mandala Artwork */}
         <div className="relative w-[280px] xs:w-[340px] sm:w-[420px] md:w-[460px] lg:w-[460px] xl:w-[500px] 2xl:w-[520px] aspect-square flex-shrink-0 flex items-center justify-center z-10 order-2 lg:order-2 my-4 lg:my-0 mx-auto">

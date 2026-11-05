@@ -1,4 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { LazyMotion, domAnimation } from 'motion/react';
+import usePhilosophyScroll from '../../animations/usePhilosophyScroll';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MandalaHeader from './MandalaHeader';
 import MandalaPanel1 from './MandalaPanel1';
@@ -10,6 +12,7 @@ import { resolveAssetUrl } from '../../utils/assetResolver';
 const MandalaHorizontalScroll = ({ data }) => {
   const containerRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
+  const [activeStop, setActiveStop] = useState(0);
   const isMouseDownRef = useRef(false);
   const startXRef = useRef(0);
   const scrollLeftRef = useRef(0);
@@ -22,6 +25,7 @@ const MandalaHorizontalScroll = ({ data }) => {
     flatData.p2_isVisible !== false ? 1 : 0,
     flatData.p3_isVisible !== false ? 1 : 0,
   ].reduce((a, b) => a + b, 0);
+  const { scrollToPanel, step } = usePhilosophyScroll(containerRef, totalPanels);
   
   const structuredData = {
     panoramicImage: flatData.panoramic_image,
@@ -54,45 +58,19 @@ const MandalaHorizontalScroll = ({ data }) => {
     }
   };
 
-  const scrollToPanel = (index) => {
-    const el = containerRef.current;
-    if (!el || !el.children[index]) return;
-    const targetChild = el.children[index];
-    el.scrollTo({
-      left: targetChild.offsetLeft,
-      behavior: 'smooth'
-    });
-    setActivePanel(index);
-  };
-
   const handleScroll = () => {
     const el = containerRef.current;
     if (!el) return;
     const index = Math.round(el.scrollLeft / el.clientWidth);
+    setActiveStop(Math.round(el.scrollLeft / el.clientWidth * 2));
     if (index >= 0 && index < totalPanels && index !== activePanel) {
       setActivePanel(index);
     }
   };
 
-  // Convert vertical mouse wheel scrolling into horizontal scrolling
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const handleWheel = (e) => {
-      // Disable auto horizontal scroll when editing visually in Admin Panel
-      if (document.body.classList.contains('puck-mode')) return;
-      
-      if (e.deltaY !== 0) {
-        e.preventDefault();
-        el.scrollLeft += e.deltaY * 1.5;
-      }
-    };
-    el.addEventListener('wheel', handleWheel, { passive: false });
-    return () => el.removeEventListener('wheel', handleWheel);
-  }, []);
-
   // Mouse Drag to Scroll
   const handleMouseDown = (e) => {
+    if (e.button !== 0 || e.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
     if (document.body.classList.contains('puck-mode')) return;
     const el = containerRef.current;
     if (!el) return;
@@ -115,11 +93,12 @@ const MandalaHorizontalScroll = ({ data }) => {
     const el = containerRef.current;
     if (!el) return;
     const x = e.pageX - el.offsetLeft;
-    const walk = (x - startXRef.current) * 1.8;
+    const walk = x - startXRef.current;
     el.scrollLeft = scrollLeftRef.current - walk;
   };
 
   return (
+    <LazyMotion features={domAnimation} strict>
     <div className="relative w-full h-screen overflow-hidden select-none bg-white text-zinc-900 font-kanit">
       
       {/* Top Header Navbar */}
@@ -133,13 +112,24 @@ const MandalaHorizontalScroll = ({ data }) => {
         onMouseLeave={handleMouseLeave}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
+        onDragStart={(event) => event.preventDefault()}
+        tabIndex={0}
+        role="region"
+        aria-label="Our philosophy. Use left and right arrow keys to explore."
+        onKeyDown={(event) => {
+          if (event.target !== event.currentTarget) return;
+          if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+            event.preventDefault();
+            step(event.key === 'ArrowRight' ? 1 : -1);
+          }
+        }}
         className="w-full h-full flex flex-row overflow-x-auto overflow-y-hidden scrollbar-none relative cursor-grab active:cursor-grabbing"
-        style={{ scrollBehavior: 'smooth' }}
+        style={{ scrollBehavior: 'auto' }}
       >
 
-        {flatData.p1_isVisible !== false && <MandalaPanel1 data={structuredData.panel1} />}
-        {flatData.p2_isVisible !== false && <MandalaPanel2 data={structuredData.panel2} />}
-        {flatData.p3_isVisible !== false && <MandalaPanel3 data={structuredData.panel3} />}
+        {flatData.p1_isVisible !== false && <MandalaPanel1 data={structuredData.panel1} scrollRoot={containerRef} />}
+        {flatData.p2_isVisible !== false && <MandalaPanel2 data={structuredData.panel2} scrollRoot={containerRef} />}
+        {flatData.p3_isVisible !== false && <MandalaPanel3 data={structuredData.panel3} scrollRoot={containerRef} />}
         {flatData.p1_isVisible !== false && (
           <div className="absolute bottom-0 left-[100vw] -translate-x-[45%] z-20 pointer-events-none w-[220px] sm:w-[320px] md:w-[420px] lg:w-[500px] xl:w-[560px] max-h-[80vh]">
             <img
@@ -152,9 +142,9 @@ const MandalaHorizontalScroll = ({ data }) => {
       </div>
 
       {/* Left Scroll Navigation Arrow */}
-      {activePanel > 0 && (
+      {activeStop > 0 && (
         <button
-          onClick={() => scrollToPanel(activePanel - 1)}
+          onClick={() => step(-1)}
           className="absolute left-6 top-1/2 -translate-y-1/2 z-40 bg-zinc-900/70 hover:bg-zinc-800 text-white p-3 rounded-full backdrop-blur-md border border-white/20 transition-all shadow-xl cursor-pointer"
           aria-label="Previous Panel"
         >
@@ -163,9 +153,9 @@ const MandalaHorizontalScroll = ({ data }) => {
       )}
 
       {/* Right Scroll Navigation Arrow */}
-      {activePanel < totalPanels - 1 && (
+      {activeStop < (totalPanels - 1) * 2 && (
         <button
-          onClick={() => scrollToPanel(activePanel + 1)}
+          onClick={() => step(1)}
           className="absolute right-6 top-1/2 -translate-y-1/2 z-40 bg-zinc-900/70 hover:bg-zinc-800 text-white p-3 rounded-full backdrop-blur-md border border-white/20 transition-all shadow-xl cursor-pointer"
           aria-label="Next Panel"
         >
@@ -195,6 +185,7 @@ const MandalaHorizontalScroll = ({ data }) => {
       </div>
 
     </div>
+    </LazyMotion>
   );
 };
 

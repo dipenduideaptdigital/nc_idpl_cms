@@ -5,11 +5,11 @@ import gallery3 from '../../assets/nc_home/gallery3.png';
 import aqua1 from '../../assets/nc_home/aqua1.png';
 import aqua2 from '../../assets/nc_home/aqua2.png';
 import team1 from '../../assets/nc_home/team1.png';
-import bush3 from '../../assets/nc_logo/bush3.png';
+import PrakritiTestimonialCarousel from './PrakritiTestimonialCarousel';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
-  if (path.startsWith('http') || path.startsWith('data:')) return path;
+  if (/^(https?:|data:|blob:|\/assets\/|\/src\/|\/@fs\/)/.test(path)) return path;
   const baseUrl = import.meta.env.VITE_API_URL 
     ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
     : 'http://localhost:5000';
@@ -52,14 +52,12 @@ const defaultTestimonials = [
 ];
 
 const PrakritiLabExperienceSection = ({ data }) => {
-  const [activeSlide, setActiveSlide] = useState(0);
   const [carouselOffset, setCarouselOffset] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
 
   const title = data?.title || "PRAKRITI LAB EXPERIENCE";
   const carouselImages = (data?.galleryImages && data.galleryImages.length > 0) ? data.galleryImages : defaultGalleryImages;
   const testimonials = (data?.testimonials && data.testimonials.length > 0) ? data.testimonials : defaultTestimonials;
-  const currentTestimonial = testimonials[activeSlide] || testimonials[0];
 
   const totalImages = carouselImages.length;
   // Extended array with cloned first image at the end for endless forward circular sliding
@@ -207,71 +205,7 @@ const PrakritiLabExperienceSection = ({ data }) => {
         </div>
 
 
-        {/* Bottom Spotlight Experience Card */}
-        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          <div className="lg:col-span-6 flex justify-center lg:justify-start">
-            <div className="bg-white p-4 sm:p-5 rounded-xs shadow-2xl border border-zinc-200/80 w-full max-w-[420px]">
-              <div className="w-full aspect-[4/3] sm:aspect-square overflow-hidden rounded-xs bg-zinc-100 mb-3">
-                <img
-                  src={currentTestimonial?.image ? getAssetUrl(currentTestimonial.image) : ''}
-                  alt={currentTestimonial?.name}
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-              <span className="font-caveat text-xl sm:text-2xl text-zinc-800 font-medium tracking-wide block px-1">
-                {currentTestimonial?.batch}
-              </span>
-            </div>
-          </div>
-
-          {/* Right Column: Name, Description & Numeric Page Controls */}
-          <div className="lg:col-span-6 relative flex flex-col justify-between space-y-6 pt-4 lg:pt-0">
-            {/* Top-Left Paint Splash Accent (bush3) */}
-            <div className="absolute -top-16 -left-12 sm:-top-20 sm:-left-16 w-[320px] sm:w-[400px] aspect-square pointer-events-none z-0">
-              <img
-                src={bush3}
-                alt=""
-                className="w-full h-full object-contain object-left-top opacity-50 filter brightness-105"
-              />
-            </div>
-            
-            <div className="relative z-10 space-y-6">
-              <div className="space-y-1">
-                <h3 className="font-kanit font-bold text-3xl sm:text-4xl text-[#1E293B] leading-tight whitespace-pre-line">
-                  {currentTestimonial?.name}
-                </h3>
-                <span className="font-kanit text-xs font-semibold tracking-widest text-[#555555] uppercase block pt-1">
-                  {currentTestimonial?.location}
-                </span>
-              </div>
-              
-              <div 
-                className="font-sans text-sm sm:text-base text-zinc-500 font-normal leading-relaxed max-w-md tiptap-content"
-                dangerouslySetInnerHTML={{ __html: currentTestimonial?.text || '' }}
-              />
-            </div>
-
-            {/* Bottom-Right Number Indicators */}
-            <div className="flex flex-col items-end gap-1 font-serif text-sm font-semibold tracking-widest pt-6 self-end">
-              {testimonials.map((_, idx) => {
-                const numStr = String(idx + 1).padStart(2, '0');
-                const isActive = idx === activeSlide;
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveSlide(idx)}
-                    className={`transition-all duration-300 italic cursor-pointer ${isActive
-                        ? 'text-[#7BA641] font-bold text-base scale-110'
-                        : 'text-zinc-400 hover:text-zinc-600 text-sm'
-                      }`}
-                  >
-                    {numStr}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+        <PrakritiTestimonialCarousel testimonials={testimonials} getAssetUrl={getAssetUrl} />
       </div>
     </section>
   );

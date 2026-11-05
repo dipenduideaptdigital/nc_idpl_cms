@@ -75,6 +75,16 @@ const MandalasCustomization = ({ data, onChange }) => {
               placeholder="e.g. Explore Now"
             />
           </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5 transition-colors duration-300">Bottom Left Quote</label>
+            <textarea
+              rows={3}
+              className="w-full px-4 py-3 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-zinc-100/10 focus:border-zinc-900 dark:focus:border-zinc-100 transition-colors text-sm bg-zinc-50/50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 resize-y"
+              value={data.bottomQuote || ''}
+              onChange={e => onChange('bottomQuote', e.target.value)}
+              placeholder="Write each line on a new row"
+            />
+          </div>
           
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5 transition-colors duration-300">Desc Line 1</label>

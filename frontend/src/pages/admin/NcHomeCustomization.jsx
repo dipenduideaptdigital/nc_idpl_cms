@@ -74,6 +74,7 @@ const NcHomeCustomization = () => {
     descLine1: "LIQUID LANDSCAPES MIRRORED IN MINDFUL ART,",
     descLine2: "A LIVING MANDALA'S HEART.",
     buttonText: 'explore the mandala',
+    bottomQuote: 'This eternal circle of life\nis playing constantly in\nand around us.',
     mandalaImage: ''
   });
 
