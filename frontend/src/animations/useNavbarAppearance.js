@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export default function useNavbarAppearance(headerRef, fallbackDark, routeKey) {
-  const [appearance, setAppearance] = useState({ floating: false, dark: fallbackDark });
+  const [appearance, setAppearance] = useState({ scrolled: false, dark: fallbackDark });
 
   useEffect(() => {
     const row = headerRef.current?.querySelector('[data-navbar-content]');
@@ -28,11 +28,12 @@ export default function useNavbarAppearance(headerRef, fallbackDark, routeKey) {
     let frame = 0;
     const update = () => {
       frame = 0;
-      const floating = window.scrollY > 100;
+      const scrolled = window.scrollY > 8;
       let dark = fallbackDark;
 
-      // A solid white bar needs no background sampling while the page scrolls.
-      if (!floating && headerRef.current) {
+      // The fixed navbar remains transparent, so sample the section beneath it
+      // to preserve readable white-on-dark and black-on-light navigation text.
+      if (headerRef.current) {
         const bounds = headerRef.current.getBoundingClientRect();
         const y = Math.max(0, Math.min(window.innerHeight - 1, bounds.top + 40));
         const layers = document.elementsFromPoint(window.innerWidth / 2, y);
@@ -55,14 +56,15 @@ export default function useNavbarAppearance(headerRef, fallbackDark, routeKey) {
         }
       }
 
-      setAppearance((previous) => previous.floating === floating && previous.dark === dark
-        ? previous : { floating, dark });
+      setAppearance((previous) => previous.scrolled === scrolled && previous.dark === dark
+        ? previous
+        : { scrolled, dark });
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     update();
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
-    const observer = new ResizeObserver(() => { if (window.scrollY <= 100) schedule(); });
+    const observer = new ResizeObserver(schedule);
     observer.observe(document.body);
     return () => {
       cancelAnimationFrame(frame);

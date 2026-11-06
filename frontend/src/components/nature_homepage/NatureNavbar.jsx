@@ -1,29 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X } from 'lucide-react';
-import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
-import leaveIcon from '../../assets/nc_logo/leave.png';
+import navbarLogo from '../../assets/nc_logo/NCWhite.png';
+// Previous navbar logo retained for an easy rollback:
+// import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
 import OfferingsMegaMenu from '../layout/OfferingsMegaMenu';
 import apiClient from '../../api/client';
-import { LazyMotion, domAnimation, useReducedMotion } from 'motion/react';
-import * as m from 'motion/react-m';
 import useNavbarAppearance from '../../animations/useNavbarAppearance';
-
-// Animate only the surface behind the original navbar; its contents never move.
-function NavbarBackdrop({ visible }) {
-  const reduceMotion = useReducedMotion();
-  return (
-    <LazyMotion features={domAnimation} strict>
-      <m.div
-        aria-hidden="true"
-        className="absolute -inset-x-3 md:-inset-x-6 -inset-y-3 -z-10 rounded-[24px] bg-white shadow-[0_8px_32px_rgba(15,35,41,0.12)] ring-1 ring-black/5 pointer-events-none"
-        initial={false}
-        animate={{ opacity: visible ? 1 : 0, scaleY: visible ? 1 : 0.92 }}
-        transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-      />
-    </LazyMotion>
-  );
-}
 
 const NatureNavbar = ({ forceDark = false }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -103,8 +86,8 @@ const NatureNavbar = ({ forceDark = false }) => {
   const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas','/services'];
   const isLightPage = !forceDark && (lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p)));
 
-  const { floating, dark } = useNavbarAppearance(headerRef, !isLightPage, location.key);
-  const lightText = !floating && dark;
+  const { scrolled, dark } = useNavbarAppearance(headerRef, !isLightPage, location.key);
+  const lightText = !scrolled && dark;
 
   // Final Menu Calculation (Use DB if exists, otherwise Fallback)
   const finalMenu = dbMenu || [
@@ -119,13 +102,11 @@ const NatureNavbar = ({ forceDark = false }) => {
   // LIGHT BACKGROUND NAVBAR 
   if (isLightPage) {
     return (
-      <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 bg-transparent pt-6 pb-4 px-6 md:px-12 font-kanit">
+      <header ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 pt-6 pb-4 px-6 md:px-12 font-kanit motion-safe:transition-colors motion-safe:duration-500 ${scrolled ? 'bg-white' : 'bg-transparent'}`}>
         <div data-navbar-content className="relative isolate max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between">
-          <NavbarBackdrop visible={floating} />
-
           {/* Logo */}
           <Link to="/" className="flex items-center group">
-            <img src={naturecubeLogo} alt="NatureCube" className="h-10 sm:h-12 w-auto object-contain" />
+            <img src={navbarLogo} alt="NatureCube" className="h-10 sm:h-12 w-auto object-contain brightness-0" />
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -246,27 +227,20 @@ const NatureNavbar = ({ forceDark = false }) => {
 
   // ================= DARK BACKGROUND NAVBAR =================
   return (
-    <header ref={headerRef} className={'fixed isolate top-0 left-0 right-0 z-50 pt-6 pb-4 px-6 md:px-12 motion-safe:transition-colors motion-safe:duration-300 ' + (lightText ? 'text-white' : 'text-black')}>
-      <div aria-hidden="true" className={'absolute inset-0 -z-10 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none motion-safe:transition-opacity motion-safe:duration-300 ' + (lightText ? 'opacity-100' : 'opacity-0')} />
+    <header ref={headerRef} className={'fixed isolate top-0 left-0 right-0 z-50 pt-6 pb-4 px-6 md:px-12 motion-safe:transition-colors motion-safe:duration-500 ' + (scrolled ? 'bg-white text-black' : lightText ? 'bg-transparent text-white' : 'bg-transparent text-black')}>
+      <div aria-hidden="true" className={'absolute inset-0 -z-10 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none motion-safe:transition-opacity motion-safe:duration-500 ' + (lightText ? 'opacity-100' : 'opacity-0')} />
       <div data-navbar-content className="relative isolate max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between">
-          <NavbarBackdrop visible={floating} />
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="flex flex-col">
-            <div className="flex items-center tracking-[0.12em] text-inherit uppercase font-kanit">
-              <span className="text-2xl md:text-3xl font-light">NATURE</span>
-              <span className="text-2xl md:text-3xl font-normal ml-0.5">C</span>
-              <img src={leaveIcon} alt="NatureCube Leaf" className="w-5 h-5 md:w-6 md:h-6 object-contain inline-block mx-0.5 filter brightness-110 contrast-125" />
-              <span className="text-2xl md:text-3xl font-normal">BE</span>
-            </div>
-            <span className={'font-kanit text-[8px] md:text-[9.5px] tracking-[0.26em] font-light uppercase mt-0.5 text-center motion-safe:transition-colors motion-safe:duration-300 ' + (lightText ? 'text-zinc-300' : 'text-zinc-600')}>
-              LIVING ART UNDER WATER
-            </span>
-          </div>
+        <Link to="/" className="flex items-center group">
+          <img
+            src={navbarLogo}
+            alt="NatureCube"
+            className={'h-10 sm:h-12 w-auto object-contain motion-safe:transition-[filter] motion-safe:duration-500 ' + (lightText ? '' : 'brightness-0')}
+          />
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-8 xl:space-x-10 font-kanit">
+        <nav className={`hidden lg:flex items-center space-x-8 xl:space-x-10 font-kanit ${scrolled ? '[&_a]:!transition-none [&_button]:!transition-none' : ''}`}>
           {finalMenu.map((link) => {
             // A. Fallback Mega Menu
             if (link.isMega) {
