@@ -14,7 +14,7 @@ export default function ServiceCard({ service, index }) {
       </div>
 
       <div className="relative z-10 px-6 pb-8 sm:px-8 lg:py-8 lg:px-0 lg:absolute lg:inset-y-0 lg:right-[8%] lg:w-[32%] flex flex-col justify-center text-white">
-        <div className="font-outfit text-4xl sm:text-5xl lg:text-[clamp(36px,3vw,48px)] leading-none font-normal text-right mb-6 lg:mb-8">
+        <div className="font-outfit text-4xl sm:text-5xl lg:text-[clamp(36px,3vw,48px)] leading-none font-normal text-right mb-10 lg:mb-12">
           {service.number || `0${index + 1}`}
         </div>
         <h3 className="font-outfit text-xl sm:text-2xl lg:text-[clamp(18px,1.9vw,32px)] lg:w-[125%] lg:-ml-[25%] lg:whitespace-nowrap font-semibold leading-tight text-right uppercase mb-5 lg:mb-6">
