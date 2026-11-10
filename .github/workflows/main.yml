@@ -18,13 +18,13 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd /var/www/myapp/IDPL_CMS_ENGINE
+            cd /var/www/myapp/nc_idpl_cms
             git pull origin main
 
             # --- Backend ---
             cd backend
             npm install
-            pm2 restart myapp-backend || pm2 start npm --name "myapp-backend" -- start
+            pm2 restart project-backend  || pm2 start npm --name "project-backend" -- start
             cd ..
 
             # --- Frontend ---
