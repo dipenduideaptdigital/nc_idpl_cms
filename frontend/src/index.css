@@ -162,6 +162,15 @@ html {
   scrollbar-color: #d4d4d8 transparent;
 }
 
+/* Hide the page scrollbar on the public website without disabling scrolling. */
+html.public-scrollbar-hidden {
+  scrollbar-width: none;
+}
+
+html.public-scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
 html.dark {
   scrollbar-color: #3f3f46 transparent;
 }

@@ -62,7 +62,7 @@ const LivingMandalasSection = ({ data }) => {
           </h2>
         </div>
 
-        <p className="hidden lg:block absolute left-6 xl:left-10 bottom-3 xl:bottom-5 max-w-[300px] whitespace-pre-line font-kanit text-[20px] font-medium tracking-[0.035em] leading-[1.4] text-[#06232B]">
+        <p className="order-4 lg:order-none lg:absolute lg:left-6 xl:left-10 lg:bottom-3 xl:bottom-5 z-20 max-w-[300px] whitespace-pre-line text-center lg:text-left font-kanit text-[18px] lg:text-[20px] font-medium tracking-[0.035em] leading-[1.4] text-[#06232B]">
           {bottomQuote}
         </p>
 

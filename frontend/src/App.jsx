@@ -26,6 +26,7 @@ const BlogDetail = lazy(() => import('./pages/BlogDetail'));
 const Projects = lazy(() => import('./pages/Projects'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
 const ServicePage = lazy(() => import('./pages/ServicePage'));
+const PrakritiActivityPage = lazy(() => import('./pages/PrakritiActivityPage'));
 
 // Admin Pages
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -159,6 +160,7 @@ function App() {
 
             {/* Public Routes INSIDE MainLayout */}
             <Route element={<MainLayout />}>
+              <Route path="/prakriti-lab/activities/:activitySlug" element={<PrakritiActivityPage />} />
               <Route path="/preview/:token" element={<PreviewPage />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/blog" element={<Blog />} />

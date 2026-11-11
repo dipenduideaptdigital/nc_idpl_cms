@@ -86,6 +86,7 @@ export const ncMandalasSchema = z.object({
     descLine1: z.string().max(200).optional(),
     descLine2: z.string().max(200).optional(),
     buttonText: z.string().max(100).optional(),
+    bottomQuote: z.string().max(1000).optional(),
     mandalaImage: z.string().optional(),
   })
 });
