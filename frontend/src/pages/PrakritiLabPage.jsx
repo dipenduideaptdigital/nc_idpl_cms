@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import PrakritiHero from '../components/prakriti/PrakritiHero';
 import PrakritiEducationSection from '../components/prakriti/PrakritiEducationSection';
-import PrakritiUpcomingWorkshopsSection from '../components/prakriti/PrakritiUpcomingWorkshopsSection';
+// import PrakritiUpcomingWorkshopsSection from '../components/prakriti/PrakritiUpcomingWorkshopsSection';
+import PrakritiUpcomingEventsSection from '../components/prakriti/PrakritiUpcomingEventsSection';
 import PrakritiLabExperienceSection from '../components/prakriti/PrakritiLabExperienceSection';
 import PrakritiGetInTouchSection from '../components/prakriti/PrakritiGetInTouchSection';
 import PrakritiLetsBeginSection from '../components/prakriti/PrakritiLetsBeginSection';
@@ -18,7 +19,8 @@ const PrakritiLabPage = () => {
 
       <PrakritiEducationSection />
 
-      <PrakritiUpcomingWorkshopsSection />
+      {/* <PrakritiUpcomingWorkshopsSection /> */}
+      <PrakritiUpcomingEventsSection />
 
       <PrakritiLabExperienceSection />
 

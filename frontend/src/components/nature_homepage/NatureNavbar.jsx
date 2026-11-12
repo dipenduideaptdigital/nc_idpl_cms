@@ -25,7 +25,11 @@ const NatureNavbar = ({ forceDark = false }) => {
 
   const [dynamicPaths, setDynamicPaths] = useState({
     about: '/about',
-    mandala: '/mandala'
+    mandala: '/mandala',
+    ripple: '/ripples',
+    gulmo: '/gulmo',
+    prakriti: '/prakriti-lab',
+    workshop: '/workshop'
   });
 
   // Fetch Dynamic Slugs for Fallback
@@ -34,11 +38,15 @@ const NatureNavbar = ({ forceDark = false }) => {
       try {
         const res = await apiClient.get('/pages/public'); 
         const pages = res.data?.data || res.data || [];
-        const newPaths = { about: '/about', mandala: '/mandala' };
+        const newPaths = { about: '/about', mandala: '/mandala', ripple: '/ripples', gulmo: '/gulmo', prakriti: '/prakriti-lab', workshop: '/workshop' };
 
         pages.forEach(page => {
           if (page.template === 'about-page') newPaths.about = `/${page.slug}`;
           if (page.template === 'mandala-page') newPaths.mandala = `/${page.slug}`;
+          if (page.template === 'ripple-page') newPaths.ripple = `/${page.slug}`;
+          if (page.template === 'gulmo-page') newPaths.gulmo = `/${page.slug}`;
+          if (page.template === 'prakriti-page') newPaths.prakriti = `/${page.slug}`;
+          if (page.template === 'workshop-page') newPaths.workshop = `/${page.slug}`;
         });
 
         setDynamicPaths(newPaths);
@@ -55,7 +63,7 @@ const NatureNavbar = ({ forceDark = false }) => {
       try {
         const res = await apiClient.get('/cms/section/global_header_menu');
         const menuItems = res.data?.data?.content?.menuItems;
-        if (menuItems && menuItems.length > 0) {
+        if (Array.isArray(menuItems) && menuItems.length > 0) {
           setDbMenu(menuItems);
         }
       } catch (error) {
@@ -90,14 +98,30 @@ const NatureNavbar = ({ forceDark = false }) => {
   const lightText = !scrolled && dark;
 
   // Final Menu Calculation (Use DB if exists, otherwise Fallback)
-  const finalMenu = dbMenu || [
+  const finalMenu = (dbMenu || [
     { id: 'f1', label: 'PHILOSOPHY', url: dynamicPaths.mandala },
     { id: 'f2', label: 'OFFERINGS', url: '#offerings', isMega: true },
     { id: 'f3', label: 'PROJECTS', url: '/projects' },
     { id: 'f4', label: 'WHO WE ARE', url: dynamicPaths.about },
     { id: 'f5', label: 'KNOWLEDGE', url: '/blog' },
     { id: 'f6', label: 'CONTACT US', url: '/contact' },
-  ];
+  ]).map((link) => {
+    // The CMS menu schema does not store isMega. Restore the built-in
+    // Offerings menu when a saved item has no custom submenu.
+    if ((link.isMega || link.label?.trim().toLowerCase() === 'offerings') && !link.children?.length) {
+      return {
+        ...link,
+        isMega: true,
+        children: [
+          { id: 'offer-ripple', label: 'Ripple', url: dynamicPaths.ripple },
+          { id: 'offer-gulmo', label: 'Gulmo', url: dynamicPaths.gulmo },
+          { id: 'offer-prakriti', label: 'Prakriti Lab', url: dynamicPaths.prakriti },
+          { id: 'offer-workshop', label: 'Workshop', url: dynamicPaths.workshop },
+        ],
+      };
+    }
+    return link;
+  });
 
   // LIGHT BACKGROUND NAVBAR 
   if (isLightPage) {
@@ -130,7 +154,7 @@ const NatureNavbar = ({ forceDark = false }) => {
               if (link.children && link.children.length > 0) {
                 return (
                   <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('dynamic', link.id)} onMouseLeave={handleMouseLeave}>
-                    <button className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
+                    <button onClick={() => setOpenDropdownId(openDropdownId === link.id ? null : link.id)} aria-expanded={openDropdownId === link.id} className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
                       <span>{link.label}</span>
                       <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdownId === link.id ? 'rotate-180 text-[#7BA641]' : ''}`} />
                       <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
@@ -260,7 +284,7 @@ const NatureNavbar = ({ forceDark = false }) => {
             if (link.children && link.children.length > 0) {
               return (
                 <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('dynamic', link.id)} onMouseLeave={handleMouseLeave}>
-                  <button className="font-kanit text-sm font-medium tracking-wide text-inherit hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
+                    <button onClick={() => setOpenDropdownId(openDropdownId === link.id ? null : link.id)} aria-expanded={openDropdownId === link.id} className="font-kanit text-sm font-medium tracking-wide text-inherit hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
                     <span>{link.label}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdownId === link.id ? 'rotate-180 text-[#7BA641]' : ''}`} />
                     <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />

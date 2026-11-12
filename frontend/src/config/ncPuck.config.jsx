@@ -25,7 +25,8 @@ import GulmoConceptSection from '../components/gulmo/GulmoConceptSection';
 import PrakritiHero from '../components/prakriti/PrakritiHero';
 import PrakritiIntroSection from '../components/prakriti/PrakritiIntroSection';
 import PrakritiEducationSection from '../components/prakriti/PrakritiEducationSection';
-import PrakritiUpcomingWorkshopsSection from '../components/prakriti/PrakritiUpcomingWorkshopsSection';
+// import PrakritiUpcomingWorkshopsSection from '../components/prakriti/PrakritiUpcomingWorkshopsSection';
+import PrakritiUpcomingEventsSection from '../components/prakriti/PrakritiUpcomingEventsSection';
 import PrakritiLabExperienceSection from '../components/prakriti/PrakritiLabExperienceSection';
 import PrakritiLabShowcaseSection from '../components/prakriti/PrakritiLabShowcaseSection';
 import PrakritiGetInTouchSection from '../components/prakriti/PrakritiGetInTouchSection';
@@ -723,7 +724,8 @@ export const ncPuckConfig = {
         buttonText: "Reserve Your Seat",
         workshops: []
       },
-      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Workshops</div> : <PrakritiUpcomingWorkshopsSection data={props} {...props} />
+      // Previous render: <PrakritiUpcomingWorkshopsSection data={props} {...props} />
+      render: (props) => props.isVisible === false ? <div className="p-6 bg-red-50 text-red-500 text-center font-bold border-2 border-red-200 border-dashed rounded-xl">Hidden: Prakriti Workshops</div> : <PrakritiUpcomingEventsSection data={props} />
     },
 
     prakritiLabExperience: {

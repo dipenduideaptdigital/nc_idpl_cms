@@ -12,6 +12,7 @@ export default function SmoothScroll() {
     if (!isPublicScrollRoute(pathname)) return;
 
     const root = document.documentElement;
+    root.classList.add('public-scrollbar-hidden');
     // Lenis supplies the easing; disable the existing CSS smooth-scroll while it is mounted.
     const hadScrollAuto = root.classList.contains('scroll-auto!');
     root.classList.add('scroll-auto!');
@@ -43,6 +44,7 @@ export default function SmoothScroll() {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('pointerdown', cancelMomentum);
       lenis.destroy();
+      root.classList.remove('public-scrollbar-hidden');
       if (!hadScrollAuto) root.classList.remove('scroll-auto!');
     };
   }, [pathname, key]);

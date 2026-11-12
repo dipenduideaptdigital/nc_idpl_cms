@@ -61,6 +61,12 @@ describe("CMS Validation Schemas", () => {
   });
 
   describe("Important defaults and strictness", () => {
+    it("preserves the homepage Mandala quote when saving CMS content", () => {
+      const bottomQuote = "This eternal circle of life\nis playing constantly in\nand around us.";
+      const parsed = ncMandalasSchema.parse({ content: { bottomQuote } });
+      expect(parsed.content.bottomQuote).toBe(bottomQuote);
+    });
+
     it("CV-04: generalSettingsSchema specific rules", () => {
       const parsed = generalSettingsSchema.parse({ content: {} });
       expect(parsed.content.landingPage).toBe("default");
