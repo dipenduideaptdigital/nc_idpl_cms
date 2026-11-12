@@ -17,18 +17,24 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
+          script_stop: true
           script: |
+            set -e
+            export GIT_TERMINAL_PROMPT=0
+
             cd /var/www/myapp/nc_idpl_cms
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
+            echo "Deployed commit:"
+            git log -1 --oneline
 
             # --- Backend ---
             cd backend
             npm install
-            pm2 restart project-backend  || pm2 start npm --name "project-backend" -- start
+            pm2 restart project-backend || pm2 start npm --name "project-backend" -- start
             cd ..
 
             # --- Frontend ---
             cd frontend
             npm install
             npm run build
-            cd ..
