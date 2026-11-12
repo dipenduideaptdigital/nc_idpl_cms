@@ -367,7 +367,6 @@ const { hasPermission } = usePermission();
                 );
               }
 
-              // Standard NavLink
               return (
                 <NavLink
                   key={item.name}
