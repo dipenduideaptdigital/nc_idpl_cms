@@ -1,0 +1,109 @@
+/* Previous numbered navigation styling, retained for reference:
+.panel-navigation {
+  position: fixed;
+  z-index: 40;
+  max-width: calc(100vw - 112px);
+  padding: 6px;
+  border: 1px solid rgb(34 66 41 / 12%);
+  border-radius: 12px;
+  background: rgb(242 247 241 / 97%);
+  color: #224229;
+  box-shadow: 0 4px 20px rgb(6 35 43 / 12%);
+  backdrop-filter: blur(12px);
+  font-family: 'Outfit', sans-serif;
+}
+
+.panel-navigation__rail {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.panel-navigation__rail::-webkit-scrollbar { display: none; }
+
+.panel-navigation__button {
+  position: relative;
+  flex: 0 0 32px;
+  height: 36px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #516456;
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .03em;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease;
+}
+.panel-navigation__button:hover { background: #e1ebdd; color: #224229; }
+.panel-navigation__button[aria-current='step'] { background: #224229; color: #fff; }
+.panel-navigation__button[aria-current='step']::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  bottom: 4px;
+  left: calc(50% - 5px);
+  border-radius: 2px;
+  background: #6ca844;
+}
+.panel-navigation__button:focus-visible { outline: 2px solid #6ca844; outline-offset: 1px; }
+@media (pointer: coarse) {
+  .panel-navigation__button { flex-basis: 40px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel-navigation__button { transition: none; }
+}
+
+*/
+
+.panel-navigation {
+  position: fixed;
+  z-index: 40;
+  max-width: calc(100vw - 112px);
+  padding: 4px 6px;
+  border: 1px solid rgb(34 66 41 / 12%);
+  border-radius: 999px;
+  background: rgb(242 247 241 / 94%);
+  box-shadow: 0 2px 10px rgb(6 35 43 / 10%);
+  backdrop-filter: blur(8px);
+}
+.panel-navigation__rail {
+  position: relative;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.panel-navigation__rail::-webkit-scrollbar { display: none; }
+.panel-navigation__button {
+  flex: 0 0 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.panel-navigation__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a7b7a2;
+  transition: background-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.panel-navigation__button:hover .panel-navigation__dot { background: #224229; }
+.panel-navigation__button[aria-current='step'] .panel-navigation__dot {
+  background: #6ca844;
+  transform: scale(1.35);
+  box-shadow: 0 0 0 3px rgb(108 168 68 / 16%);
+}
+.panel-navigation__button:focus-visible { outline: 2px solid #224229; outline-offset: -2px; }
+@media (prefers-reduced-motion: reduce) {
+  .panel-navigation__dot { transition: none; }
+}

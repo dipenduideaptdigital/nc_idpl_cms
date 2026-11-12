@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import MandalaHeader from '../nc_mandala/MandalaHeader';
+import NatureNavbar from '../nature_homepage/NatureNavbar';
+import PanelNavigation from '../shared/PanelNavigation';
 import AboutHeroPanel from './AboutHeroPanel';
 import AboutJourneyPanel from './AboutJourneyPanel';
 import AboutAwardsPanel from './AboutAwardsPanel';
@@ -174,7 +175,7 @@ const AboutHorizontalScroll = ({ data }) => {
     <div className="relative w-full h-screen overflow-hidden select-none bg-black text-white font-kanit">
 
       {/* Persistent Navigation Bar across all panels */}
-      <MandalaHeader data={{ logo: flatData.logo }} />
+      <NatureNavbar solidBackground />
 
       {/* Horizontal Scroll Track */}
       <div
@@ -249,7 +250,8 @@ const AboutHorizontalScroll = ({ data }) => {
         </button>
       )}
 
-      {/* Bottom Right Panel Indicator Dots */}
+      {/*
+      Previous numbered navigation retained for reference.
       <div className="fixed bottom-6 right-24 sm:right-28 z-[60] flex items-center space-x-2 bg-zinc-900/80 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/20 shadow-2xl">
         {Array.from({ length: totalPanels }).map((_, idx) => (
           <button
@@ -268,6 +270,13 @@ const AboutHorizontalScroll = ({ data }) => {
           </button>
         ))}
       </div>
+      */}
+      <PanelNavigation
+        count={totalPanels}
+        activeIndex={activePanel}
+        onSelect={scrollToPanel}
+        className="bottom-6 right-24 sm:right-28"
+      />
     </div>
   );
 };

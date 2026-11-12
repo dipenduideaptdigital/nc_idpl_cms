@@ -120,7 +120,9 @@ const PrakritiEducationSection = ({ data }) => {
           {cardsToRender.map((card, index) => {
             const imgSrc = card.image ? getAssetUrl(card.image) : '';
             return (
-              <Reveal key={card.id || index} direction="right" amount={0.2} duration={1.2} delay={index * 0.12} className="h-full" contentClassName="h-full">
+              // Previously wrapped in Reveal with direction="right", duration={1.2},
+              // and delay={index * 0.12}. Activity cards now render immediately.
+              <div key={card.id || index} className="h-full">
                 <Link to={`/prakriti-lab/activities/${(card.title || `activity-${index + 1}`).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`} state={{ activityTitle: card.title, activityImage: imgSrc }} onClick={rememberActivityReturn} aria-label={`Explore ${card.title || 'activity'}`} className="block h-full group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4b7133]">
                 <article className="h-full bg-[#e5eee8] p-2 flex flex-col">
                   {imgSrc && <img src={imgSrc} alt={card.alt || card.title || 'Education Card'} className="w-full aspect-square object-cover object-center" />}
@@ -135,7 +137,7 @@ const PrakritiEducationSection = ({ data }) => {
                   </div>
                 </article>
                 </Link>
-              </Reveal>
+              </div>
             );
           })}
         </div>

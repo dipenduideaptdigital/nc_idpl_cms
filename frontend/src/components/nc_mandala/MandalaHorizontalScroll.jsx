@@ -2,7 +2,8 @@ import React, { useRef, useState } from 'react';
 import { LazyMotion, domAnimation } from 'motion/react';
 import usePhilosophyScroll from '../../animations/usePhilosophyScroll';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import MandalaHeader from './MandalaHeader';
+import NatureNavbar from '../nature_homepage/NatureNavbar';
+import PanelNavigation from '../shared/PanelNavigation';
 import MandalaPanel1 from './MandalaPanel1';
 import MandalaPanel2 from './MandalaPanel2';
 import MandalaPanel3 from './MandalaPanel3';
@@ -13,9 +14,10 @@ const MandalaHorizontalScroll = ({ data }) => {
   const containerRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
   const [activeStop, setActiveStop] = useState(0);
-  const isMouseDownRef = useRef(false);
-  const startXRef = useRef(0);
-  const scrollLeftRef = useRef(0);
+  // Previous mouse-drag state retained for reference:
+  // const isMouseDownRef = useRef(false);
+  // const startXRef = useRef(0);
+  // const scrollLeftRef = useRef(0);
 
   const flatData = data || {};
 
@@ -68,7 +70,7 @@ const MandalaHorizontalScroll = ({ data }) => {
     }
   };
 
-  // Mouse Drag to Scroll
+  /* Previous mouse-drag scrolling (disabled):
   const handleMouseDown = (e) => {
     if (e.button !== 0 || e.target.closest('a, button, input, textarea, select, [contenteditable="true"]')) return;
     if (document.body.classList.contains('puck-mode')) return;
@@ -97,21 +99,19 @@ const MandalaHorizontalScroll = ({ data }) => {
     el.scrollLeft = scrollLeftRef.current - walk;
   };
 
+  */
+
   return (
     <LazyMotion features={domAnimation} strict>
     <div className="relative w-full h-screen overflow-hidden select-none bg-white text-zinc-900 font-kanit">
       
       {/* Top Header Navbar */}
-      <MandalaHeader />
+      <NatureNavbar solidBackground />
 
       {/* Horizontal Scroll Track Container */}
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
         onDragStart={(event) => event.preventDefault()}
         tabIndex={0}
         role="region"
@@ -123,7 +123,7 @@ const MandalaHorizontalScroll = ({ data }) => {
             step(event.key === 'ArrowRight' ? 1 : -1);
           }
         }}
-        className="w-full h-full flex flex-row overflow-x-auto overflow-y-hidden scrollbar-none relative cursor-grab active:cursor-grabbing"
+        className="w-full h-full flex flex-row overflow-x-auto overflow-y-hidden scrollbar-none relative"
         style={{ scrollBehavior: 'auto' }}
       >
 
@@ -163,7 +163,8 @@ const MandalaHorizontalScroll = ({ data }) => {
         </button>
       )}
 
-      {/* Bottom Right Panel Indicator Dots */}
+      {/*
+      Previous numbered navigation retained for reference.
       <div className="fixed bottom-6 right-8 sm:right-12 z-[60] flex items-center space-x-2 bg-zinc-900/80 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/20 shadow-2xl">
         {Array.from({ length: totalPanels }).map((_, idx) => (
           <button
@@ -183,6 +184,13 @@ const MandalaHorizontalScroll = ({ data }) => {
           </button>
         ))}
       </div>
+      */}
+      <PanelNavigation
+        count={totalPanels}
+        activeIndex={activePanel}
+        onSelect={scrollToPanel}
+        className="bottom-6 right-24 sm:right-28"
+      />
 
     </div>
     </LazyMotion>
