@@ -8,7 +8,7 @@ import OfferingsMegaMenu from '../layout/OfferingsMegaMenu';
 import apiClient from '../../api/client';
 import useNavbarAppearance from '../../animations/useNavbarAppearance';
 
-const NatureNavbar = ({ forceDark = false }) => {
+const NatureNavbar = ({ forceDark = false, solidBackground = false }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // States for Mega Menu (Hardcoded fallback)
@@ -22,6 +22,46 @@ const NatureNavbar = ({ forceDark = false }) => {
   const location = useLocation();
   const timeoutRef = useRef(null);
   const headerRef = useRef(null);
+
+  const closeOfferings = () => {
+    clearTimeout(timeoutRef.current);
+    setIsOfferingsOpen(false);
+  };
+
+  const handleLogoClick = (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    closeOfferings();
+    setMobileMenuOpen(false);
+    setOpenMobileDropdownId(null);
+    setOpenDropdownId(null);
+  };
+
+  // Close the panel on navigation, and release any pending hover timer.
+  useEffect(() => {
+    clearTimeout(timeoutRef.current);
+    setIsOfferingsOpen(false);
+    setOpenDropdownId(null);
+    return () => clearTimeout(timeoutRef.current);
+  }, [location.key]);
+
+  useEffect(() => {
+    if (!isOfferingsOpen) return;
+    const dismiss = (event) => {
+      if (event.type === 'keydown' && event.key !== 'Escape') return;
+      if (event.type === 'pointerdown' && headerRef.current?.contains(event.target)) return;
+      clearTimeout(timeoutRef.current);
+      setIsOfferingsOpen(false);
+      if (event.type === 'keydown') {
+        headerRef.current?.querySelector('[aria-controls="offerings-mega-menu"]')?.focus();
+      }
+    };
+    document.addEventListener('keydown', dismiss);
+    document.addEventListener('pointerdown', dismiss);
+    return () => {
+      document.removeEventListener('keydown', dismiss);
+      document.removeEventListener('pointerdown', dismiss);
+    };
+  }, [isOfferingsOpen]);
 
   const [dynamicPaths, setDynamicPaths] = useState({
     about: '/about',
@@ -85,6 +125,7 @@ const NatureNavbar = ({ forceDark = false }) => {
   };
 
   const handleMouseLeave = () => {
+    clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setIsOfferingsOpen(false);
       setOpenDropdownId(null);
@@ -94,7 +135,9 @@ const NatureNavbar = ({ forceDark = false }) => {
   const lightPages = [dynamicPaths.about, dynamicPaths.mandala, '/living-mandalas','/services'];
   const isLightPage = !forceDark && (lightPages.includes(location.pathname) || lightPages.some(p => p !== '/' && location.pathname.startsWith(p)));
 
-  const { scrolled, dark } = useNavbarAppearance(headerRef, !isLightPage, location.key);
+  const { scrolled: hasScrolled, dark } = useNavbarAppearance(headerRef, !isLightPage, location.key);
+  // Horizontal pages do not scroll the window; keep navigation readable over every panel.
+  const scrolled = solidBackground || hasScrolled;
   const lightText = !scrolled && dark;
 
   // Final Menu Calculation (Use DB if exists, otherwise Fallback)
@@ -106,13 +149,13 @@ const NatureNavbar = ({ forceDark = false }) => {
     { id: 'f5', label: 'KNOWLEDGE', url: '/blog' },
     { id: 'f6', label: 'CONTACT US', url: '/contact' },
   ]).map((link) => {
-    // The CMS menu schema does not store isMega. Restore the built-in
-    // Offerings menu when a saved item has no custom submenu.
-    if ((link.isMega || link.label?.trim().toLowerCase() === 'offerings') && !link.children?.length) {
+    // Use the designed desktop panel for Offerings in both CMS and fallback menus.
+    // Retain saved children for the existing mobile accordion.
+    if (link.isMega || link.label?.trim().toLowerCase() === 'offerings') {
       return {
         ...link,
         isMega: true,
-        children: [
+        children: link.children?.length ? link.children : [
           { id: 'offer-ripple', label: 'Ripple', url: dynamicPaths.ripple },
           { id: 'offer-gulmo', label: 'Gulmo', url: dynamicPaths.gulmo },
           { id: 'offer-prakriti', label: 'Prakriti Lab', url: dynamicPaths.prakriti },
@@ -123,13 +166,22 @@ const NatureNavbar = ({ forceDark = false }) => {
     return link;
   });
 
+  const offeringsPanel = isOfferingsOpen && (
+    <OfferingsMegaMenu
+      links={dynamicPaths}
+      onClose={closeOfferings}
+      onMouseEnter={() => clearTimeout(timeoutRef.current)}
+      onMouseLeave={handleMouseLeave}
+    />
+  );
+
   // LIGHT BACKGROUND NAVBAR 
   if (isLightPage) {
     return (
-      <header ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 pt-6 pb-4 px-6 md:px-12 font-kanit motion-safe:transition-colors motion-safe:duration-500 ${scrolled ? 'bg-white' : 'bg-transparent'}`}>
+      <header ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 pt-6 pb-4 px-6 md:px-12 font-kanit motion-safe:transition-[background-color,color,box-shadow] motion-safe:duration-500 ${scrolled ? 'bg-white shadow-[0_4px_18px_rgba(6,35,43,0.12)]' : 'bg-transparent'}`}>
         <div data-navbar-content className="relative isolate max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center group">
+          <Link to="/" state={{ scrollToTop: true }} onClick={handleLogoClick} aria-label="NatureCube home" className="flex items-center group">
             <img src={navbarLogo} alt="NatureCube" className="h-10 sm:h-12 w-auto object-contain brightness-0" />
           </Link>
 
@@ -140,12 +192,12 @@ const NatureNavbar = ({ forceDark = false }) => {
               if (link.isMega) {
                 return (
                   <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('mega')} onMouseLeave={handleMouseLeave}>
-                    <button onClick={() => setIsOfferingsOpen(!isOfferingsOpen)} className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
+                    <button aria-expanded={isOfferingsOpen} aria-controls="offerings-mega-menu" onClick={() => { clearTimeout(timeoutRef.current); setIsOfferingsOpen(!isOfferingsOpen); }} className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
                       <span>{link.label}</span>
                       <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-[#7BA641]' : ''}`} />
                       <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#000000] transition-all duration-300 group-hover:w-full" />
                     </button>
-                    {isOfferingsOpen && <OfferingsMegaMenu onClose={() => setIsOfferingsOpen(false)} />}
+                    {/* The full-width panel is rendered at the header edge below. */}
                   </div>
                 );
               }
@@ -245,17 +297,18 @@ const NatureNavbar = ({ forceDark = false }) => {
             </div>
           </div>
         </div>
+        {offeringsPanel}
       </header>
     );
   }
 
   // ================= DARK BACKGROUND NAVBAR =================
   return (
-    <header ref={headerRef} className={'fixed isolate top-0 left-0 right-0 z-50 pt-6 pb-4 px-6 md:px-12 motion-safe:transition-colors motion-safe:duration-500 ' + (scrolled ? 'bg-white text-black' : lightText ? 'bg-transparent text-white' : 'bg-transparent text-black')}>
+    <header ref={headerRef} className={'fixed isolate top-0 left-0 right-0 z-50 pt-6 pb-4 px-6 md:px-12 motion-safe:transition-[background-color,color,box-shadow] motion-safe:duration-500 ' + (scrolled ? 'bg-white text-black shadow-[0_4px_18px_rgba(6,35,43,0.12)]' : lightText ? 'bg-transparent text-white' : 'bg-transparent text-black')}>
       <div aria-hidden="true" className={'absolute inset-0 -z-10 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none motion-safe:transition-opacity motion-safe:duration-500 ' + (lightText ? 'opacity-100' : 'opacity-0')} />
       <div data-navbar-content className="relative isolate max-w-7xl min-[1921px]:max-w-[70vw] mx-auto flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center group">
+        <Link to="/" state={{ scrollToTop: true }} onClick={handleLogoClick} aria-label="NatureCube home" className="flex items-center group">
           <img
             src={navbarLogo}
             alt="NatureCube"
@@ -270,12 +323,12 @@ const NatureNavbar = ({ forceDark = false }) => {
             if (link.isMega) {
               return (
                 <div key={link.id} className="relative group py-2" onMouseEnter={() => handleMouseEnter('mega')} onMouseLeave={handleMouseLeave}>
-                  <button onClick={() => setIsOfferingsOpen(!isOfferingsOpen)} className="font-kanit text-sm font-medium tracking-wide text-inherit hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
+                  <button aria-expanded={isOfferingsOpen} aria-controls="offerings-mega-menu" onClick={() => { clearTimeout(timeoutRef.current); setIsOfferingsOpen(!isOfferingsOpen); }} className="font-kanit text-sm font-medium tracking-wide text-inherit hover:text-[#7BA641] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer">
                     <span>{link.label}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOfferingsOpen ? 'rotate-180 text-[#7BA641]' : ''}`} />
                     <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#7BA641] transition-all duration-300 group-hover:w-full" />
                   </button>
-                  {isOfferingsOpen && <OfferingsMegaMenu onClose={() => setIsOfferingsOpen(false)} />}
+                  {/* The full-width panel is rendered at the header edge below. */}
                 </div>
               );
             }
@@ -374,6 +427,7 @@ const NatureNavbar = ({ forceDark = false }) => {
           </div>
         </div>
       </div>
+      {offeringsPanel}
     </header>
   );
 };

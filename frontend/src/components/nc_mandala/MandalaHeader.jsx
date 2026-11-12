@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
@@ -11,11 +11,19 @@ const MandalaHeader = ({ data }) => {
   const timeoutRef = useRef(null);
   const location = useLocation();
 
+  useEffect(() => {
+    clearTimeout(timeoutRef.current);
+    setIsOfferingsOpen(false);
+    return () => clearTimeout(timeoutRef.current);
+  }, [location.key]);
+
   const handleLinkClick = (e) => {
     if (document.body.classList.contains('puck-mode')) {
       e.preventDefault();
     } else {
       setMobileMenuOpen(false);
+      clearTimeout(timeoutRef.current);
+      setIsOfferingsOpen(false);
     }
   };
 
@@ -25,6 +33,7 @@ const MandalaHeader = ({ data }) => {
   };
 
   const handleMouseLeave = () => {
+    clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setIsOfferingsOpen(false);
     }, 150);
@@ -70,8 +79,11 @@ const MandalaHeader = ({ data }) => {
                   onMouseLeave={handleMouseLeave}
                 >
                   <button
+                    aria-expanded={isOfferingsOpen}
+                    aria-controls="offerings-mega-menu"
                     onClick={(e) => {
                       if (document.body.classList.contains('puck-mode')) e.preventDefault();
+                      clearTimeout(timeoutRef.current);
                       setIsOfferingsOpen(!isOfferingsOpen);
                     }}
                     className="font-kanit text-sm font-medium tracking-wide text-[#000000] hover:text-[#6CA844] transition-colors uppercase py-1 relative flex items-center gap-1 cursor-pointer"
@@ -81,9 +93,7 @@ const MandalaHeader = ({ data }) => {
                     <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#6CA844] transition-all duration-300 group-hover:w-full" />
                   </button>
 
-                  {isOfferingsOpen && (
-                    <OfferingsMegaMenu onClose={() => setIsOfferingsOpen(false)} />
-                  )}
+                  {/* Full-width mega menu is mounted at the header edge below. */}
                 </div>
               );
             }
@@ -183,6 +193,16 @@ const MandalaHeader = ({ data }) => {
             STORE
           </a>
         </div>
+      )}
+      {isOfferingsOpen && (
+        <OfferingsMegaMenu
+          onClose={() => {
+            clearTimeout(timeoutRef.current);
+            setIsOfferingsOpen(false);
+          }}
+          onMouseEnter={() => clearTimeout(timeoutRef.current)}
+          onMouseLeave={handleMouseLeave}
+        />
       )}
     </header>
   );

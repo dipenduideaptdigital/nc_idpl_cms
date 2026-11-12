@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigationType } from 'react-router-dom';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import { cancelScrollMomentum, createSmoothScrollOptions, isPublicScrollRoute } from './smoothScrollOptions';
 import attachSectionPaging from './attachSectionPaging';
 
 export default function SmoothScroll() {
-  const { pathname, key } = useLocation();
+  const { pathname, key, state } = useLocation();
+  const navigationType = useNavigationType();
+  const resetToTop = pathname === '/' && state?.scrollToTop === true && navigationType !== 'POP';
 
   useEffect(() => {
     if (!isPublicScrollRoute(pathname)) return;
@@ -18,6 +20,9 @@ export default function SmoothScroll() {
     root.classList.add('scroll-auto!');
     let lenis;
     lenis = new Lenis(createSmoothScrollOptions(() => lenis));
+    // Logo navigation resets the destination after it mounts, including same-page clicks.
+    // Use Lenis so stale smooth-scroll momentum cannot pull the page down again.
+    if (resetToTop) lenis.scrollTo(0, { immediate: true, force: true });
     const detachSectionPaging = attachSectionPaging(lenis);
 
     const cancelMomentum = () => cancelScrollMomentum(lenis);
@@ -47,7 +52,7 @@ export default function SmoothScroll() {
       root.classList.remove('public-scrollbar-hidden');
       if (!hadScrollAuto) root.classList.remove('scroll-auto!');
     };
-  }, [pathname, key]);
+  }, [pathname, key, resetToTop]);
 
   return null;
 }
