@@ -10,6 +10,7 @@ vi.mock("../../../src/shared/core/systemStateStore.js", () => ({
   systemStateStore: {
     get: vi.fn(),
     set: vi.fn(),
+    defaultState: { state: "ACTIVE" } // Added to prevent undefined error during DB sync
   },
 }));
 
@@ -28,6 +29,10 @@ vi.mock("../../../src/config/db.js", () => ({
     $transaction: vi.fn(async (cb) => {
       return await cb(txMock);
     }),
+    // Fix: Added setting mock for direct queries outside transaction
+    setting: {
+      findUnique: vi.fn(),
+    }
   },
 }));
 
@@ -47,7 +52,10 @@ describe("System State Service", () => {
   });
 
   describe("A. getSystemStateConfig()", () => {
-    it("SS-01: Returns exact configuration from systemStateStore", async () => {
+    it("SS-01: Returns exact configuration from systemStateStore when DB record is null", async () => {
+      // Fix: Mock DB to return null so it falls back to the in-memory store
+      prisma.setting.findUnique.mockResolvedValue(null);
+      
       const mockConfig = { state: "MAINTENANCE", version: 5 };
       systemStateStore.get.mockReturnValue(mockConfig);
 
@@ -55,10 +63,27 @@ describe("System State Service", () => {
       expect(result).toEqual(mockConfig);
     });
 
-    it("SS-02: Returns null if store is empty", async () => {
+    it("SS-02: Returns null if store is empty and DB is empty", async () => {
+      // Fix: Mock DB to return null
+      prisma.setting.findUnique.mockResolvedValue(null);
+      
       systemStateStore.get.mockReturnValue(null);
       const result = await systemStateService.getSystemStateConfig();
       expect(result).toBeNull();
+    });
+
+    it("SS-02b: Syncs store and returns config if DB record exists", async () => {
+      // New test to cover the updated DB sync logic in getSystemStateConfig
+      const dbRecord = { value: { state: "READ_ONLY", version: 2 } };
+      prisma.setting.findUnique.mockResolvedValue(dbRecord);
+      
+      const result = await systemStateService.getSystemStateConfig();
+      
+      expect(systemStateStore.set).toHaveBeenCalledWith({
+        state: "READ_ONLY",
+        version: 2
+      });
+      expect(result).toEqual({ state: "READ_ONLY", version: 2 });
     });
   });
 
