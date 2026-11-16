@@ -30,6 +30,9 @@ const PrakritiActivityPage = lazy(() => import('./pages/PrakritiActivityPage'));
 
 // Admin Pages
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
+const ActivityEditor = lazy(() => import('./pages/admin/activities/ActivityEditor'));
+const WorkshopList = lazy(() => import('./pages/admin/workshops/WorkshopList'));
+const WorkshopEditor = lazy(() => import('./pages/admin/workshops/WorkshopEditor'));
 const NcHomeCustomization = lazy(() => import('./pages/admin/NcHomeCustomization'));
 const AboutCustomization = lazy(() => import('./pages/admin/AboutCustomization'));
 const MandalaCustomization = lazy(() => import('./pages/admin/MandalaCustomization'));
@@ -105,6 +108,11 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="prakriti-activities" element={<Navigate to="/admin/prakriti-activities/field-trips" replace />} />
+              <Route path="prakriti-activities/:activityKey" element={<ActivityEditor />} />
+              <Route path="workshops" element={<WorkshopList />} />
+              <Route path="workshops/create" element={<WorkshopEditor />} />
+              <Route path="workshops/edit/:id" element={<WorkshopEditor />} />
               <Route path="home-customization" element={<NcHomeCustomization />} />
               <Route path="about-customization" element={<AboutCustomization />} />
               <Route path="mandala-customization" element={<MandalaCustomization />} />

@@ -43,7 +43,6 @@ export default function OfferingsMegaMenuPanel({ links, onClose, onMouseEnter, o
           <div className="offerings-mega-menu__pattern" style={{ backgroundImage: `url(${pattern})` }} aria-hidden="true" />
           <div className="offerings-mega-menu__lab-links">
             <Link to={links.prakriti} onClick={onClose} className="offerings-mega-menu__lab-title">Prakriti LAB</Link>
-            <Link to={links.workshop} onClick={onClose} className="offerings-mega-menu__workshop">Workshop</Link>
           </div>
           <p>Elevate your indoor spaces with lush, green gardens tailored to thrive in various home environments.</p>
         </div>

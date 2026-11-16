@@ -35,6 +35,10 @@ export const pagesApi = {
     const response = await apiClient.get(`/pages/${slug}`);
     return response.data;
   },
+  getPublicActivities: async () => {
+    const response = await apiClient.get('/pages/prakriti-activities');
+    return response.data;
+  },
 
   generatePreviewLink: async (id) => {
     const response = await apiClient.post(`/admin/pages/${id}/preview-link`);

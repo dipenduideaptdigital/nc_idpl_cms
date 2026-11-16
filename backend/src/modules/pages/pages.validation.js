@@ -9,6 +9,7 @@ const RESERVED_SLUGS = [
 
 // Dynamic system design layout templates routing blocks
 export const ALLOWED_TEMPLATES = [
+  "prakriti-activity-page",
   "default",
   "landing-page",
   "service-page",
@@ -70,6 +71,7 @@ const mandalaHorizontalScrollBlockSchema = z.object({ type: z.literal("mandalaHo
 
 // PROJECTS BANNER BLOCK
 const projectsBannerBlockSchema = z.object({ type: z.literal("projectsBanner"), data: z.record(z.any()).default({}) });
+const prakritiActivityBlockSchema = z.object({ type: z.literal("prakritiActivity"), data: z.record(z.any()).default({}) });
 
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
@@ -86,6 +88,7 @@ const dynamicButtonBlockSchema = z.object({
 });
 
 const blockSchema = z.discriminatedUnion("type", [
+  prakritiActivityBlockSchema,
   richTextBlockSchema,
   contactFormBlockSchema,
   dynamicButtonBlockSchema,

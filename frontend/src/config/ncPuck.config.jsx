@@ -31,6 +31,7 @@ import PrakritiLabExperienceSection from '../components/prakriti/PrakritiLabExpe
 import PrakritiLabShowcaseSection from '../components/prakriti/PrakritiLabShowcaseSection';
 import PrakritiGetInTouchSection from '../components/prakriti/PrakritiGetInTouchSection';
 import PrakritiLetsBeginSection from '../components/prakriti/PrakritiLetsBeginSection';
+import ActivityDetail from '../components/prakriti/ActivityDetail';
 
 // Workshop Components
 import WorkshopHero from '../components/workshop/WorkshopHero';
@@ -1169,6 +1170,107 @@ export const ncPuckConfig = {
         backgroundImage: ""
       },
       render: (props) => <NcProjectsHero data={props} />
+    },
+
+    prakritiActivity: {
+      fields: {
+        hero_heading: { type: "text" },
+        hero_showHeading: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
+        hero_image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> },
+        
+        intro_visible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
+        intro_heading: { type: "textarea" },
+        intro_description: { type: "textarea" },
+        intro_logos: {
+          type: "array",
+          arrayFields: {
+            label: { type: "text" },
+            alt: { type: "text" },
+            image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          },
+          defaultItemProps: { label: "LOGO", alt: "Partner Logo", image: "" }
+        },
+
+        events_visible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
+        events_heading: { type: "text" },
+        events_description: { type: "textarea" },
+        events_buttonLabel: { type: "text" },
+        events_items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+            venue: { type: "text" },
+            date: { type: "text" },
+            description: { type: "textarea" },
+            image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          },
+          defaultItemProps: { title: "NEW EVENT", venue: "Kolkata", date: "2026-04-15", description: "", image: "" }
+        },
+
+        archive_visible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
+        archive_heading: { type: "text" },
+        archive_items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+            venue: { type: "text" },
+            date: { type: "text" },
+            linkLabel: { type: "text" },
+            linkUrl: { type: "text" },
+            image: { type: "custom", render: ({ value, onChange }) => <ImageField value={value} onChange={onChange} /> }
+          },
+          defaultItemProps: { title: "PAST WORKSHOP", venue: "Kolkata", date: "March 2026", linkLabel: "View", linkUrl: "", image: "" }
+        },
+
+        cta_visible: { type: "custom", render: ({ value, onChange }) => <VisibilityToggle value={value} onChange={onChange} /> },
+        cta_title: { type: "text" },
+        cta_accent: { type: "text" },
+        cta_headline: { type: "textarea" },
+        cta_description: { type: "textarea" },
+        cta_buttonLabel: { type: "text" },
+        cta_buttonUrl: { type: "text" }
+      },
+      render: (props) => {
+        const nestedData = {
+          activityKey: props.activityKey || 'field-trips',
+          card: props.card || { title: props.hero_heading || 'Activity', description: '', image: props.hero_image || '', alt: '', order: 0, visible: true },
+          hero: {
+            heading: props.hero_heading || '',
+            image: props.hero_image || '',
+            alt: props.hero_heading || '',
+            showHeading: props.hero_showHeading !== false
+          },
+          introduction: {
+            visible: props.intro_visible !== false,
+            heading: props.intro_heading || '',
+            description: props.intro_description || '',
+            logos: props.intro_logos || []
+          },
+          events: {
+            visible: props.events_visible !== false,
+            heading: props.events_heading || '',
+            description: props.events_description || '',
+            buttonLabel: props.events_buttonLabel || 'Reserve Your Seat',
+            buttonUrl: props.events_buttonUrl || '#contact',
+            items: props.events_items || []
+          },
+          archive: {
+            visible: props.archive_visible !== false,
+            heading: props.archive_heading || '',
+            items: props.archive_items || []
+          },
+          cta: {
+            visible: props.cta_visible !== false,
+            title: props.cta_title || 'LIVING',
+            accent: props.cta_accent || 'art',
+            headline: props.cta_headline || '',
+            description: props.cta_description || '',
+            buttonLabel: props.cta_buttonLabel || "LET'S GET STARTED",
+            buttonUrl: props.cta_buttonUrl || '#contact'
+          }
+        };
+        return <ActivityDetail data={nestedData} />;
+      }
     }
   }
 };

@@ -402,3 +402,33 @@ body.puck-mode .fixed.bottom-6,
 body.puck-mode button.absolute.top-1\/2 {
   display: none !important;
 }
+
+/* NC animated border (admin cards) */
+@property --nc-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.nc-border {
+  --nc-bg: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background:
+    linear-gradient(var(--nc-bg), var(--nc-bg)) padding-box,
+    conic-gradient(from var(--nc-angle), transparent 0 70%, #3b82f6 85%, transparent 100%) border-box,
+    linear-gradient(rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.2)) border-box;
+  animation: nc-spin 6s linear infinite;
+}
+
+.dark .nc-border {
+  --nc-bg: #18181b; /* zinc-900, card-er dark background */
+}
+
+@keyframes nc-spin {
+  to { --nc-angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nc-border { animation: none; }
+}

@@ -28,6 +28,7 @@ import PrakritiLabExperienceSection from '../prakriti/PrakritiLabExperienceSecti
 import PrakritiUpcomingEventsSection from '../prakriti/PrakritiUpcomingEventsSection';
 import PrakritiGetInTouchSection from '../prakriti/PrakritiGetInTouchSection';
 import PrakritiLetsBeginSection from '../prakriti/PrakritiLetsBeginSection';
+import ActivityDetail from '../prakriti/ActivityDetail';
 
 // WORKSHOP 
 import WorkshopHero from '../workshop/WorkshopHero';
@@ -95,6 +96,8 @@ const BlockMapper = memo(({ block, index }) => {
       return <PrakritiGetInTouchSection key={index} data={data} />;
     case 'prakritiLetsBegin': 
       return <PrakritiLetsBeginSection key={index} data={data} />;
+    case 'prakritiActivity':
+      return <ActivityDetail key={index} data={data} />;
     case 'workshopHero':
       return <WorkshopHero key={index} data={data} />;
     case 'workshopDetails':

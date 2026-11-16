@@ -126,13 +126,13 @@ const PageList = () => {
     const currentSlug = (page.slug || '').toLowerCase().trim();
     const fullPath = (page.fullPath || '').toLowerCase().trim();
     
-    // Check if the page is a service page
     const isServicePage = currentSlug === 'services' || currentSlug === 'service' || fullPath.startsWith('/services') || page.template === 'service-page';
+    const isWorkshopOrActivityPage = page.template === 'workshop-page' || page.template === 'prakriti-activity-page' || fullPath.startsWith('/prakriti-lab/activities/');
 
     if (isServicesMode) {
       return isServicePage;
     } else {
-      return !isServicePage;
+      return !isServicePage && !isWorkshopOrActivityPage;
     }
   });
 

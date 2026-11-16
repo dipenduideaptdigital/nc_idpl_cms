@@ -155,12 +155,11 @@ const NatureNavbar = ({ forceDark = false, solidBackground = false }) => {
       return {
         ...link,
         isMega: true,
-        children: link.children?.length ? link.children : [
+        children: (link.children?.length ? link.children : [
           { id: 'offer-ripple', label: 'Ripple', url: dynamicPaths.ripple },
           { id: 'offer-gulmo', label: 'Gulmo', url: dynamicPaths.gulmo },
           { id: 'offer-prakriti', label: 'Prakriti Lab', url: dynamicPaths.prakriti },
-          { id: 'offer-workshop', label: 'Workshop', url: dynamicPaths.workshop },
-        ],
+        ]).filter(child => !/workshop/i.test(child.label || '') && !/workshop/i.test(child.url || '')),
       };
     }
     return link;

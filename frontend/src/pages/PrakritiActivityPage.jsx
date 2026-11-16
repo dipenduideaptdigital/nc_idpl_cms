@@ -1,33 +1,175 @@
-import React, { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import workshopHero from '../assets/nc_home/Workshop_hero.png';
-import fieldImage from '../assets/nc_home/card4.png';
-import communityImage from '../assets/nc_home/plab1.png';
-import ActivityIntroduction from '../components/prakriti/ActivityIntroduction';
-import ActivityArchive from '../components/prakriti/ActivityArchive';
-import PrakritiUpcomingWorkshopsSection from '../components/prakriti/PrakritiUpcomingWorkshopsSection';
-import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
+import React, { useEffect, useState } from 'react';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
+import { pagesApi } from '../api/pages';
+import ActivityDetail from '../components/prakriti/ActivityDetail';
+import SEOHead from '../components/shared/SEOHead';
+
+const ALIASES = {
+  'expert-led-nature-workshop': 'nature-workshops',
+  'expert-led-nature-workshops': 'nature-workshops',
+};
 
 export default function PrakritiActivityPage() {
   const { activitySlug } = useParams();
   const location = useLocation();
-  const title = location.state?.activityTitle?.replace(/\s+/g, ' ') || activitySlug.replace(/-/g, ' ');
-  const isWorkshop = /workshop/i.test(title);
-  const image = isWorkshop ? workshopHero : (location.state?.activityImage || (/community/i.test(title) ? communityImage : fieldImage));
+  const [pageData, setPageData] = useState(null);
+  const [activityData, setActivityData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => { window.scrollTo(0, 0); }, [activitySlug]);
+  const normalizedSlug = ALIASES[activitySlug] || activitySlug;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (ALIASES[activitySlug]) return;
+
+    let isMounted = true;
+    const fetchActivityAndWorkshops = async () => {
+      try {
+        setLoading(true);
+
+        const [pageRes, workshopsRes] = await Promise.allSettled([
+          pagesApi.getPublicPageBySlug(`prakriti-lab/activities/${normalizedSlug}`),
+          pagesApi.getPublicPages({ template: 'workshop-page', limit: 100 }),
+        ]);
+
+        if (!isMounted) return;
+
+        const fallbackTitle =
+          location.state?.activityTitle?.replace(/\s+/g, ' ') || normalizedSlug.replace(/-/g, ' ');
+
+        let baseActivity = {
+          activityKey: normalizedSlug,
+          card: { title: fallbackTitle, description: '', image: location.state?.activityImage || '' },
+          hero: {
+            heading: fallbackTitle,
+            image: location.state?.activityImage || '',
+            alt: fallbackTitle,
+            showHeading: !/workshop/i.test(fallbackTitle) && normalizedSlug !== 'nature-workshops',
+          },
+          introduction: { heading: '', visible: true },
+          events: {
+            heading: normalizedSlug === 'nature-workshops' ? 'UPCOMING WORKSHOPS' : `UPCOMING ${fallbackTitle.toUpperCase()}`,
+            visible: true,
+            items: [],
+          },
+          archive: { heading: `Archive ${ normalizedSlug === 'nature-workshops' ? 'workshop' : fallbackTitle }`, visible: true, items: [] },
+          cta: { visible: true },
+        };
+
+        if (pageRes.status === 'fulfilled' && pageRes.value?.data) {
+          const page = pageRes.value.data;
+          setPageData(page);
+          const block = page?.content?.blocks?.find((b) => b.type === 'prakritiActivity');
+          if (block?.data) {
+            baseActivity = {
+              ...baseActivity,
+              ...block.data,
+              hero: { ...baseActivity.hero, ...(block.data.hero || {}) },
+              introduction: { ...baseActivity.introduction, ...(block.data.introduction || {}) },
+              events: { ...baseActivity.events, ...(block.data.events || {}) },
+              archive: { ...baseActivity.archive, ...(block.data.archive || {}) },
+              cta: { ...baseActivity.cta, ...(block.data.cta || {}) },
+            };
+          }
+        }
+
+        // Extract mapped Workshop Pages for this specific Activity Page
+        const allWorkshopPages =
+          workshopsRes.status === 'fulfilled' && Array.isArray(workshopsRes.value?.data)
+            ? workshopsRes.value.data
+            : [];
+
+        const matchedWorkshops = allWorkshopPages.filter((wp) => {
+          const targetActivity = wp.content?.activityKey || 'nature-workshops';
+          return targetActivity === normalizedSlug;
+        });
+
+        const mappedUpcoming = [];
+        const mappedArchive = [];
+
+        matchedWorkshops.forEach((wp) => {
+          const blocks = wp.content?.blocks || [];
+          const heroBlock = blocks.find((b) => b.type === 'workshopHero')?.data || {};
+          const detailsBlock = blocks.find((b) => b.type === 'workshopDetails')?.data || {};
+          const galleryBlock = blocks.find((b) => b.type === 'workshopGallery')?.data || {};
+
+          const cardImage =
+            wp.content?.thumbnail ||
+            heroBlock.backgroundImage ||
+            galleryBlock.image1 ||
+            wp.featuredImage?.url ||
+            '';
+
+          const targetUrl = wp.fullPath || `/${wp.slug}`;
+          const placement = wp.content?.placement || 'upcoming';
+
+          if (placement === 'archive') {
+            mappedArchive.push({
+              id: wp.id,
+              title: detailsBlock.title || wp.title,
+              venue: wp.content?.venue || detailsBlock.venue || 'NatureCube Experience Centre, Kolkata',
+              date: detailsBlock.date || 'Completed',
+              image: cardImage,
+              linkUrl: targetUrl,
+            });
+          } else {
+            mappedUpcoming.push({
+              id: wp.id,
+              title: detailsBlock.title || wp.title,
+              image: cardImage,
+              date: detailsBlock.date || '',
+              venue: wp.content?.venue || detailsBlock.venue || '',
+              url: targetUrl,
+              buttonUrl: targetUrl,
+            });
+          }
+        });
+
+        // Merge mapped Workshop pages with any manually added items
+        if (mappedUpcoming.length > 0) {
+          baseActivity.events = {
+            ...baseActivity.events,
+            items: [...mappedUpcoming, ...(baseActivity.events.items || [])],
+          };
+        }
+
+        if (mappedArchive.length > 0) {
+          baseActivity.archive = {
+            ...baseActivity.archive,
+            items: [...mappedArchive, ...(baseActivity.archive.items || [])],
+          };
+        }
+
+        setActivityData(baseActivity);
+      } catch (err) {
+        console.error('Error loading activity page:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    fetchActivityAndWorkshops();
+    return () => {
+      isMounted = false;
+    };
+  }, [activitySlug, normalizedSlug, location.state]);
+
+  if (ALIASES[activitySlug]) {
+    return <Navigate to={`/prakriti-lab/activities/${ALIASES[activitySlug]}`} replace />;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center bg-white">
+        <div className="w-10 h-10 border-4 border-zinc-200 border-t-[#6CA844] rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div className="-mt-24 bg-white text-[#09242b]">
-      <section data-nav-theme="dark" className="relative min-h-[60vh] md:min-h-[min(100vh,800px)] bg-[#10252a]">
-        <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover object-center" />
-        {!isWorkshop && <div className="absolute inset-0 bg-black/35 flex items-end px-6 pb-16 sm:px-12 lg:px-20"><h1 className="font-kanit text-4xl md:text-6xl font-semibold text-white capitalize">{title}</h1></div>}
-        {isWorkshop && <h1 className="sr-only">{title}</h1>}
-      </section>
-      <ActivityIntroduction title={isWorkshop ? 'workshops' : title} />
-      <PrakritiUpcomingWorkshopsSection data={{ heading: isWorkshop ? 'UPCOMING WORKSHOPS' : `UPCOMING ${title.toUpperCase()}` }} />
-      <ActivityArchive title={isWorkshop ? 'workshop' : title} />
-      <GetStartedCtaSection />
-    </div>
+    <>
+      {pageData && <SEOHead data={pageData} type="page" />}
+      <ActivityDetail data={activityData || { activityKey: normalizedSlug }} />
+    </>
   );
 }

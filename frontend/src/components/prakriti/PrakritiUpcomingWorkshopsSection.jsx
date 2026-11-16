@@ -1,35 +1,27 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Reveal from '../../animations/Reveal';
 import bush3 from '../../assets/nc_logo/bush3.png';
 import card1 from '../../assets/nc_home/plab3.png';
 import card2 from '../../assets/nc_home/plab4.png';
 import card3 from '../../assets/nc_home/card3.png';
 
-// Upgraded getAssetUrl: Handles deeper Puck ImageField objects & string paths flawlessly
 const getAssetUrl = (path) => {
   if (!path) return '';
-
   let urlPath = path;
-
   if (typeof path === 'object') {
     urlPath = path.url || path.src || path.path || '';
   }
-
   if (typeof urlPath !== 'string' || !urlPath) return '';
-
   if (urlPath.startsWith('http') || urlPath.startsWith('data:')) return urlPath;
-
   if (urlPath.startsWith('/src/') || urlPath.startsWith('/assets/') || urlPath.startsWith('/@fs/')) {
     return urlPath;
   }
-
   const baseUrl = import.meta.env.VITE_API_URL
     ? import.meta.env.VITE_API_URL.replace('/api/v1', '')
     : 'http://localhost:5000';
-
   const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
   const cleanPath = urlPath.startsWith('/') ? urlPath : `/${urlPath}`;
-
   return `${cleanBaseUrl}${cleanPath}`;
 };
 
@@ -41,18 +33,17 @@ const defaultWorkshops = [
 
 const PrakritiUpcomingWorkshopsSection = (props) => {
   const blockData = props?.data || props || {};
-
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const heading = blockData.heading || "UPCOMING WORKSHOPS";
   const subtext = blockData.subtext || "It is a long\nestablished fact\nthat a reader will\nbe distracted.";
   const buttonText = blockData.buttonText || "Reserve Your Seat";
 
-  // Array Fallbacks for Workshops
   const dynamicWorkshops = blockData.workshops || blockData.cards || blockData.items || [];
   const workshops = dynamicWorkshops.length > 0 ? dynamicWorkshops : defaultWorkshops;
-
-  const currentWorkshop = workshops[currentIndex] || workshops[0];
+  const safeIndex = currentIndex >= workshops.length ? 0 : currentIndex;
+  const currentWorkshop = workshops[safeIndex] || workshops[0];
+  const currentWorkshopUrl = currentWorkshop?.url || currentWorkshop?.buttonUrl || '';
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % workshops.length);
@@ -88,12 +79,21 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
           />
 
           <div className="pt-4 sm:pt-10">
-            <button
-              onClick={handleReserve}
-              className="font-kanit font-semibold text-lg text-[#7BA641] pb-1 border-b-2 border-[#7BA641] hover:opacity-80 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer group"
-            >
-              <span>{buttonText}</span>
-            </button>
+            {currentWorkshopUrl ? (
+              <Link
+                to={currentWorkshopUrl}
+                className="font-kanit font-semibold text-lg text-[#7BA641] pb-1 border-b-2 border-[#7BA641] hover:opacity-80 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer group"
+              >
+                <span>{buttonText}</span>
+              </Link>
+            ) : (
+              <button
+                onClick={handleReserve}
+                className="font-kanit font-semibold text-lg text-[#7BA641] pb-1 border-b-2 border-[#7BA641] hover:opacity-80 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer group"
+              >
+                <span>{buttonText}</span>
+              </button>
+            )}
           </div>
         </Reveal>
 
@@ -103,12 +103,10 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
             
             {workshops.map((ws, index) => {
               const uploadedImgField = ws.image || ws.imageUrl || ws.src || ws.picture;
-              
               const adminImg = uploadedImgField ? getAssetUrl(uploadedImgField) : '';
-              const fallbackImg = defaultWorkshops[index]?.image || card1;
+              const fallbackImg = defaultWorkshops[index % defaultWorkshops.length]?.image || card1;
               const finalImageSrc = adminImg || fallbackImg;
-
-              const relativeIndex = (index - currentIndex + workshops.length) % workshops.length;
+              const relativeIndex = (index - safeIndex + workshops.length) % workshops.length;
               
               let stackStyles = "";
               if (relativeIndex === 0) {
@@ -118,35 +116,55 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
               } else if (relativeIndex === 2) {
                 stackStyles = "z-10 -translate-y-6 -translate-x-8 -rotate-1 scale-[0.94] opacity-70 shadow-md";
               } else {
-                stackStyles = "z-0 -translate-y-8 -translate-x-10 scale-[0.9] opacity-0 pointer-events-none"; 
+                stackStyles = "z-0 -translate-y-8 -translate-x-10 scale-[0.9] opacity-0 pointer-events-none";
               }
+
+              const targetUrl = ws.url || ws.buttonUrl || '';
 
               return (
                 <div 
                   key={ws.id || index}
                   className={`absolute top-0 left-0 w-full h-full bg-white rounded-xs border border-zinc-200/90 p-2 sm:p-3 transition-all duration-700 ease-in-out origin-bottom-right ${stackStyles}`}
                 >
-                   <img
+                  {targetUrl ? (
+                    <Link to={targetUrl} className="block w-full h-full group">
+                      <img
+                        src={finalImageSrc}
+                        alt={ws.title || 'Workshop'}
+                        className="w-full h-full object-cover rounded-xs group-hover:scale-[1.01] transition-transform duration-300"
+                      />
+                    </Link>
+                  ) : (
+                    <img
                       src={finalImageSrc}
                       alt={ws.title || 'Workshop'}
                       className="w-full h-full object-cover rounded-xs"
                     />
+                  )}
                 </div>
               );
             })}
 
-            {/* Exact Original Desktop Attached Dark Overlay Box (Hidden on mobile < sm) */}
+            {/* Desktop Attached Dark Overlay Box */}
             <div className="hidden sm:flex absolute right-[-180px] bottom-8 z-40 bg-[#0C1A22] text-white p-5 w-[210px] rounded-xs shadow-2xl flex-col justify-between border border-zinc-800/80 min-h-[175px]">
               <div className="mb-4">
-                <h3 className="font-kanit font-bold text-lg sm:text-xl tracking-wide uppercase text-white leading-tight transition-all duration-500">
-                  {currentWorkshop?.title}
-                </h3>
+                {currentWorkshopUrl ? (
+                  <Link to={currentWorkshopUrl} className="hover:text-[#7BA641] transition-colors">
+                    <h3 className="font-kanit font-bold text-lg sm:text-xl tracking-wide uppercase text-white hover:text-[#7BA641] leading-tight transition-all duration-300">
+                      {currentWorkshop?.title}
+                    </h3>
+                  </Link>
+                ) : (
+                  <h3 className="font-kanit font-bold text-lg sm:text-xl tracking-wide uppercase text-white leading-tight transition-all duration-500">
+                    {currentWorkshop?.title}
+                  </h3>
+                )}
               </div>
               
               {/* Pagination Counter & Navigation Button */}
               <div className="flex items-center justify-between pt-3 border-t border-zinc-700/60 font-kanit mt-auto">
                 <span className="text-base sm:text-lg font-medium tracking-widest text-zinc-200">
-                  {currentIndex + 1}/{workshops.length}
+                  {safeIndex + 1}/{workshops.length}
                 </span>
                 <button
                   onClick={handleNext}
@@ -157,21 +175,28 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
                 </button>
               </div>
             </div>
-            
+
           </div>
 
-          {/* Mobile Black Card (Rendered below the image stack on small screens < sm with 100% visible image cards) */}
+          {/* Mobile Black Card */}
           <div className="sm:hidden w-full max-w-[400px] mt-6 z-40 bg-[#0C1A22] text-white p-4.5 rounded-xl shadow-xl flex flex-col justify-between border border-zinc-800/80">
             <div className="mb-3">
-              <h3 className="font-kanit font-bold text-base tracking-wide uppercase text-white leading-tight">
-                {currentWorkshop?.title}
-              </h3>
+              {currentWorkshopUrl ? (
+                <Link to={currentWorkshopUrl}>
+                  <h3 className="font-kanit font-bold text-base tracking-wide uppercase text-white hover:text-[#7BA641] leading-tight">
+                    {currentWorkshop?.title}
+                  </h3>
+                </Link>
+              ) : (
+                <h3 className="font-kanit font-bold text-base tracking-wide uppercase text-white leading-tight">
+                  {currentWorkshop?.title}
+                </h3>
+              )}
             </div>
 
-            {/* Pagination Counter & Navigation Button */}
             <div className="flex items-center justify-between pt-3 border-t border-zinc-700/60 font-kanit">
               <span className="text-sm font-medium tracking-widest text-zinc-200">
-                {currentIndex + 1}/{workshops.length}
+                {safeIndex + 1}/{workshops.length}
               </span>
               <button
                 onClick={handleNext}
@@ -183,12 +208,10 @@ const PrakritiUpcomingWorkshopsSection = (props) => {
               </button>
             </div>
           </div>
-
         </Reveal>
+
       </div>
     </section>
-
-
   );
 };
 

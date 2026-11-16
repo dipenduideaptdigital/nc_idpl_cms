@@ -118,6 +118,7 @@ const { hasPermission } = usePermission();
   }, []);
 
   const [openMenus, setOpenMenus] = useState({
+    'Prakriti Lab': location.pathname.includes('/admin/prakriti-activities'),
     'Blogs': location.pathname.includes('/admin/blogs'),
     'Dynamic Forms': location.pathname.includes('/admin/forms') || location.pathname.includes('/admin/contact-customization')
   });
@@ -164,6 +165,17 @@ const { hasPermission } = usePermission();
     { name: 'Home Settings', icon: ImageIcon, path: '/admin/home-customization', permission: 'page.edit' },
     { name: 'About Settings', icon: Globe, path: '/admin/about-customization', permission: 'page.edit' },
     { name: 'Mandala Settings', icon: Layers, path: '/admin/mandala-customization', permission: 'page.edit' },
+    {
+      name: 'Prakriti Lab',
+      icon: Layers,
+      permission: 'page.edit',
+      children: [
+        { name: 'Field Trips', path: '/admin/prakriti-activities/field-trips', permission: 'page.edit' },
+        { name: 'Community Interaction', path: '/admin/prakriti-activities/community-interaction', permission: 'page.edit' },
+        { name: 'Nature Workshops', path: '/admin/prakriti-activities/nature-workshops', permission: 'page.edit' },
+      ]
+    },
+    { name: 'Workshop Pages', icon: FileText, path: '/admin/workshops', permission: 'page.view' },
     { 
       name: 'Blogs', 
       icon: BookOpen, 

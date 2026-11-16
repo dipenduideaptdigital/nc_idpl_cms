@@ -130,7 +130,6 @@ const defaultLinks = {
   ripple: '/ripples',
   gulmo: '/gulmo',
   prakriti: '/prakriti-lab',
-  workshop: '/workshop',
 };
 
 // Both public headers use this menu. The main navbar supplies its CMS paths;
@@ -145,7 +144,7 @@ export default function OfferingsMegaMenu({ links, ...props }) {
       const pages = response.data?.data || response.data || [];
       if (!Array.isArray(pages) || !active) return;
       const nextLinks = { ...defaultLinks };
-      const templates = { 'ripple-page': 'ripple', 'gulmo-page': 'gulmo', 'prakriti-page': 'prakriti', 'workshop-page': 'workshop' };
+      const templates = { 'ripple-page': 'ripple', 'gulmo-page': 'gulmo', 'prakriti-page': 'prakriti' };
       pages.forEach((page) => {
         const key = templates[page.template];
         if (key && page.slug) nextLinks[key] = `/${page.slug}`;
