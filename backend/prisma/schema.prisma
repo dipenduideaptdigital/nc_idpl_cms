@@ -575,3 +575,35 @@ model FormSubmissionNote {
   @@index([submissionId])
   @@map("form_submission_notes")
 }
+
+model FaqCategory {
+  id          String        @id @default(cuid())
+  name        String        @db.VarChar(100)
+  slug        String        @unique @db.VarChar(120)
+  description String?       @db.VarChar(300)
+  sortOrder   Int           @default(0)
+  status      PageStatus    @default(PUBLISHED)
+  questions   FaqQuestion[]
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status, sortOrder])
+  @@map("faq_categories")
+}
+
+model FaqQuestion {
+  id         String      @id @default(cuid())
+  categoryId String
+  category   FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  question   String      @db.VarChar(300)
+  answer     Json
+  sortOrder  Int         @default(0)
+  status     PageStatus  @default(PUBLISHED)
+
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([categoryId, status, sortOrder])
+  @@map("faq_questions")
+}

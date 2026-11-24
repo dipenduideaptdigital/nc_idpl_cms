@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Image as ImageIcon, Settings, LogOut, FileText, Sun, Moon, MapPin,
-  Globe, Inbox, Menu, X, BookOpen, Layers, Briefcase, Wrench, ChevronDown, FolderOpen, AlertTriangle, FilePlus
+  Globe, Inbox, Menu, X, BookOpen, Layers, Briefcase, Wrench, ChevronDown, FolderOpen, AlertTriangle, FilePlus, HelpCircle
 } from 'lucide-react';
 // import { useAuth } from '../../context/AuthContext'; 
 import { usePermission } from '../../hooks/usePermission'; 
@@ -197,6 +197,7 @@ const { hasPermission } = usePermission();
       ]
     },
     { name: 'Projects', icon: Briefcase, path: '/admin/projects', permission: 'project.view' },
+    { name: 'FAQ Management', icon: HelpCircle, path: '/admin/faqs', permission: 'faq.view' },
   ];
 
   const visibleNavItems = navItems.filter(item => {

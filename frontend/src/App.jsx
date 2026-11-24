@@ -43,6 +43,7 @@ const ContactRoutingSettings = lazy(() => import('./pages/admin/settings/Contact
 const PageList = lazy(() => import('./pages/admin/pages/PageList'));
 const PageEditor = lazy(() => import('./pages/admin/pages/PageEditor'));
 const ProjectList = lazy(() => import('./pages/admin/projects/ProjectList'));
+const FaqManager = lazy(() => import('./pages/admin/faq/FaqManager'));
 const ProjectEditor = lazy(() => import('./pages/admin/projects/ProjectEditor'));
 const BlogList = lazy(() => import('./pages/admin/blogs/BlogList'));
 const BlogEditor = lazy(() => import('./pages/admin/blogs/BlogEditor'));
@@ -130,6 +131,7 @@ function App() {
               <Route path="services/edit/:id" element={<PageEditor />} />
 
               <Route path="projects" element={<ProjectList />} />
+              <Route path="faqs" element={<FaqManager />} />
               <Route path="projects/create" element={<ProjectEditor />} />
               <Route path="projects/edit/:id" element={<ProjectEditor />} />
               <Route path="blogs" element={<BlogList />} />

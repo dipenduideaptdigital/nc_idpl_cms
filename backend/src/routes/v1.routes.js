@@ -20,6 +20,9 @@ import systemStateRoutes from "../modules/system-state/systemState.routes.js";
 import dynamicFormsAdminRoutes from "../modules/dynamic-forms/dynamic-forms.admin.routes.js";
 import dynamicFormsPublicRoutes from "../modules/dynamic-forms/dynamic-forms.public.routes.js";
 
+import faqsAdminRoutes from "../modules/faqs/faqs.admin.routes.js";
+import faqsPublicRoutes from "../modules/faqs/faqs.public.routes.js";
+
 const router = Router();
 
 router.use("/auth", authRoutes);
@@ -41,6 +44,8 @@ router.use("/admin/dashboard", dashboardRoutes);
 router.use("/admin/system-state", systemStateRoutes);
 router.use("/admin/dynamic-forms", dynamicFormsAdminRoutes);
 router.use("/dynamic-forms", dynamicFormsPublicRoutes);
+router.use("/admin/faqs", faqsAdminRoutes);
+router.use("/faqs", faqsPublicRoutes);
 router.get("/health", (req, res) => {
   res.status(200).json({
     success: true,

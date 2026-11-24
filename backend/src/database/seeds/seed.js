@@ -55,6 +55,12 @@ const PERMISSIONS = [
   { name: "Edit Project", slug: "project.edit", module: "PROJECTS" },
   { name: "Delete Project", slug: "project.delete", module: "PROJECTS" },
 
+  // FAQS
+  { name: "View FAQs", slug: "faq.view", module: "FAQS" },
+  { name: "Create FAQ", slug: "faq.create", module: "FAQS" },
+  { name: "Edit FAQ", slug: "faq.edit", module: "FAQS" },
+  { name: "Delete FAQ", slug: "faq.delete", module: "FAQS" },
+
   // DYNAMIC FORMS
   { name: "View Forms", slug: "form.view", module: "FORMS" },
   { name: "Create Form", slug: "form.create", module: "FORMS" },
