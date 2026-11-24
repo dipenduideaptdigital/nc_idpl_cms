@@ -7,7 +7,7 @@ import SwimmingFish from '../../animations/SwimmingFish';
 import brush1Img from '../../assets/nc_logo/brush1.png';
 
 // Fallback Default Images
-import defaultLogoImg from '../../assets/nc_logo/naturecube.png';
+import defaultLogoImg from '../../assets/nc_logo/WebsiteLogoWhite03.png';
 import defaultRipplesLogo from '../../assets/nc_logo/ripples.png';
 import defaultGulmoLogo from '../../assets/nc_logo/gulmo.png';
 import defaultGallery1 from '../../assets/nc_home/gallery1.png';
@@ -60,7 +60,7 @@ const NatureShowcaseSection = ({ data }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           <div className="lg:col-span-4 space-y-6 md:space-y-8 pr-0 lg:pr-6 lg:text-left">
             <Reveal direction="right" className="w-[180px] sm:w-[240px] lg:w-[300px] mx-auto lg:mx-0 pt-2">
-              <img src={row1Logo} alt="NatureCube Logo" className="w-full h-auto object-contain" />
+              <img src={row1Logo} alt="NatureCube Logo" className="w-full h-auto object-contain brightness-0" />
             </Reveal>
             <Reveal
               delay={0.1}

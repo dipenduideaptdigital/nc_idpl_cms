@@ -1,7 +1,7 @@
 import React from 'react';
 import adaLogo from '../../assets/nc_logo/ada.jpg';
 import person2 from '../../assets/nc_about/person2.png';
-import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
+import naturecubeLogo from '../../assets/nc_logo/WebsiteLogoWhite03.png';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 
 const AboutHistoryPanel = ({ data }) => {
@@ -44,7 +44,7 @@ const AboutHistoryPanel = ({ data }) => {
               <img
                 src={image1}
                 alt="ADA Aqua Design Amano"
-                className="max-h-20 sm:max-h-24 w-auto object-contain"
+                className="max-h-20 sm:max-h-24 w-auto object-contain brightness-0"
               />
             </div>
 

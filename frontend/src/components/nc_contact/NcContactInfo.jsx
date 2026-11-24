@@ -87,7 +87,7 @@ const NcContactInfo = ({ data }) => {
         </div>
 
         {/* Main Floating Contact Form Box */}
-        <div className="bg-white rounded-[32px] sm:rounded-[40px] shadow-[0_15px_45px_rgba(0,0,0,0.035)] border border-zinc-100/90 p-7 sm:p-10 lg:p-14 relative z-10 overflow-hidden mb-16 md:mb-24">
+        <div className="bg-white rounded-[32px] sm:rounded-[40px] shadow-[0_15px_45px_rgba(0,0,0,0.035)] border border-[#6CA844] p-7 sm:p-10 lg:p-14 relative z-10 overflow-hidden mb-16 md:mb-24">
           
           {/* Right Side Organic Watercolor Bush Image inside card */}
           <div className="absolute top-[-50px] right-[-50px] lg:top-[-100px] lg:right-[-100px] w-[400px] sm:w-[600px] lg:w-[620px] pointer-events-none opacity-90 z-0 transform rotate-135">
@@ -266,7 +266,7 @@ const NcContactInfo = ({ data }) => {
         <div className="space-y-16 md:space-y-20">
 
           {/* Row 1: 3 Circular Icon Contacts */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-between border-b border-zinc-100 pb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-between border-b border-[#6CA844] pb-12">
             
             {/* Email Contact */}
             <div className="flex items-center gap-4">
@@ -290,9 +290,7 @@ const NcContactInfo = ({ data }) => {
 
             {/* Phone Contact */}
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-[#edf5e6] flex items-center justify-center shrink-0">
-                <img src={call2Icon} alt="Phone" className="w-6 h-6 object-contain" />
-              </div>
+              <img src={callIcon} alt="Phone" className="w-12 h-12 object-contain shrink-0" />
               <div className="flex flex-col text-xs sm:text-sm font-outfit text-zinc-800">
                 <a href={`tel:${cleanPhone1}`} className="hover:text-[#7BA641] transition-colors">{phone1}</a>
                 {phone2 && <a href={`tel:${cleanPhone2}`} className="hover:text-[#7BA641] transition-colors">{phone2}</a>}
@@ -313,7 +311,9 @@ const NcContactInfo = ({ data }) => {
                 {address}
               </p>
               <div className="flex items-center gap-2.5">
-                <img src={callIcon} alt="Phone Icon" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#edf5e6] flex items-center justify-center shrink-0">
+                  <img src={call2Icon} alt="Phone Icon" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" />
+                </div>
                 <a href={`tel:${cleanPhone1}`} className="font-kanit text-base sm:text-lg text-zinc-900 hover:text-[#7BA641] transition-colors">
                   {phone1}
                 </a>
@@ -329,7 +329,9 @@ const NcContactInfo = ({ data }) => {
                 {address}
               </p>
               <div className="flex items-center gap-2.5">
-                <img src={callIcon} alt="Phone Icon" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#edf5e6] flex items-center justify-center shrink-0">
+                  <img src={call2Icon} alt="Phone Icon" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" />
+                </div>
                 <a href={`tel:${cleanPhone1}`} className="font-kanit text-base sm:text-lg text-zinc-900 hover:text-[#7BA641] transition-colors">
                   {phone1}
                 </a>

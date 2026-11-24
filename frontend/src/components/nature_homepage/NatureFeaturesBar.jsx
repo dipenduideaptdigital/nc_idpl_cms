@@ -9,8 +9,8 @@ import { resolveAssetUrl } from '../../utils/assetResolver';
 const DEFAULT_FEATURES = [
   { icon: handIcon, title: '40+ Years', subtitle: 'of Experience', titleBold: true },
   { icon: solutionIcon, title: 'Sustainable', subtitle: 'Solutions', titleBold: true },
-  { icon: qualityIcon, title: 'Focus on', subtitle: 'Quality', titleBold: false },
-  { icon: guidanceIcon, title: 'Expert', subtitle: 'Guidance', titleBold: false },
+  { icon: qualityIcon, title: 'Focus on', subtitle: 'Quality', titleBold: true },
+  { icon: guidanceIcon, title: 'Expert', subtitle: 'Guidance', titleBold: true },
 ];
 
 const NatureFeaturesBar = ({ featuresData }) => {
@@ -47,10 +47,10 @@ const NatureFeaturesBar = ({ featuresData }) => {
           <img src={iconUrl} alt={item.title} className="w-6 h-6 sm:w-8 sm:h-8 2xl:w-12 2xl:h-12 object-contain" />
         </div>
         <div className="flex flex-col text-left text-white min-w-0">
-          <span className={`font-kanit text-xs sm:text-base md:text-xl 2xl:text-2xl tracking-wide leading-tight whitespace-nowrap ${item.titleBold ? 'font-bold text-white' : 'font-normal text-zinc-200'}`}>
+          <span className="font-kanit text-xs sm:text-base md:text-xl 2xl:text-2xl tracking-wide leading-tight whitespace-nowrap font-bold text-white">
             {item.title}
           </span>
-          <span className={`font-kanit text-[10px] sm:text-xs md:text-base 2xl:text-xl tracking-wide leading-tight whitespace-nowrap ${!item.titleBold ? 'font-bold text-white' : 'font-normal text-zinc-200'}`}>
+          <span className="font-kanit text-[10px] sm:text-xs md:text-base 2xl:text-xl tracking-wide leading-tight whitespace-nowrap font-normal text-zinc-200">
             {item.subtitle}
           </span>
         </div>

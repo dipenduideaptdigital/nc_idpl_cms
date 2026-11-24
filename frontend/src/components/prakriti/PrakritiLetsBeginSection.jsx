@@ -15,7 +15,6 @@ const PrakritiLetsBeginSection = ({ data }) => {
   const title = data?.title || "Let's begin";
   const description = data?.description || 'Transform your indoor spaces with living art. Explore our curated collections of botanical aquascapes, terrariums, and custom biomes built by Prakriti Lab.';
   const storeUrlText = data?.storeUrlText || 'naturecube.store';
-  const storeUrl = data?.storeUrl || "https://naturecube.store";
   const btnText = data?.btnText || 'STORE';
   
   const imageMainSrc = data?.imageMain ? getAssetUrl(data.imageMain) : gallery1;
@@ -46,9 +45,7 @@ const PrakritiLetsBeginSection = ({ data }) => {
                 {storeUrlText}
               </span>
               <a
-                href={storeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/shop"
                 className="bg-[#7BA641] hover:bg-[#6b9337] text-white text-xs sm:text-sm font-semibold tracking-wider px-8 py-3 rounded-xs uppercase transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(123,166,65,0.4)] cursor-pointer inline-block"
               >
                 {btnText}

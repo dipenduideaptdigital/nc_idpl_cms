@@ -57,9 +57,7 @@ const RipplesGulmoLetsBeginSection = ({ data }) => {
               </m.span>
 
               <m.a {...appear}
-                href={data?.storeUrl || "https://naturecube.store"}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/shop"
                 className="bg-[#7BA641] hover:bg-[#6b9337] text-white text-xs sm:text-sm font-bold tracking-widest px-8 py-3 rounded-none uppercase transition-[background-color,box-shadow] duration-300 shadow-sm hover:shadow-[0_4px_14px_rgba(123,166,65,0.4)] cursor-pointer inline-block"
               >
                 {data?.btnText || 'STORE'}

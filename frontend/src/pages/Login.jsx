@@ -3,7 +3,7 @@ import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import heroback from '../assets/nc_home/plant_hero.jpg';
-import logo from '../assets/nc_logo/naturecube.png';
+import logo from '../assets/nc_logo/WebsiteLogoWhite03.png';
 import apiClient from '../api/client';
 // import { useAuth } from '../context/AuthContext';
 import { useDispatch } from 'react-redux';
@@ -153,7 +153,7 @@ dispatch(
             <img 
               src={logo} 
               alt="NatureCube Logo" 
-              className="h-12 md:h-14 w-auto object-contain brightness-0 invert drop-shadow-[0_0_15px_rgba(123,166,65,0.35)]" 
+              className="h-12 md:h-14 w-auto object-contain drop-shadow-[0_0_15px_rgba(123,166,65,0.35)]"
             />
           </Link>
         </div>

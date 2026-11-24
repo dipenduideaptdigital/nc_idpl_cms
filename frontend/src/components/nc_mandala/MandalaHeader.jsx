@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
-import naturecubeLogo from '../../assets/nc_logo/naturecube.png';
+import naturecubeLogo from '../../assets/nc_logo/WebsiteLogoWhite03.png';
 import OfferingsMegaMenu from '../layout/OfferingsMegaMenu';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 
@@ -55,16 +55,24 @@ const MandalaHeader = ({ data }) => {
   ];
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-50 bg-transparent pt-6 pb-4 px-6 md:px-12 font-kanit pointer-events-auto">
+    <header className={`absolute top-0 left-0 right-0 z-50 pt-6 pb-4 px-6 md:px-12 font-kanit pointer-events-auto border-b transition-[background-color,border-color,box-shadow] duration-300 ${isOfferingsOpen ? 'bg-white border-[#6CA844] shadow-[0_4px_18px_rgba(6,35,43,0.12)]' : 'bg-transparent border-transparent'}`}>
       <div className="w-full max-w-[1800px] mx-auto flex items-center justify-between">
 
         {/* Logo */}
-        <Link to="/" onClick={handleLinkClick} className="flex items-center group">
+        <Link to="/" onClick={handleLinkClick} className="relative flex items-center">
           <img
             src={data?.logo ? resolveAssetUrl(data.logo) : naturecubeLogo}
             alt="NatureCube"
-            className="h-10 sm:h-12 w-auto object-contain"
+            className={`h-12 sm:h-14 w-auto object-contain ${isOfferingsOpen ? 'brightness-0' : ''}`}
           />
+          {isOfferingsOpen && !data?.logo && (
+            <img
+              src={naturecubeLogo}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 h-full w-full object-contain [clip-path:inset(25.5%_20.5%_30.9%_69.5%)]"
+            />
+          )}
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -131,7 +139,7 @@ const MandalaHeader = ({ data }) => {
         {/* Store CTA Button */}
         <div className="hidden lg:block">
           <a
-            href="#store"
+            href="/shop"
             onClick={handleLinkClick}
             className="font-kanit inline-flex items-center justify-center bg-[#6CA844] hover:bg-[#5f973a] text-white font-medium text-xs tracking-wider px-7 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:shadow-[0_4px_15px_rgba(108,168,68,0.4)] uppercase"
           >
@@ -186,7 +194,7 @@ const MandalaHeader = ({ data }) => {
             );
           })}
           <a
-            href="#store"
+            href="/shop"
             onClick={handleLinkClick}
             className="block text-center bg-[#6CA844] hover:bg-[#5f973a] text-white font-bold text-xs tracking-widest px-6 py-3 rounded-sm uppercase mt-4"
           >

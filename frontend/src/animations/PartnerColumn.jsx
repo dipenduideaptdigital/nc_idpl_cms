@@ -47,14 +47,14 @@ export default function PartnerColumn({ logos, direction = 'up', className = '' 
             {logos.map((logoUrl, index) => (
               <div
                 key={index}
-                className="bg-white rounded-[10px] p-4 sm:p-6 lg:p-8 flex items-center justify-center aspect-square shadow-[4px_4px_14.5px_-3px_#00000026]"
+                className="flex items-center justify-center aspect-square"
               >
                 <img
                   src={logoUrl}
                   alt={copy === 1 ? '' : 'Partner logo'}
                   loading="lazy"
                   decoding="async"
-                  className="max-h-12 sm:max-h-20 lg:max-h-24 w-auto max-w-[85%] object-contain"
+                  className="max-h-20 sm:max-h-28 lg:max-h-32 w-auto max-w-full object-contain"
                 />
               </div>
             ))}

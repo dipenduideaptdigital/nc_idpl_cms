@@ -1,6 +1,6 @@
 import React from 'react';
 import { Settings, Mail, Phone, Clock, Wrench } from 'lucide-react';
-import SubhaakritiLogo from '../../assets/nc_logo/naturecube.png';
+import SubhaakritiLogo from '../../assets/nc_logo/WebsiteLogoWhite03.png';
 
 const getAssetUrl = (path) => {
   if (!path) return '';
@@ -52,7 +52,7 @@ const MaintenancePage = ({ data }) => {
 
         {/* Logo */}
         <div className="mb-12 animate-in slide-in-from-top-8 duration-1000 delay-150 flex flex-col items-center">
-          <img src={SubhaakritiLogo} alt="NatureCube" className="h-10 md:h-12 w-auto brightness-0 invert opacity-90 drop-shadow-lg" />
+          <img src={SubhaakritiLogo} alt="NatureCube" className="h-10 md:h-12 w-auto opacity-90 drop-shadow-lg" />
           <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-zinc-400 mt-4 font-semibold drop-shadow-md">The Design People</p>
         </div>
 

@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import designJar from '../../assets/nc_home/design_jar.png';
 import brush2 from '../../assets/nc_logo/brush2.png';
+import lightStand from '../../assets/gulmo/light-stand-z.png';
+import jungleSoil from '../../assets/gulmo/jungle-soil.png';
+import forestPlant from '../../assets/gulmo/forest-plant.png';
+import maintenanceTool from '../../assets/gulmo/layout-maintenance-tool.png';
 
 const GulmoForestOrganismSection = ({ data }) => {
   const features = [
@@ -11,8 +15,8 @@ const GulmoForestOrganismSection = ({ data }) => {
       title: data?.f1Title || 'GLASS: TOP CASE',
       description: data?.f1Desc || 'A tall glass cover with ventilation holes that maintains high humidity and temperature.',
       side: 'left',
-      dotPos: { top: '22%', left: '42.5%' },
-      cardPos: { top: '27%', left: '30%' },
+      dotPos: { top: '34%', left: '9%' },
+      cardPos: { top: '40%', left: '20%' },
     },
     {
       id: 'lighting',
@@ -21,7 +25,7 @@ const GulmoForestOrganismSection = ({ data }) => {
       title: data?.f2Title || 'LIGHTING SYSTEM',
       description: data?.f2Desc || 'High-spectrum LED lighting engineered specifically to support photosynthesis and vibrant plant growth.',
       side: 'right',
-      dotPos: { top: '15%', left: '56.5%' },
+      dotPos: { top: '14%', left: '50%' },
       cardPos: { top: '12%', left: '58%' },
     },
     {
@@ -31,7 +35,7 @@ const GulmoForestOrganismSection = ({ data }) => {
       title: data?.f3Title || 'PLANTS & FLORA',
       description: data?.f3Desc || 'Lush evergreen mosses, miniature ferns, and humidity-retaining species crafted for long-term health.',
       side: 'left',
-      dotPos: { top: '48%', left: '44%' },
+      dotPos: { top: '63%', left: '15%' },
       cardPos: { top: '42%', left: '26%' },
     },
     {
@@ -41,7 +45,7 @@ const GulmoForestOrganismSection = ({ data }) => {
       title: data?.f4Title || 'TERRA BASE & TERRA PLATE',
       description: data?.f4Desc || 'Cylindrical porous ceramic base supplying continuous hydration through natural water evaporation.',
       side: 'right',
-      dotPos: { top: '63%', left: '53.5%' },
+      dotPos: { top: '88%', left: '82%' },
       cardPos: { top: '55%', left: '58%' },
     },
     {
@@ -50,9 +54,9 @@ const GulmoForestOrganismSection = ({ data }) => {
       subLabel: '',
       title: data?.f5Title || 'SUBSTRATE & SOIL',
       description: data?.f5Desc || 'Multi-layered nutrient substratum optimized for root breathability and balanced moisture retention.',
-      side: 'left',
-      dotPos: { top: '75%', left: '43.5%' },
-      cardPos: { top: '68%', left: '26%' },
+      side: 'right',
+      dotPos: { top: '72%', left: '84%' },
+      cardPos: { top: '68%', left: '72%' },
     },
     {
       id: 'tool',
@@ -60,9 +64,9 @@ const GulmoForestOrganismSection = ({ data }) => {
       subLabel: data?.f6Sub || 'MAINTENANCE TOOL',
       title: data?.f6Title || 'LAYOUT & MAINTENANCE TOOL',
       description: data?.f6Desc || 'Precision aquascaping tools for delicate planting, trimming, and pin-point maintenance.',
-      side: 'right',
-      dotPos: { top: '80%', left: '55%' },
-      cardPos: { top: '72%', left: '58%' },
+      side: 'left',
+      dotPos: { top: '-5%', left: '12%' },
+      cardPos: { top: '10%', left: '26%' },
     },
   ];
 
@@ -117,16 +121,36 @@ const GulmoForestOrganismSection = ({ data }) => {
             />
           </div>
 
-          {/* Central Glass Jar Assembly */}
-          <div className="relative z-10 flex justify-center items-center py-8 mt-5 pointer-events-none">
+          {/* Central Glass Jar Assembly and component layers */}
+          <div className="relative z-10 mt-5 w-[180px] sm:w-[240px] md:w-[290px] lg:w-[240px] pointer-events-none">
             <img
               src={data?.jarImage || designJar}
               alt="Exploded Terrarium Design Jar"
-              className="w-[180px] sm:w-[240px] md:w-[290px] lg:w-[240px] h-auto object-contain drop-shadow-xl"
+              className="relative z-10 block w-full h-auto object-contain drop-shadow-xl"
             />
-          </div>
 
-          {/* Hotspot Dots on the Jar Diagram */}
+            {/* The supplied product components are intentionally layered over the glass assembly. */}
+            <img
+              src={lightStand}
+              alt="Light stand Z"
+              className="absolute z-20 left-1/2 top-[-19%] w-[118%] h-auto origin-center -translate-x-1/2 scale-y-[1.3] object-contain"
+            />
+            <img
+              src={maintenanceTool}
+              alt="Layout and maintenance tool"
+              className="absolute z-20 left-[-4%] top-[-10%] w-[44%] h-auto object-contain"
+            />
+            <img
+              src={forestPlant}
+              alt="Forest plant"
+              className="absolute z-30 left-1/2 top-[25%] w-[84%] h-auto -translate-x-1/2 object-contain"
+            />
+            <img
+              src={jungleSoil}
+              alt="Jungle soil"
+              className="absolute z-20 left-1/2 top-[64%] w-[98%] h-auto -translate-x-1/2 object-contain"
+            />
+          {/* Keep hotspots in the jar's coordinate system at every breakpoint. */}
           {features.map((feature) => {
             const isActive = feature.id === activeId;
             return (
@@ -138,23 +162,24 @@ const GulmoForestOrganismSection = ({ data }) => {
                 }}
                 aria-label={feature.title}
                 style={{ top: feature.dotPos.top, left: feature.dotPos.left }}
-                className="absolute z-30 transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer focus:outline-none"
+                className="absolute z-40 pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer focus:outline-none"
               >
                 <div className="relative flex items-center justify-center">
                   {isActive && (
-                    <span className="absolute inline-flex h-6 w-6 rounded-full bg-[#7BA641]/60 animate-ping" />
+                    <span className="absolute inline-flex h-8 w-8 rounded-full bg-[#6CA844]/60 animate-ping" />
                   )}
                   <span
                     className={`block rounded-full transition-all duration-300 ${
                       isActive
-                        ? 'w-4 h-4 bg-[#7BA641] shadow-[0_0_12px_rgba(123,166,65,0.8)] border-2 border-white'
-                        : 'w-3 h-3 bg-[#7BA641]/70 hover:bg-[#7BA641] hover:scale-125 border border-white/80'
+                        ? 'w-5 h-5 bg-[#6CA844] shadow-[0_0_12px_rgba(108,168,68,0.8)] border-2 border-white'
+                        : 'w-4 h-4 bg-[#6CA844] hover:scale-125 border border-white/80'
                     }`}
                   />
                 </div>
               </button>
             );
           })}
+          </div>
 
           {/* Active Tooltip Info Card (Desktop & Tablet) */}
           {activeFeature && (
@@ -165,12 +190,12 @@ const GulmoForestOrganismSection = ({ data }) => {
                 top: activeFeature.cardPos.top,
                 left: activeFeature.cardPos.left,
               }}
-              className="hidden md:block absolute z-30 transform -translate-x-1/2 -translate-y-1/2 w-64 lg:w-72 bg-[#e4e7df]/85 backdrop-blur-md border border-white/60 rounded-sm p-4 sm:p-5 shadow-xl transition-all duration-400 ease-out"
+              className="hidden md:flex absolute z-30 h-52 w-52 -translate-x-1/2 -translate-y-1/2 flex-col justify-center rounded-none border border-white/50 bg-[#95A2AB]/[0.11] p-4 backdrop-blur-[12px] shadow-[0_12px_32px_rgba(6,35,43,0.14),inset_0_1px_0_rgba(255,255,255,0.55)] transition-all duration-400 ease-out"
             >
-              <h4 className="text-xs sm:text-sm font-bold text-[#556349] tracking-wider uppercase mb-2">
+              <h4 className="font-kanit text-xs sm:text-sm font-light text-[#503A3A] tracking-wider uppercase mb-2">
                 {activeFeature.title}
               </h4>
-              <p className="text-[11px] sm:text-xs text-[#525e49] leading-relaxed font-normal">
+              <p className="font-kanit text-[11px] sm:text-xs font-light text-[#503A3A] leading-relaxed">
                 {activeFeature.description}
               </p>
             </div>
@@ -180,6 +205,7 @@ const GulmoForestOrganismSection = ({ data }) => {
           <div className="hidden md:flex flex-col justify-between absolute left-2 lg:left-8 xl:left-22 top-1/2 -translate-y-1/2 h-[460px] z-20 pointer-events-auto">
             {features
               .filter((f) => f.side === 'left')
+              .sort((a, b) => ['tool', 'glass', 'plants'].indexOf(a.id) - ['tool', 'glass', 'plants'].indexOf(b.id))
               .map((item) => {
                 const isActive = item.id === activeId;
                 return (
@@ -190,12 +216,14 @@ const GulmoForestOrganismSection = ({ data }) => {
                       setActiveId(isActive ? null : item.id);
                     }}
                     className={`text-left group cursor-pointer focus:outline-none transition-all duration-300 ${
+                      item.id === 'tool' ? 'translate-x-2 -translate-y-28' : ''
+                    } ${
                       isActive ? 'scale-105' : 'hover:opacity-90'
                     }`}
                   >
                     <span
                       className={`block font-kanit font-medium text-xl sm:text-2xl lg:text-[34px] xl:text-[33px] leading-tight lg:leading-[45px] tracking-normal uppercase transition-colors ${
-                        isActive ? 'text-[#7BA641]' : 'text-[#6A6A6A]'
+                        isActive ? 'text-[#7BA641]' : 'text-[#363636]'
                       }`}
                     >
                       {item.label}
@@ -203,10 +231,10 @@ const GulmoForestOrganismSection = ({ data }) => {
                     {item.subLabel && (
                       <span
                         className={`block font-kanit font-medium text-xl sm:text-2xl lg:text-[30px] xl:text-[35px] leading-tight lg:leading-[45px] tracking-normal uppercase transition-colors ${
-                          isActive ? 'text-[#7BA641]' : 'text-[#6A6A6A]'
+                          isActive ? 'text-[#7BA641]' : 'text-[#363636]'
                         }`}
                       >
-                        {item.subLabel}
+                        {item.id === 'tool' ? <>{'MAINTENANCE'}<br />{'TOOL'}</> : item.subLabel}
                       </span>
                     )}
                   </button>
@@ -218,6 +246,7 @@ const GulmoForestOrganismSection = ({ data }) => {
           <div className="hidden md:flex flex-col justify-between absolute right-8 lg:right-8 xl:right-2 top-1/2 -translate-y-1/2 h-[460px] z-20 pointer-events-auto">
             {features
               .filter((f) => f.side === 'right')
+              .sort((a, b) => ['lighting', 'substrate', 'terra'].indexOf(a.id) - ['lighting', 'substrate', 'terra'].indexOf(b.id))
               .map((item) => {
                 const isActive = item.id === activeId;
                 return (
@@ -233,7 +262,7 @@ const GulmoForestOrganismSection = ({ data }) => {
                   >
                     <span
                       className={`block font-kanit font-medium text-xl sm:text-2xl lg:text-[30px] xl:text-[33px] leading-tight lg:leading-[45px] tracking-normal uppercase transition-colors ${
-                        isActive ? 'text-[#7BA641]' : 'text-[#6A6A6A]'
+                        isActive ? 'text-[#7BA641]' : 'text-[#363636]'
                       }`}
                     >
                       {item.label}
@@ -241,7 +270,7 @@ const GulmoForestOrganismSection = ({ data }) => {
                     {item.subLabel && (
                       <span
                         className={`block font-kanit font-medium text-xl sm:text-2xl lg:text-[34px] xl:text-[32px] leading-tight lg:leading-[45px] tracking-normal uppercase transition-colors ${
-                          isActive ? 'text-[#7BA641]' : 'text-[#6A6A6A]'
+                          isActive ? 'text-[#7BA641]' : 'text-[#363636]'
                         }`}
                       >
                         {item.subLabel}
@@ -260,11 +289,11 @@ const GulmoForestOrganismSection = ({ data }) => {
             onClick={(e) => e.stopPropagation()}
             className="block md:hidden mt-8 space-y-6 z-30 relative"
           >
-            <div className="bg-[#e4e7df]/90 backdrop-blur-md border border-white/60 rounded-lg p-5 shadow-lg max-w-md mx-auto">
-              <h4 className="text-sm font-bold text-[#556349] tracking-wider uppercase mb-2">
+            <div className="flex h-52 w-52 mx-auto flex-col justify-center rounded-none border border-white/50 bg-[#95A2AB]/[0.11] p-4 backdrop-blur-[12px] shadow-[0_12px_32px_rgba(6,35,43,0.14),inset_0_1px_0_rgba(255,255,255,0.55)]">
+              <h4 className="font-kanit text-sm font-light text-[#503A3A] tracking-wider uppercase mb-2">
                 {activeFeature.title}
               </h4>
-              <p className="text-xs text-[#525e49] leading-relaxed font-normal">
+              <p className="font-kanit text-xs font-light text-[#503A3A] leading-relaxed">
                 {activeFeature.description}
               </p>
             </div>
@@ -286,7 +315,7 @@ const GulmoForestOrganismSection = ({ data }) => {
                   className={`p-3 text-center rounded-md font-kanit font-medium text-xs sm:text-sm uppercase tracking-normal transition-all duration-300 cursor-pointer ${
                     isActive
                       ? 'bg-[#7BA641] text-white shadow-md'
-                      : 'bg-gray-100 text-[#6A6A6A] hover:bg-gray-200'
+                      : 'bg-gray-100 text-[#363636] hover:bg-gray-200'
                   }`}
                 >
                   {item.label} {item.subLabel ? ` / ${item.subLabel}` : ''}
