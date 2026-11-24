@@ -6,7 +6,7 @@ import GetInTouch from '../shared/GetInTouch';
 import WhatsAppButton from '../shared/WhatsAppButton';
 import GlobalFormModal from '../dynamic-forms/GlobalFormModal';
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, lightBackground = false }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -23,8 +23,8 @@ const MainLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className="font-sans antialiased min-h-screen flex flex-col overflow-x-hidden relative bg-[#070e06] text-white">
-      <NatureNavbar />
+    <div className={`font-sans antialiased min-h-screen flex flex-col overflow-x-hidden relative ${lightBackground ? 'bg-white text-zinc-900' : 'bg-[#070e06] text-white'}`}>
+      <NatureNavbar solidBackground={lightBackground} />
 
       <main className="flex-grow pt-24">
         {children || <Outlet />}

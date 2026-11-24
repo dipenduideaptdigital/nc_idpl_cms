@@ -29,7 +29,9 @@ const OurPartnersSection = ({ data }) => {
   const headline = data?.headline || 'Trusted by Leading<br />Innovators in Web3.';
   const paragraph = data?.paragraph || 'If you use this site regularly and would like to help keep the site on the Internet, please consider donating a small sum to help pay for the hosting and bandwidth bill.';
   const buttonText = data?.buttonText || 'STORE';
-  const buttonLink = data?.buttonLink || '#store';
+  const buttonLink = /^(shop|store)$/i.test(buttonText.trim()) || !data?.buttonLink || data.buttonLink === '#store'
+    ? '/shop'
+    : data.buttonLink;
 
   const getLogo = (index) => data?.partnerLogos?.[index]
     ? getAssetUrl(data.partnerLogos[index])

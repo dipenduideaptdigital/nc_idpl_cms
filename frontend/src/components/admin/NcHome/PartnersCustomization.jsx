@@ -107,7 +107,7 @@ const PartnersCustomization = ({ data, setData }) => {
           
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
             {[0, 1, 2, 3, 4, 5].map(idx => (
-              <div key={idx} className="border border-zinc-200 dark:border-zinc-700 p-4 rounded-xl bg-zinc-50/30 dark:bg-zinc-950 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
+              <div key={idx} className="p-0">
                 <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-3 text-center transition-colors duration-300">
                   Logo {idx + 1}
                 </label>
@@ -115,6 +115,7 @@ const PartnersCustomization = ({ data, setData }) => {
                 <ImageField 
                   value={data.partnerLogos?.[idx] || ''} 
                   onChange={(url) => handleLogoChange(idx, url)} 
+                  variant="logo"
                 />
               </div>
             ))}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import heroback from '../assets/nc_home/plant_hero.jpg';
-import logo from '../assets/nc_logo/naturecube.png';
+import logo from '../assets/nc_logo/WebsiteLogoWhite03.png';
 import apiClient from '../api/client';
 
 const ResetPassword = () => {

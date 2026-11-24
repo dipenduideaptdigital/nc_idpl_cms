@@ -21,6 +21,8 @@ const DynamicPage = lazy(() => import('./pages/DynamicPage'));
 const PreviewPage = lazy(() => import('./pages/PreviewPage')); 
 const NatureHomePreview = lazy(() => import('./pages/NatureHomePreview'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const ShopComingSoon = lazy(() => import('./pages/ShopComingSoon'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
 const Projects = lazy(() => import('./pages/Projects'));
@@ -167,6 +169,10 @@ function App() {
             <Route path="/projects/:slug" element={<ProjectDetail />} />
 
             {/* Public Routes INSIDE MainLayout */}
+            <Route path="/faq" element={<MainLayout lightBackground><FAQ /></MainLayout>} />
+            <Route path="/faqs" element={<Navigate to="/faq" replace />} />
+            <Route path="/shop" element={<ShopComingSoon />} />
+            <Route path="/store" element={<Navigate to="/shop" replace />} />
             <Route element={<MainLayout />}>
               <Route path="/prakriti-lab/activities/:activitySlug" element={<PrakritiActivityPage />} />
               <Route path="/preview/:token" element={<PreviewPage />} />

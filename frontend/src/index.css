@@ -11,11 +11,18 @@
   --font-reem-fun: 'Reem Kufi Fun', sans-serif;
   --font-kanit: 'Kanit', sans-serif;
   --font-caveat: 'Caveat', cursive;
+  --font-century-gothic: 'Century Gothic', 'CenturyGothic', 'Avant Garde', Arial, sans-serif;
   --font-architects: 'Architects Daughter', cursive;
   --font-patrick: 'Patrick Hand', cursive;
   --font-larken: 'Larken-MediumItalic', 'Larken-LightItalic', 'Cormorant Garamond', 'Instrument Serif', serif;
+  --animate-offerings-menu-reveal: offerings-menu-reveal 0.3s ease-out both;
   --color-primary: #3B82F6;
   --color-secondary: #f97316;
+}
+
+@keyframes offerings-menu-reveal {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .font-outfit {
@@ -159,16 +166,7 @@ html {
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: #d4d4d8 transparent;
-}
-
-/* Hide the page scrollbar on the public website without disabling scrolling. */
-html.public-scrollbar-hidden {
-  scrollbar-width: none;
-}
-
-html.public-scrollbar-hidden::-webkit-scrollbar {
-  display: none;
+  scrollbar-color: #7ba641 #f1f6ea;
 }
 
 html.dark {
@@ -176,24 +174,23 @@ html.dark {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f1f6ea;
 }
 
-/* Light Mode Scrollbar Thumb */
+/* Site scrollbar */
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
-  /* zinc-300 */
+  background: #7ba641;
+  border: 2px solid #f1f6ea;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa;
-  /* zinc-400 */
+  background: #6b9337;
 }
 
 /* Dark Mode Scrollbar Thumb */

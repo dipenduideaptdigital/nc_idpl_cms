@@ -3,8 +3,9 @@ import { Image as ImageIcon, X, FolderOpen } from 'lucide-react';
 import { resolveAssetUrl } from '../../utils/assetResolver';
 import MediaPickerModal from './MediaPickerModal';
 
-const ImageField = ({ value, onChange }) => {
+const ImageField = ({ value, onChange, variant = 'default' }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const isLogoPreview = variant === 'logo';
 
   const handleSelectMedia = (url) => {
     onChange(url);
@@ -20,11 +21,11 @@ const ImageField = ({ value, onChange }) => {
   return (
     <div className="w-full">
       {value ? (
-        <div className="relative group w-full h-40 bg-zinc-100 dark:bg-zinc-800 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-700 transition-colors duration-300">
+        <div className={`relative group w-full ${isLogoPreview ? 'h-44 flex items-center justify-center' : 'h-40 bg-zinc-100 dark:bg-zinc-800 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-700 transition-colors duration-300'}`}>
           <img
             src={displayUrl}
             alt="Selected Preview"
-            className="w-full h-full object-cover"
+            className={isLogoPreview ? 'h-full w-full object-contain scale-125' : 'w-full h-full object-cover'}
           />
 
           {/* Overlay Actions */}

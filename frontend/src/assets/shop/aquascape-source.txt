@@ -1,0 +1,4 @@
+Asset: aquascape.png
+Tool: built-in image_gen (edit of the approved coming-soon mockup).
+Prompt:
+Use case: precise-object-edit. Input image is the approved website mockup. Extract/recreate ONLY its right-hand photoreal glass cube aquascape aquarium on a round pale limestone plinth as a standalone square web hero asset. Preserve the exquisite green fern and moss, central driftwood tree, clear water, few tiny fish, perspective showing front and right glass panels, pale textured stone circular base and soft floor shadow. Center the complete object with 6 percent margins, no cropping of aquarium or base. Background is completely plain uniform warm ivory #F7F8F1 except the natural soft contact shadow. Remove ALL text, logos, UI, navigation, badges, floating card, buttons, borders and thin background circle. The image must contain only the beautiful aquascape and plinth, no webpage. Premium natural daylight product photography.

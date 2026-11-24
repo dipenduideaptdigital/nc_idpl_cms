@@ -182,7 +182,7 @@ const PrakritiEducationSection = ({ data }) => {
                   aria-label={`Explore ${card.title || 'activity'}`}
                   className="block h-full group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4b7133]"
                 >
-                  <article className="h-full bg-[#e5eee8] p-2 flex flex-col">
+                  <article className="flex h-full flex-col bg-[#e5eee8] p-2 transition-[background-color,box-shadow,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-2 group-hover:bg-[#06232b] group-hover:shadow-[0_18px_32px_rgba(6,35,43,0.26)] group-focus-visible:-translate-y-2 group-focus-visible:bg-[#06232b] group-focus-visible:shadow-[0_18px_32px_rgba(6,35,43,0.26)] motion-reduce:transition-none">
                     {imgSrc && (
                       <img
                         src={imgSrc}
@@ -191,15 +191,15 @@ const PrakritiEducationSection = ({ data }) => {
                       />
                     )}
                     <div className="relative flex flex-col flex-1 pt-3 pb-1 pr-12">
-                      <h3 className="font-kanit font-semibold text-2xl text-[#1b2425] leading-tight tracking-tight whitespace-pre-line">
+                      <h3 className="font-kanit font-semibold text-2xl text-[#1b2425] leading-tight tracking-tight whitespace-pre-line transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white group-focus-visible:text-white">
                         {card.title}
                       </h3>
                       <div className="mt-2">
-                        <p className="text-sm leading-snug text-[#515b57]">
+                        <p className="text-sm leading-snug text-[#515b57] transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-[#e5eee8] group-focus-visible:text-[#e5eee8]">
                           {card.description || 'Discover nature through learning and shared experiences.'}
                         </p>
                       </div>
-                      <ArrowUpRight aria-hidden="true" className="absolute bottom-1 right-1 text-[#6f7974]" size={40} />
+                      <ArrowUpRight aria-hidden="true" className="absolute bottom-1 right-1 text-[#6f7974] transition-[color,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#a4cf86] group-focus-visible:-translate-y-1 group-focus-visible:translate-x-1 group-focus-visible:text-[#a4cf86] motion-reduce:transition-none" size={40} />
                     </div>
                   </article>
                 </Link>

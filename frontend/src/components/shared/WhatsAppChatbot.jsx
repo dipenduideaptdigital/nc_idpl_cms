@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, RefreshCw, MessageCircle } from 'lucide-react';
-import SubhaakritiLogo from '../../assets/nc_logo/naturecube.png';
+import SubhaakritiLogo from '../../assets/nc_logo/WebsiteLogoWhite03.png';
 
 const chatbotSteps = {
   welcome: {
@@ -224,7 +224,7 @@ const WhatsAppChatbot = ({ isOpen, onClose, configuredPhoneNumber, configuredDef
       <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-4 py-3 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-inner overflow-hidden border border-emerald-500">
-            <img src={SubhaakritiLogo} alt="Nature Logo" className="w-8 h-8 object-contain" />
+            <img src={SubhaakritiLogo} alt="Nature Logo" className="w-8 h-8 object-contain brightness-0" />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full animate-pulse"></span>
           </div>
           <div>
