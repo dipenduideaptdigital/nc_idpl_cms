@@ -368,3 +368,26 @@ export const headerMenuSchema = z.object({
     menuItems: z.array(menuItemSchema).default([])
   }).strict()
 });
+
+const megaMenuLink = z.string().trim().max(500).refine(
+  (value) => value === '' || /^\/(?![\/\\])[^\\\s]*$/.test(value),
+  'Use an internal path starting with /'
+);
+const megaMenuImage = z.string().trim().max(2048).refine(
+  (value) => value === '' || /^https?:\/\/[^\s]+$/i.test(value) || /^\/(?![\/\\])[^\\\s]*$/.test(value),
+  'Use a media URL or an internal media path'
+);
+const megaMenuText = z.string().trim().max(200).optional();
+const megaMenuCard = z.object({ title: megaMenuText, image: megaMenuImage.optional(), href: megaMenuLink.optional() });
+export const offeringsMegaMenuSchema = z.object({
+  content: z.object({
+    label: megaMenuText,
+    headingLine1: megaMenuText,
+    headingLine2: megaMenuText,
+    description: z.string().max(1000).optional(),
+    tagline: megaMenuText,
+    ripple: megaMenuCard.optional(),
+    gulmo: megaMenuCard.optional(),
+    prakriti: megaMenuCard.extend({ description: z.string().max(1000).optional() }).optional(),
+  }).strict()
+});

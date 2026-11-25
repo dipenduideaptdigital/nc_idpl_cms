@@ -29,12 +29,14 @@ import {
   gulmoOurProjectsSchema,
   gulmoLetsBeginSchema,
   gulmoConceptSchema,
-  headerMenuSchema
+  headerMenuSchema,
+  offeringsMegaMenuSchema
 } from "./cms.validation.js";
 
 export const CMS_REGISTRY = {
   // GLOBAL SETTINGS
   "global_header_menu": headerMenuSchema,
+  "global_offerings_mega_menu": offeringsMegaMenuSchema,
   "homepage_general": generalSettingsSchema,
   "homepage_footer": footerSchema,
   "cms_settings": cmsSettingsSchema,

@@ -35,6 +35,7 @@ const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const ActivityEditor = lazy(() => import('./pages/admin/activities/ActivityEditor'));
 const WorkshopList = lazy(() => import('./pages/admin/workshops/WorkshopList'));
 const WorkshopEditor = lazy(() => import('./pages/admin/workshops/WorkshopEditor'));
+const MegaMenuCustomization = lazy(() => import('./pages/admin/MegaMenuCustomization'));
 const NcHomeCustomization = lazy(() => import('./pages/admin/NcHomeCustomization'));
 const AboutCustomization = lazy(() => import('./pages/admin/AboutCustomization'));
 const MandalaCustomization = lazy(() => import('./pages/admin/MandalaCustomization'));
@@ -117,6 +118,7 @@ function App() {
               <Route path="workshops/create" element={<WorkshopEditor />} />
               <Route path="workshops/edit/:id" element={<WorkshopEditor />} />
               <Route path="home-customization" element={<NcHomeCustomization />} />
+              <Route path="mega-menu" element={<MegaMenuCustomization />} />
               <Route path="about-customization" element={<AboutCustomization />} />
               <Route path="mandala-customization" element={<MandalaCustomization />} />
               <Route path="contact-customization" element={<ContactPageCustomization />} />
