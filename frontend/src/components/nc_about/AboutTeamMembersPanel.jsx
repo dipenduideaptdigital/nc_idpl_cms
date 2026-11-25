@@ -41,7 +41,7 @@ const AboutTeamMembersPanel = ({ data }) => {
               alt="Col. Basudev Mitra"
               className="w-24 sm:w-32 lg:w-44 h-24 sm:h-32 lg:h-44 aspect-square object-cover flex-shrink-0 shadow-sm border border-zinc-100"
             />
-            <div className="pt-1">
+            <div className="min-w-0 max-w-[390px] -translate-y-3">
               <h3 className="font-kanit font-semibold text-base sm:text-lg lg:text-xl text-[#7BA641] tracking-wide uppercase mb-1 sm:mb-2">
                 {leader1Name}
               </h3>
@@ -58,7 +58,7 @@ const AboutTeamMembersPanel = ({ data }) => {
               alt="Partha Chakraborty"
               className="w-24 sm:w-32 lg:w-44 h-24 sm:h-32 lg:h-44 aspect-square object-cover flex-shrink-0 shadow-sm border border-zinc-100"
             />
-            <div className="pt-1">
+            <div className="min-w-0 max-w-[390px] -translate-y-3">
               <h3 className="font-kanit font-semibold text-base sm:text-lg lg:text-xl text-[#7BA641] tracking-wide uppercase mb-1 sm:mb-2">
                 {leader2Name}
               </h3>
@@ -75,7 +75,7 @@ const AboutTeamMembersPanel = ({ data }) => {
               alt="Sanjoy Dutta"
               className="w-24 sm:w-32 lg:w-44 h-24 sm:h-32 lg:h-44 aspect-square object-cover flex-shrink-0 shadow-sm border border-zinc-100"
             />
-            <div className="pt-1">
+            <div className="min-w-0 max-w-[390px] -translate-y-3">
               <h3 className="font-kanit font-semibold text-base sm:text-lg lg:text-xl text-[#7BA641] tracking-wide uppercase mb-1 sm:mb-2">
                 {leader3Name}
               </h3>
@@ -88,7 +88,7 @@ const AboutTeamMembersPanel = ({ data }) => {
         </div>
 
         {/* Right Section: Wide Cut-Out Team Group Photo (Increased Height & Scale) */}
-        <div className="w-[580px] sm:w-[800px] lg:w-[980px] flex-shrink-0 relative flex items-end justify-start h-full pb-0 -ml-50 overflow-visible mr-60">
+        <div className="w-[580px] sm:w-[800px] lg:w-[980px] flex-shrink-0 relative flex items-end justify-start h-full pb-0 -ml-24 overflow-visible mr-60">
           <img
             src={data?.groupImage ? resolveAssetUrl(data.groupImage) : team5Img}
             alt="NatureCube Team Group"

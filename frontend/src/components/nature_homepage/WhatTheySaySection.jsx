@@ -63,34 +63,31 @@ const WhatTheySaySection = ({ data }) => {
   };
   if (data?.isVisible === false) return null;
   return (
-    <section className="relative w-full bg-white py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-20 overflow-hidden select-none">
+    <section className="relative w-full min-w-0 overflow-hidden bg-white px-4 py-12 select-none min-[360px]:px-5 sm:px-8 sm:py-16 lg:px-20 lg:py-20">
       
       <div className="absolute -top-10 -left-10 w-[320px] sm:w-[480px] lg:w-[600px] h-auto pointer-events-none z-0 opacity-35">
         <img src={brushBg} alt="" className="w-full h-auto object-contain object-left-top" />
       </div>
 
-      <div className="max-w-[1200px] mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      <div className="relative z-10 mx-auto grid max-w-[1200px] min-w-0 grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
         
         {/* Left Column */}
-        <div className="lg:col-span-5 flex flex-col items-start pt-0 lg:pt-4">
+        <div className="flex min-w-0 flex-col items-start pt-0 lg:col-span-5 lg:pt-4">
           <span className="font-kanit text-[18px] sm:text-[20px] font-medium text-[#6CA844] tracking-wide block lowercase mb-3">
             {tagline}
           </span>
 
-          <div className="mb-6 flex items-baseline flex-wrap">
-            <span className="font-reem font-bold text-3xl sm:text-5xl lg:text-[55px] text-black leading-[100%] uppercase align-middle" style={{ fontWeight: 700, verticalAlign: 'middle' }}>
+          <div className="mb-6 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span className="font-reem text-[28px] font-bold uppercase leading-[100%] text-black min-[360px]:text-3xl sm:text-5xl lg:text-[55px]" style={{ fontWeight: 700, verticalAlign: 'middle' }}>
               {titlePrefix}
             </span>
-            <span className="font-reem font-bold text-3xl sm:text-5xl lg:text-[64px] leading-[100%] align-middle" style={{ fontWeight: 700, verticalAlign: 'middle' }}>
-              &nbsp;
-            </span>
-            <span className="font-larken font-normal italic text-4xl sm:text-6xl lg:text-[88px] text-[#6CA844] leading-[100%] lowercase align-middle" style={{ fontWeight: 550, verticalAlign: 'middle' }}>
+            <span className="font-larken text-[34px] font-normal italic lowercase leading-[100%] text-[#6CA844] min-[360px]:text-4xl sm:text-6xl lg:text-[88px]" style={{ fontWeight: 550, verticalAlign: 'middle' }}>
               {italicTitle}
             </span>
           </div>
 
           <h2 
-            className="font-kanit font-medium text-2xl sm:text-4xl lg:text-[40px] text-zinc-900 leading-[1.2] max-w-md lg:max-w-lg mb-4 lg:mb-12"
+            className="mb-4 max-w-md break-words font-kanit text-[26px] font-medium leading-[1.2] text-zinc-900 min-[360px]:text-[28px] sm:text-4xl lg:mb-12 lg:max-w-lg lg:text-[40px]"
             dangerouslySetInnerHTML={{ __html: headline }}
           />
 
@@ -130,8 +127,8 @@ const WhatTheySaySection = ({ data }) => {
         </div>
 
         {/* Right Column: Featured Single Primary Card for Mobile/Tablet & Desktop */}
-        <div className="lg:col-span-6 flex flex-col items-center lg:items-start w-[600px] mt-4 lg:mt-60">
-          <div className="w-full relative rounded-xs overflow-hidden shadow-2xl mt-0 ml-0 mx-auto lg:mx-0">
+        <div className="mt-4 flex w-full min-w-0 max-w-[600px] flex-col items-center lg:col-span-6 lg:mt-60 lg:items-start">
+          <div className="relative mx-auto mt-0 ml-0 w-full overflow-hidden rounded-xs shadow-2xl lg:mx-0">
             <div className="w-full aspect-[4/5] max-h-[360px] xs:max-h-[420px] sm:max-h-[500px] lg:max-h-[630px] relative">
               <img src={getImageUrl(activeItem.image)} alt={activeItem.name || 'Testimonial'} className="w-full h-full object-cover object-left" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-40% to-transparent p-6 sm:p-8 lg:p-10 flex flex-col justify-end text-white">

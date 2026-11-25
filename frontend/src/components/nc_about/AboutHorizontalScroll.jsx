@@ -20,8 +20,16 @@ const AboutHorizontalScroll = ({ data }) => {
   const containerRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
   const [panelCount, setPanelCount] = useState(0);
+  const [isNavigationVisible, setIsNavigationVisible] = useState(true);
+  const navigationTimerRef = useRef(null);
 
   const flatData = data || {};
+
+  const revealNavigation = () => {
+    setIsNavigationVisible(true);
+    window.clearTimeout(navigationTimerRef.current);
+    navigationTimerRef.current = window.setTimeout(() => setIsNavigationVisible(false), 1600);
+  };
 
 
 
@@ -119,6 +127,7 @@ const AboutHorizontalScroll = ({ data }) => {
   };
 
   const scrollToPanel = (index) => {
+    revealNavigation();
     const panels = getPanels();
     if (!panels[index]) return;
     const targetChild = panels[index];
@@ -130,6 +139,7 @@ const AboutHorizontalScroll = ({ data }) => {
   };
 
   const handleScroll = () => {
+    revealNavigation();
     const el = containerRef.current;
     if (!el) return;
     const panels = getPanels();
@@ -169,6 +179,11 @@ const AboutHorizontalScroll = ({ data }) => {
     return () => el.removeEventListener('wheel', handleWheel);
   }, [flatData]);
 
+  useEffect(() => {
+    revealNavigation();
+    return () => window.clearTimeout(navigationTimerRef.current);
+  }, []);
+
   const totalPanels = panelCount || 10;
 
   return (
@@ -181,6 +196,8 @@ const AboutHorizontalScroll = ({ data }) => {
       <div
         ref={containerRef}
         onScroll={handleScroll}
+        onPointerMove={revealNavigation}
+        onPointerDown={revealNavigation}
         className="w-full h-full flex flex-row overflow-x-auto overflow-y-hidden scrollbar-none relative"
         style={{ scrollBehavior: 'smooth' }}
       >
@@ -275,6 +292,8 @@ const AboutHorizontalScroll = ({ data }) => {
         count={totalPanels}
         activeIndex={activePanel}
         onSelect={scrollToPanel}
+        visible={isNavigationVisible}
+        onInteract={revealNavigation}
         className="bottom-6 right-24 sm:right-28"
       />
     </div>
