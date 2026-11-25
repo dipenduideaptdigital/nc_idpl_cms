@@ -6,6 +6,7 @@ import NcProjectOverview from '../components/nc_projects/NcProjectOverview';
 import NcProjectStackFrames from '../components/nc_projects/NcProjectStackFrames';
 import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
 import NatureFooter from '../components/nature_homepage/NatureFooter';
+import SiteBreadcrumb from '../components/shared/SiteBreadcrumb';
 import { projectsApi } from '../api/projects';
 import apiClient from '../api/client';
 
@@ -68,6 +69,7 @@ const ProjectDetail = () => {
       
       {/* Hero Section */}
       <NcProjectDetailHero project={project} />
+      <SiteBreadcrumb />
 
       {/* Main Content Sections */}
       <main className="flex-grow w-full">

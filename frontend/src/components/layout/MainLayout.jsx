@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import NatureNavbar from '../nature_homepage/NatureNavbar';
 import NatureFooter from '../nature_homepage/NatureFooter';
+import SiteBreadcrumb from '../shared/SiteBreadcrumb';
 import GetInTouch from '../shared/GetInTouch';
 import WhatsAppButton from '../shared/WhatsAppButton';
 import GlobalFormModal from '../dynamic-forms/GlobalFormModal';
 
-const MainLayout = ({ children, lightBackground = false }) => {
+const MainLayout = ({ children, lightBackground = false, showBreadcrumb = false }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ const MainLayout = ({ children, lightBackground = false }) => {
       <NatureNavbar solidBackground={lightBackground} />
 
       <main className="flex-grow pt-24">
+        {showBreadcrumb && <SiteBreadcrumb />}
         {children || <Outlet />}
       </main>
 

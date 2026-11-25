@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import rippleImage from '../../assets/nc_home/aqua2.png';
 import gulmoImage from '../../assets/nc_mandala/gulmo_tank.png';
-import pattern from '../../assets/nc_mandala/pattern.png';
+import prakritiCardImage from '../../assets/nc_mandala/prakriti-lab-card.png';
 
 export default function OfferingsMegaMenuPanel({ links, onClose, onMouseEnter, onMouseLeave }) {
   return (
@@ -39,7 +39,9 @@ export default function OfferingsMegaMenuPanel({ links, onClose, onMouseEnter, o
         </div>
 
         <div className="relative isolate flex flex-col justify-between gap-12 overflow-hidden rounded-[3px] bg-[#06232b] p-[clamp(28px,3.3vw,54px)] text-white lg:max-xl:p-7">
-          <div className="absolute inset-0 -z-10 bg-repeat bg-[length:190px] opacity-[.22]" style={{ backgroundImage: `url(${pattern})` }} aria-hidden="true" />
+          <div className="absolute inset-0 -z-10" aria-hidden="true">
+            <img src={prakritiCardImage} alt="" className="size-full object-cover object-center brightness-[.58]" />
+          </div>
           <div className="flex flex-col items-start">
             <Link to={links.prakriti} onClick={onClose} className="text-[clamp(25px,2vw,34px)] font-semibold leading-[1.25] text-inherit no-underline transition-colors duration-[250ms] hover:text-[#a4cf86] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#6ca844] motion-reduce:transition-none">Prakriti LAB</Link>
             {/* <Link to={links.workshop} onClick={onClose} className="mt-[3px] text-[19px] font-light text-inherit no-underline transition-colors duration-[250ms] hover:text-[#a4cf86] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#6ca844] motion-reduce:transition-none">Workshop</Link> */}

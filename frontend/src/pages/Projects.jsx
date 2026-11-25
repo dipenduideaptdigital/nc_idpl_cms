@@ -5,6 +5,7 @@ import NcProjectsSectionHeader from '../components/nc_projects/NcProjectsSection
 import NcProjectsGrid from '../components/nc_projects/NcProjectsGrid';
 import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
 import NatureFooter from '../components/nature_homepage/NatureFooter';
+import SiteBreadcrumb from '../components/shared/SiteBreadcrumb';
 import PageRenderer from '../components/shared/PageRenderer';
 import { pagesApi } from '../api/pages';
 import { projectsApi } from '../api/projects';
@@ -83,7 +84,10 @@ const Projects = () => {
       {topBlocks.length > 0 ? (
         <PageRenderer blocks={topBlocks} />
       ) : (
-        <NcProjectsHero />
+        <>
+          <NcProjectsHero />
+          <SiteBreadcrumb />
+        </>
       )}
 
       <NcProjectsSectionHeader

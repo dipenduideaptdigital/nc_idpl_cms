@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { LazyMotion, domAnimation } from 'motion/react';
 import usePhilosophyScroll from '../../animations/usePhilosophyScroll';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -14,12 +14,20 @@ const MandalaHorizontalScroll = ({ data }) => {
   const containerRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
   const [activeStop, setActiveStop] = useState(0);
+  const [isNavigationVisible, setIsNavigationVisible] = useState(true);
+  const navigationTimerRef = useRef(null);
   // Previous mouse-drag state retained for reference:
   // const isMouseDownRef = useRef(false);
   // const startXRef = useRef(0);
   // const scrollLeftRef = useRef(0);
 
   const flatData = data || {};
+
+  const revealNavigation = () => {
+    setIsNavigationVisible(true);
+    window.clearTimeout(navigationTimerRef.current);
+    navigationTimerRef.current = window.setTimeout(() => setIsNavigationVisible(false), 1600);
+  };
 
   // Dynamically calculate total visible panels based on admin toggles
   const totalPanels = [
@@ -61,6 +69,7 @@ const MandalaHorizontalScroll = ({ data }) => {
   };
 
   const handleScroll = () => {
+    revealNavigation();
     const el = containerRef.current;
     if (!el) return;
     const index = Math.round(el.scrollLeft / el.clientWidth);
@@ -69,6 +78,11 @@ const MandalaHorizontalScroll = ({ data }) => {
       setActivePanel(index);
     }
   };
+
+  useEffect(() => {
+    revealNavigation();
+    return () => window.clearTimeout(navigationTimerRef.current);
+  }, []);
 
   /* Previous mouse-drag scrolling (disabled):
   const handleMouseDown = (e) => {
@@ -112,6 +126,8 @@ const MandalaHorizontalScroll = ({ data }) => {
       <div
         ref={containerRef}
         onScroll={handleScroll}
+        onPointerMove={revealNavigation}
+        onPointerDown={revealNavigation}
         onDragStart={(event) => event.preventDefault()}
         tabIndex={0}
         role="region"
@@ -120,6 +136,7 @@ const MandalaHorizontalScroll = ({ data }) => {
           if (event.target !== event.currentTarget) return;
           if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
             event.preventDefault();
+            revealNavigation();
             step(event.key === 'ArrowRight' ? 1 : -1);
           }
         }}
@@ -144,7 +161,7 @@ const MandalaHorizontalScroll = ({ data }) => {
       {/* Left Scroll Navigation Arrow */}
       {activeStop > 0 && (
         <button
-          onClick={() => step(-1)}
+          onClick={() => { revealNavigation(); step(-1); }}
           className="absolute left-6 top-1/2 -translate-y-1/2 z-40 bg-zinc-900/70 hover:bg-zinc-800 text-white p-3 rounded-full backdrop-blur-md border border-white/20 transition-all shadow-xl cursor-pointer"
           aria-label="Previous Panel"
         >
@@ -155,7 +172,7 @@ const MandalaHorizontalScroll = ({ data }) => {
       {/* Right Scroll Navigation Arrow */}
       {activeStop < (totalPanels - 1) * 2 && (
         <button
-          onClick={() => step(1)}
+          onClick={() => { revealNavigation(); step(1); }}
           className="absolute right-6 top-1/2 -translate-y-1/2 z-40 bg-zinc-900/70 hover:bg-zinc-800 text-white p-3 rounded-full backdrop-blur-md border border-white/20 transition-all shadow-xl cursor-pointer"
           aria-label="Next Panel"
         >
@@ -189,6 +206,8 @@ const MandalaHorizontalScroll = ({ data }) => {
         count={totalPanels}
         activeIndex={activePanel}
         onSelect={scrollToPanel}
+        visible={isNavigationVisible}
+        onInteract={revealNavigation}
         className="bottom-6 right-24 sm:right-28"
       />
 

@@ -28,12 +28,16 @@ const LearnTogetherSection = ({ data }) => {
           {tagline}
         </span>
 
-        {/* Box Placeholder / Logo Image */}
-        <div className="w-[240px] sm:w-[280px] h-[100px] sm:h-[120px] border-[1.5px] border-gray-200 shadow-sm rounded-sm bg-white mb-2 flex items-center justify-center overflow-hidden p-3">
-          {logoImage && (
-            <img src={logoImage} alt={tagline} className="max-w-full max-h-full object-contain" />
-          )}
-        </div>
+        {/* CMS-managed logo: intentionally rendered without a surrounding card. */}
+        {logoImage && (
+          <div className="-ml-6 mb-2 flex w-[270px] max-w-full items-center sm:-ml-8 sm:w-[330px] lg:-ml-10 lg:w-[380px]">
+            <img
+              src={logoImage}
+              alt={tagline}
+              className="h-auto w-full max-h-[125px] object-contain object-left sm:max-h-[150px] lg:max-h-[175px]"
+            />
+          </div>
+        )}
 
         {/* Titles */}
         <h2 className="font-reem text-5xl sm:text-6xl lg:text-[64px] font-normal tracking-wide text-[#0f2329] leading-none uppercase pt-2">

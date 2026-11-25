@@ -38,12 +38,12 @@ export default function PartnerColumn({ logos, direction = 'up', className = '' 
   return (
     <div
       ref={frameRef}
-      className={`min-w-0 px-2 ${reduceMotion ? '' : 'aspect-[1/2.6] overflow-hidden'} ${className}`}
+      className={`min-w-0 px-1 min-[360px]:px-1.5 sm:px-2 ${reduceMotion ? '' : 'aspect-[1/2.35] overflow-hidden sm:aspect-[1/2.6]'} ${className}`}
     >
       <div ref={trackRef}>
         {/* Identical groups, including bottom spacing, make the 50% loop seamless. */}
         {Array.from({ length: reduceMotion ? 1 : 2 }, (_, copy) => (
-          <div key={copy} aria-hidden={copy === 1 ? true : undefined} className="flex flex-col gap-4 lg:gap-6 pb-4 lg:pb-6">
+          <div key={copy} aria-hidden={copy === 1 ? true : undefined} className="flex flex-col gap-3 min-[360px]:gap-4 lg:gap-6 pb-3 min-[360px]:pb-4 lg:pb-6">
             {logos.map((logoUrl, index) => (
               <div
                 key={index}
@@ -54,7 +54,7 @@ export default function PartnerColumn({ logos, direction = 'up', className = '' 
                   alt={copy === 1 ? '' : 'Partner logo'}
                   loading="lazy"
                   decoding="async"
-                  className="max-h-20 sm:max-h-28 lg:max-h-32 w-auto max-w-full object-contain"
+                  className="max-h-16 min-[360px]:max-h-20 sm:max-h-28 lg:max-h-32 w-auto max-w-full object-contain"
                 />
               </div>
             ))}

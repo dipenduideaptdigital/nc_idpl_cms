@@ -5,6 +5,7 @@ import BlogContent from '../components/blog/BlogContent';
 import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
 import apiClient from '../api/client';
 import useScrollAnimation from '../hooks/useScrollAnimation';
+import SiteBreadcrumb from '../components/shared/SiteBreadcrumb';
 
 const Blog = () => {
   const [searchParams] = useSearchParams();
@@ -31,6 +32,7 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-zinc-50 pb-24 font-kanit">
       <BlogHero />
+      <SiteBreadcrumb />
       <BlogContent />
       <GetStartedCtaSection data={ctaData} />
     </div>
