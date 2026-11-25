@@ -69,7 +69,7 @@ const DynamicPage = () => {
 
   if (page.templateKey) {
     return (
-      <MainLayout>
+      <MainLayout showBreadcrumb={false}>
         <SEOHead data={page} type="page" />
         <TemplateRenderer page={page} />
       </MainLayout>
@@ -89,7 +89,7 @@ const DynamicPage = () => {
   }
 
   return (
-    <MainLayout>
+    <MainLayout showBreadcrumb={false}>
       <SEOHead data={page} type="page" />
       <PageRenderer blocks={page.content?.blocks} template={page.template} />
     </MainLayout>

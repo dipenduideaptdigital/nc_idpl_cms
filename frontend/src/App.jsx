@@ -171,7 +171,7 @@ function App() {
             <Route path="/projects/:slug" element={<ProjectDetail />} />
 
             {/* Public Routes INSIDE MainLayout */}
-            <Route path="/faq" element={<MainLayout lightBackground><FAQ /></MainLayout>} />
+            <Route path="/faq" element={<MainLayout lightBackground showBreadcrumb><FAQ /></MainLayout>} />
             <Route path="/faqs" element={<Navigate to="/faq" replace />} />
             <Route path="/shop" element={<ShopComingSoon />} />
             <Route path="/store" element={<Navigate to="/shop" replace />} />

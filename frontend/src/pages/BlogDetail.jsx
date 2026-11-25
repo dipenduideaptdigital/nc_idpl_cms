@@ -9,6 +9,7 @@ import BlogReviews from '../components/blog/BlogReviews';
 import GetStartedCtaSection from '../components/nature_homepage/GetStartedCtaSection';
 import apiClient from '../api/client';
 import SEOHead from '../components/shared/SEOHead';
+import SiteBreadcrumb from '../components/shared/SiteBreadcrumb';
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -67,6 +68,7 @@ const BlogDetail = () => {
       <SEOHead data={blog} type="blog" />
 
       <BlogDetailHero post={blog} />
+      <SiteBreadcrumb />
 
       <div className="container mx-auto px-4 md:px-8 max-w-7xl mt-16 opal-move-up mb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">

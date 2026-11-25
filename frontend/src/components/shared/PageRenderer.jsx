@@ -8,6 +8,7 @@ import RipplesLetsBeginSection from '../ripples/RipplesLetsBeginSection';
 import RipplesGulmoLetsBeginSection from '../ripples/RipplesGulmoLetsBeginSection';
 import RipplesAquascapeSection from '../ripples/RipplesAquascapeSection';
 import GetStartedCtaSection from '../nature_homepage/GetStartedCtaSection';
+import SiteBreadcrumb from './SiteBreadcrumb';
 
 //Gulmo
 import GulmoHero from '../gulmo/GulmoHero';
@@ -200,9 +201,19 @@ const PageRenderer = memo(({ blocks, template }) => {
 
   return (
     <div className={`animate-in fade-in duration-700 min-h-screen w-full ${wrapperBg}`}>
-      {blocks.map((block, index) => (
-        <BlockMapper key={block.id || index} block={block} index={index} />
-      ))}
+      {blocks.map((block, index) => {
+        const isFirstBlock = index === 0;
+        const isHero = ['ripplesHero', 'gulmoHero', 'prakritiHero', 'workshopHero', 'projectsBanner'].includes(block.type);
+        const supportsBreadcrumb = !['about-page', 'mandala-page'].includes(template);
+
+        return (
+          <React.Fragment key={block.id || index}>
+            {isFirstBlock && supportsBreadcrumb && !isHero && <SiteBreadcrumb />}
+            <BlockMapper block={block} index={index} />
+            {isFirstBlock && supportsBreadcrumb && isHero && <SiteBreadcrumb />}
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 });

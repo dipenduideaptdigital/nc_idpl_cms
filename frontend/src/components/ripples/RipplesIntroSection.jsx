@@ -33,11 +33,11 @@ const RipplesIntroSection = ({ data, showQuoteBanner }) => {
   return (
     <section className="w-full bg-white select-none font-kanit pb-0 overflow-hidden">
       {/* Top Intro Section */}
-      <div className="min-h-[80vh] lg:min-h-screen flex flex-col justify-center max-w-7xl mx-auto py-20 lg:py-0 px-5 sm:px-8 md:px-12 lg:px-20">
+      <div className="min-h-[80vh] lg:min-h-screen flex flex-col justify-start max-w-7xl mx-auto py-16 lg:py-20 px-5 sm:px-8 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 md:gap-16 items-start">
           
           {/* Main Title (Left Column) */}
-          <div className="lg:col-span-6 pr-0 mt-40 ">
+          <div className="lg:col-span-6 pr-0">
             <div 
               className="font-kanit lg:mt-10 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[80px] font-medium text-[#363636] leading-[1.1] tracking-tight whitespace-pre-line [&>p]:m-0"
               dangerouslySetInnerHTML={{ __html: data?.mainTitle || 'It is a long<br/>established<br/>fact that a<br/>reader will be<br/>distracted.' }}
@@ -45,7 +45,7 @@ const RipplesIntroSection = ({ data, showQuoteBanner }) => {
           </div>
 
           {/* Subtitle, Description & Explore Action (Right Column) */}
-          <div className="lg:col-span-6 lg:col-start-8 space-y-4 sm:space-y-6 mt-50 lg:pt-4">
+          <div className="lg:col-span-6 lg:col-start-8 space-y-4 sm:space-y-6 lg:pt-4">
             <div 
               className="font-kanit text-base sm:text-xl md:text-2xl lg:text-[35px] font-medium text-[#666666] leading-snug whitespace-pre-line [&>p]:m-0"
               dangerouslySetInnerHTML={{ __html: data?.subTitle || 'It is a long established fact<br/>that a reader will be<br/>distracted.' }}

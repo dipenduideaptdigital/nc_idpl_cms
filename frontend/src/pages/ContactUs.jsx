@@ -4,6 +4,7 @@ import NcContactInfo from '../components/nc_contact/NcContactInfo';
 import NcJoinAndMap from '../components/nc_contact/NcJoinAndMap';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 import apiClient from '../api/client';
+import SiteBreadcrumb from '../components/shared/SiteBreadcrumb';
 
 const ContactUs = () => {
   useScrollAnimation();
@@ -29,6 +30,7 @@ const ContactUs = () => {
   return (
     <div className="min-h-screen bg-white font-kanit">
       <NcContactBanner data={data} />
+      <SiteBreadcrumb />
       <NcContactInfo data={data} />
       <NcJoinAndMap data={data} />
     </div>

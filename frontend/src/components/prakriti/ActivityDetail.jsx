@@ -7,6 +7,7 @@ import ActivityArchive from './ActivityArchive';
 import PrakritiUpcomingWorkshopsSection from './PrakritiUpcomingWorkshopsSection';
 import GetStartedCtaSection from '../nature_homepage/GetStartedCtaSection';
 import { resolveAssetUrl } from '../../utils/assetResolver';
+import SiteBreadcrumb from '../shared/SiteBreadcrumb';
 
 const FALLBACK_HERO_BY_KEY = {
   'field-trips': fieldImage,
@@ -70,6 +71,8 @@ export default function ActivityDetail({ data = {} }) {
           <h1 className="sr-only">{title}</h1>
         )}
       </section>
+
+      <SiteBreadcrumb />
 
       <ActivityIntroduction title={isWorkshop ? 'workshops' : title} data={introduction} />
 

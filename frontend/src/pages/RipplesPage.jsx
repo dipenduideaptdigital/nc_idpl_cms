@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import RipplesHero from '../components/ripples/RipplesHero';
+import RipplesBreadcrumb from '../components/ripples/RipplesBreadcrumb';
 import RipplesIntroSection from '../components/ripples/RipplesIntroSection';
 import RipplesNatureAquariumSection from '../components/ripples/RipplesNatureAquariumSection';
 import RipplesLetsBeginSection from '../components/ripples/RipplesLetsBeginSection';
@@ -14,6 +15,7 @@ const RipplesPage = () => {
     <div className="w-full min-h-screen bg-[#070e06] text-white font-sans antialiased">
       {/* Hero Section */}
       <RipplesHero />
+      <RipplesBreadcrumb />
 
       {/* Intro & Takashi Amano Quote Section */}
       <RipplesIntroSection />
