@@ -68,36 +68,77 @@ export const createBlogWithRevision = async (blogData, categoryIds, tagIds, acto
     await tx.blogRevision.create({
       data: { blogId: blog.id, snapshot: JSON.parse(JSON.stringify(blog)), actorId }
     });
-    return blog;
+        return blog;
+  }, {
+    maxWait: 10000,
+    timeout: 20000,
   });
 };
 
-export const updateBlogWithRevision = async (id, updatePayload, categoryIds, tagIds, actorId) => {
-  return await prisma.$transaction(async (tx) => {
-    if (updatePayload.isFeatured) {
-      const activeFeaturedCount = await tx.blog.count({ where: { isFeatured: true, status: "PUBLISHED", deletedAt: null, id: { not: id } } });
-      if (activeFeaturedCount >= 6) {
-        throw new Error("Maximum of 6 featured blogs reached inside system pipelines configuration.");
+
+export const updateBlogWithRevision = async (
+  id,
+  updatePayload,
+  categoryIds,
+  tagIds,
+  actorId
+) => {
+  return await prisma.$transaction(
+    async (tx) => {
+      if (updatePayload.isFeatured) {
+        const activeFeaturedCount = await tx.blog.count({
+          where: {
+            isFeatured: true,
+            status: "PUBLISHED",
+            deletedAt: null,
+            id: { not: id },
+          },
+        });
+
+        if (activeFeaturedCount >= 6) {
+          throw new Error(
+            "Maximum of 6 featured blogs reached inside system pipelines configuration."
+          );
+        }
       }
+
+      const updateData = { ...updatePayload };
+
+      if (categoryIds) {
+        updateData.categories = {
+          set: categoryIds.map(id => ({ id })),
+        };
+      }
+
+      if (tagIds) {
+        updateData.tags = {
+          set: tagIds.map(id => ({ id })),
+        };
+      }
+
+      const blog = await tx.blog.update({
+        where: { id },
+        data: updateData,
+        include: BLOG_ADMIN_SELECT_INCLUDE,
+      });
+
+      await tx.blogRevision.create({
+        data: {
+          blogId: blog.id,
+          snapshot: JSON.parse(JSON.stringify(blog)),
+          actorId,
+        },
+      });
+
+      return blog;
+    },
+    {
+      maxWait: 10000,
+      timeout: 20000,
     }
-
-    const updateData = { ...updatePayload };
-    if (categoryIds) updateData.categories = { set: categoryIds.map(id => ({ id })) };
-    if (tagIds) updateData.tags = { set: tagIds.map(id => ({ id })) };
-
-    const blog = await tx.blog.update({
-      where: { id },
-      data: updateData,
-      include: BLOG_ADMIN_SELECT_INCLUDE
-    });
-
-    await tx.blogRevision.create({
-      data: { blogId: blog.id, snapshot: JSON.parse(JSON.stringify(blog)), actorId }
-    });
-
-    return blog;
-  });
+  );
 };
+
 
 export const trackBlogView = async (blogId, fingerprint) => {
   const ONE_HOUR_AGO = new Date(Date.now() - 60 * 60 * 1000);
