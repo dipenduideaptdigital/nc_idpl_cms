@@ -5,7 +5,7 @@ import bush3 from '../../assets/nc_logo/bush3.png';
 
 const GulmoOurProjectsSection = ({ data }) => {
   return (
-    <section className="w-full bg-[#fcfdfa] text-[#1f2937] py-16 sm:py-24 md:py-28 px-6 sm:px-10 lg:px-16 relative overflow-hidden select-none font-kanit">
+    <section className="w-full bg-[#fcfdfa] text-[#1f2937] pt-6 sm:pt-8 pb-16 sm:pb-24 md:pb-28 px-6 sm:px-10 lg:px-16 relative overflow-hidden select-none font-kanit">
       <div className="max-w-6xl mx-auto relative z-10">
 
         {/* Background Organic Watercolor Splash */}
