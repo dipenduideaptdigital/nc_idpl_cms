@@ -52,24 +52,14 @@ const BlockRendererNode = memo(({ block }) => {
         </div>
       );
     case 'heading':
-      return (
-        <h2
-          className="font-kanit text-[28px] md:text-[34px] font-medium text-zinc-900 tracking-tight mb-6 mt-10 text-left"
-          dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
-        />
-      );
     case 'paragraph':
-      return (
-        <div
-          className="font-kanit font-normal mb-6 text-[16px] md:text-[19px] text-zinc-500 leading-relaxed text-left prose prose-zinc max-w-none prose-headings:font-kanit prose-headings:font-medium prose-p:font-kanit prose-p:font-normal prose-li:font-kanit prose-li:font-normal prose-a:text-[#6CA844] hover:prose-a:text-[#568a35]"
-          dangerouslySetInnerHTML={{ __html: data?.text || data?.content || '' }}
-        />
-      );
     case 'richText':
       return (
         <div
-          className="font-kanit font-normal prose prose-zinc max-w-none text-left mb-6 text-zinc-500 text-[16px] md:text-[19px] leading-relaxed prose-headings:text-zinc-900 prose-headings:font-kanit prose-headings:font-medium prose-p:font-kanit prose-p:font-normal prose-ul:font-kanit prose-ol:font-kanit prose-li:font-kanit prose-li:font-normal prose-a:text-[#6CA844] hover:prose-a:text-[#568a35]"
-          dangerouslySetInnerHTML={{ __html: data?.content || '' }}
+          className="blog-rich-text prose prose-zinc max-w-none mb-6 text-left"
+          dangerouslySetInnerHTML={{
+            __html: data?.content || data?.text || ''
+          }}
         />
       );
     case 'quote':

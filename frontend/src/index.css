@@ -429,3 +429,119 @@ body.puck-mode button.absolute.top-1\/2 {
 @media (prefers-reduced-motion: reduce) {
   .nc-border { animation: none; }
 }
+
+
+/* ========================================
+   Public Blog Content Typography
+======================================== */
+
+.blog-rich-text {
+  font-family: 'Kanit', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: #52525b;
+}
+
+/* Normal paragraph */
+.blog-rich-text p {
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: inherit;
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+/* List items */
+.blog-rich-text li {
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: inherit;
+}
+
+/* Headings */
+.blog-rich-text h1 {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.blog-rich-text h2 {
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.blog-rich-text h3 {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.blog-rich-text h4,
+.blog-rich-text h5,
+.blog-rich-text h6 {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.blog-rich-text h1,
+.blog-rich-text h2,
+.blog-rich-text h3,
+.blog-rich-text h4,
+.blog-rich-text h5,
+.blog-rich-text h6 {
+  font-family: inherit;
+  color: #18181b;
+  margin-top: 28px;
+  margin-bottom: 16px;
+}
+
+/* Preserve intentional bold formatting */
+.blog-rich-text strong,
+.blog-rich-text b {
+  font-weight: 600;
+}
+
+/* Preserve italic formatting */
+.blog-rich-text em,
+.blog-rich-text i {
+  font-style: italic;
+}
+
+/* Links */
+.blog-rich-text a {
+  color: #6ca844;
+  text-decoration: underline;
+}
+
+.blog-rich-text a:hover {
+  color: #568a35;
+}
+
+/* Responsive typography */
+@media (max-width: 767px) {
+  .blog-rich-text,
+  .blog-rich-text p,
+  .blog-rich-text li {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .blog-rich-text h1 {
+    font-size: 26px;
+  }
+
+  .blog-rich-text h2 {
+    font-size: 24px;
+  }
+
+  .blog-rich-text h3 {
+    font-size: 21px;
+  }
+}

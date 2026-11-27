@@ -15,7 +15,6 @@ const BlogContent = () => {
   const [sidebarData, setSidebarData] = useState({ categories: [], popularTags: [], recentPosts: [] });
   const [loading, setLoading] = useState(true);
 
-  // URL theke active filters ber kore ana
   const currentPage = parseInt(searchParams.get('page')) || 1;
   const currentCategory = searchParams.get('categorySlug') || '';
   const currentTag = searchParams.get('tagSlug') || '';
@@ -25,11 +24,10 @@ const BlogContent = () => {
     const fetchBlogsAndSidebar = async () => {
       setLoading(true);
       try {
-        // Parallel Network Call for Maximum Speed
         const [blogsRes, categoriesRes, tagsRes] = await Promise.all([
           blogsApi.getPublicBlogs({
             page: currentPage,
-            limit: 3, // 3 posts per page to show pagination engine
+            limit: 3,
             categorySlug: currentCategory,
             tagSlug: currentTag,
             search: currentSearch
@@ -105,14 +103,17 @@ const BlogContent = () => {
           ) : posts.length > 0 ? (
             posts.map((post) => (
               <article key={post.id} className="group animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <Link to={`/blog/${post.slug}`} className="block rounded-none overflow-hidden mb-6 bg-zinc-100 relative pt-[60%] sm:pt-[50%] shadow-sm">
-                  <img
-                    src={resolveAssetUrl(post.featuredImage?.url, defaultThumbnail)}
-                    alt={post.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </Link>
+                <Link
+                    to={`/blog/${post.slug}`}
+                    className="block rounded-none overflow-hidden mb-6 bg-zinc-100 shadow-sm"
+                  >
+                    <img
+                      src={resolveAssetUrl(post.featuredImage?.url, defaultThumbnail)}
+                      alt={post.title}
+                      className="block w-full h-auto object-contain"
+                      loading="lazy"
+                    />
+                  </Link>
 
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex flex-wrap gap-2">
