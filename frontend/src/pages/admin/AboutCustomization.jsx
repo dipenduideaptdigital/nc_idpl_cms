@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Layout, Type, ArrowLeft, Loader2, CheckCircle, AlertCircle, Plus, Trash2, ChevronDown, ChevronUp, Edit2, Image as ImageIcon } from 'lucide-react';
+import { Save, Layout, Type, ArrowLeft, Loader2, CheckCircle, AlertCircle, Plus, Trash2, ChevronDown, ChevronUp, Edit2 } from 'lucide-react';
 import { pagesApi } from '../../api/pages';
 import TipTapEditor from '../../components/admin/TipTapEditor';
 import { Puck } from '@measured/puck';
@@ -256,11 +256,18 @@ const AboutCustomization = () => {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
-      console.error(err);
-      setError('Failed to save. Please try again.');
-    } finally {
-      setSaving(false);
-    }
+        console.error(
+          'About page save failed:',
+          err.response?.data || err
+        );
+
+        setError(
+          err.response?.data?.message ||
+          'Failed to save. Please try again.'
+        );
+      } finally {
+        setSaving(false);
+      }
   };
 
   const handleFormSubmit = (e) => {
@@ -450,10 +457,33 @@ const AboutCustomization = () => {
                 <div><label className={labelClass}>Small Muted Text</label><textarea rows="3" name="history_smallText" value={formData.history_smallText} onChange={handleInputChange} className={`${fieldClass} resize-none`} /></div>
                 <div><label className={labelClass}>Bold Emphasized Text</label><textarea rows="3" name="history_boldText" value={formData.history_boldText} onChange={handleInputChange} className={`${fieldClass} resize-none`} /></div>
                 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="mt-2">
-                    <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-2 block">Seminar Image 1 (Tank)</label>
-                    <ImageField value={formData.seminars_image1} onChange={(url) => handleTiptapChange('seminars_image1', url)} />
-                  </div>
+                  <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-2 block">
+                    History Image 1
+                  </label>
+
+                  <ImageField
+                    value={formData.history_image1 || ''}
+                    onChange={(url) =>
+                      handleTiptapChange('history_image1', url)
+                    }
+                  />
+                </div>
+
+                <div className="mt-2">
+                  <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-2 block">
+                    History Image 2
+                  </label>
+
+                  <ImageField
+                    value={formData.history_image2 || ''}
+                    onChange={(url) =>
+                      handleTiptapChange('history_image2', url)
+                    }
+                  />
+                </div>
+              </div>
               </div>
             )}
 
@@ -470,11 +500,16 @@ const AboutCustomization = () => {
                   </div>
                   <div><label className={labelClass}>Description Text</label><textarea rows="2" name="seminars_seminarText" value={formData.seminars_seminarText} onChange={handleInputChange} className={`${fieldClass} resize-none`} /></div>
                   <div>
-                    <label className={labelClass}>Seminar Image 1 (Tank)</label>
-                    <div className="flex items-center gap-2 mt-1">
-                      <input type="text" name="seminars_image1" value={formData.seminars_image1 || ''} onChange={handleInputChange} className={`flex-1 px-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40 transition-colors`} placeholder="Image URL" />
-                      <button type="button" onClick={() => { setMediaTarget({ field: 'seminars_image1' }); setIsMediaModalOpen(true); }} className="px-4 py-2 bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 text-zinc-900 dark:text-zinc-100 rounded-xl text-sm font-bold flex items-center gap-2 transition-colors"><ImageIcon className="w-4 h-4"/></button>
-                    </div>
+                    <label className={labelClass}>
+                      Seminar Image 1 (Tank)
+                    </label>
+
+                    <ImageField
+                      value={formData.seminars_image1 || ''}
+                      onChange={(url) =>
+                        handleTiptapChange('seminars_image1', url)
+                      }
+                    />
                   </div>
                 </div>
 
@@ -595,12 +630,17 @@ const AboutCustomization = () => {
                     <label className={labelClass}>Member 1</label>
                     <input type="text" placeholder="Name" name="members_leader1Name" value={formData.members_leader1Name} onChange={handleInputChange} className={fieldClassSm} />
                     <textarea rows="4" placeholder="Bio" name="members_leader1Bio" value={formData.members_leader1Bio} onChange={handleInputChange} className={`${fieldClassSm} resize-none`} />
-                    <div>
-                      <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase">Image 1</label>
-                      <div className="flex items-center gap-1 mt-1">
-                        <input type="text" name="members_leader1Image" value={formData.members_leader1Image || ''} onChange={handleInputChange} className="flex-1 px-2 py-1.5 border border-zinc-200 dark:border-zinc-700 rounded-lg text-xs bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:focus:ring-emerald-400/40 transition-colors" />
-                        <button type="button" onClick={() => { setMediaTarget({ field: 'members_leader1Image' }); setIsMediaModalOpen(true); }} className="px-2 py-1.5 bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 text-zinc-900 dark:text-zinc-100 rounded-lg text-xs font-bold transition-colors"><ImageIcon className="w-3 h-3"/></button>
-                      </div>
+                    <div className="mt-2">
+                      <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-2 block">
+                        Image 1
+                      </label>
+
+                      <ImageField
+                        value={formData.members_leader1Image || ''}
+                        onChange={(url) =>
+                          handleTiptapChange('members_leader1Image', url)
+                        }
+                      />
                     </div>
                   </div>
                   <div className="p-4 border border-zinc-200 dark:border-zinc-700 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 space-y-3">
@@ -624,12 +664,16 @@ const AboutCustomization = () => {
                 </div>
 
                 <div className="mt-8 border-t border-zinc-100 dark:border-zinc-800 pt-6">
-                  <label className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Team Group Photo (Wide Cut-out)</label>
-                  <div className="flex items-center gap-2 mt-1">
-                    <input type="text" name="members_groupImage" value={formData.members_groupImage || ''} onChange={handleInputChange} className="flex-1 px-4 py-2 border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 transition-colors" placeholder="Image URL" />
-                    <button type="button" onClick={() => { setMediaTarget({ field: 'members_groupImage' }); setIsMediaModalOpen(true); }} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold flex items-center gap-2 transition-colors"><ImageIcon className="w-4 h-4"/> Browse</button>
-                  </div>
-                  {formData.members_groupImage && <img src={resolveAssetUrl(formData.members_groupImage)} className="mt-3 h-32 w-auto object-contain rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm" alt="Preview"/>}
+                  <label className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase mb-2 block">
+                    Team Group Photo (Wide Cut-out)
+                  </label>
+
+                  <ImageField
+                    value={formData.members_groupImage || ''}
+                    onChange={(url) =>
+                      handleTiptapChange('members_groupImage', url)
+                    }
+                  />
                 </div>
               </div>
             )}
