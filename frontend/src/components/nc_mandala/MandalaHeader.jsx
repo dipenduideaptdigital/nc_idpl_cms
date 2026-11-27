@@ -49,7 +49,7 @@ const MandalaHeader = ({ data }) => {
     { name: 'PHILOSOPHY', href: '/mandala' },
     { name: 'OFFERINGS', href: '#offerings', isMega: true },
     { name: 'PROJECTS', href: '/projects' },
-    { name: 'WHO WE ARE', href: '/about' },
+    { name: 'WHO WE ARE', href: '/who-we-are' },
     { name: 'KNOWLEDGE', href: '/blog' },
     { name: 'CONTACT US', href: '/contact' },
   ];

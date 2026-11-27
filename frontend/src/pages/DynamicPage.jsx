@@ -76,13 +76,37 @@ const DynamicPage = () => {
     );
   }
 
-  const isFullScreenTemplate = ['about-page', 'mandala-page'].includes(page.template);
+  const blocks = page.content?.blocks || [];
+
+  const hasAboutHorizontalBlock = blocks.some(
+    block => block.type === 'aboutHorizontalScroll'
+  );
+
+  const hasMandalaHorizontalBlock = blocks.some(
+    block => block.type === 'mandalaHorizontalScroll'
+  );
+
+  const resolvedTemplate = hasAboutHorizontalBlock
+    ? 'about-page'
+    : hasMandalaHorizontalBlock
+      ? 'mandala-page'
+      : page.template;
+
+  const isFullScreenTemplate = [
+    'about-page',
+    'mandala-page',
+  ].includes(resolvedTemplate);
 
   if (isFullScreenTemplate) {
     return (
       <>
         <SEOHead data={page} type="page" />
-        <PageRenderer blocks={page.content?.blocks} template={page.template} />
+
+        <PageRenderer
+          blocks={blocks}
+          template={resolvedTemplate}
+        />
+
         <WhatsAppButton />
       </>
     );

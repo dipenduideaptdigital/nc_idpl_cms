@@ -13,7 +13,7 @@ const AboutUs = () => {
 
   const fetchAboutData = async () => {
     try {
-      const res = await pagesApi.getPublicPageBySlug('about');
+      const res = await pagesApi.getPublicPageBySlug('who-we-are');
       
       if (res.data && res.data.content?.blocks) {
         const block = res.data.content.blocks.find(b => b.type === 'aboutHorizontalScroll');

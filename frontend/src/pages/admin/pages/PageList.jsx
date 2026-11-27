@@ -91,12 +91,33 @@ const PageList = () => {
     fetchPages();
   }, [location.pathname]); 
 
+  
   const fetchPages = async () => {
     try {
       setLoading(true);
-      const data = await pagesApi.getPages();
-      setPages(data.data || []);
+
+      let currentPage = 1;
+      let totalPages = 1;
+      const allPages = [];
+
+      do {
+        const response = await pagesApi.getPages({
+          page: currentPage,
+          limit: 100,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+        });
+
+        allPages.push(...(response.data || []));
+
+        totalPages = response.meta?.totalPages || 1;
+        currentPage++;
+
+      } while (currentPage <= totalPages);
+
+      setPages(allPages);
       setError(null);
+
     } catch (err) {
       console.error('Failed to fetch pages:', err);
       setError('Failed to load pages. Please try again.');
@@ -104,6 +125,7 @@ const PageList = () => {
       setLoading(false);
     }
   };
+
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this page? This action cannot be undone.')) {

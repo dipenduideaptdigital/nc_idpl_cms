@@ -168,25 +168,64 @@ const AboutCustomization = () => {
     };
   }, [isPuckMode]);
 
+  
   const fetchAboutPage = async () => {
     try {
       setLoading(true);
-      const res = await pagesApi.getPublicPageBySlug('about');
-      if (res.data && res.data.content?.blocks?.length > 0) {
-        setPageId(res.data.id);
-        const blockData = res.data.content.blocks.find(b => b.type === 'aboutHorizontalScroll');
-        if (blockData && blockData.data) {
-          setFormData(prev => ({ ...prev, ...blockData.data }));
-        }
+      setError(null);
+      setPageId(null);
+
+      const res = await pagesApi.getPages({
+        search: 'who-we-are',
+        limit: 100,
+      });
+
+      const targetPage = (res.data || []).find(
+        page => page.fullPath === '/who-we-are'
+      );
+
+      if (!targetPage) {
+        throw new Error(
+          'The /who-we-are page was not found.'
+        );
       }
+
+      const pageResponse = await pagesApi.getPageById(
+        targetPage.id
+      );
+
+      const page = pageResponse.data;
+
+      const blockData = page?.content?.blocks?.find(
+        block => block.type === 'aboutHorizontalScroll'
+      );
+
+      if (!blockData?.data) {
+        throw new Error(
+          'About content block was not found in /who-we-are.'
+        );
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        ...blockData.data,
+      }));
+
+      setPageId(page.id);
+
     } catch (err) {
-      if (err.response?.status !== 404) {
-        setError('Failed to fetch About page data.');
-      }
+      console.error('Failed to fetch About page:', err);
+
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        'Failed to fetch About page data.'
+      );
     } finally {
       setLoading(false);
     }
   };
+
 
   const getVisibilityState = () => {
     return formData[`${activeTab}_isVisible`] !== false;
@@ -226,49 +265,79 @@ const AboutCustomization = () => {
     setFormData(prev => ({ ...prev, awards_list: newList }));
   };
 
+  
   const saveToServer = async (dataToSave) => {
+    if (!pageId) {
+      setError(
+        'Unable to save. Please load the /who-we-are page first.'
+      );
+      return;
+    }
+
     setSaving(true);
     setError(null);
     setSuccess(false);
 
-    const payload = {
-      title: 'About Us',
-      slug: 'about',
-      status: 'PUBLISHED',
-      template: 'about-page',
-      includeInSitemap: true,
-      content: {
-        blocks: [{
-          id: Date.now().toString(),
-          type: 'aboutHorizontalScroll',
-          data: dataToSave
-        }]
-      }
-    };
-
     try {
-      if (pageId) {
-        await pagesApi.updatePage(pageId, payload);
-      } else {
-        const res = await pagesApi.createPage(payload);
-        setPageId(res.data.id);
+      const response = await pagesApi.getPageById(pageId);
+      const currentPage = response.data;
+
+      if (currentPage?.fullPath !== '/who-we-are') {
+        throw new Error(
+          'Invalid About page. Expected /who-we-are.'
+        );
       }
+
+      const existingBlocks = currentPage.content?.blocks || [];
+
+      const blockExists = existingBlocks.some(
+        block => block.type === 'aboutHorizontalScroll'
+      );
+
+      if (!blockExists) {
+        throw new Error('About content block is missing.');
+      }
+
+      const updatedBlocks = existingBlocks.map(block =>
+        block.type === 'aboutHorizontalScroll'
+          ? {
+              ...block,
+              data: {
+                ...block.data,
+                ...dataToSave,
+              },
+            }
+          : block
+      );
+
+      const payload = {
+        template: 'about-page',
+        templateKey: null,
+        templateVersion: null,
+        content: {
+          ...currentPage.content,
+          blocks: updatedBlocks,
+        },
+      };
+
+      await pagesApi.updatePage(pageId, payload);
+
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
-        console.error(
-          'About page save failed:',
-          err.response?.data || err
-        );
 
-        setError(
-          err.response?.data?.message ||
-          'Failed to save. Please try again.'
-        );
-      } finally {
-        setSaving(false);
-      }
+    } catch (err) {
+      console.error('About page save failed:', err);
+
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        'Failed to save. Please try again.'
+      );
+    } finally {
+      setSaving(false);
+    }
   };
+
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -331,10 +400,12 @@ const AboutCustomization = () => {
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Manage the Horizontal Scroll Panels & Images</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => setIsPuckMode(true)} className="px-4 py-2.5 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold rounded-xl flex items-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+          <button
+            onClick={() => setIsPuckMode(true)}
+            disabled={saving || loading || !pageId} className="px-4 py-2.5 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold rounded-xl flex items-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
             <Type className="w-4 h-4"/> Edit Visually
           </button>
-          <button onClick={handleFormSubmit} disabled={saving} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-70">
+          <button onClick={handleFormSubmit} disabled={saving || loading || !pageId} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-70">
             {saving ? <Loader2 className="w-4 h-4 animate-spin"/> : <Save className="w-4 h-4"/>} 
             {saving ? 'Saving...' : 'Save'}
           </button>

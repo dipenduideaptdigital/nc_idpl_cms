@@ -62,7 +62,7 @@ const NatureNavbar = ({ forceDark = false, solidBackground = false }) => {
   }, [isOfferingsOpen]);
 
   const [dynamicPaths, setDynamicPaths] = useState({
-    about: '/about',
+    about: '/who-we-are',
     mandala: '/mandala',
     ripple: '/ripples',
     gulmo: '/gulmo',
@@ -76,10 +76,9 @@ const NatureNavbar = ({ forceDark = false, solidBackground = false }) => {
       try {
         const res = await apiClient.get('/pages/public'); 
         const pages = res.data?.data || res.data || [];
-        const newPaths = { about: '/about', mandala: '/mandala', ripple: '/ripples', gulmo: '/gulmo', prakriti: '/prakriti-lab', workshop: '/workshop' };
+        const newPaths = { about: '/who-we-are', mandala: '/mandala', ripple: '/ripples', gulmo: '/gulmo', prakriti: '/prakriti-lab', workshop: '/workshop' };
 
         pages.forEach(page => {
-          if (page.template === 'about-page') newPaths.about = `/${page.slug}`;
           if (page.template === 'mandala-page') newPaths.mandala = `/${page.slug}`;
           if (page.template === 'ripple-page') newPaths.ripple = `/${page.slug}`;
           if (page.template === 'gulmo-page') newPaths.gulmo = `/${page.slug}`;
@@ -152,6 +151,21 @@ const NatureNavbar = ({ forceDark = false, solidBackground = false }) => {
     { id: 'f5', label: 'KNOWLEDGE', url: '/blog' },
     { id: 'f6', label: 'CONTACT US', url: '/contact' },
   ]).map((link) => {
+    const label = link.label?.trim().toLowerCase();
+    const url = link.url?.trim();
+
+    if (
+      label === 'who we are' ||
+      url === '/about' ||
+      url === '/about-us' ||
+      url === '/who-we-are'
+    ) {
+      return {
+        ...link,
+        url: '/who-we-are',
+      };
+    }
+
     if (/^(shop|store)$/i.test(link.label?.trim() || '') || /^[/#](shop|store)\/?$/i.test(link.url || '')) {
       return { ...link, url: '/shop' };
     }
