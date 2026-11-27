@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import designJar from '../../assets/nc_home/design_jar.png';
 import brush2 from '../../assets/nc_logo/brush2.png';
 import lightStand from '../../assets/gulmo/light-stand-z.png';
@@ -16,17 +16,15 @@ const GulmoForestOrganismSection = ({ data }) => {
       description: data?.f1Desc || 'A tall glass cover with ventilation holes that maintains high humidity and temperature.',
       side: 'left',
       dotPos: { top: '34%', left: '9%' },
-      cardPos: { top: '40%', left: '20%' },
     },
     {
       id: 'lighting',
       label: data?.f2Label || 'LIGHTING SYSTEM',
-      subLabel: '',
+      subLabel: data?.f2Sub || 'LIGHT STAND Z',
       title: data?.f2Title || 'LIGHTING SYSTEM',
       description: data?.f2Desc || 'High-spectrum LED lighting engineered specifically to support photosynthesis and vibrant plant growth.',
       side: 'right',
       dotPos: { top: '14%', left: '50%' },
-      cardPos: { top: '12%', left: '58%' },
     },
     {
       id: 'plants',
@@ -35,9 +33,10 @@ const GulmoForestOrganismSection = ({ data }) => {
       title: data?.f3Title || 'PLANTS & FLORA',
       description: data?.f3Desc || 'Lush evergreen mosses, miniature ferns, and humidity-retaining species crafted for long-term health.',
       side: 'left',
-      dotPos: { top: '63%', left: '15%' },
-      cardPos: { top: '42%', left: '26%' },
+      dotPos: { top: '67%', left: '15%' },
     },
+    // Retired Terra Base entry, including its bottom-most hotspot.
+    /*
     {
       id: 'terra',
       label: data?.f4Label || 'TERRA BASE',
@@ -48,6 +47,7 @@ const GulmoForestOrganismSection = ({ data }) => {
       dotPos: { top: '88%', left: '82%' },
       cardPos: { top: '55%', left: '58%' },
     },
+    // Retired standalone Substrate entry. Soil now has one combined label/card.
     {
       id: 'substrate',
       label: data?.f5Label || 'SUBSTRATE',
@@ -58,6 +58,16 @@ const GulmoForestOrganismSection = ({ data }) => {
       dotPos: { top: '72%', left: '84%' },
       cardPos: { top: '68%', left: '72%' },
     },
+    */
+    {
+      id: 'soil',
+      label: data?.soilLabel || 'JUNGLE SOIL &',
+      subLabel: data?.soilSubLabel || 'JUNGLE BASE SOIL',
+      title: data?.soilTitle || 'JUNGLE SOIL & JUNGLE BASE SOIL',
+      description: data?.soilDescription || 'Layered soil supports healthy roots, holds moisture, and provides a stable foundation for the plants in your terrarium.',
+      side: 'right',
+      dotPos: { top: '72%', left: '84%' },
+    },
     {
       id: 'tool',
       label: data?.f6Label || 'LAYOUT &',
@@ -66,14 +76,87 @@ const GulmoForestOrganismSection = ({ data }) => {
       description: data?.f6Desc || 'Precision aquascaping tools for delicate planting, trimming, and pin-point maintenance.',
       side: 'left',
       dotPos: { top: '-5%', left: '12%' },
-      cardPos: { top: '10%', left: '26%' },
     },
   ];
 
   const [activeId, setActiveId] = useState('glass');
+  const [cardPosition, setCardPosition] = useState(null);
+  const [bottomSpace, setBottomSpace] = useState(0);
   const containerRef = useRef(null);
+  const diagramRef = useRef(null);
+  const cardRef = useRef(null);
 
   const activeFeature = features.find((f) => f.id === activeId);
+  const cardSide = activeFeature?.side;
+
+  useLayoutEffect(() => {
+    const diagram = diagramRef.current;
+    const card = cardRef.current;
+    if (!activeId || !diagram || !card) {
+      setCardPosition(null);
+      return;
+    }
+
+    // Both columns anchor their cards to their own headings, never the image.
+    const placeCard = () => {
+      if (!card.offsetWidth) {
+        setCardPosition(null);
+        setBottomSpace(0);
+        return;
+      }
+      const bounds = diagram.getBoundingClientRect();
+      const label = diagram.querySelector(`[data-diagram-label="${activeId}"]`);
+      if (!label?.getClientRects().length) {
+        setCardPosition(null);
+        return;
+      }
+      const labelBounds = label.getBoundingClientRect();
+      const sectionBounds = containerRef.current.getBoundingClientRect();
+      const labels = Array.from(diagram.querySelectorAll('[data-diagram-label]'));
+      const nextLabel = labels
+        .filter((element) => element.parentElement === label.parentElement)
+        .map((element) => element.getBoundingClientRect())
+        .filter((rect) => rect.top > labelBounds.bottom)
+        .sort((a, b) => a.top - b.top)[0];
+      const availableHeight = nextLabel ? nextLabel.top - labelBounds.bottom - 20 : 240;
+      card.style.maxHeight = `${Math.min(240, availableHeight)}px`;
+      const width = card.offsetWidth;
+      const height = card.offsetHeight;
+      const minLeft = sectionBounds.left + 8 - bounds.left;
+      const maxLeft = sectionBounds.right - 8 - bounds.left - width;
+      let left = Math.max(minLeft, Math.min(maxLeft,
+        (cardSide === 'left' ? labelBounds.left : labelBounds.right - width) - bounds.left));
+      const top = labelBounds.bottom - bounds.top + 12;
+      const dots = Array.from(diagram.querySelectorAll('[data-diagram-dot]'))
+        .map((dot) => dot.getBoundingClientRect());
+
+      // At tablet widths, move outward within the same column to clear a dot.
+      for (const dot of dots) {
+        if (top < dot.bottom - bounds.top + 16 && top + height > dot.top - bounds.top - 16) {
+          if (cardSide === 'left') left = Math.min(left, dot.left - bounds.left - width - 16);
+          else left = Math.max(left, dot.right - bounds.left + 16);
+        }
+      }
+      left = Math.max(minLeft, Math.min(maxLeft, left));
+      const next = { left, top };
+      setCardPosition((previous) => previous?.left === left && previous?.top === top ? previous : next);
+
+      // Reserve room for the lowest card even when it is closed, avoiding jumps.
+      const lowestLabel = Math.max(...labels.map((element) => element.getBoundingClientRect().bottom));
+      setBottomSpace(Math.max(0, lowestLabel - bounds.bottom + 240));
+    };
+
+    placeCard();
+    const observer = new ResizeObserver(placeCard);
+    observer.observe(diagram);
+    observer.observe(card);
+    diagram.querySelectorAll('[data-diagram-label], img').forEach((element) => observer.observe(element));
+    window.addEventListener('resize', placeCard);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', placeCard);
+    };
+  }, [activeId, cardSide, data]);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -95,21 +178,23 @@ const GulmoForestOrganismSection = ({ data }) => {
     <section
       ref={containerRef}
       onClick={() => setActiveId(null)}
-      className="w-full bg-[#fdfdfc] text-[#374151] py-16 sm:py-20 md:py-24 px-4 sm:px-8 overflow-hidden select-none font-kanit cursor-default"
+      className="w-full bg-[#fdfdfc] text-[#374151] pt-16 sm:pt-20 md:pt-24 pb-4 sm:pb-6 px-4 sm:px-8 overflow-hidden select-none font-kanit cursor-default"
     >
       <div className="max-w-6xl mx-auto">
         {/* Main Heading */}
         <h2
           style={{ fontFamily: "'Caveat', 'Architects Daughter', 'Patrick Hand', cursive" }}
-          className="font-caveat text-4xl sm:text-5xl md:text-6xl lg:text-5xl text-[#7BA641] font-normal tracking-wide text-center mb-8 md:mb-14"
+          className="font-caveat text-4xl sm:text-5xl md:text-6xl lg:text-5xl text-[#7BA641] font-normal tracking-wide text-center mb-14 md:mb-24"
         >
           {data?.mainTitle || 'The Forest Is A Peculiar Organism'}
         </h2>
 
         {/* Main Diagram Area */}
         <div
+          ref={diagramRef}
+          style={{ '--diagram-bottom-space': `${bottomSpace}px` }}
           onClick={() => setActiveId(null)}
-          className="relative w-full max-w-4xl mx-auto min-h-[550px] sm:min-h-[620px] md:min-h-[700px] flex items-center justify-center"
+          className="relative w-full max-w-4xl mx-auto min-h-[550px] sm:min-h-[620px] md:min-h-[700px] md:mb-[var(--diagram-bottom-space)] flex items-center justify-center"
         >
           
           {/* Background Brush Splash */}
@@ -161,15 +246,15 @@ const GulmoForestOrganismSection = ({ data }) => {
                   setActiveId(isActive ? null : feature.id);
                 }}
                 aria-label={feature.title}
+                aria-expanded={isActive}
+                data-diagram-dot={feature.id}
                 style={{ top: feature.dotPos.top, left: feature.dotPos.left }}
-                className="absolute z-40 pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer focus:outline-none"
+                className="absolute z-40 pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6CA844]"
               >
                 <div className="relative flex items-center justify-center">
-                  {isActive && (
-                    <span className="absolute inline-flex h-8 w-8 rounded-full bg-[#6CA844]/60 animate-ping" />
-                  )}
+                  <span aria-hidden="true" className="pointer-events-none absolute inline-flex h-8 w-8 rounded-full bg-[#6CA844]/60 motion-safe:animate-ping" />
                   <span
-                    className={`block rounded-full transition-all duration-300 ${
+                    className={`block rounded-full transition-[background-color,box-shadow,transform] duration-300 motion-reduce:transition-none ${
                       isActive
                         ? 'w-5 h-5 bg-[#6CA844] shadow-[0_0_12px_rgba(108,168,68,0.8)] border-2 border-white'
                         : 'w-4 h-4 bg-[#6CA844] hover:scale-125 border border-white/80'
@@ -184,25 +269,28 @@ const GulmoForestOrganismSection = ({ data }) => {
           {/* Active Tooltip Info Card (Desktop & Tablet) */}
           {activeFeature && (
             <div
+              ref={cardRef}
               key={activeFeature.id}
               onClick={(e) => e.stopPropagation()}
               style={{
-                top: activeFeature.cardPos.top,
-                left: activeFeature.cardPos.left,
+                top: cardPosition?.top ?? 0,
+                left: cardPosition?.left ?? 0,
+                visibility: cardPosition ? 'visible' : 'hidden',
               }}
-              className="hidden md:flex absolute z-30 h-52 w-52 -translate-x-1/2 -translate-y-1/2 flex-col justify-center rounded-none border border-white/50 bg-[#95A2AB]/[0.11] p-4 backdrop-blur-[12px] shadow-[0_12px_32px_rgba(6,35,43,0.14),inset_0_1px_0_rgba(255,255,255,0.55)] transition-all duration-400 ease-out"
+              className="hidden md:flex absolute z-30 h-auto max-h-60 w-60 flex-col justify-start overflow-y-auto break-words rounded-none border border-white/50 bg-[#95A2AB]/[0.11] p-3 backdrop-blur-[12px] shadow-[0_12px_32px_rgba(6,35,43,0.14),inset_0_1px_0_rgba(255,255,255,0.55)]"
             >
-              <h4 className="font-kanit text-xs sm:text-sm font-light text-[#503A3A] tracking-wider uppercase mb-2">
+              <h4 className="shrink-0 font-kanit text-base leading-6 font-light text-[#503A3A] uppercase mb-2">
                 {activeFeature.title}
               </h4>
-              <p className="font-kanit text-[11px] sm:text-xs font-light text-[#503A3A] leading-relaxed">
+              <p className="shrink-0 font-kanit text-sm leading-[22px] font-light text-[#503A3A]">
                 {activeFeature.description}
               </p>
             </div>
           )}
 
           {/* Desktop Left Labels */}
-          <div className="hidden md:flex flex-col justify-between absolute left-2 lg:left-8 xl:left-22 top-1/2 -translate-y-1/2 h-[460px] z-20 pointer-events-auto">
+          {/* Compact cards let the labels sit closer to their product parts. */}
+          <div className="hidden md:flex flex-col items-start gap-48 absolute left-2 lg:left-8 xl:left-22 top-1/2 -translate-y-[390px] z-20 pointer-events-auto">
             {features
               .filter((f) => f.side === 'left')
               .sort((a, b) => ['tool', 'glass', 'plants'].indexOf(a.id) - ['tool', 'glass', 'plants'].indexOf(b.id))
@@ -211,14 +299,13 @@ const GulmoForestOrganismSection = ({ data }) => {
                 return (
                   <button
                     key={item.id}
+                    data-diagram-label={item.id}
                     onClick={(e) => {
                       e.stopPropagation();
                       setActiveId(isActive ? null : item.id);
                     }}
-                    className={`text-left group cursor-pointer focus:outline-none transition-all duration-300 ${
-                      item.id === 'tool' ? 'translate-x-2 -translate-y-28' : ''
-                    } ${
-                      isActive ? 'scale-105' : 'hover:opacity-90'
+                    className={`text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6CA844] transition-colors duration-300 hover:opacity-90 ${
+                      item.id === 'tool' ? '-translate-x-8' : ''
                     }`}
                   >
                     <span
@@ -243,22 +330,21 @@ const GulmoForestOrganismSection = ({ data }) => {
           </div>
 
           {/* Desktop Right Labels */}
-          <div className="hidden md:flex flex-col justify-between absolute right-8 lg:right-8 xl:right-2 top-1/2 -translate-y-1/2 h-[460px] z-20 pointer-events-auto">
+          <div className="hidden md:flex flex-col justify-between absolute right-8 lg:right-8 xl:right-2 top-1/2 -translate-y-1/2 -translate-x-2 lg:-translate-x-8 h-[460px] z-20 pointer-events-auto">
             {features
               .filter((f) => f.side === 'right')
-              .sort((a, b) => ['lighting', 'substrate', 'terra'].indexOf(a.id) - ['lighting', 'substrate', 'terra'].indexOf(b.id))
+              .sort((a, b) => ['lighting', 'soil'].indexOf(a.id) - ['lighting', 'soil'].indexOf(b.id))
               .map((item) => {
                 const isActive = item.id === activeId;
                 return (
                   <button
                     key={item.id}
+                    data-diagram-label={item.id}
                     onClick={(e) => {
                       e.stopPropagation();
                       setActiveId(isActive ? null : item.id);
                     }}
-                    className={`text-right group cursor-pointer focus:outline-none transition-all duration-300 ${
-                      isActive ? 'scale-105' : 'hover:opacity-90'
-                    }`}
+                    className="text-left -translate-y-8 group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6CA844] transition-colors duration-300 hover:opacity-90"
                   >
                     <span
                       className={`block font-kanit font-medium text-xl sm:text-2xl lg:text-[30px] xl:text-[33px] leading-tight lg:leading-[45px] tracking-normal uppercase transition-colors ${
@@ -287,13 +373,13 @@ const GulmoForestOrganismSection = ({ data }) => {
         {activeFeature && (
           <div
             onClick={(e) => e.stopPropagation()}
-            className="block md:hidden mt-8 space-y-6 z-30 relative"
+            className={`mt-8 space-y-6 z-30 relative ${cardPosition ? 'block md:hidden' : 'block'}`}
           >
-            <div className="flex h-52 w-52 mx-auto flex-col justify-center rounded-none border border-white/50 bg-[#95A2AB]/[0.11] p-4 backdrop-blur-[12px] shadow-[0_12px_32px_rgba(6,35,43,0.14),inset_0_1px_0_rgba(255,255,255,0.55)]">
-              <h4 className="font-kanit text-sm font-light text-[#503A3A] tracking-wider uppercase mb-2">
+            <div className="flex h-auto max-h-60 w-60 mx-auto flex-col justify-start overflow-y-auto break-words rounded-none border border-white/50 bg-[#95A2AB]/[0.11] p-3 backdrop-blur-[12px] shadow-[0_12px_32px_rgba(6,35,43,0.14),inset_0_1px_0_rgba(255,255,255,0.55)]">
+              <h4 className="shrink-0 font-kanit text-base leading-6 font-light text-[#503A3A] uppercase mb-2">
                 {activeFeature.title}
               </h4>
-              <p className="font-kanit text-xs font-light text-[#503A3A] leading-relaxed">
+              <p className="shrink-0 font-kanit text-sm leading-[22px] font-light text-[#503A3A]">
                 {activeFeature.description}
               </p>
             </div>
