@@ -60,33 +60,67 @@ const BlogEditor = () => {
     } catch (err) { console.error(err); }
   };
 
+  
   const fetchBlog = async () => {
     try {
       setLoading(true);
+
       const res = await apiClient.get(`/admin/blogs/${id}`);
       const data = res.data.data;
-      
+
       setFormData({
-        ...data,
-        categoryIds: data.categories.map(c => c.id),
-        tagIds: data.tags.map(t => t.id),
-        publishedAt: data.publishedAt ? new Date(data.publishedAt).toISOString().slice(0, 16) : '',
+        title: data.title ?? '',
+        slug: data.slug ?? '',
+        excerpt: data.excerpt ?? '',
+        status: data.status ?? 'DRAFT',
+
+        publishedAt: data.publishedAt
+          ? new Date(data.publishedAt)
+              .toISOString()
+              .slice(0, 16)
+          : '',
+
+        categoryIds: (data.categories ?? []).map(c => c.id),
+        tagIds: (data.tags ?? []).map(t => t.id),
+
+        featuredImageId: data.featuredImageId ?? null,
+
+        content: data.content ?? { blocks: [] },
+
+        isFeatured: data.isFeatured ?? false,
+
+        // SEO fields
+        metaTitle: data.metaTitle ?? '',
+        metaDescription: data.metaDescription ?? '',
+        metaKeywords: data.metaKeywords ?? '',
+
         includeInSitemap: data.includeInSitemap ?? true,
         noIndex: data.noIndex ?? false,
         noFollow: data.noFollow ?? false,
+
+        canonicalUrl: data.canonicalUrl ?? '',
+        ogTitle: data.ogTitle ?? '',
+        ogDescription: data.ogDescription ?? '',
+        ogImageId: data.ogImageId ?? null,
       });
 
-      if (data.status === 'SCHEDULED') setIsScheduling(true);
+      setIsScheduling(data.status === 'SCHEDULED');
 
       if (data.featuredImage) {
-        setCoverPreview(resolveAssetUrl(data.featuredImage.url));
+        setCoverPreview(
+          resolveAssetUrl(data.featuredImage.url)
+        );
+      } else {
+        setCoverPreview(null);
       }
-    } catch (err) { 
-      setErrorMsg('Failed to load blog details.'); 
-    } finally { 
-      setLoading(false); 
+
+    } catch (err) {
+      setErrorMsg('Failed to load blog details.');
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const addBlock = (type) => {
     const newBlock = { id: Date.now().toString(), type, data: {} };
@@ -113,13 +147,53 @@ const BlogEditor = () => {
     });
   };
 
+  const buildBlogPayload = (data) => {
+    return {
+      title: data.title,
+      slug: data.slug,
+      excerpt: data.excerpt,
+      status: data.status,
+      content: data.content,
+      isFeatured: data.isFeatured,
+
+      // Taxonomies
+      categoryIds: data.categoryIds,
+      tagIds: data.tagIds,
+
+      // Media
+      featuredImageId: data.featuredImageId,
+
+      // Scheduling
+      publishedAt: data.publishedAt,
+
+      // SEO
+      metaTitle: data.metaTitle,
+      metaDescription: data.metaDescription,
+      metaKeywords: data.metaKeywords,
+
+      // Crawler settings
+      includeInSitemap: data.includeInSitemap,
+      noIndex: data.noIndex,
+      noFollow: data.noFollow,
+
+      // Social graph
+      canonicalUrl: data.canonicalUrl,
+      ogTitle: data.ogTitle,
+      ogDescription: data.ogDescription,
+      ogImageId: data.ogImageId,
+    };
+  };
   const handleDiscardSchedule = async () => {
     if (!window.confirm("Are you sure you want to discard this schedule? It will revert to DRAFT.")) return;
     
     try {
       setSaving(true);
-      const payload = { ...formData, status: 'DRAFT' };
-      delete payload.publishedAt;
+      const payload = buildBlogPayload({
+      ...formData,
+      status: 'DRAFT',
+    });
+
+    delete payload.publishedAt;
       
       await blogsApi.updateBlogPost(id, payload);
       window.location.reload(); 
@@ -133,7 +207,7 @@ const BlogEditor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { ...formData };
+    const payload = buildBlogPayload(formData);
     
     if (payload.status === 'SCHEDULED') {
       if (!payload.publishedAt) return alert('Please set a publish date for scheduled posts.');
