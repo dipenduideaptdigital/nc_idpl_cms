@@ -29,49 +29,52 @@ export const ALLOWED_TEMPLATE_KEYS = [
   "landing-ripples"
 ];
 
-const richTextBlockSchema = z.object({ type: z.literal("richText"), data: z.record(z.any()).default({}) });
+const richTextBlockSchema = z.object({ type: z.literal("richText"), data: z.record(z.string(), z.any()).default({}) });
 
-const ripplesHeroBlockSchema = z.object({ type: z.literal("ripplesHero"), data: z.record(z.any()).default({}) });
-const ripplesIntroBlockSchema = z.object({ type: z.literal("ripplesIntro"), data: z.record(z.any()).default({}) });
-const ripplesNatureAquariumBlockSchema = z.object({ type: z.literal("ripplesNatureAquarium"), data: z.record(z.any()).default({}) });
-const ripplesLetsBeginBlockSchema = z.object({ type: z.literal("ripplesLetsBegin"), data: z.record(z.any()).default({}) });
-const ripplesGulmoLetsBeginBlockSchema = z.object({ type: z.literal("ripplesGulmoLetsBegin"), data: z.record(z.any()).default({}) });
-const ripplesAquascapeBlockSchema = z.object({ type: z.literal("ripplesAquascape"), data: z.record(z.any()).default({}) });
-const getStartedCtaBlockSchema = z.object({ type: z.literal("getStartedCta"), data: z.record(z.any()).default({}) });
+const ripplesHeroBlockSchema = z.object({ type: z.literal("ripplesHero"), data: z.record(z.string(), z.any()).default({}) });
+const ripplesIntroBlockSchema = z.object({ type: z.literal("ripplesIntro"), data: z.record(z.string(), z.any()).default({}) });
+const ripplesNatureAquariumBlockSchema = z.object({ type: z.literal("ripplesNatureAquarium"), data: z.record(z.string(), z.any()).default({}) });
+const ripplesLetsBeginBlockSchema = z.object({ type: z.literal("ripplesLetsBegin"), data: z.record(z.string(), z.any()).default({}) });
+const ripplesGulmoLetsBeginBlockSchema = z.object({ type: z.literal("ripplesGulmoLetsBegin"), data: z.record(z.string(), z.any()).default({}) });
+const ripplesAquascapeBlockSchema = z.object({ type: z.literal("ripplesAquascape"), data: z.record(z.string(), z.any()).default({}) });
+const getStartedCtaBlockSchema = z.object({ type: z.literal("getStartedCta"), data: z.record(z.string(), z.any()).default({}) });
 
 // GULMO BLOCKS
-const gulmoHeroBlockSchema = z.object({ type: z.literal("gulmoHero"), data: z.record(z.any()).default({}) });
-const gulmoTerrariumBlockSchema = z.object({ type: z.literal("gulmoTerrarium"), data: z.record(z.any()).default({}) });
-const gulmoQuoteBlockSchema = z.object({ type: z.literal("gulmoQuote"), data: z.record(z.any()).default({}) });
-const gulmoForestOrganismBlockSchema = z.object({ type: z.literal("gulmoForestOrganism"), data: z.record(z.any()).default({}) });
-const gulmoOurProjectsBlockSchema = z.object({ type: z.literal("gulmoOurProjects"), data: z.record(z.any()).default({}) });
-const gulmoLetsBeginBlockSchema = z.object({ type: z.literal("gulmoLetsBegin"), data: z.record(z.any()).default({}) });
-const gulmoConceptBlockSchema = z.object({ type: z.literal("gulmoConcept"), data: z.record(z.any()).default({}) });
+const gulmoHeroBlockSchema = z.object({ type: z.literal("gulmoHero"), data: z.record(z.string(), z.any()).default({}) });
+const gulmoTerrariumBlockSchema = z.object({ type: z.literal("gulmoTerrarium"), data: z.record(z.string(), z.any()).default({}) });
+const gulmoQuoteBlockSchema = z.object({ type: z.literal("gulmoQuote"), data: z.record(z.string(), z.any()).default({}) });
+const gulmoForestOrganismBlockSchema = z.object({ type: z.literal("gulmoForestOrganism"), data: z.record(z.string(), z.any()).default({}) });
+const gulmoOurProjectsBlockSchema = z.object({ type: z.literal("gulmoOurProjects"), data: z.record(z.string(), z.any()).default({}) });
+const gulmoLetsBeginBlockSchema = z.object({ type: z.literal("gulmoLetsBegin"), data: z.record(z.string(), z.any()).default({}) });
+const gulmoConceptBlockSchema = z.object({ type: z.literal("gulmoConcept"), data: z.record(z.string(), z.any()).default({}) });
 
 // PRAKRITI LAB BLOCKS 
-const prakritiHeroBlockSchema = z.object({ type: z.literal("prakritiHero"), data: z.record(z.any()).default({}) });
-const prakritiIntroBlockSchema = z.object({ type: z.literal("prakritiIntro"), data: z.record(z.any()).default({}) });
-const prakritiEducationBlockSchema = z.object({ type: z.literal("prakritiEducation"), data: z.record(z.any()).default({}) });
-const prakritiUpcomingWorkshopsBlockSchema = z.object({ type: z.literal("prakritiUpcomingWorkshops"), data: z.record(z.any()).default({}) });
-const prakritiLabExperienceBlockSchema = z.object({ type: z.literal("prakritiLabExperience"), data: z.record(z.any()).default({}) });
-const prakritiLabShowcaseBlockSchema = z.object({ type: z.literal("prakritiLabShowcase"), data: z.record(z.any()).default({}) });
-const prakritiGetInTouchBlockSchema = z.object({ type: z.literal("prakritiGetInTouch"), data: z.record(z.any()).default({}) });
-const prakritiLetsBeginBlockSchema = z.object({ type: z.literal("prakritiLetsBegin"), data: z.record(z.any()).default({}) });
+const prakritiHeroBlockSchema = z.object({ type: z.literal("prakritiHero"), data: z.record(z.string(), z.any()).default({}) });
+const prakritiIntroBlockSchema = z.object({ type: z.literal("prakritiIntro"), data: z.record(z.string(), z.any()).default({}) });
+const prakritiEducationBlockSchema = z.object({ type: z.literal("prakritiEducation"), data: z.record(z.string(), z.any()).default({}) });
+const prakritiUpcomingWorkshopsBlockSchema = z.object({ type: z.literal("prakritiUpcomingWorkshops"), data: z.record(z.string(), z.any()).default({}) });
+const prakritiLabExperienceBlockSchema = z.object({ type: z.literal("prakritiLabExperience"), data: z.record(z.string(), z.any()).default({}) });
+const prakritiLabShowcaseBlockSchema = z.object({ type: z.literal("prakritiLabShowcase"), data: z.record(z.string(), z.any()).default({}) });
+const prakritiGetInTouchBlockSchema = z.object({ type: z.literal("prakritiGetInTouch"), data: z.record(z.string(), z.any()).default({}) });
+const prakritiLetsBeginBlockSchema = z.object({ type: z.literal("prakritiLetsBegin"), data: z.record(z.string(), z.any()).default({}) });
 
 // WORKSHOP BLOCKS
-const workshopHeroBlockSchema = z.object({ type: z.literal("workshopHero"), data: z.record(z.any()).default({}) });
-const workshopDetailsBlockSchema = z.object({ type: z.literal("workshopDetails"), data: z.record(z.any()).default({}) });
-const workshopGalleryBlockSchema = z.object({ type: z.literal("workshopGallery"), data: z.record(z.any()).default({}) });
+const workshopHeroBlockSchema = z.object({ type: z.literal("workshopHero"), data: z.record(z.string(), z.any()).default({}) });
+const workshopDetailsBlockSchema = z.object({ type: z.literal("workshopDetails"), data: z.record(z.string(), z.any()).default({}) });
+const workshopGalleryBlockSchema = z.object({ type: z.literal("workshopGallery"), data: z.record(z.string(), z.any()).default({}) });
 
 // ABOUT BLOCK
-const aboutHorizontalScrollBlockSchema = z.object({ type: z.literal("aboutHorizontalScroll"), data: z.record(z.any()).default({}) });
+const aboutHorizontalScrollBlockSchema = z.object({
+  type: z.literal("aboutHorizontalScroll"),
+  data: z.record(z.string(), z.any()).default({})
+});
 
 // MANDALA BLOCK
-const mandalaHorizontalScrollBlockSchema = z.object({ type: z.literal("mandalaHorizontalScroll"), data: z.record(z.any()).default({}) });
+const mandalaHorizontalScrollBlockSchema = z.object({ type: z.literal("mandalaHorizontalScroll"), data: z.record(z.string(), z.any()).default({}) });
 
 // PROJECTS BANNER BLOCK
-const projectsBannerBlockSchema = z.object({ type: z.literal("projectsBanner"), data: z.record(z.any()).default({}) });
-const prakritiActivityBlockSchema = z.object({ type: z.literal("prakritiActivity"), data: z.record(z.any()).default({}) });
+const projectsBannerBlockSchema = z.object({ type: z.literal("projectsBanner"), data: z.record(z.string(), z.any()).default({}) });
+const prakritiActivityBlockSchema = z.object({ type: z.literal("prakritiActivity"), data: z.record(z.string(), z.any()).default({}) });
 
 const contactFormBlockSchema = z.object({
   type: z.literal("contactForm"),
@@ -84,7 +87,7 @@ const contactFormBlockSchema = z.object({
 
 const dynamicButtonBlockSchema = z.object({ 
   type: z.literal("dynamicButton"), 
-  data: z.record(z.any()).default({}) 
+  data: z.record(z.string(), z.any()).default({}) 
 });
 
 const blockSchema = z.discriminatedUnion("type", [
